@@ -18,6 +18,8 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Tooltip("Ú’n”»’è‚ÌLayerMask")] LayerMask groundMask = ~0;
     [SerializeField, Tooltip("•Ç‚ÌÚG”»’è")] LayerMask wallMask = ~0;
     [SerializeField, Tooltip("GamManager‚ğŠi”[‚·‚é•Ï”")] GameManager m_gameManager;
+    [SerializeField, Tooltip("ƒƒCƒ“•Ší")] GameObject m_mainWeapon = default;
+    [SerializeField, Tooltip("ƒTƒu•Ší")] GameObject m_subWeapon = default;
     [SerializeField, Tooltip("•Šíprefab‚ğŠi”[‚·‚é•Ï”")] GameObject[] m_weaponPrefab = new GameObject[3];
 
     enum UnityChanState { STAND, WALK, DASH, JUMP };
@@ -226,14 +228,20 @@ public class PlayerContoller : MonoBehaviour
 
     void WeaponChange()
     {
-        var changeKey = Input.GetAxisRaw("WeaponChange");
-        if(changeKey == 1)
-        {
-            Debug.Log("a");
-        }
-        else if(changeKey == -1)
+        bool weaponSwitch = true;
+
+        if(weaponSwitch)
         {
 
+        }
+        else
+        {
+
+        }
+
+        if (Input.GetButtonDown("WeaponChange"))
+        {
+            weaponSwitch = !weaponSwitch;
         }
     }
 }
