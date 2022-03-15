@@ -226,18 +226,19 @@ public class PlayerContoller : MonoBehaviour
         attackRange.enabled = !attackRange.enabled;
     }
 
-    void WeaponChange()
+    void WeaponActionMethod()
     {
         bool weaponSwitch = true;
 
         if(weaponSwitch)
         {
-
+            
         }
         else
         {
-
+            
         }
+
 
         if (Input.GetButtonDown("WeaponChange"))
         {
