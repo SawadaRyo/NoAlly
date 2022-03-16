@@ -25,6 +25,7 @@ public class PlayerContoller : MonoBehaviour
     enum UnityChanState { STAND, WALK, DASH, JUMP };
     float m_turnSpeed = 15f;
     float m_h;
+    bool m_weaponSwitch = true;
     Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
     //Camera m_MainCamera;
@@ -32,6 +33,7 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_Animator;
     [Tooltip("Unityちゃんの向いている方向")] Quaternion orgLocalQuaternion;
     CapsuleCollider m_capsuleCollider;
+    GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
 
@@ -41,6 +43,7 @@ public class PlayerContoller : MonoBehaviour
         m_capsuleCollider = GetComponent<CapsuleCollider>();
         m_rb = GetComponent<Rigidbody>();
         m_Audio = gameObject.AddComponent<AudioSource>();
+        m_weaponSwitch = true;
         //m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
@@ -228,21 +231,29 @@ public class PlayerContoller : MonoBehaviour
 
     void WeaponActionMethod()
     {
-        bool weaponSwitch = true;
+        
 
-        if(weaponSwitch)
+        //攻撃
+        if(Input.GetButtonDown("Attack"))
         {
-            
+            m_Animator.SetTrigger("Attack");
+        }
+        //メインとサブの武器を切り替える
+        if(m_weaponSwitch)
+        {
+            m_equipmentWeapon = m_mainWeapon;
         }
         else
         {
-            
+            m_equipmentWeapon = m_subWeapon;
         }
 
-
+        //メインとサブの表示を切り替える
         if (Input.GetButtonDown("WeaponChange"))
         {
-            weaponSwitch = !weaponSwitch;
+            m_weaponSwitch = !m_weaponSwitch;
+            m_mainWeapon.SetActive(m_weaponSwitch);
+            m_subWeapon.SetActive(!m_weaponSwitch);
         }
     }
 }
