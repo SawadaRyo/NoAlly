@@ -32,7 +32,7 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
     [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_Animator;
     [Tooltip("Unityちゃんの向いている方向")] Quaternion orgLocalQuaternion;
-    CapsuleCollider m_capsuleCollider;
+    Collider isAttack;
     GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
@@ -40,10 +40,10 @@ public class PlayerContoller : MonoBehaviour
     void Start()
     {
         orgLocalQuaternion = this.transform.localRotation;
-        m_capsuleCollider = GetComponent<CapsuleCollider>();
         m_rb = GetComponent<Rigidbody>();
         m_Audio = gameObject.AddComponent<AudioSource>();
         m_weaponSwitch = true;
+        isAttack = m_equipmentWeapon.GetComponent<Collider>();
         //m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
@@ -87,6 +87,7 @@ public class PlayerContoller : MonoBehaviour
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, 0);
         m_Animator.SetFloat("MoveSpeed", Mathf.Abs(velocity.x));
 
+        //プレイヤーの攻撃
         if (Input.GetButtonDown("Attack"))
         {
 
@@ -255,5 +256,10 @@ public class PlayerContoller : MonoBehaviour
             m_mainWeapon.SetActive(m_weaponSwitch);
             m_subWeapon.SetActive(!m_weaponSwitch);
         }
+    }
+
+    void IsAttack()
+    {
+        isAttack.enabled = !isAttack.enabled;
     }
 }
