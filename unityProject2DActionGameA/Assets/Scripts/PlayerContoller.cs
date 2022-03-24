@@ -25,19 +25,17 @@ public class PlayerContoller : MonoBehaviour
 
     [SerializeField, Tooltip("武器prefabを格納する変数")] GameObject[] m_weaponPrefab = new GameObject[4];
 
-    enum UnityChanState { STAND, WALK, DASH, JUMP };
     float m_turnSpeed = 15f;
     float m_h;
     bool m_weaponSwitch = true;
     Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
-    //Camera m_MainCamera;
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
     [Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
     [Tooltip("メイン武器")] GameObject m_mainWeapon = default;
     [Tooltip("サブ武器")] GameObject m_subWeapon = default;
+    [Tooltip("装備中の武器")] GameObject m_equipmentWeapon = default;
     Collider isAttack;
-    GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
 
