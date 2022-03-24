@@ -238,7 +238,8 @@ public class PlayerContoller : MonoBehaviour
         //攻撃
         if(Input.GetButtonDown("Attack"))
         {
-            m_Animator.SetTrigger("Attack");
+            //m_Animator.SetTrigger("Attack");
+            m_Animator.SetTrigger(m_equipmentWeapon.name + "Attack");
         }
         
         //メインとサブの表示を切り替える
