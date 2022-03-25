@@ -38,7 +38,6 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("メイン武器")] GameObject m_mainWeapon = default;
     [Tooltip("サブ武器")] GameObject m_subWeapon = default;
     [Tooltip("装備中の武器")] GameObject m_equipmentWeapon = default;
-    Collider isAttack;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
 
@@ -54,7 +53,6 @@ public class PlayerContoller : MonoBehaviour
         m_mainWeapon.SetActive(true);
         m_subWeapon.SetActive(false);
         m_equipmentWeapon = m_mainWeapon;
-        isAttack = m_equipmentWeapon.GetComponent<Collider>();
         //m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
@@ -184,27 +182,24 @@ public class PlayerContoller : MonoBehaviour
     }
     void wallJumpMethod()
     {
+        m_Animator.SetBool("WallGrip", IsLeftWalled() || IsRightWalled());
         if (IsGrounded())
         {
-            m_Animator.SetBool("WallGrip", false);
             m_rb.useGravity = true;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsLeftWalled() || IsRightWalled())
         {
-            m_Animator.SetBool("WallGrip", true);
             m_rb.useGravity = false;
             if (Input.GetButtonDown("Jump"))
             {
-                m_Animator.SetBool("WallGrip", false);
                 m_Animator.SetTrigger("WallJump");
                 //StartCoroutine("WallJumpTime");
             }
         }
         else
         {
-            m_Animator.SetBool("WallGrip", false);
             m_rb.useGravity = true;
             return;
         }
@@ -223,18 +218,11 @@ public class PlayerContoller : MonoBehaviour
         StartCoroutine("WallJumpTime");
     }
 
-    void NormalAttack(int weapnNumber)
-    {
-        var attackRange = m_weaponPrefab[weapnNumber].GetComponent<CapsuleCollider>();
-        attackRange.enabled = !attackRange.enabled;
-    }
-
     void WeaponActionMethod()
     {
         //通常攻撃の処理
         if(Input.GetButtonDown("Attack"))
         {
-            //m_Animator.SetTrigger("Attack");
             m_Animator.SetTrigger(m_equipmentWeapon.name + "Attack");
         }
 
@@ -258,21 +246,18 @@ public class PlayerContoller : MonoBehaviour
             m_weaponSwitch = !m_weaponSwitch;
             m_mainWeapon.SetActive(m_weaponSwitch);
             m_subWeapon.SetActive(!m_weaponSwitch);
-        }
 
-        //メインとサブの武器を切り替える
-        if (m_weaponSwitch)
-        {
-            m_equipmentWeapon = m_mainWeapon;
-        }
-        else
-        {
-            m_equipmentWeapon = m_subWeapon;
+            //メインとサブの武器を切り替える
+            if (m_weaponSwitch)
+            {
+                m_equipmentWeapon = m_mainWeapon;
+            }
+            else
+            {
+                m_equipmentWeapon = m_subWeapon;
+            }
         }
     }
 
-    void IsAttack()
-    {
-        isAttack.enabled = !isAttack.enabled;
-    }
+    
 }
