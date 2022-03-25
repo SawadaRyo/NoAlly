@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerContoller : MonoBehaviour
 {
+    [SerializeField, Tooltip("溜め攻撃の溜めカウンター")] int m_chrageAttackCounter = 120;
     [SerializeField, Tooltip("プレイヤーの移動速度")] float speed = 5f;
     [SerializeField, Tooltip("ダッシュの倍率")] float dashPowor = 10f;
     [SerializeField, Tooltip("空中での移動速度")] float grindFroth = 5f;
@@ -25,6 +26,8 @@ public class PlayerContoller : MonoBehaviour
 
     [SerializeField, Tooltip("武器prefabを格納する変数")] GameObject[] m_weaponPrefab = new GameObject[4];
 
+
+    [Tooltip("溜め攻撃の溜め時間")] int m_chrageAttackCount = 0;
     float m_turnSpeed = 15f;
     float m_h;
     bool m_weaponSwitch = true;
@@ -176,15 +179,8 @@ public class PlayerContoller : MonoBehaviour
             m_Audio.PlayOneShot(jumpSound);
             m_rb.AddForce(0f, jump, 0f, ForceMode.Impulse);
         }
-
-        if (!IsGrounded())
-        {
-            m_Animator.SetBool("Jump", true);
-        }
-        else
-        {
-            m_Animator.SetBool("Jump", false);
-        }
+        m_Animator.SetBool("Jump", !IsGrounded());
+        
     }
     void wallJumpMethod()
     {
@@ -235,12 +231,26 @@ public class PlayerContoller : MonoBehaviour
 
     void WeaponActionMethod()
     {
-        //攻撃
+        //通常攻撃の処理
         if(Input.GetButtonDown("Attack"))
         {
             //m_Animator.SetTrigger("Attack");
             m_Animator.SetTrigger(m_equipmentWeapon.name + "Attack");
         }
+
+        //溜め攻撃の処理
+        //if(Input.GetButton("Attack"))
+        //{
+        //    m_chrageAttackCount++;
+        //}
+        //if(Input.GetButtonUp("Attack"))
+        //{
+        //    if(m_chrageAttackCount >= m_chrageAttackCounter)
+        //    {
+
+        //        m_chrageAttackCount = 0;
+        //    }
+        //}
         
         //メインとサブの表示を切り替える
         if (Input.GetButtonDown("WeaponChange"))
