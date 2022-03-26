@@ -89,7 +89,7 @@ public class PlayerContoller : MonoBehaviour
             {
                 velocity.x = m_h * dashPowor;
             }
-            else
+            else if(!Input.GetButton("Dash"))
             {
                 velocity.x = m_h * speed;
             }
@@ -115,11 +115,6 @@ public class PlayerContoller : MonoBehaviour
             StartCoroutine("WaitKeyInput");
         }
     }
-
-    //public void GetItem(ItemBase item)
-    //{
-    //    m_ItemList.Add(item);
-    //}
 
     void OnCollisionExit()
     {
@@ -150,24 +145,15 @@ public class PlayerContoller : MonoBehaviour
     //    bool hitFlg2 = Physics.Raycast(ray, out m_hitInfo, distance, wallMask);
     //}
 #endif
-    bool IsRightWalled()
+    bool IsWalled()
     {
         Vector3 isWallCenter = footPos.transform.position;
-        Ray ray = new Ray(isWallCenter, Vector3.right);
-        bool hitFlg = Physics.Raycast(ray, out m_hitInfo, walldistance, wallMask);
+        Ray rayRight = new Ray(isWallCenter, Vector3.right);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, walldistance, wallMask)
+                   || Physics.Raycast(rayLeft, out m_hitInfo, walldistance, wallMask);
         return hitFlg;
     }
-
-    bool IsLeftWalled()
-    {
-        Vector3 isWallCenter = footPos.transform.position;
-        Ray ray = new Ray(isWallCenter, Vector3.left);
-        bool hitFlg = Physics.Raycast(ray, out m_hitInfo, walldistance, wallMask);
-        return hitFlg;
-    }
-
-
-
     void JumpMethod()
     {
         //ジャンプの処理
@@ -182,14 +168,14 @@ public class PlayerContoller : MonoBehaviour
     }
     void wallJumpMethod()
     {
-        m_Animator.SetBool("WallGrip", IsLeftWalled() || IsRightWalled());
+        m_Animator.SetBool("WallGrip",IsWalled());
         if (IsGrounded())
         {
             m_rb.useGravity = true;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
-        else if (IsLeftWalled() || IsRightWalled())
+        else if (IsWalled())
         {
             m_rb.useGravity = false;
             if (Input.GetButtonDown("Jump"))
