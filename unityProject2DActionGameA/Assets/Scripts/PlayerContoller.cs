@@ -1,3 +1,4 @@
+using System; 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,7 @@ public class PlayerContoller : MonoBehaviour
     float m_turnSpeed = 15f;
     float m_h;
     bool m_weaponSwitch = true;
+    bool charge = false;
     Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
@@ -41,7 +43,11 @@ public class PlayerContoller : MonoBehaviour
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
 
-    void Start()
+    delegate void PlayerMethod();
+    PlayerMethod m_playerMethod = default;
+    
+
+    void Awake()
     {
         orgLocalQuaternion = this.transform.localRotation;
         m_rb = GetComponent<Rigidbody>();
@@ -54,16 +60,34 @@ public class PlayerContoller : MonoBehaviour
         m_subWeapon.SetActive(false);
         m_equipmentWeapon = m_mainWeapon;
         //m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+       
+            
+    }
+    void OnEnable()
+    {
+        m_playerMethod += JumpMethod;
+        m_playerMethod += WeaponActionMethod;
+        m_playerMethod += wallJumpMethod;
+        m_playerMethod += MoveMethod;
+    }
+    void OnDisable()
+    {
+        m_playerMethod -= JumpMethod;
+        m_playerMethod -= WeaponActionMethod;
+        m_playerMethod -= wallJumpMethod;
+        m_playerMethod -= MoveMethod;
     }
     void Update()
     {
         if (!m_gameManager.IsGame) return;
         else
         {
-            JumpMethod();
-            wallJumpMethod();
-            MoveMethod();
-            WeaponActionMethod();
+            m_playerMethod();
+            //JumpMethod();
+            //wallJumpMethod();
+            //MoveMethod();
+            //WeaponActionMethod();
         }
     }
 
@@ -105,12 +129,12 @@ public class PlayerContoller : MonoBehaviour
             m_Audio.PlayOneShot(damageSound);
         }
 
-        if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
+        else if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
         {
             transform.parent = other.gameObject.transform;
         }
 
-        if (other.gameObject.tag == "Piston")
+        else if (other.gameObject.tag == "Piston")
         {
             StartCoroutine("WaitKeyInput");
         }
@@ -212,22 +236,23 @@ public class PlayerContoller : MonoBehaviour
             m_Animator.SetTrigger(m_equipmentWeapon.name + "Attack");
         }
 
-        //溜め攻撃の処理
-        //if(Input.GetButton("Attack"))
-        //{
-        //    m_chrageAttackCount++;
-        //}
-        //if(Input.GetButtonUp("Attack"))
-        //{
-        //    if(m_chrageAttackCount >= m_chrageAttackCounter)
-        //    {
-
-        //        m_chrageAttackCount = 0;
-        //    }
-        //}
-        
+        //溜め攻撃の処理(弓矢のアニメーションもこの処理）
+        charge = Input.GetButton("Attack");
+        if (charge)
+        {
+            m_chrageAttackCount++;
+        }
+        if (Input.GetButtonUp("Attack"))
+        {
+            if (m_chrageAttackCount >= m_chrageAttackCounter)
+            {
+                
+                m_chrageAttackCount = 0;
+            }
+        }
+        m_Animator.SetBool("Charge", Input.GetButton("Attack"));
         //メインとサブの表示を切り替える
-        if (Input.GetButtonDown("WeaponChange"))
+        if (Input.GetButtonDown("WeaponChange") && !charge)
         {
             m_weaponSwitch = !m_weaponSwitch;
             m_mainWeapon.SetActive(m_weaponSwitch);
