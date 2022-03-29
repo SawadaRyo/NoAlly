@@ -32,7 +32,6 @@ public class PlayerContoller : MonoBehaviour
     float m_turnSpeed = 15f;
     float m_h;
     bool m_weaponSwitch = true;
-    bool charge = false;
     Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
@@ -42,6 +41,8 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("装備中の武器")] GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
+    public bool Charge { get; private set; } = false;
+    public int ChargeCount { get; private set; } = 0;
 
     delegate void PlayerMethod();
     PlayerMethod m_playerMethod = default;
@@ -237,8 +238,8 @@ public class PlayerContoller : MonoBehaviour
         }
 
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-        charge = Input.GetButton("Attack");
-        if (charge)
+        Charge = Input.GetButton("Attack");
+        if (Charge)
         {
             m_chrageAttackCount++;
         }
@@ -252,7 +253,7 @@ public class PlayerContoller : MonoBehaviour
         }
         m_Animator.SetBool("Charge", Input.GetButton("Attack"));
         //メインとサブの表示を切り替える
-        if (Input.GetButtonDown("WeaponChange") && !charge)
+        if (Input.GetButtonDown("WeaponChange") && !Charge)
         {
             m_weaponSwitch = !m_weaponSwitch;
             m_mainWeapon.SetActive(m_weaponSwitch);
