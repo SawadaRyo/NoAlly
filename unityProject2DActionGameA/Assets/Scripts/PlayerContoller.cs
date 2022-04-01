@@ -247,7 +247,6 @@ public class PlayerContoller : MonoBehaviour
         {
             if (m_chrageAttackCount >= m_chrageAttackCounter)
             {
-                
                 m_chrageAttackCount = 0;
             }
         }
