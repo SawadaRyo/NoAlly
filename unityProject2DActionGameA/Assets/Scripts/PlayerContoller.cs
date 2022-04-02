@@ -85,10 +85,7 @@ public class PlayerContoller : MonoBehaviour
         else
         {
             m_playerMethod();
-            //JumpMethod();
-            //wallJumpMethod();
-            //MoveMethod();
-            //WeaponActionMethod();
+            Debug.Log(m_chrageAttackCount);
         }
     }
 
@@ -239,7 +236,7 @@ public class PlayerContoller : MonoBehaviour
 
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
         Charge = Input.GetButton("Attack");
-        if (Charge)
+        if (Charge && m_chrageAttackCount < 180 )
         {
             m_chrageAttackCount++;
         }
