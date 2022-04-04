@@ -61,9 +61,6 @@ public class PlayerContoller : MonoBehaviour
         m_subWeapon.SetActive(false);
         m_equipmentWeapon = m_mainWeapon;
         //m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
-       
-            
     }
     void OnEnable()
     {

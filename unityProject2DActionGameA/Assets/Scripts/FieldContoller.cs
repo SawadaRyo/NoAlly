@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FieldContoller : MonoBehaviour
 {
+    //stage‚ÌActive‚ÌŠÇ—‚ğ‚·‚éScript
     // Start is called before the first frame update
     void Start()
     {
