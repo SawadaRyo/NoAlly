@@ -42,7 +42,7 @@ public class PlayerContoller : MonoBehaviour
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     public bool Charge { get; private set; } = false;
-    public int ChargeCount { get; private set; } = 0;
+    public int ChrageAttackCount { get => m_chrageAttackCount; set => m_chrageAttackCount = value; }
 
     delegate void PlayerMethod();
     PlayerMethod m_playerMethod = default;
@@ -82,7 +82,7 @@ public class PlayerContoller : MonoBehaviour
         else
         {
             m_playerMethod();
-            Debug.Log(m_chrageAttackCount);
+            //Debug.Log(m_chrageAttackCount);
         }
     }
 
@@ -233,15 +233,15 @@ public class PlayerContoller : MonoBehaviour
 
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
         Charge = Input.GetButton("Attack");
-        if (Charge && m_chrageAttackCount < 180 )
+        if (Charge && ChrageAttackCount < 1800 )
         {
-            m_chrageAttackCount++;
+            ChrageAttackCount++;
         }
         if (Input.GetButtonUp("Attack"))
         {
-            if (m_chrageAttackCount >= m_chrageAttackCounter)
+            if (ChrageAttackCount >= m_chrageAttackCounter)
             {
-                m_chrageAttackCount = 0;
+                ChrageAttackCount = 0;
             }
         }
         m_Animator.SetBool("Charge", Input.GetButton("Attack"));
