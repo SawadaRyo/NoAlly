@@ -2,18 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponBase : MonoBehaviour
+ public class WeaponBase : MonoBehaviour
 {
     [SerializeField] int m_weaponPower = 5;
-    Collider isAttack;
     public int WeaponPower { get => m_weaponPower; set => m_weaponPower = value; }
 
-    private void Start()
+    public void IsAttack(Collider isAttack, float attackRenge, Vector3 attackCenter, LayerMask enemyLayer)
     {
-        isAttack = this.GetComponent<Collider>();
+        var enemiescol = Physics.OverlapSphere(attackCenter, attackRenge, enemyLayer);
+        foreach (var c in enemiescol)
+        {
+            var enemiesHP = gameObject.GetComponent<GaugeManager>();
+
+            if (enemiesHP)
+            {
+                enemiesHP.HP -= WeaponPower;
+            }
+        }
+        
     }
-    public void IsAttack()
+
+    public void IsAttack(Collider isAttack, float attackRenge, Vector3 attackStart, Vector3 attackEnd, LayerMask enemyLayer)
     {
-        isAttack.enabled = !isAttack.enabled;
+        var enemiescol = Physics.OverlapCapsule(attackStart, attackEnd, attackRenge, enemyLayer);
+        foreach (var c in enemiescol)
+        {
+            var enemiesHP = gameObject.GetComponent<GaugeManager>();
+
+            if (enemiesHP)
+            {
+                enemiesHP.HP -= WeaponPower;
+            }
+        }
     }
 }

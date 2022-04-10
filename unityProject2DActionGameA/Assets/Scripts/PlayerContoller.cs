@@ -239,7 +239,7 @@ public class PlayerContoller : MonoBehaviour
         }
         if (Input.GetButtonUp("Attack"))
         {
-            if (ChrageAttackCount >= m_chrageAttackCounter)
+            if (ChrageAttackCount > 0)
             {
                 ChrageAttackCount = 0;
             }
