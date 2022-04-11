@@ -14,7 +14,6 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Tooltip("壁の接触判定のRayの射程")] float walldistance = 0.1f;
     [SerializeField, Tooltip("SphierCastの半径")] float isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("壁ジャンの力")] float wallJumpPower = 10f;
-    [Tooltip("プレイヤーに掛かる重力値")] float m_gravity = -0.981f;
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip jumpSound;
     [SerializeField, Tooltip("プレイヤーのダメージサウンド")] AudioClip damageSound;
 
@@ -89,6 +88,7 @@ public class PlayerContoller : MonoBehaviour
     void MoveMethod()
     {
         m_h = Input.GetAxisRaw("Horizontal");
+        var moveSpeed = 0f;
         Vector3 velocity = m_rb.velocity;
         if (m_h == -1)
         {
@@ -103,16 +103,16 @@ public class PlayerContoller : MonoBehaviour
 
         //プレイヤーの移動
         if (m_h != 0)
-        {
-            if (Input.GetButton("Dash") && IsGrounded())//ダッシュコマンド
-            {
-                velocity.x = m_h * dashPowor;
-            }
-            else if(!Input.GetButton("Dash"))
-            {
-                velocity.x = m_h * speed;
-            }
+        { 
+            moveSpeed = speed;
         }
+
+        if (Input.GetButtonDown("Dash") && IsGrounded())//ダッシュコマンド
+        {
+            m_rb.AddForce(this.transform.forward * dashPowor, ForceMode.VelocityChange);
+            m_Animator.SetTrigger("Dash");
+        }
+        velocity.x = m_h * moveSpeed;
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, 0);
         m_Animator.SetFloat("MoveSpeed", Mathf.Abs(velocity.x));
     }
@@ -218,8 +218,8 @@ public class PlayerContoller : MonoBehaviour
     void WalljumpPower()
     {
         m_Audio.PlayOneShot(jumpSound);
-        Vector3 vec = transform.up + m_hitInfo.normal;
-        m_rb.AddForce(vec * wallJumpPower, ForceMode.Impulse);
+        //Vector3 vec = transform.up + m_hitInfo.normal;
+        m_rb.AddForce(transform.up * wallJumpPower, ForceMode.Impulse);
         StartCoroutine("WallJumpTime");
     }
 

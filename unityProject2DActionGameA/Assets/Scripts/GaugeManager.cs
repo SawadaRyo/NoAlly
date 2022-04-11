@@ -32,7 +32,6 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ð“Š‡‚·‚éƒXƒNƒŠƒvƒ
         {
             m_SAPGague.value = m_SAP;
         }
-
     }
 
     // Update is called once per frame
@@ -40,11 +39,11 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ð“Š‡‚·‚éƒXƒNƒŠƒvƒ
     {
         m_HPGague.value = HP;
         m_SAPGague.value = SAP;
+        MaxGagueController();
         if (HP == 0)
         {
             m_living = false;
         }
-        MaxGagueController();
     }
     void MaxGagueController()
     {
@@ -52,18 +51,10 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ð“Š‡‚·‚éƒXƒNƒŠƒvƒ
         {
             HP -= (HP - m_maxHP);
         }
-        else if (HP == m_maxHP && m_HPGagieHandle != null)
-        {
-            m_HPGagieHandle.color = Color.green;
-        }
 
         if (m_SAP > m_maxSAP)
         {
             m_SAP -= (m_SAP - m_maxSAP);
-        }
-        else if (m_SAP == m_maxSAP && m_SAPGagieHandle != null)
-        {
-            m_SAPGagieHandle.color = Color.yellow;
         }
     }
 }
