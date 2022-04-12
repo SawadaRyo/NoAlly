@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒg
 {
     [SerializeField, Tooltip("HP‚ÌãŒÀ")] int m_maxHP = 20;
-    [Tooltip("•KE‹ZƒQ[ƒW‚ÌãŒÀ")] int m_maxSAP = 20;
     [SerializeField, Tooltip("ƒIƒuƒWƒFƒNƒg‚ÌHP")] int m_HP = 20;
-    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì•KE‹ZƒQ[ƒW")] int m_SAP = 0;
-    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
     [SerializeField, Tooltip("HPƒQ[ƒW‚Ìslider")] Slider m_HPGague;
     [SerializeField, Tooltip("SAPƒQ[ƒW‚Ìslider")] Slider m_SAPGague;
     [SerializeField] Image m_HPGagieHandle;
     [SerializeField] Image m_SAPGagieHandle;
+    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì•KE‹ZƒQ[ƒW")] int m_SAP = 0;
+    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
+    [Tooltip("•KE‹ZƒQ[ƒW‚ÌãŒÀ")] int m_maxSAP = 20;
 
     public int HP { get => m_HP; set => m_HP = value; }
     public int SAP { get => m_SAP; set => m_SAP = value; }
@@ -57,4 +57,5 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
             m_SAP -= (m_SAP - m_maxSAP);
         }
     }
+    
 }
