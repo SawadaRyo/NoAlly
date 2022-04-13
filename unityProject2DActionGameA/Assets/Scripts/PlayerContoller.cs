@@ -67,6 +67,7 @@ public class PlayerContoller : MonoBehaviour
         m_playerMethod += WeaponActionMethod;
         m_playerMethod += wallJumpMethod;
         m_playerMethod += MoveMethod;
+        Charge = Input.GetButton("Attack");
     }
     void OnDisable()
     {
@@ -211,8 +212,12 @@ public class PlayerContoller : MonoBehaviour
     }
     IEnumerable WallJumpTime()
     {
-        m_h = 0;
-        yield return new WaitForSeconds(0.5f);
+        int i = 0;
+        while(i <= 1)
+        {
+            m_h = 0;
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     void WalljumpPower()
@@ -232,7 +237,6 @@ public class PlayerContoller : MonoBehaviour
         }
 
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-        Charge = Input.GetButton("Attack");
         if (Charge && ChrageAttackCount < 1800 )
         {
             ChrageAttackCount++;
@@ -263,6 +267,4 @@ public class PlayerContoller : MonoBehaviour
             }
         }
     }
-
-    
 }

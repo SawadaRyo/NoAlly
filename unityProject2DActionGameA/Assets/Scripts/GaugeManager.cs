@@ -11,9 +11,13 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     [SerializeField, Tooltip("SAPƒQ[ƒW‚Ìslider")] Slider m_SAPGague;
     [SerializeField] Image m_HPGagieHandle;
     [SerializeField] Image m_SAPGagieHandle;
+    [SerializeField] float m_rigitDefensePercentage = 0.2f;
+    [SerializeField] float m_fireDifansePercentage = 0.2f;
+    [SerializeField] float m_elekeDifansePercentage = 0.2f;
+    [SerializeField] float m_frozenDifansePercentage = 0.2f;
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì•KE‹ZƒQ[ƒW")] int m_SAP = 0;
-    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
     [Tooltip("•KE‹ZƒQ[ƒW‚ÌãŒÀ")] int m_maxSAP = 20;
+    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
 
     public int HP { get => m_HP; set => m_HP = value; }
     public int SAP { get => m_SAP; set => m_SAP = value; }
@@ -40,10 +44,7 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
         m_HPGague.value = HP;
         m_SAPGague.value = SAP;
         MaxGagueController();
-        if (HP == 0)
-        {
-            m_living = false;
-        }
+        
     }
     void MaxGagueController()
     {
@@ -57,5 +58,19 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
             m_SAP -= (m_SAP - m_maxSAP);
         }
     }
-    
+    //ƒ_ƒ[ƒWŒvZ
+    public void DamageMethod(int weaponPower, int firePower, int elekePower,int frozenPower)
+    {
+        var damage = weaponPower * (1 - m_rigitDefensePercentage)
+            + firePower * (1 - m_fireDifansePercentage)
+             * elekePower * (1 - m_elekeDifansePercentage)
+             * frozenPower * (1 - m_frozenDifansePercentage);
+        HP -= (int)damage;
+        //¶€”»’è
+        if (HP == 0)
+        {
+            m_living = false;
+        }
+        else return;
+    }
 }
