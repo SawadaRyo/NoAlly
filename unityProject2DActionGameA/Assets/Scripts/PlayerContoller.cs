@@ -25,24 +25,25 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Tooltip("GamManagerを格納する変数")] GameManager m_gameManager;
 
     [SerializeField, Tooltip("武器prefabを格納する変数")] GameObject[] m_weaponPrefab = new GameObject[4];
+    [SerializeField, Tooltip("メイン武器")] GameObject m_mainWeapon = default;
+    [SerializeField, Tooltip("サブ武器")] GameObject m_subWeapon = default;
 
 
     [Tooltip("溜め攻撃の溜め時間")] int m_chrageAttackCount = 0;
-    float m_turnSpeed = 15f;
-    float m_h;
-    bool m_weaponSwitch = true;
-    Rigidbody m_rb;
+    [Tooltip("Playerの振り向き速度")]float m_turnSpeed = 25f;
+    [Tooltip("横移動のベクトル")]float m_h;
+    [Tooltip("武器切り替え")] bool m_weaponSwitch = true;
+    bool m_attacked = false;
+    [Tooltip("Rigidbodyコンポーネントの取得")]Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
     [Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
-    [Tooltip("メイン武器")] GameObject m_mainWeapon = default;
-    [Tooltip("サブ武器")] GameObject m_subWeapon = default;
     [Tooltip("装備中の武器")] GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     public bool Charge { get; private set; } = false;
     public int ChrageAttackCount { get => m_chrageAttackCount; set => m_chrageAttackCount = value; }
-
+    public bool Attacked { get => m_attacked; set => m_attacked = value; }
     delegate void PlayerMethod();
     PlayerMethod m_playerMethod = default;
     
@@ -54,8 +55,8 @@ public class PlayerContoller : MonoBehaviour
         m_Audio = gameObject.AddComponent<AudioSource>();
 
         m_weaponSwitch = true;
-        m_mainWeapon = m_weaponPrefab[0];
-        m_subWeapon = m_weaponPrefab[1];
+        //m_mainWeapon = m_weaponPrefab[0];
+        //m_subWeapon = m_weaponPrefab[1];
         m_mainWeapon.SetActive(true);
         m_subWeapon.SetActive(false);
         m_equipmentWeapon = m_mainWeapon;
@@ -83,9 +84,12 @@ public class PlayerContoller : MonoBehaviour
         {
             m_playerMethod();
             //Debug.Log(m_chrageAttackCount);
+            Debug.Log(Attacked);
         }
     }
 
+    //Playerの動きを処理が書かれた関数
+    //----------------------------------------------
     void MoveMethod()
     {
         m_h = Input.GetAxisRaw("Horizontal");
@@ -149,22 +153,6 @@ public class PlayerContoller : MonoBehaviour
         bool hitFlg = Physics.SphereCast(ray, isGroundRengeRadios, out _, distance, groundMask);
         return hitFlg;
     }
-#if UNITY_EDITOR
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Vector3 isGroundCenter = footPos.transform.position;
-    //    Gizmos.DrawWireSphere(footPos.transform.position + Vector3.down * distance, isGroundRengeRadios);
-
-    //    Vector3 isWallCenter = footPos.transform.position;
-    //    Ray ray = new Ray(isWallCenter, Vector3.right);
-    //    bool hitFlg = Physics.Raycast(ray, out m_hitInfo, distance, wallMask);
-
-    //    Vector3 isWallCenter2 = footPos.transform.position;
-    //    Ray ray2 = new Ray(isWallCenter, Vector3.right);
-    //    bool hitFlg2 = Physics.Raycast(ray, out m_hitInfo, distance, wallMask);
-    //}
-#endif
     bool IsWalled()
     {
         Vector3 isWallCenter = footPos.transform.position;
@@ -219,13 +207,18 @@ public class PlayerContoller : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-
+    //AnimationEventで呼ぶ関数
+    //---------------------------------------------------------
     void WalljumpPower()
     {
         m_Audio.PlayOneShot(jumpSound);
         //Vector3 vec = transform.up + m_hitInfo.normal;
         m_rb.AddForce(transform.up * wallJumpPower, ForceMode.Impulse);
         StartCoroutine("WallJumpTime");
+    }
+    void AttackJud()
+    {
+        Attacked = !Attacked;
     }
 
     void WeaponActionMethod()
@@ -250,7 +243,7 @@ public class PlayerContoller : MonoBehaviour
         }
         m_Animator.SetBool("Charge", Input.GetButton("Attack"));
         //メインとサブの表示を切り替える
-        if (Input.GetButtonDown("WeaponChange") && !Charge)
+        if (Input.GetButtonDown("WeaponChange") && !Charge && !Attacked)
         {
             m_weaponSwitch = !m_weaponSwitch;
             m_mainWeapon.SetActive(m_weaponSwitch);
@@ -267,4 +260,21 @@ public class PlayerContoller : MonoBehaviour
             }
         }
     }
+
+#if UNITY_EDITOR
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Vector3 isGroundCenter = footPos.transform.position;
+    //    Gizmos.DrawWireSphere(footPos.transform.position + Vector3.down * distance, isGroundRengeRadios);
+
+    //    Vector3 isWallCenter = footPos.transform.position;
+    //    Ray ray = new Ray(isWallCenter, Vector3.right);
+    //    bool hitFlg = Physics.Raycast(ray, out m_hitInfo, distance, wallMask);
+
+    //    Vector3 isWallCenter2 = footPos.transform.position;
+    //    Ray ray2 = new Ray(isWallCenter, Vector3.right);
+    //    bool hitFlg2 = Physics.Raycast(ray, out m_hitInfo, distance, wallMask);
+    //}
+#endif
 }
