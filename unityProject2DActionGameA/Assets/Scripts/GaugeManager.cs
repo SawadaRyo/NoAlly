@@ -11,10 +11,10 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     [SerializeField, Tooltip("SAPƒQ[ƒW‚Ìslider")] Slider m_SAPGague;
     [SerializeField] Image m_HPGagieHandle;
     [SerializeField] Image m_SAPGagieHandle;
-    [SerializeField] float m_rigitDefensePercentage = 0.2f;
-    [SerializeField] float m_fireDifansePercentage = 0.2f;
-    [SerializeField] float m_elekeDifansePercentage = 0.2f;
-    [SerializeField] float m_frozenDifansePercentage = 0.2f;
+    [SerializeField] float m_rigitDefensePercentage = 0.8f;
+    [SerializeField] float m_fireDifansePercentage = 0.8f;
+    [SerializeField] float m_elekeDifansePercentage = 0.8f;
+    [SerializeField] float m_frozenDifansePercentage = 0.8f;
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì•KE‹ZƒQ[ƒW")] int m_SAP = 0;
     [Tooltip("•KE‹ZƒQ[ƒW‚ÌãŒÀ")] int m_maxSAP = 20;
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
@@ -61,10 +61,10 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     //ƒ_ƒ[ƒWŒvZ
     public void DamageMethod(int weaponPower, int firePower, int elekePower,int frozenPower)
     {
-        var damage = weaponPower * (1 - m_rigitDefensePercentage)
-            + firePower * (1 - m_fireDifansePercentage)
-             * elekePower * (1 - m_elekeDifansePercentage)
-             * frozenPower * (1 - m_frozenDifansePercentage);
+        var damage = weaponPower * m_rigitDefensePercentage
+            + firePower * m_fireDifansePercentage
+            + elekePower * m_elekeDifansePercentage
+            + frozenPower * m_frozenDifansePercentage;
         HP -= (int)damage;
         //¶€”»’è
         if (HP == 0)

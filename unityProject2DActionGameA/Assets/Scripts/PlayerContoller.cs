@@ -33,11 +33,13 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("Playerの振り向き速度")]float m_turnSpeed = 25f;
     [Tooltip("横移動のベクトル")]float m_h;
     [Tooltip("武器切り替え")] bool m_weaponSwitch = true;
+    [Tooltip("スライディングの判定")] bool m_isDash = false;
     bool m_attacked = false;
+    bool m_ableMove = false;
     [Tooltip("Rigidbodyコンポーネントの取得")]Rigidbody m_rb;
     //List<ItemBase> m_ItemList = new List<ItemBase>();
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
-    [Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
+    //[Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
     [Tooltip("装備中の武器")] GameObject m_equipmentWeapon = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
@@ -48,9 +50,9 @@ public class PlayerContoller : MonoBehaviour
     PlayerMethod m_playerMethod = default;
     
 
-    void Awake()
+    void Start()
     {
-        orgLocalQuaternion = this.transform.localRotation;
+        //orgLocalQuaternion = this.transform.localRotation;
         m_rb = GetComponent<Rigidbody>();
         m_Audio = gameObject.AddComponent<AudioSource>();
 
@@ -66,7 +68,7 @@ public class PlayerContoller : MonoBehaviour
     {
         m_playerMethod += JumpMethod;
         m_playerMethod += WeaponActionMethod;
-        m_playerMethod += wallJumpMethod;
+        m_playerMethod += WallJumpMethod;
         m_playerMethod += MoveMethod;
         Charge = Input.GetButton("Attack");
     }
@@ -74,7 +76,7 @@ public class PlayerContoller : MonoBehaviour
     {
         m_playerMethod -= JumpMethod;
         m_playerMethod -= WeaponActionMethod;
-        m_playerMethod -= wallJumpMethod;
+        m_playerMethod -= WallJumpMethod;
         m_playerMethod -= MoveMethod;
     }
     void Update()
@@ -93,6 +95,7 @@ public class PlayerContoller : MonoBehaviour
     void MoveMethod()
     {
         m_h = Input.GetAxisRaw("Horizontal");
+        m_isDash = Input.GetButtonDown("Dash");
         var moveSpeed = 0f;
         Vector3 velocity = m_rb.velocity;
         if (m_h == -1)
@@ -107,15 +110,16 @@ public class PlayerContoller : MonoBehaviour
         }
 
         //プレイヤーの移動
-        if (m_h != 0)
+        if (m_h != 0 && !m_ableMove)
         { 
             moveSpeed = speed;
         }
 
-        if (Input.GetButtonDown("Dash") && IsGrounded())//ダッシュコマンド
+        //ダッシュコマンド
+        if (m_isDash && IsGrounded())
         {
-            m_rb.AddForce(this.transform.forward * dashPowor, ForceMode.VelocityChange);
-            m_Animator.SetTrigger("Dash");
+            StartCoroutine("Dash", m_isDash);
+            m_Animator.SetBool("Dash",m_isDash);
         }
         velocity.x = m_h * moveSpeed;
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, 0);
@@ -132,11 +136,6 @@ public class PlayerContoller : MonoBehaviour
         else if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
         {
             transform.parent = other.gameObject.transform;
-        }
-
-        else if (other.gameObject.tag == "Piston")
-        {
-            StartCoroutine("WaitKeyInput");
         }
     }
 
@@ -174,16 +173,17 @@ public class PlayerContoller : MonoBehaviour
         m_Animator.SetBool("Jump", !IsGrounded());
         
     }
-    void wallJumpMethod()
+    void WallJumpMethod()
     {
         m_Animator.SetBool("WallGrip",IsWalled());
+        m_equipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
         {
             m_rb.useGravity = true;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
-        else if (IsWalled())
+        else if (IsWalled() && m_h != 0)
         {
             m_rb.useGravity = false;
             if (Input.GetButtonDown("Jump"))
@@ -198,13 +198,18 @@ public class PlayerContoller : MonoBehaviour
             return;
         }
     }
-    IEnumerable WallJumpTime()
+    IEnumerable Dash(bool isDash)
     {
-        int i = 0;
-        while(i <= 1)
+        if(m_isDash)
         {
-            m_h = 0;
-            yield return new WaitForSeconds(0.5f);
+            for (float i = 0; i <= 0.5f; i += 0.1f)
+            {
+
+            }
+        }
+        else if(!m_isDash)
+        {
+            yield break;
         }
     }
     //AnimationEventで呼ぶ関数
@@ -214,11 +219,15 @@ public class PlayerContoller : MonoBehaviour
         m_Audio.PlayOneShot(jumpSound);
         //Vector3 vec = transform.up + m_hitInfo.normal;
         m_rb.AddForce(transform.up * wallJumpPower, ForceMode.Impulse);
-        StartCoroutine("WallJumpTime");
     }
     void AttackJud()
     {
         Attacked = !Attacked;
+    }
+    void MoveJud()
+    {
+        m_ableMove = !m_ableMove;
+        Debug.Log(m_ableMove);
     }
 
     void WeaponActionMethod()
