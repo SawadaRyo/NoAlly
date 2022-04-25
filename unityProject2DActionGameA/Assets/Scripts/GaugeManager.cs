@@ -17,7 +17,7 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     [SerializeField] float m_frozenDifansePercentage = 0.8f;
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì•KE‹ZƒQ[ƒW")] int m_SAP = 0;
     [Tooltip("•KE‹ZƒQ[ƒW‚ÌãŒÀ")] int m_maxSAP = 20;
-    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] bool m_living = false;
+    [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶€”»’è")] protected bool m_living = false;
 
     public int HP { get => m_HP; set => m_HP = value; }
     public int SAP { get => m_SAP; set => m_SAP = value; }
@@ -44,7 +44,6 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
         m_HPGague.value = HP;
         m_SAPGague.value = SAP;
         MaxGagueController();
-        
     }
     void MaxGagueController()
     {
