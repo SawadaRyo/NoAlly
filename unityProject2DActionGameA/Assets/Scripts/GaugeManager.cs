@@ -9,8 +9,6 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     [SerializeField, Tooltip("ƒIƒuƒWƒFƒNƒg‚ÌHP")] int m_HP = 20;
     [SerializeField, Tooltip("HPƒQ[ƒW‚Ìslider")] Slider m_HPGague;
     [SerializeField, Tooltip("SAPƒQ[ƒW‚Ìslider")] Slider m_SAPGague;
-    [SerializeField] Image m_HPGagieHandle;
-    [SerializeField] Image m_SAPGagieHandle;
     [SerializeField] float m_rigitDefensePercentage = 0.8f;
     [SerializeField] float m_fireDifansePercentage = 0.8f;
     [SerializeField] float m_elekeDifansePercentage = 0.8f;
