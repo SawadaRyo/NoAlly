@@ -39,8 +39,11 @@ public class GaugeManager : MonoBehaviour //HP‚âSAPƒQ[ƒW‚È‚Ç‚ğ“Š‡‚·‚éƒXƒNƒŠƒvƒ
     // Update is called once per frame
     void Update()
     {
-        m_HPGague.value = HP;
-        m_SAPGague.value = SAP;
+        if(gameObject.tag == "Player")
+        {
+            m_HPGague.value = HP;
+            m_SAPGague.value = SAP;
+        }
         MaxGagueController();
     }
     void MaxGagueController()
