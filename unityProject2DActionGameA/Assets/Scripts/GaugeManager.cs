@@ -5,14 +5,15 @@ using UnityEngine.UI;
 
 public class GaugeManager : MonoBehaviour //HPやSAPゲージなどを統括するスクリプト
 {
-    [SerializeField, Tooltip("HPの上限")] int m_maxHP = 20;
-    [SerializeField, Tooltip("オブジェクトのHP")] int m_HP = 20;
+    [SerializeField, Tooltip("オブジェクトのHPの上限")] int m_maxHP = 20;
+    [SerializeField, Tooltip("オブジェクトの現在のHP")] protected int m_HP = 20;
     [SerializeField, Tooltip("HPゲージのslider")] Slider m_HPGague;
     [SerializeField, Tooltip("SAPゲージのslider")] Slider m_SAPGague;
     [SerializeField] float m_rigitDefensePercentage = 0.8f;
     [SerializeField] float m_fireDifansePercentage = 0.8f;
     [SerializeField] float m_elekeDifansePercentage = 0.8f;
     [SerializeField] float m_frozenDifansePercentage = 0.8f;
+    [SerializeField, Tooltip("プレイヤーのダメージサウンド")] AudioClip m_damageSound;
     [Tooltip("オブジェクトの必殺技ゲージ")] int m_SAP = 0;
     [Tooltip("必殺技ゲージの上限")] int m_maxSAP = 20;
     [Tooltip("オブジェクトの生死判定")] protected bool m_living = false;
