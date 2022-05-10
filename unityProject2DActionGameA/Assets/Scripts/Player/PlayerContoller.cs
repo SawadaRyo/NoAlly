@@ -6,10 +6,10 @@ using UnityEngine;
 public class PlayerContoller : MonoBehaviour
 {
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
-    [SerializeField, Tooltip("ダッシュの倍率")] float m_dashPowor = 10f;
+    [SerializeField, Tooltip("ダッシュの倍率")] float m_dashSpeed = 10f;
     //[SerializeField, Tooltip("空中での移動速度")] float m_grindFroth = 5f;
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
-    [SerializeField, Tooltip("接地判定のRayの射程")] float m_distance = 0.1f;
+    [SerializeField, Tooltip("接地判定のRayの射程")] float m_graundDistance = 1f;
     [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.5f;
     [SerializeField, Tooltip("SphierCastの半径")] float m_isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("壁ジャンの力")] float m_wallJumpPower = 7f;
@@ -50,13 +50,15 @@ public class PlayerContoller : MonoBehaviour
     {
         m_playerMethod += WallJumpMethod;
         m_playerMethod += MoveMethod;
+        m_playerMethod += JumpMethod;
     }
     void OnDisable()
     {
         m_playerMethod -= WallJumpMethod;
         m_playerMethod -= MoveMethod;
+        m_playerMethod -= JumpMethod;
     }
-    void FixedUpdate()
+    void Update()
     {
         if (!m_gameManager.IsGame) return;
         else
@@ -64,17 +66,13 @@ public class PlayerContoller : MonoBehaviour
             m_playerMethod();
         }
     }
-    void Update()
-    {
-        JumpMethod();
-    }
 
     //Playerの動きを処理が書かれた関数
     //----------------------------------------------
     void MoveMethod()
     {
         m_h = Input.GetAxisRaw("Horizontal");
-        m_isDash = Input.GetButtonDown("Dash");
+        m_isDash = Input.GetButton("Dash");
         var moveSpeed = 0f;
         Vector3 velocity = m_rb.velocity;
 
@@ -97,15 +95,15 @@ public class PlayerContoller : MonoBehaviour
         }
 
         //ダッシュコマンド
-        if (m_isDash && IsGrounded())
+        if (m_isDash)
         {
-            StartCoroutine("Dash");
+            if (!IsGrounded() && m_isDash) return;
+            moveSpeed = m_dashSpeed;
         }
 
         velocity.x = m_h * moveSpeed;
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, 0);
         m_Animator.SetFloat("MoveSpeed", Mathf.Abs(velocity.x));
-        m_Animator.SetBool("Dash", m_isDash);
     }
 
     void OnCollisionEnter(Collision other)
@@ -119,14 +117,13 @@ public class PlayerContoller : MonoBehaviour
     void OnCollisionExit()
     {
         transform.parent = null;
-        //this.transform.localRotation = orgLocalQuaternion;
     }
 
     bool IsGrounded()
     {
         Vector3 isGroundCenter = m_footPos.transform.position;
         Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_distance, m_groundMask);
+        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
         return hitFlg;
     }
     bool IsWalled()
@@ -143,7 +140,6 @@ public class PlayerContoller : MonoBehaviour
         //ジャンプの処理
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            //Debug.Log("a");
             m_Audio.PlayOneShot(m_jumpSound);
             m_rb.AddForce(0f, m_jump, 0f, ForceMode.Impulse);
         }
@@ -152,21 +148,23 @@ public class PlayerContoller : MonoBehaviour
     }
     void WallJumpMethod()
     {
-        m_Animator.SetBool("WallGrip",IsWalled() && m_h != 0);
+        m_Animator.SetBool("WallGrip", IsWalled() && m_h != 0);
         m_weaponChanger.EquipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
         {
-            m_rb.useGravity = true;
+            m_rb.mass = 1f;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsWalled() && m_h != 0)
         {
-            m_rb.useGravity = false;
+            //m_rb.mass = 0.5f;
             if (Input.GetButtonDown("Jump"))
             {
-                //m_Animator.SetTrigger("WallJump");
                 //StartCoroutine("WallJumpTime");
+                m_Audio.PlayOneShot(m_jumpSound);
+                Vector3 vec = transform.up + m_hitInfo.normal;
+                m_rb.AddForce(vec * m_wallJumpPower, ForceMode.Impulse);
             }
         }
         else
@@ -174,27 +172,33 @@ public class PlayerContoller : MonoBehaviour
             m_rb.useGravity = true;
             return;
         }
+        
+        //IEnumerable Dash()
+        //{
+        //    Vector3 velForward = transform.forward;
+        //    velForward.x *= m_dashPowor;
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        m_rb.velocity += new Vector3(velForward.x,0, 0);
+        //        yield return new WaitForSeconds(0.1f);
+        //    }
+        //    yield break;
+        //}
+        //AnimationEventで呼ぶ関数
+        //---------------------------------------------------------
+
     }
-    IEnumerable Dash()
-    {
-        Vector3 velForward = transform.forward;
-        velForward.x *= m_dashPowor;
-        for (int i = 0; i < 5; i++)
-        {
-            m_rb.velocity += new Vector3(velForward.x,0, 0);
-        }
-        yield break;
-    }
-    //AnimationEventで呼ぶ関数
-    //---------------------------------------------------------
     void WalljumpPower()
     {
-        m_Audio.PlayOneShot(m_jumpSound);
-        Vector3 vec = transform.up + m_hitInfo.normal;
-        m_rb.AddForce(vec * m_wallJumpPower, ForceMode.Impulse);
+        
     }
     void MoveJud()
     {
         m_ableMove = !m_ableMove;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(m_footPos.position, m_isGroundRengeRadios);
     }
 }

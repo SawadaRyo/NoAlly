@@ -5,34 +5,31 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] Image m_manuPanel = default;
+    [SerializeField] GameObject m_menuPanel = default;
     [SerializeField] Button m_fastButton = default;
-    bool m_manuSwitch = false;
+    [SerializeField] Button[] m_mainWeapon = new Button[3];
+    [SerializeField] Button[] m_subWeapon = new Button[3];
+    bool m_menuSwitch = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
 
     // Update is called once per frame
     void Update()
     {
-        
+        ManuHandler();
     }
     void ManuHandler()
     {
-        if(Input.GetButtonDown("ManuSwitch"))
+        if(Input.GetButtonDown("MenuSwitch"))
         {
             //ToDo メニューの開閉にアニメーションを加える
-            m_manuSwitch = !m_manuSwitch;
-            m_manuPanel.enabled = m_manuSwitch;
-            m_fastButton.Select();
+            m_menuSwitch = !m_menuSwitch;
+            m_menuPanel.SetActive(m_menuSwitch);
         }
 
-        if(m_manuSwitch)
-        {
-
-        }
+        //if(m_menuSwitch)
+        //{
+        //    m_fastButton.Select();
+        //}
     }
 }
