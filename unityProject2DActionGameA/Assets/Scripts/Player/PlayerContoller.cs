@@ -161,10 +161,7 @@ public class PlayerContoller : MonoBehaviour
             //m_rb.mass = 0.5f;
             if (Input.GetButtonDown("Jump"))
             {
-                //StartCoroutine("WallJumpTime");
-                m_Audio.PlayOneShot(m_jumpSound);
-                Vector3 vec = transform.up + m_hitInfo.normal;
-                m_rb.AddForce(vec * m_wallJumpPower, ForceMode.Impulse);
+                m_Animator.SetTrigger("WallJump");
             }
         }
         else
@@ -172,33 +169,18 @@ public class PlayerContoller : MonoBehaviour
             m_rb.useGravity = true;
             return;
         }
-        
-        //IEnumerable Dash()
-        //{
-        //    Vector3 velForward = transform.forward;
-        //    velForward.x *= m_dashPowor;
-        //    for (int i = 0; i < 5; i++)
-        //    {
-        //        m_rb.velocity += new Vector3(velForward.x,0, 0);
-        //        yield return new WaitForSeconds(0.1f);
-        //    }
-        //    yield break;
-        //}
-        //AnimationEvent�ŌĂԊ֐�
-        //---------------------------------------------------------
-
     }
-    void WalljumpPower()
-    {
-        
-    }
+    //AnimatorEvent�ŌĂԊ֐�
+    //----------------------------------------------
     void MoveJud()
     {
         m_ableMove = !m_ableMove;
     }
-    private void OnDrawGizmos()
+
+    void WallJump()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(m_footPos.position, m_isGroundRengeRadios);
+        m_Audio.PlayOneShot(m_jumpSound);
+        Vector3 vec = transform.up + m_hitInfo.normal;
+        m_rb.AddForce(vec * m_wallJumpPower, ForceMode.Impulse);
     }
 }

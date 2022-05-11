@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BulletContoller : WeaponAction
 {
-    [SerializeField] Transform m_mazulForward = default;
+    [SerializeField] Transform m_muzzleForward = default;
     [SerializeField] GameObject[] m_bulletPrefab = new GameObject[3];
     [SerializeField] float m_bulletSpeed = 10;
     Bullet[] m_bullet = new Bullet[3];
@@ -43,8 +43,8 @@ public class BulletContoller : WeaponAction
     }
     void BulletInsAndResat()
     {
-        var bullletObj = Instantiate(m_bulletPrefab[m_bulletType], m_mazulForward.position, Quaternion.Euler(0f,0f,90f)) as GameObject;
-        bullletObj.GetComponent<Rigidbody>().AddForce(m_mazulForward.transform.forward * m_bulletSpeed, ForceMode.Impulse);
+        var bullletObj = Instantiate(m_bulletPrefab[m_bulletType], m_muzzleForward.position, Quaternion.Euler(0f,0f,90f)) as GameObject;
+        bullletObj.GetComponent<Rigidbody>().AddForce(m_muzzleForward.transform.forward * m_bulletSpeed, ForceMode.Impulse);
         m_bulletType = 0; //ë≈ÇøèIÇÌÇ¡ÇΩå„íeÇÃprefabÇí èÌíeÇ…ñﬂÇ∑
     }
 }

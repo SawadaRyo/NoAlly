@@ -23707,13 +23707,13 @@ AnimationClip:
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
     m_StopTime: 0.7666667
-    m_OrientationOffsetY: 0
+    m_OrientationOffsetY: 180
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
     m_LoopTime: 0
     m_LoopBlend: 0
-    m_LoopBlendOrientation: 0
+    m_LoopBlendOrientation: 1
     m_LoopBlendPositionY: 0
     m_LoopBlendPositionXZ: 0
     m_KeepOriginalOrientation: 1
@@ -46492,9 +46492,9 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.46666667
-    functionName: WalljumpPower
+    functionName: WallJump
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 5859041337681985671, guid: e7ffa82f3b86c7d46b548ce2dca647c0, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
