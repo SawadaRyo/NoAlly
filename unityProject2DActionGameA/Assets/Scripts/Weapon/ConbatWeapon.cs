@@ -6,12 +6,13 @@ using System.Linq;
 public class ConbatWeapon : WeaponBase
 {
     [SerializeField] WeaponAction m_weaponChanger;
-    BoxCollider m_boxCollider;
+    Collider m_boxCollider;
 
     public override void IsStart()
     {
-        m_boxCollider = gameObject.GetComponent<BoxCollider>();
+        m_boxCollider = gameObject.GetComponent<Collider>();
     }
+    
     public override void IsUpdate()
     {
         if (m_weaponChanger.Attacked)
