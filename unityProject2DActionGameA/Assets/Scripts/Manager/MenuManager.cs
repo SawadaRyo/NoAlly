@@ -7,8 +7,6 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject m_menuPanel = default;
     [SerializeField] Button m_fastButton = default;
-    [SerializeField] Button[] m_mainWeapon = new Button[3];
-    [SerializeField] Button[] m_subWeapon = new Button[3];
     bool m_menuSwitch = false;
 
     
@@ -25,11 +23,11 @@ public class MenuManager : MonoBehaviour
             //ToDo メニューの開閉にアニメーションを加える
             m_menuSwitch = !m_menuSwitch;
             m_menuPanel.SetActive(m_menuSwitch);
+            if(m_menuSwitch)
+            {
+                m_fastButton.Select();
+            }
         }
 
-        //if(m_menuSwitch)
-        //{
-        //    m_fastButton.Select();
-        //}
     }
 }

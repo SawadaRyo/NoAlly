@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WeaponChanger : MonoBehaviour
 {
-    [SerializeField, Tooltip("•Šíprefab‚ğŠi”[‚·‚é•Ï”")] GameObject[] m_weaponPrefab = new GameObject[3];
     [SerializeField, Tooltip("ƒƒCƒ“•Ší")] GameObject m_mainWeapon = default;
     [SerializeField, Tooltip("ƒTƒu•Ší")] GameObject m_subWeapon = default;
 
