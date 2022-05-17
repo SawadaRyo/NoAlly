@@ -293,37 +293,6 @@ Transform:
   m_Father: {fileID: 6043550336031580256}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1838139665285409706
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8283962505704099837}
-  m_Layer: 7
-  m_Name: AttackRenge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8283962505704099837
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1838139665285409706}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.87, z: 0.98}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6486502470459398717}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1918077184773638634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,7 +1438,6 @@ Transform:
   - {fileID: 1609189615659612841}
   - {fileID: 5249843548606430843}
   - {fileID: 3424213974642167931}
-  - {fileID: 8283962505704099837}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 360, y: 0, z: 0}
@@ -2688,6 +2656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6534780755977835821, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
+    - {fileID: 2062872718, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
 --- !u!1 &4907760791102824178 stripped
 GameObject:

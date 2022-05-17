@@ -12,6 +12,8 @@ public class WeaponChanger : MonoBehaviour
     WeaponAction m_weaponAction = default;
 
     public GameObject EquipmentWeapon { get => m_equipmentWeapon; set => m_equipmentWeapon = value; }
+    public GameObject MainWeapon { get => m_mainWeapon; set => m_mainWeapon = value; }
+    public GameObject SubWeapon { get => m_subWeapon; set => m_subWeapon = value; }
     void Start()
     {
         m_weaponAction = GetComponent<WeaponAction>();
