@@ -48,10 +48,7 @@ public class BulletContoller : WeaponAction
     }
     void BulletInsAndResat()
     {
-        if(m_personType == PersonType.Player)
-        {
-            var bullletObj = Instantiate(m_bulletPrefab[m_bulletType], m_muzzleForward.position, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
-            m_bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
-        }
+        var bullletObj = Instantiate(m_bulletPrefab[m_bulletType], m_muzzleForward.position, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
+        m_bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
     }
 }
