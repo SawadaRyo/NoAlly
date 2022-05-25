@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerContoller : MonoBehaviour
+public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 {
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
     [SerializeField, Tooltip("プレイヤーのクライム速度")] float m_crimbSpeed = 4f;

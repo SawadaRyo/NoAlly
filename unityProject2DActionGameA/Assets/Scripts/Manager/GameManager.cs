@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonBehaviour<GameManager>
 {
     bool m_isGame = false; //ƒQ[ƒ€’†‚©‚Ç‚¤‚©”»’è‚·‚é•Ï”
 
