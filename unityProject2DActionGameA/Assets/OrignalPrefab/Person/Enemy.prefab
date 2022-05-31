@@ -888,7 +888,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2085358176561948986}
   m_Layer: 8
-  m_Name: Muzle
+  m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1821,10 +1821,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_distance: 5
+  m_bulletPrefab: {fileID: 0}
   m_playerMask:
     serializedVersion: 2
     m_Bits: 128
   m_enemyAnimator: {fileID: 2820460639442440840}
+  m_attackPos: {fileID: 2085358176561948986}
 --- !u!54 &3081815343322692167
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
- public class WeaponBase : MonoBehaviour
+public class WeaponBase : MonoBehaviour
 {
     [SerializeField] protected int m_weaponPower = 5;
     [SerializeField] protected int m_elekePower = 0;
@@ -31,14 +31,9 @@ using UnityEngine;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "TargetObject")
+        if (other.gameObject.TryGetComponent(out GaugeManager targetHp))
         {
-            var enemyHP = other.gameObject.GetComponent<GaugeManager>();
-            if (enemyHP)
-            {
-                enemyHP.DamageMethod(m_weaponPower, m_firePower, m_elekePower, m_frozenPower);
-            }
-            else return;
+            targetHp.DamageMethod(m_weaponPower, m_firePower, m_elekePower, m_frozenPower);
         }
     }
 }
