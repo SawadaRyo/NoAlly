@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 {
+    [Header("Ground")]
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
-    [SerializeField, Tooltip("プレイヤーのクライム速度")] float m_crimbSpeed = 4f;
     [SerializeField, Tooltip("ダッシュの倍率")] float m_dashSpeed = 10f;
-    //[SerializeField, Tooltip("空中での移動速度")] float m_grindFroth = 5f;
+
+    [Header("Air")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
+    [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
+
     [SerializeField, Tooltip("接地判定のRayの射程")] float m_graundDistance = 1f;
     [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.5f;
-    [SerializeField, Tooltip("SphierCastの半径")] float m_isGroundRengeRadios = 1f;
-    [SerializeField, Tooltip("壁ジャンの力")] float m_wallJumpPower = 7f;
+    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
 
     [SerializeField, Tooltip("Rayの射出点")] Transform m_footPos;
@@ -148,7 +150,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     void WallJumpMethod()
     {
-        float m_v = Input.GetAxisRaw("Vertical");
         m_Animator.SetBool("WallGrip", IsWalled() && m_h != 0);
         m_weaponChanger.EquipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
@@ -160,10 +161,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         else if (IsWalled())
         {
             m_rb.useGravity = false;
-            if (m_v != 0)
+            if (Input.GetButtonDown("Jump"))
             {
-                m_velo.y = m_v * m_crimbSpeed;
-                m_rb.velocity = new Vector3(m_velo.x, m_velo.y, 0);
+                m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
                 m_Animator.SetFloat("CrimbSpeed", m_velo.y);
             }
         }
@@ -183,6 +183,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         m_Audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
-        m_rb.AddForce(vec * m_wallJumpPower, ForceMode.Impulse);
+        m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
     }
 }

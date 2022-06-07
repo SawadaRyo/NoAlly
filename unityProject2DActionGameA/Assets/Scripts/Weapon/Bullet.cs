@@ -5,8 +5,6 @@ using UnityEngine;
 public class Bullet : WeaponBase
 {
     float m_time = 0f;
-    Transform m_muzzleForward = default;
-    Rigidbody m_rb = default;
 
     
     void Update()
