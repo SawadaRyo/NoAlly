@@ -12,23 +12,14 @@ public class WeaponBase : MonoBehaviour
     [SerializeField] protected LayerMask enemyLayer = ~0;
     public int WeaponPower { get => m_weaponPower; set => m_weaponPower = value; }
 
-    public virtual void IsStart()
+    public virtual void Start()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
-    public virtual void IsUpdate()
+    public virtual void Update()
     {
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
-    void Start()
-    {
-        IsStart();
-    }
-    void Update()
-    {
-        IsUpdate();
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out GaugeManager targetHp))

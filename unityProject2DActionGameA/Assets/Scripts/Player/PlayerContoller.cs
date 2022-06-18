@@ -1,4 +1,4 @@
-using System; 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,38 +9,42 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
     [SerializeField, Tooltip("ダッシュの倍率")] float m_dashSpeed = 10f;
 
-    [Header("Air")]
+    [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
-    [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
-
     [SerializeField, Tooltip("接地判定のRayの射程")] float m_graundDistance = 1f;
-    [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.5f;
-    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
-    [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
-
     [SerializeField, Tooltip("Rayの射出点")] Transform m_footPos;
     [SerializeField, Tooltip("接地判定のLayerMask")] LayerMask m_groundMask = ~0;
-    [SerializeField, Tooltip("壁の接触判定")] LayerMask m_wallMask = ~0;
 
-    [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_Animator;
     [SerializeField, Tooltip("GamManagerを格納する変数")] GameManager m_gameManager;
     [SerializeField, Tooltip("WeaponChangerを格納する変数")] WeaponChanger m_weaponChanger;
 
-    
-    //[Tooltip("移動力指定")] float moveSpeed = 0f;
+    [Header("WallJump")]
+    [SerializeField, Tooltip("壁の接触判定")] LayerMask m_wallMask = ~0;
+    [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
+    [SerializeField, Tooltip("壁をずり落ちる速度")] float m_wallSlideSpeed = 0.4f;
+    [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.5f;
+    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
+    [Tooltip("壁のずり落ち判定")] bool m_slideWall = false;
+
+    [Header("Animation")]
+    [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_Animator;
+
+    [Header("Audio")]
+    [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
+    [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
+
     [Tooltip("Playerの振り向き速度")] float m_turnSpeed = 25f;
     [Tooltip("横移動のベクトル")] float m_h;
     [Tooltip("スライディングの判定")] bool m_isDash = false;
     [Tooltip("")] bool m_ableMove = true;
-    [Tooltip("Rigidbodyコンポーネントの取得")]Rigidbody m_rb;
+    [Tooltip("Rigidbodyコンポーネントの取得")] Rigidbody m_rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
-    [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
     //[Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     delegate void PlayerMethod();
     PlayerMethod m_playerMethod = default;
-    
+
 
     void Start()
     {
@@ -70,7 +74,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_playerMethod();
         }
     }
-
     //Playerの動きを処理が書かれた関数
     //----------------------------------------------
     void MoveMethod()
@@ -93,7 +96,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
         //プレイヤーの移動
         if (m_h != 0 && m_ableMove)
-        { 
+        {
             moveSpeed = m_speed;
             //ダッシュコマンド
             if (m_isDash)
@@ -107,20 +110,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_rb.velocity = new Vector3(m_velo.x, m_rb.velocity.y, 0);
         m_Animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
     }
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
-        {
-            transform.parent = other.gameObject.transform;
-        }
-    }
-
-    void OnCollisionExit()
-    {
-        transform.parent = null;
-    }
-
     bool IsGrounded()
     {
         Vector3 isGroundCenter = m_footPos.transform.position;
@@ -146,7 +135,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_rb.AddForce(0f, m_jump, 0f, ForceMode.Impulse);
         }
         m_Animator.SetBool("Jump", !IsGrounded());
-        
+
     }
     void WallJumpMethod()
     {
@@ -154,13 +143,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_weaponChanger.EquipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
         {
-            m_rb.useGravity = true;
+            m_slideWall = false;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsWalled())
         {
-            m_rb.useGravity = false;
+            m_slideWall = true;
             if (Input.GetButtonDown("Jump"))
             {
                 m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
@@ -169,7 +158,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         }
         else
         {
-            m_rb.useGravity = true;
+            m_slideWall = false;
+        }
+
+
+    if(m_slideWall)
+        {
+            m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, m_wallSlideSpeed, float.MaxValue));
         }
     }
     //AnimatorEventで呼ぶ関数
@@ -178,11 +173,21 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         m_ableMove = !m_ableMove;
     }
-
     void WallJump()
     {
         m_Audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
         m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
+    }
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
+        {
+            transform.parent = other.gameObject.transform;
+        }
+    }
+    void OnCollisionExit()
+    {
+        transform.parent = null;
     }
 }

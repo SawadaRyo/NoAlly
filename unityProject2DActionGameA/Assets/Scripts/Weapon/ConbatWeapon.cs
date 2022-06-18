@@ -8,12 +8,12 @@ public class ConbatWeapon : WeaponBase
     [SerializeField] WeaponAction m_weaponChanger;
     Collider m_boxCollider;
 
-    public override void IsStart()
+    public override void Start()
     {
         m_boxCollider = gameObject.GetComponent<Collider>();
     }
     
-    public override void IsUpdate()
+    public override void Update()
     {
         if (m_weaponChanger.Attacked)
         {
