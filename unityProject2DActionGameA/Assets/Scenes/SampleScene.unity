@@ -967,7 +967,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20682
+  m_Name: pb_Mesh25608
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1351,7 +1351,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 0.6460019, y: 1}
+    m_SensorSize: {x: 1.7759999, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1838,7 +1838,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8be9a208995bf488a448f7d3260303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_manuPanel: {fileID: 0}
+  m_menuPanels:
+  - {fileID: 0}
+  - {fileID: 0}
+  m_GaugeUI:
+  - {fileID: 0}
+  - {fileID: 0}
   m_fastButton: {fileID: 0}
 --- !u!1001 &1607377900
 PrefabInstance:
@@ -3192,6 +3197,10 @@ PrefabInstance:
     - target: {fileID: 3081815343322692167, guid: 65185797253b9f84a95d0707f2d1e722, type: 3}
       propertyPath: m_Constraints
       value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081815343322692167, guid: 65185797253b9f84a95d0707f2d1e722, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7285692716738608816, guid: 65185797253b9f84a95d0707f2d1e722, type: 3}
       propertyPath: m_Constraints

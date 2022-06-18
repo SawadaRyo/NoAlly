@@ -5,9 +5,7 @@ using UnityEngine;
 public class Bullet : WeaponBase
 {
     float m_time = 0f;
-
-    
-    void Update()
+    public override void Update()
     {
         m_time += Time.deltaTime;
         if(m_time > 5f)

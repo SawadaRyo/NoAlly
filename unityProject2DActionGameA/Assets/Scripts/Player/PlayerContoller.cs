@@ -8,6 +8,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Header("Ground")]
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
     [SerializeField, Tooltip("ダッシュの倍率")] float m_dashSpeed = 10f;
+    [Tooltip("Playerの振り向き速度")] float m_turnSpeed = 25f;
+    [Tooltip("横移動のベクトル")] float m_h;
+    [Tooltip("スライディングの判定")] bool m_isDash = false;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
@@ -33,13 +36,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
     [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
 
-    [Tooltip("Playerの振り向き速度")] float m_turnSpeed = 25f;
-    [Tooltip("横移動のベクトル")] float m_h;
-    [Tooltip("スライディングの判定")] bool m_isDash = false;
     [Tooltip("")] bool m_ableMove = true;
     [Tooltip("Rigidbodyコンポーネントの取得")] Rigidbody m_rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
-    //[Tooltip("Playerの向いている方向")] Quaternion orgLocalQuaternion;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     delegate void PlayerMethod();
@@ -110,22 +109,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_rb.velocity = new Vector3(m_velo.x, m_rb.velocity.y, 0);
         m_Animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
     }
-    bool IsGrounded()
-    {
-        Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
-        return hitFlg;
-    }
-    bool IsWalled()
-    {
-        Vector3 isWallCenter = m_footPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
-        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        return hitFlg;
-    }
     void JumpMethod()
     {
         //ジャンプの処理
@@ -166,6 +149,24 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         {
             m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, m_wallSlideSpeed, float.MaxValue));
         }
+    }
+    //判定処理
+    //----------------------------------------------
+    bool IsGrounded()
+    {
+        Vector3 isGroundCenter = m_footPos.transform.position;
+        Ray ray = new Ray(isGroundCenter, Vector3.down);
+        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
+        return hitFlg;
+    }
+    bool IsWalled()
+    {
+        Vector3 isWallCenter = m_footPos.transform.position;
+        Ray rayRight = new Ray(isWallCenter, Vector3.right);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
+                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+        return hitFlg;
     }
     //AnimatorEventで呼ぶ関数
     //----------------------------------------------
