@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GaugeManager : MonoBehaviour //敵やプレイヤーの体力を管理するスクリプト
 {

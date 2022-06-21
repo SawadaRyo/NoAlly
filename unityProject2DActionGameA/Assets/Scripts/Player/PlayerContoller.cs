@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerContoller : SingletonBehaviour<PlayerContoller>
@@ -145,7 +142,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         }
 
 
-    if(m_slideWall)
+        if (m_slideWall)
         {
             m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, m_wallSlideSpeed, float.MaxValue));
         }
