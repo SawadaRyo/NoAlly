@@ -3,18 +3,18 @@ using UnityEngine.UI;
 
 public class PlayerHP : MonoBehaviour
 {
-    [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")] int m_maxSAP = 20;
-    [SerializeField, Tooltip("オブジェクトのHPの上限")] int m_maxHP = 20;
-    [SerializeField, Tooltip("物理防御力")] float m_rigitDefensePercentage = 0.8f;
-    [SerializeField, Tooltip("炎防御力")] float m_fireDifansePercentage = 0.8f;
-    [SerializeField, Tooltip("電気防御力")] float m_elekeDifansePercentage = 0.8f;
-    [SerializeField, Tooltip("氷結防御力")] float m_frozenDifansePercentage = 0.8f;
+    [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")] float m_maxSAP = 20;
+    [SerializeField, Tooltip("オブジェクトのHPの上限")] float m_maxHP = 20;
     [SerializeField, Tooltip("HPゲージのslider")] Slider m_HPGague = default;
     [SerializeField, Tooltip("SAPゲージのslider")] Slider m_SAPGague = default;
     [SerializeField, Tooltip("プレイヤーのダメージサウンド")] AudioClip m_damageSound;
 
-    [Tooltip("オブジェクトの現在の必殺技ゲージ")] int m_sap = 0;
-    [Tooltip("オブジェクトの現在のHP")] int m_hp;
+    [Tooltip("物理防御力")] float m_rigitDefensePercentage = 0f;
+    [Tooltip("炎防御力")] float m_fireDifansePercentage = 0f;
+    [Tooltip("電気防御力")] float m_elekeDifansePercentage = 0f;
+    [Tooltip("氷結防御力")] float m_frozenDifansePercentage = 0f;
+    [Tooltip("オブジェクトの現在の必殺技ゲージ")] float m_sap = 0f;
+    [Tooltip("オブジェクトの現在のHP")] float m_hp = 0f;
     [Tooltip("オブジェクトの生死判定")] bool m_living = true;
     [Tooltip("Animatorの格納変数")] Animator m_animator;
 
@@ -38,8 +38,7 @@ public class PlayerHP : MonoBehaviour
     {
         if (m_living)
         {
-            m_HPGague.value = m_hp;
-            MaxGagueController();
+            return;
         }
         else
         {
@@ -64,27 +63,25 @@ public class PlayerHP : MonoBehaviour
         else return;
     }
 
-    void MaxGagueController()
+    
+    public void HPPuls(int hpPuls)
     {
+        m_hp += hpPuls;
         if (m_hp > m_maxHP)
         {
             m_hp -= (m_hp - m_maxHP);
         }
-
-        if (m_sap > m_maxSAP)
-        {
-            m_sap -= (m_sap - m_maxSAP);
-        }
-    }
-    public void HPPuls(int hpPuls)
-    {
-        m_hp += hpPuls;
+        m_HPGague.value = m_hp/m_maxHP;
     }
     public void SAPPuls(int sapPuls)
     {
         m_sap += sapPuls;
-        m_SAPGague.value = m_sap;
+        if (m_sap > m_maxSAP)
+        {
+            m_sap -= (m_sap - m_maxSAP);
+        }
+        m_SAPGague.value = m_sap/m_maxSAP;
     }
 
-    public int SAP { get => m_sap; set => m_sap = value; }
+    public float SAP { get => m_sap; set => m_sap = value; }
 }

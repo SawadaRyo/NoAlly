@@ -221,15 +221,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81dcefb2884ad644c860636b3a09435e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_maxSAP: 20
   m_maxHP: 20
-  m_rigitDefensePercentage: 0.8
-  m_fireDifansePercentage: 0.8
-  m_elekeDifansePercentage: 0.8
-  m_frozenDifansePercentage: 0.8
-  m_damageSound: {fileID: 0}
-  m_animator: {fileID: 0}
   m_HPGague: {fileID: 0}
   m_SAPGague: {fileID: 0}
+  m_damageSound: {fileID: 0}
 --- !u!1 &1642621315180359488
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3424213974642167931}
   m_Layer: 7
-  m_Name: Muzul
+  m_Name: Muzzul
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1414,7 +1410,6 @@ GameObject:
   - component: {fileID: 3336403794512273230}
   - component: {fileID: 5289776905065084665}
   - component: {fileID: 4200727533426496697}
-  - component: {fileID: 4906259125646066205}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1474,24 +1469,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_speed: 5
-  m_crimbSpeed: 4
   m_dashSpeed: 10
   m_jump: 7
   m_graundDistance: 1
-  m_walldistance: 0.5
-  m_isGroundRengeRadios: 1
-  m_wallJumpPower: 10
-  m_jumpSound: {fileID: 0}
   m_footPos: {fileID: 1313930391956556090}
   m_groundMask:
     serializedVersion: 2
     m_Bits: 8
+  m_gameManager: {fileID: 0}
+  m_weaponChanger: {fileID: 4200727533426496697}
   m_wallMask:
     serializedVersion: 2
     m_Bits: 64
+  m_wallJump: 7
+  m_wallSlideSpeed: 0.4
+  m_walldistance: 0.5
+  m_isGroundRengeRadios: 1
   m_Animator: {fileID: 929011965019340871}
-  m_gameManager: {fileID: 0}
-  m_weaponChanger: {fileID: 4200727533426496697}
+  m_jumpSound: {fileID: 0}
 --- !u!136 &5294745906104342022
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1537,12 +1532,13 @@ MonoBehaviour:
   m_chrageAttackCounter: 1800
   m_weaponChanger: {fileID: 4200727533426496697}
   m_animator: {fileID: 929011965019340871}
-  m_muzzleForward: {fileID: 0}
+  m_bulletSpeed: 10
+  m_muzzleForward: {fileID: 3424213974642167931}
   m_bulletPrefab:
   - {fileID: 8475604947313964177, guid: 30b508e3d6cfa8e42bc54bfb5891eaf5, type: 3}
   - {fileID: 8475604947313964177, guid: 87b87b81531a9fd40aa945f0f29a2ed7, type: 3}
   - {fileID: 8475604947313964177, guid: 4413819ffe4c9224c83eddf98145e5d6, type: 3}
-  m_bulletSpeed: 10
+  m_personType: 0
 --- !u!114 &4200727533426496697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1557,27 +1553,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_mainWeapon: {fileID: 748107444520056556}
   m_subWeapon: {fileID: 4907760791102824178}
---- !u!114 &4906259125646066205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5859041337681985671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81dcefb2884ad644c860636b3a09435e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_maxHP: 20
-  m_rigitDefensePercentage: 0.8
-  m_fireDifansePercentage: 0.8
-  m_elekeDifansePercentage: 0.8
-  m_frozenDifansePercentage: 0.8
-  m_damageSound: {fileID: 0}
-  m_animator: {fileID: 0}
-  m_HPGague: {fileID: 0}
-  m_SAPGague: {fileID: 0}
 --- !u!1 &5947872199233545180
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,7 +2081,7 @@ GameObject:
   m_Layer: 7
   m_Name: FollowTarget
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2648,7 +2623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8745504583168015379, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8969147199027675956, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
       propertyPath: m_Mesh
@@ -2681,7 +2656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1021122236882404, guid: 4d6864fd8b0a6c745b07a5eb332892b2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4398898608242442, guid: 4d6864fd8b0a6c745b07a5eb332892b2, type: 3}
       propertyPath: m_RootOrder
