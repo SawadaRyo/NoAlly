@@ -26,20 +26,20 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 
     private void Awake()
     {
-        CheckIns();
+        //CheckIns();
     }
-    bool CheckIns()
-    {
-        if (m_instance == null)
-        {
-            m_instance = this as T;
-            return true;
-        }
-        else if (m_instance == this)
-        {
-            return true;
-        }
-        Destroy(this);
-        return false;
-    }
+    //bool CheckIns()
+    //{
+    //    if (m_instance == null)
+    //    {
+    //        m_instance = this as T;
+    //        return true;
+    //    }
+    //    else if (m_instance == this)
+    //    {
+    //        return true;
+    //    }
+    //    Destroy(this);
+    //    return false;
+    //}
 }

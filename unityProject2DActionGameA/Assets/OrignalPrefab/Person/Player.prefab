@@ -1452,7 +1452,10 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:LeftHand'\n\tTransform 'mixamorig:LeftHand'\n\tFrom
+    animation clip 'Slash Advance Air'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
@@ -1485,7 +1488,7 @@ MonoBehaviour:
   m_wallSlideSpeed: 0.4
   m_walldistance: 0.5
   m_isGroundRengeRadios: 1
-  m_Animator: {fileID: 929011965019340871}
+  m_animator: {fileID: 0}
   m_jumpSound: {fileID: 0}
 --- !u!136 &5294745906104342022
 CapsuleCollider:
@@ -2623,7 +2626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8745504583168015379, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8969147199027675956, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
       propertyPath: m_Mesh
@@ -2718,6 +2721,10 @@ PrefabInstance:
       propertyPath: m_playerContoller
       value: 
       objectReference: {fileID: 1609236156441954690}
+    - target: {fileID: 7790828739022402294, guid: 4d6864fd8b0a6c745b07a5eb332892b2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d6864fd8b0a6c745b07a5eb332892b2, type: 3}
 --- !u!4 &5874512639589264573 stripped

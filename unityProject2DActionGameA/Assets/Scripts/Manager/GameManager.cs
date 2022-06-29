@@ -2,6 +2,8 @@
 //1:IsGameの判定
 //2:プレイヤー及び敵キャラクターの管理
 //3:カメラの資格ないのみにオブジェクト生成
+//4:シーン遷移
+//5:マネージャー管理
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

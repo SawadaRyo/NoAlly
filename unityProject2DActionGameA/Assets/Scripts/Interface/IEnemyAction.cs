@@ -5,5 +5,7 @@ using UnityEngine;
 public interface IEnemyAction 
 {
     Transform AttackPos { get; }
-    void EnemyAttack();
+    public void EnemyAttack();
+    public void Create();
+    public void Death();
 }

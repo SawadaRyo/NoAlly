@@ -16,7 +16,7 @@ public class EnemyBullet : WeaponBase
         //m_muzzleForward = GameObject.FindGameObjectWithTag("EnemyMuzzle").transform;
         m_muzzleForward.position = transform.position;
     }
-    void Update()
+    public override void Update()
     {
         m_time += Time.deltaTime;
         m_rb.velocity = m_muzzleForward.transform.forward * m_bulletSpeed;

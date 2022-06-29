@@ -5,24 +5,10 @@ using System.Linq;
 
 public class ConbatWeapon : WeaponBase
 {
-    [SerializeField] WeaponAction m_weaponChanger;
     Collider m_boxCollider;
 
     public override void Start()
     {
         m_boxCollider = gameObject.GetComponent<Collider>();
     }
-    
-    public override void Update()
-    {
-        if (m_weaponChanger.Attacked)
-        {
-            m_boxCollider.enabled = true;
-        }
-        else
-        {
-            m_boxCollider.enabled = false; 
-        }
-    }
-    
 }

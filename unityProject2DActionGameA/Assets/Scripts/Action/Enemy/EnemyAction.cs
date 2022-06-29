@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAction : MonoBehaviour,IEnemyAction
+public class EnemyAction : MonoBehaviour, IEnemyAction
 {
-    [SerializeField] float m_distance = 3f;
     [SerializeField] GameObject m_bulletPrefab;
-    [SerializeField] LayerMask m_playerMask = ~0;
     [SerializeField] Animator m_enemyAnimator;
     [SerializeField] Transform m_attackPos;
-    RaycastHit hit;
     bool m_sightIn = false;
+    float m_interval = 2f;
 
     public Transform AttackPos => m_attackPos;
- 
-    void Start()
-    {
-        hit = new RaycastHit();
-    }
+
+
     void Update()
     {
         m_enemyAnimator.SetBool("Aiming", m_sightIn);
@@ -45,11 +40,22 @@ public class EnemyAction : MonoBehaviour,IEnemyAction
     }
     IEnumerator RapidFire()
     {
+        var wait = new WaitForSeconds(m_interval);
         while (m_sightIn)
         {
             m_enemyAnimator.SetTrigger("Fire");
-            yield return new WaitForSeconds(2f);
+            yield return wait;
         }
-        if (!m_sightIn) yield break;
+    }
+
+    //ê∂ê¨Ç∆îjâÛéûÇÃèàóù
+    public void Create()
+    {
+
+    }
+
+    public void Death()
+    {
+        throw new System.NotImplementedException();
     }
 }

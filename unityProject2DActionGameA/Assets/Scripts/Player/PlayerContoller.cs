@@ -27,13 +27,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("壁のずり落ち判定")] bool m_slideWall = false;
 
     [Header("Animation")]
-    [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_Animator;
+    [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_animator;
 
     [Header("Audio")]
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
-    [Tooltip("オーディオを取得する為の変数")] AudioSource m_Audio;
+    [Tooltip("オーディオを取得する為の変数")] AudioSource m_audio;
 
-    [Tooltip("")] bool m_ableMove = true;
+    [Tooltip("移動可能か判定する変数")] bool m_ableMove = true;
     [Tooltip("Rigidbodyコンポーネントの取得")] Rigidbody m_rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
     RaycastHit m_hitInfo;
@@ -46,7 +46,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         //orgLocalQuaternion = this.transform.localRotation;
         m_rb = GetComponent<Rigidbody>();
-        m_Audio = gameObject.AddComponent<AudioSource>();
+        m_audio = gameObject.AddComponent<AudioSource>();
         m_velo = m_rb.velocity;
 
     }
@@ -64,14 +64,16 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     void Update()
     {
-        if (!m_gameManager.IsGame) return;
+        if (!m_gameManager.IsGame)
+        {
+            return;
+        }
         else
         {
             m_playerMethod();
         }
     }
-    //Playerの動きを処理が書かれた関数
-    //----------------------------------------------
+    //Playerの動きを処理が書かれた関数----------------------------------------------//
     void MoveMethod()
     {
         m_h = Input.GetAxisRaw("Horizontal");
@@ -104,22 +106,38 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
         m_velo.x = m_h * moveSpeed;
         m_rb.velocity = new Vector3(m_velo.x, m_rb.velocity.y, 0);
-        m_Animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
+        m_animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
+    }
+    bool IsGrounded()
+    {
+        Vector3 isGroundCenter = m_footPos.transform.position;
+        Ray ray = new Ray(isGroundCenter, Vector3.down);
+        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
+        return hitFlg;
     }
     void JumpMethod()
     {
         //ジャンプの処理
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            m_Audio.PlayOneShot(m_jumpSound);
+            m_audio.PlayOneShot(m_jumpSound);
             m_rb.AddForce(0f, m_jump, 0f, ForceMode.Impulse);
         }
-        m_Animator.SetBool("Jump", !IsGrounded());
+        m_animator.SetBool("Jump", !IsGrounded());
 
+    }
+    bool IsWalled()
+    {
+        Vector3 isWallCenter = m_footPos.transform.position;
+        Ray rayRight = new Ray(isWallCenter, Vector3.right);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
+                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+        return hitFlg;
     }
     void WallJumpMethod()
     {
-        m_Animator.SetBool("WallGrip", IsWalled() && m_h != 0);
+        m_animator.SetBool("WallGrip", IsWalled());
         m_weaponChanger.EquipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
         {
@@ -132,8 +150,8 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_slideWall = true;
             if (Input.GetButtonDown("Jump"))
             {
+                
                 m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
-                m_Animator.SetFloat("CrimbSpeed", m_velo.y);
             }
         }
         else
@@ -144,36 +162,17 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
         if (m_slideWall)
         {
-            m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, m_wallSlideSpeed, float.MaxValue));
+            m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -m_wallSlideSpeed, float.MaxValue));
         }
     }
-    //判定処理
-    //----------------------------------------------
-    bool IsGrounded()
-    {
-        Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
-        return hitFlg;
-    }
-    bool IsWalled()
-    {
-        Vector3 isWallCenter = m_footPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
-        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        return hitFlg;
-    }
-    //AnimatorEventで呼ぶ関数
-    //----------------------------------------------
+    //AnimatorEventで呼ぶ関数----------------------------------------------//
     void MoveJud()
     {
         m_ableMove = !m_ableMove;
     }
     void WallJump()
     {
-        m_Audio.PlayOneShot(m_jumpSound);
+        m_audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
         m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
     }
@@ -187,5 +186,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     void OnCollisionExit()
     {
         transform.parent = null;
+    }
+    private void OnDrawGizmos()
+    {
+        
     }
 }
