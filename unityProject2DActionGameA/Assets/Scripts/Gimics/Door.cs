@@ -16,11 +16,7 @@ public class Door : MonoBehaviour
         m_animator = GetComponent<Animator>();
         m_doorLight = transform.GetChild(0).GetComponent<Renderer>().materials[1];
         m_remainLock = m_locks.Length;
-        if(m_remainLock == 0)
-        {
-            m_unLock = true;
-            m_doorLight.SetColor("Emission", Color.green);
-        }
+        UnLock();
     }
 
     void OnTriggerEnter(Collider other)
@@ -47,7 +43,11 @@ public class Door : MonoBehaviour
 
     public void UnLock()
     {
-        m_remainLock--;
+        if(m_remainLock > 0)
+        {
+            m_remainLock--;
+        }
+
         if(m_remainLock == 0)
         {
             m_unLock = true;

@@ -12,22 +12,22 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
     [SerializeField, Tooltip("接地判定のRayの射程")] float m_graundDistance = 1f;
-    [SerializeField, Tooltip("Rayの射出点")] Transform m_footPos;
+    [SerializeField, Tooltip("接地判定のRayの射出点")] Transform m_footPos;
+    [SerializeField, Tooltip("接地判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("接地判定のLayerMask")] LayerMask m_groundMask = ~0;
-
-    [SerializeField, Tooltip("GamManagerを格納する変数")] GameManager m_gameManager;
     [SerializeField, Tooltip("WeaponChangerを格納する変数")] WeaponChanger m_weaponChanger;
 
     [Header("WallJump")]
-    [SerializeField, Tooltip("壁の接触判定")] LayerMask m_wallMask = ~0;
     [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
     [SerializeField, Tooltip("壁をずり落ちる速度")] float m_wallSlideSpeed = 0.4f;
-    [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.5f;
-    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
+    [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.1f;
+    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isWallRengeRadios = 0.5f;
+    [SerializeField, Tooltip("壁の接触判定")] LayerMask m_wallMask = ~0;
+    [SerializeField, Tooltip("接地判定のRayの射出点")] Transform m_gripPos;
     [Tooltip("壁のずり落ち判定")] bool m_slideWall = false;
 
     [Header("Animation")]
-    [SerializeField, Tooltip("アニメーションを取得する為の変数")] Animator m_animator;
+    [Tooltip("アニメーションを取得する為の変数")] Animator m_animator;
 
     [Header("Audio")]
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
@@ -38,9 +38,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
     RaycastHit m_hitInfo;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-    delegate void PlayerMethod();
-    PlayerMethod m_playerMethod = default;
-
+    delegate void WeaponAttacks();
 
     void Start()
     {
@@ -48,31 +46,19 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_rb = GetComponent<Rigidbody>();
         m_audio = gameObject.AddComponent<AudioSource>();
         m_velo = m_rb.velocity;
-
+        m_animator = GetComponent<Animator>();
     }
-    void OnEnable()
-    {
-        m_playerMethod += WallJumpMethod;
-        m_playerMethod += MoveMethod;
-        m_playerMethod += JumpMethod;
-    }
-    void OnDisable()
-    {
-        m_playerMethod -= WallJumpMethod;
-        m_playerMethod -= MoveMethod;
-        m_playerMethod -= JumpMethod;
-    }
+    
     void Update()
     {
-        if (!m_gameManager.IsGame)
+        if (GameManager.Instance.IsGame)
         {
-            return;
-        }
-        else
-        {
-            m_playerMethod();
+            MoveMethod();
+            JumpMethod(); 
+            WallJumpMethod();
         }
     }
+    
     //Playerの動きを処理が書かれた関数----------------------------------------------//
     void MoveMethod()
     {
@@ -128,11 +114,15 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     bool IsWalled()
     {
-        Vector3 isWallCenter = m_footPos.transform.position;
+        if (IsGrounded()) return false;
+
+        Vector3 isWallCenter = m_gripPos.transform.position;
         Ray rayRight = new Ray(isWallCenter, Vector3.right);
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
         bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
                    || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+        //bool hitFlg = Physics.SphereCast(rayRight, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask) ||
+        //              Physics.SphereCast(rayLeft, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask);
         return hitFlg;
     }
     void WallJumpMethod()
@@ -150,7 +140,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_slideWall = true;
             if (Input.GetButtonDown("Jump"))
             {
-                
                 m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
             }
         }

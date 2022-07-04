@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
 {
+    [SerializeField] GameObject m_objectPrefab;
     [SerializeField] protected int m_weaponPower = 5;
     [SerializeField] protected int m_elekePower = 0;
     [SerializeField] protected int m_firePower = 0;
