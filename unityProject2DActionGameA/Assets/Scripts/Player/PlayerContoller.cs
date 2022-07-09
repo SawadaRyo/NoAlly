@@ -15,7 +15,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [SerializeField, Tooltip("接地判定のRayの射出点")] Transform m_footPos;
     [SerializeField, Tooltip("接地判定のSphierCastの半径")] float m_isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("接地判定のLayerMask")] LayerMask m_groundMask = ~0;
-    [SerializeField, Tooltip("WeaponChangerを格納する変数")] WeaponChanger m_weaponChanger;
 
     [Header("WallJump")]
     [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
@@ -48,17 +47,17 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_velo = m_rb.velocity;
         m_animator = GetComponent<Animator>();
     }
-    
+
     void Update()
     {
         if (GameManager.Instance.IsGame)
         {
             MoveMethod();
-            JumpMethod(); 
+            JumpMethod();
             WallJumpMethod();
         }
     }
-    
+
     //Playerの動きを処理が書かれた関数----------------------------------------------//
     void MoveMethod()
     {
@@ -81,12 +80,14 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         //プレイヤーの移動
         if (m_h != 0 && m_ableMove)
         {
-            moveSpeed = m_speed;
             //ダッシュコマンド
             if (m_isDash)
             {
-                if (!IsGrounded() && m_isDash) return;
                 moveSpeed = m_dashSpeed;
+            }
+            else
+            {
+                moveSpeed = m_speed;
             }
         }
 
@@ -123,12 +124,25 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                    || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
         //bool hitFlg = Physics.SphereCast(rayRight, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask) ||
         //              Physics.SphereCast(rayLeft, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask);
+        
         return hitFlg;
+    }
+    bool IsOtherWalled()
+    {
+        if (IsGrounded()) return false;
+
+        Vector3 isWallCenter = m_gripPos.transform.position;
+        Ray rayRight = new Ray(isWallCenter, Vector3.right);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+        bool otherWall = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
+                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+        
+        return otherWall;
     }
     void WallJumpMethod()
     {
         m_animator.SetBool("WallGrip", IsWalled());
-        m_weaponChanger.EquipmentWeapon.SetActive(!IsWalled());
+        WeaponChanger.Instance.EquipmentWeapon.SetActive(!IsWalled());
         if (IsGrounded())
         {
             m_slideWall = false;
@@ -178,6 +192,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     private void OnDrawGizmos()
     {
-        
+
     }
 }

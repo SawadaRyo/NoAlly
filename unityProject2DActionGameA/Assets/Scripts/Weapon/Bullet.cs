@@ -21,7 +21,7 @@ public class Bullet : WeaponBase
             var damage = other.gameObject.GetComponent<GaugeManager>();
             if(damage != null)
             {
-                damage.DamageMethod(m_weaponPower, m_firePower, m_elekePower, m_frozenPower);
+                damage.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);
             }
         }
         Destroy(this.gameObject);

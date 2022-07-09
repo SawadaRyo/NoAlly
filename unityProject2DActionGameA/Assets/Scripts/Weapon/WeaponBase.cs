@@ -5,17 +5,20 @@ using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
 {
-    [SerializeField] GameObject m_objectPrefab;
-    [SerializeField] protected int m_weaponPower = 5;
+    [SerializeField] protected int m_rigitPower = 5;
     [SerializeField] protected int m_elekePower = 0;
     [SerializeField] protected int m_firePower = 0;
     [SerializeField] protected int m_frozenPower = 0;
     [SerializeField] protected LayerMask enemyLayer = ~0;
-    public int WeaponPower { get => m_weaponPower; set => m_weaponPower = value; }
+    Renderer m_weaponRenderer;
+
+    public int WeaponPower { get => m_rigitPower; set => m_rigitPower = value; }
+    public Renderer WeaponRenderer { get => m_weaponRenderer; set => m_weaponRenderer = value; }
 
     public virtual void Start()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
+        m_weaponRenderer = GetComponent<Renderer>();
     }
     public virtual void Update()
     {
@@ -25,7 +28,7 @@ public class WeaponBase : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out GaugeManager targetHp))
         {
-            targetHp.DamageMethod(m_weaponPower, m_firePower, m_elekePower, m_frozenPower);
+            targetHp.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);
         }
     }
 }

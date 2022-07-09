@@ -29,7 +29,7 @@ public class EnemyBullet : WeaponBase
     {
         if (other.gameObject.TryGetComponent(out PlayerHP player))
         {
-            player.DamageMethod(m_weaponPower, m_firePower, m_elekePower, m_frozenPower);
+            player.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);
             Destroy(gameObject);
         }
     }
