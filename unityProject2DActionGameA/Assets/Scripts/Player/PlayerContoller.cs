@@ -9,6 +9,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("プレイヤーの振り向き速度")] float m_turnSpeed = 25f;
     [Tooltip("横移動のベクトル")] float m_h;
     [Tooltip("スライディングの判定")] bool m_isDash = false;
+    [Tooltip("")] GameObject m_otherCollider;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
@@ -126,9 +127,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
         bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
                    || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        //bool hitFlg = Physics.SphereCast(rayRight, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask) ||
-        //              Physics.SphereCast(rayLeft, m_isWallRengeRadios, out m_hitInfo, m_walldistance, m_wallMask);
-        
         return hitFlg;
     }
     bool IsOtherWalled()
@@ -140,7 +138,10 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
         bool otherWall = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
                    || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        
+        if(m_hitInfo.collider.gameObject.layer != m_wallMask)
+        {
+            m_h = 0;
+        }
         return otherWall;
     }
     void WallJumpMethod()
@@ -185,10 +186,15 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Pendulam" || other.gameObject.tag == "Ffield")
+        var otherCollider = other.gameObject;
+        if(otherCollider)
         {
-            transform.parent = other.gameObject.transform;
+            if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
+            {
+                transform.parent = other.gameObject.transform;
+            }
         }
+        
     }
     void OnCollisionExit()
     {
