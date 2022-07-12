@@ -6,6 +6,4 @@ public interface IEnemyAction
 {
     Transform AttackPos { get; }
     public void EnemyAttack();
-    public void Create();
-    public void Death();
 }

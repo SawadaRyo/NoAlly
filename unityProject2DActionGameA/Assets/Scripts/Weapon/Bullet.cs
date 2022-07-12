@@ -16,9 +16,9 @@ public class Bullet : WeaponBase
     void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "TargetObject" ||
-           other.gameObject.GetComponent<GaugeManager>() != null)
+           other.gameObject.GetComponent<EnemyGauge>() != null)
         {
-            var damage = other.gameObject.GetComponent<GaugeManager>();
+            var damage = other.gameObject.GetComponent<EnemyGauge>();
             if(damage != null)
             {
                 damage.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);

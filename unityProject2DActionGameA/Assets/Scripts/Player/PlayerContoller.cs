@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 {
     [Header("Ground")]
     [SerializeField, Tooltip("プレイヤーの移動速度")] float m_speed = 5f;
     [SerializeField, Tooltip("ダッシュの倍率")] float m_dashSpeed = 10f;
-    [Tooltip("Playerの振り向き速度")] float m_turnSpeed = 25f;
+    [Tooltip("プレイヤーの振り向き速度")] float m_turnSpeed = 25f;
     [Tooltip("横移動のベクトル")] float m_h;
     [Tooltip("スライディングの判定")] bool m_isDash = false;
 
@@ -26,7 +27,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("壁のずり落ち判定")] bool m_slideWall = false;
 
     [Header("Animation")]
-    [Tooltip("アニメーションを取得する為の変数")] Animator m_animator;
+    [Tooltip("Animationを取得する為の変数")] Animator m_animator;
 
     [Header("Audio")]
     [SerializeField, Tooltip("ジャンプのサウンド")] AudioClip m_jumpSound;
@@ -35,13 +36,16 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("移動可能か判定する変数")] bool m_ableMove = true;
     [Tooltip("Rigidbodyコンポーネントの取得")] Rigidbody m_rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
-    RaycastHit m_hitInfo;
+    [Tooltip("接触しているオブジェクトの情報")]RaycastHit m_hitInfo;
+    [Tooltip("装備中の武器")] WeaponBase m_eWeapon = default;
+
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     delegate void WeaponAttacks();
 
     void Start()
     {
         //orgLocalQuaternion = this.transform.localRotation;
+        m_eWeapon = WeaponChanger.Instance.EquipmentWeapon;
         m_rb = GetComponent<Rigidbody>();
         m_audio = gameObject.AddComponent<AudioSource>();
         m_velo = m_rb.velocity;
@@ -142,7 +146,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     void WallJumpMethod()
     {
         m_animator.SetBool("WallGrip", IsWalled());
-        WeaponChanger.Instance.EquipmentWeapon.SetActive(!IsWalled());
+        m_eWeapon.RendererActive(!IsWalled());
         if (IsGrounded())
         {
             m_slideWall = false;
@@ -190,8 +194,5 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         transform.parent = null;
     }
-    private void OnDrawGizmos()
-    {
-
-    }
+    
 }

@@ -19,18 +19,24 @@ public class EnemyBullet : WeaponBase
     public override void Update()
     {
         m_time += Time.deltaTime;
-        m_rb.velocity = m_muzzleForward.transform.forward * m_bulletSpeed;
         if (m_time > 5f)
         {
             Destroy(gameObject);
         }
     }
+    public override void MovementOfWeapon()
+    {
+        base.MovementOfWeapon();
+        m_rb.velocity = m_muzzleForward.transform.forward * m_bulletSpeed * m_time;
+    }
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out PlayerHP player))
+        if (other.gameObject.TryGetComponent(out PlayerGauge player))
         {
             player.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);
             Destroy(gameObject);
         }
     }
+
+   
 }

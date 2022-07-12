@@ -5,10 +5,19 @@ using System.Linq;
 
 public class ConbatWeapon : WeaponBase
 {
-    Collider m_boxCollider;
-
-    public override void Start()
+    public override void MovementOfWeapon(Collider target)
     {
-        m_boxCollider = gameObject.GetComponent<Collider>();
+        var targetHp = target.gameObject.GetComponent<PlayerGauge>();
+        if(targetHp)
+        {
+            targetHp.DamageMethod(m_rigitPower, m_firePower, m_elekePower, m_frozenPower);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Collider targetHp))
+        {
+            MovementOfWeapon(targetHp);
+        }
     }
 }

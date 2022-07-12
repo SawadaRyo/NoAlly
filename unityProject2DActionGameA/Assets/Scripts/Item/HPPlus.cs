@@ -5,10 +5,10 @@ using UnityEngine;
 public class HPPlus : ItemBase
 {
     [SerializeField] int m_HPPlusParameter = 4;
-    PlayerHP m_playerGagueManager;
+    PlayerGauge m_playerGagueManager;
     public override void Activate(Collider other)
     {
-        m_playerGagueManager = other.gameObject.GetComponent<PlayerHP>();
+        m_playerGagueManager = other.gameObject.GetComponent<PlayerGauge>();
         m_playerGagueManager.HPPuls(m_HPPlusParameter);
     }
 }
