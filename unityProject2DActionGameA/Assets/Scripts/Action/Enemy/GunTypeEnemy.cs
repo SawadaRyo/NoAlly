@@ -17,19 +17,21 @@ public class GunTypeEnemy : EnemyBase
         m_bulletPool.SetBaseObj(m_bulletPrefab, m_attackPos);
         m_bulletPool.SetCapacity(m_bulletSize);
     }
+
+  
     public override void EnemyAttack()
     {
-        m_enemyAnimator.SetBool("Aiming", m_sightIn);
-        StartCoroutine(RapidFire());
+        m_enemyAnimator.SetBool("Aiming", InSight());
+        StartCoroutine(RapidFire(InSight()));
     }
     public void InsBullet()
     {
         m_bulletPool.Instantiate();
     }
-    IEnumerator RapidFire()
+    IEnumerator RapidFire(bool sightIn)
     {
         var wait = new WaitForSeconds(m_interval);
-        while (m_sightIn)
+        while (sightIn)
         {
             m_enemyAnimator.SetTrigger("Fire");
             yield return wait;

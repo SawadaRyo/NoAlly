@@ -37,7 +37,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("移動可能か判定する変数")] bool m_ableMove = true;
     [Tooltip("Rigidbodyコンポーネントの取得")] Rigidbody m_rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")] Vector3 m_velo = default;
-    [Tooltip("接触しているオブジェクトの情報")]RaycastHit m_hitInfo;
+    [Tooltip("接触しているオブジェクトの情報")] RaycastHit m_hitInfo;
     [Tooltip("装備中の武器")] WeaponBase m_eWeapon = default;
 
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
@@ -138,7 +138,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
         bool otherWall = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
                    || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        if(m_hitInfo.collider.gameObject.layer != m_wallMask)
+        if (m_hitInfo.collider.gameObject.layer != m_wallMask)
         {
             m_h = 0;
         }
@@ -187,18 +187,18 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     void OnCollisionEnter(Collision other)
     {
         var otherCollider = other.gameObject;
-        if(otherCollider)
+        if (otherCollider)
         {
             if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
             {
                 transform.parent = other.gameObject.transform;
             }
         }
-        
+
     }
     void OnCollisionExit()
     {
         transform.parent = null;
     }
-    
+
 }

@@ -1,39 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-public abstractÅ@class EnemyBase : MonoBehaviour,IObjectPool
+public abstract class EnemyBase : MonoBehaviour, IObjectPool
 {
+    [SerializeField] float m_radius = 5f;
     [SerializeField] protected Animator m_enemyAnimator;
-    [SerializeField] Renderer m_enemyRenderer = default;
-    protected bool m_sightIn = false;
+    [SerializeField] Renderer[] m_enemyRenderer = default;
+    [SerializeField] LayerMask m_playerLayer = ~0;
     bool m_isActive = false;
+    RaycastHit m_hitInfo;
 
     public bool IsActive { get => m_isActive; set => m_isActive = value; }
     public abstract void EnemyAttack();
     public virtual void Start() { }
-    public virtual void Update() { }
+    public virtual void OnTriggerEnter(Collider other) { }
+    public virtual void OnTriggerExit(Collider other) { }
+    public void FixedUpdate()
+    {
+        EnemyAttack();
+        Debug.Log(InSight());
+    }
 
-    void OnTriggerEnter(Collider other)
+    public bool InSight()
     {
-        if (other.gameObject.TryGetComponent(out PlayerContoller player))
+        Vector3 center = transform.position;
+        Ray ray = new Ray(center, Vector3.forward);
+        var inSight = Physics.OverlapSphere(center, m_radius, m_playerLayer);
+        foreach(var s in inSight)
         {
-            m_sightIn = true;
+            var player = s.gameObject.GetComponent<PlayerContoller>();
+            if(player)
+            {
+                return true;
+            }
         }
+        return false;
+        
     }
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.TryGetComponent(out PlayerContoller player))
-        {
-            m_sightIn = false;
-        }
-    }
-    //AnimationEventÇ≈åƒÇ‘
-    
 
     //ê∂ê¨Ç∆îjâÛéûÇÃèàóù
     public void Create()
     {
-        m_enemyRenderer.enabled = true;
+        foreach (var r in m_enemyRenderer)
+        {
+            r.enabled = true;
+        }
         gameObject.GetComponent<CapsuleCollider>().enabled = true;
         m_enemyAnimator.SetBool("Death", false);
         m_enemyAnimator.Play("RifleIdle");
@@ -46,7 +58,17 @@ public abstractÅ@class EnemyBase : MonoBehaviour,IObjectPool
 
     public void DisactiveForInstantiate()
     {
-        m_enemyRenderer.enabled = false;
+        foreach (var r in m_enemyRenderer)
+        {
+            r.enabled = false;
+        }
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
+    }
+
+    public void OnDrawGizmos()
+    {
+        var center = transform.position;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(center, m_radius);
     }
 }
