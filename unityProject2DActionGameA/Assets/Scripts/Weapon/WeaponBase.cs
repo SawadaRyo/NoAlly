@@ -5,21 +5,26 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour, IObjectPool
 {
-    [SerializeField] protected int m_rigitPower = 5;
-    [SerializeField] protected int m_elekePower = 0;
-    [SerializeField] protected int m_firePower = 0;
-    [SerializeField] protected int m_frozenPower = 0;
+    [SerializeField] protected float m_rigitPower = 5;
+    [SerializeField] protected float m_elekePower = 0;
+    [SerializeField] protected float m_firePower = 0;
+    [SerializeField] protected float m_frozenPower = 0;
     [SerializeField] protected LayerMask enemyLayer = ~0;
     [SerializeField] Renderer[] m_weaponRenderer = default;
 
     bool m_isActive = false;
+    Collider m_collider = default;
 
-    public Renderer[] WeaponRenderer { get => m_weaponRenderer; set => m_weaponRenderer = value; }
     public bool IsActive { get => m_isActive; set => m_isActive = value; }
+    public float RigitPower { get => m_rigitPower; set => m_rigitPower = value; }
+    public float ElekePower { get => m_elekePower; set => m_elekePower = value; }
+    public float FirePower { get => m_firePower; set => m_firePower = value; }
+    public float FrozenPower { get => m_frozenPower; set => m_frozenPower = value; }
 
     public virtual void Start()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
+        m_collider = GetComponent<Collider>();
     }
     public virtual void Update()
     {
@@ -36,17 +41,26 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
     }
     public void Create()
     {
-
+        foreach (var weaponRend in m_weaponRenderer)
+        {
+            weaponRend.enabled = true;
+        }
+        m_collider.enabled = true;
     }
 
-    public void Death()
+    public void Disactive()
     {
-
+        foreach (var weaponRend in m_weaponRenderer)
+        {
+            weaponRend.enabled = false;
+        }
+        m_collider.enabled = false;
     }
 
     public void DisactiveForInstantiate()
     {
 
     }
-
 }
+
+

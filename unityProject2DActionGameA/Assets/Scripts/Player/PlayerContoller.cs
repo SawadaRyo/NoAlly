@@ -20,9 +20,8 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
     [Header("WallJump")]
     [SerializeField, Tooltip("プレイヤーの壁キックの力")] float m_wallJump = 7f;
-    [SerializeField, Tooltip("壁をずり落ちる速度")] float m_wallSlideSpeed = 0.4f;
+    [SerializeField, Tooltip("壁をずり落ちる速度")] float m_wallSlideSpeed = 0.8f;
     [SerializeField, Tooltip("壁の接触判定のRayの射程")] float m_walldistance = 0.1f;
-    [SerializeField, Tooltip("壁の接触判定のSphierCastの半径")] float m_isWallRengeRadios = 0.5f;
     [SerializeField, Tooltip("壁の接触判定")] LayerMask m_wallMask = ~0;
     [SerializeField, Tooltip("接地判定のRayの射出点")] Transform m_gripPos;
     [Tooltip("壁のずり落ち判定")] bool m_slideWall = false;
@@ -57,16 +56,16 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         if (GameManager.Instance.IsGame)
         {
+            m_h = Input.GetAxisRaw("Horizontal");
+            WallJumpMethod();
             MoveMethod();
             JumpMethod();
-            WallJumpMethod();
         }
     }
 
     //Playerの動きを処理が書かれた関数----------------------------------------------//
     void MoveMethod()
     {
-        m_h = Input.GetAxisRaw("Horizontal");
         m_isDash = Input.GetButton("Dash");
         var moveSpeed = 0f;
 
@@ -157,9 +156,14 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         else if (IsWalled())
         {
             m_slideWall = true;
+            m_h = 0;
             if (Input.GetButtonDown("Jump"))
             {
-                m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
+
+                Vector3 vec = transform.up + m_hitInfo.normal * 3;
+                m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
+                Debug.Log(vec);
+                //m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
             }
         }
         else
@@ -194,11 +198,17 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                 transform.parent = other.gameObject.transform;
             }
         }
-
     }
     void OnCollisionExit()
     {
         transform.parent = null;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 isGroundCenter = m_footPos.transform.position;
+        Ray ray = new Ray(isGroundCenter, Vector3.down);
+        Gizmos.DrawRay(ray);
+    }
 }

@@ -7,7 +7,7 @@ public class GunTypeEnemy : EnemyBase
     [SerializeField] int m_bulletSize = 50;
     [SerializeField] Transform m_attackPos;
     [SerializeField] EnemyBullet m_bulletPrefab;
-    ObjectPool<EnemyBullet> m_bulletPool;
+    ObjectPool<WeaponBase> m_bulletPool;
     float m_interval = 2f;
 
 

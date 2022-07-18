@@ -4,39 +4,39 @@ using System.Linq;
 using UnityEngine;
 public abstract class EnemyBase : MonoBehaviour, IObjectPool
 {
-    [SerializeField] float m_radius = 5f;
+    [SerializeField] protected float m_radius = 5f;
     [SerializeField] protected Animator m_enemyAnimator;
     [SerializeField] Renderer[] m_enemyRenderer = default;
     [SerializeField] LayerMask m_playerLayer = ~0;
     bool m_isActive = false;
+    protected Vector3 m_center = Vector3.zero;
     RaycastHit m_hitInfo;
 
     public bool IsActive { get => m_isActive; set => m_isActive = value; }
-    public abstract void EnemyAttack();
-    public virtual void Start() { }
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerExit(Collider other) { }
+    public abstract void EnemyAttack();
+    public virtual void Start() { }
     public void FixedUpdate()
     {
+        m_center = transform.position;
         EnemyAttack();
-        Debug.Log(InSight());
     }
 
     public bool InSight()
     {
-        Vector3 center = transform.position;
-        Ray ray = new Ray(center, Vector3.forward);
-        var inSight = Physics.OverlapSphere(center, m_radius, m_playerLayer);
-        foreach(var s in inSight)
+        Ray ray = new Ray(m_center, Vector3.forward);
+        var inSight = Physics.OverlapSphere(m_center, m_radius, m_playerLayer);
+        foreach (var s in inSight)
         {
             var player = s.gameObject.GetComponent<PlayerContoller>();
-            if(player)
+            if (player)
             {
                 return true;
             }
         }
         return false;
-        
+
     }
 
     //ê∂ê¨Ç∆îjâÛéûÇÃèàóù
@@ -51,7 +51,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         m_enemyAnimator.Play("RifleIdle");
     }
 
-    public void Death()
+    public void Disactive()
     {
         m_enemyAnimator.SetBool("Death", true);
     }
@@ -67,8 +67,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
 
     public void OnDrawGizmos()
     {
-        var center = transform.position;
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(center, m_radius);
+        Gizmos.DrawWireSphere(m_center, m_radius);
     }
 }
