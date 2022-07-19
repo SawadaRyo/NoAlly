@@ -24,6 +24,7 @@ public class Door : MonoBehaviour
         if(other.gameObject.TryGetComponent(out PlayerContoller p))
         {
             DoorState(true);
+            MenuOpen.Instance.SafeZorn = !MenuOpen.Instance.SafeZorn;
         }
     }
 
