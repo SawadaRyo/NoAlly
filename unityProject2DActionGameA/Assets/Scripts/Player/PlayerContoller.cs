@@ -9,7 +9,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("プレイヤーの振り向き速度")] float m_turnSpeed = 25f;
     [Tooltip("横移動のベクトル")] float m_h;
     [Tooltip("スライディングの判定")] bool m_isDash = false;
-    [Tooltip("")] GameObject m_otherCollider;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float m_jump = 5f;
@@ -60,6 +59,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             WallJumpMethod();
             MoveMethod();
             JumpMethod();
+
         }
     }
 
@@ -124,25 +124,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         Vector3 isWallCenter = m_gripPos.transform.position;
         Ray rayRight = new Ray(isWallCenter, Vector3.right);
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
-        bool hitFlg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        return hitFlg;
-    }
-    bool IsOtherWalled()
-    {
-        if (IsGrounded()) return false;
 
-        Vector3 isWallCenter = m_gripPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
-        bool otherWall = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-                   || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-        if (m_hitInfo.collider.gameObject.layer != m_wallMask)
-        {
-            m_h = 0;
-        }
-        return otherWall;
+        bool hitflg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
+        || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+
+        return hitflg;
     }
+
     void WallJumpMethod()
     {
         m_animator.SetBool("WallGrip", IsWalled());
@@ -159,7 +147,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_h = 0;
             if (Input.GetButtonDown("Jump"))
             {
-
                 Vector3 vec = transform.up + m_hitInfo.normal * 3;
                 m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
                 Debug.Log(vec);
@@ -208,7 +195,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         Gizmos.color = Color.red;
         Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.down);
+        Ray ray = new Ray(isGroundCenter, Vector3.right);
         Gizmos.DrawRay(ray);
     }
 }

@@ -59,7 +59,7 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
 
     public void DisactiveForInstantiate()
     {
-
+        
     }
 }
 
