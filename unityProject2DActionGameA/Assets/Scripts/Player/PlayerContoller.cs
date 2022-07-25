@@ -111,7 +111,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         //ÉWÉÉÉìÉvÇÃèàóù
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            m_audio.PlayOneShot(m_jumpSound);
+            //m_audio.PlayOneShot(m_jumpSound);
             m_rb.AddForce(0f, m_jump, 0f, ForceMode.Impulse);
         }
         m_animator.SetBool("Jump", !IsGrounded());
@@ -149,7 +149,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             {
                 Vector3 vec = transform.up + m_hitInfo.normal * 3;
                 m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
-                Debug.Log(vec);
                 //m_rb.velocity = new Vector3(m_rb.velocity.x, m_jump, 0);
             }
         }

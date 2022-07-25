@@ -14,7 +14,7 @@ public class Interval
     public bool IsCountUp()
     {
         m_time += Time.deltaTime;
-        if(m_time > m_interval)
+        if(m_time < m_interval)
         {
             return false;
         }

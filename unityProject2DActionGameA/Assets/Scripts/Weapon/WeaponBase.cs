@@ -30,8 +30,10 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
     {
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
+    public virtual void OnApplicationQuit() { }
     public virtual void MovementOfWeapon() { }
     public virtual void MovementOfWeapon(Collider target) { }
+    public virtual void WeaponMode(ElementType type) { }
     public void RendererActive(bool stats)
     {
         foreach (var weaponRend in m_weaponRenderer)
@@ -59,7 +61,7 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
 
     public void DisactiveForInstantiate()
     {
-        
+
     }
 }
 
