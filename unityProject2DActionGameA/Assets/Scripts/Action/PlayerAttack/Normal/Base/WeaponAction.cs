@@ -4,8 +4,7 @@ using UnityEngine;
 public abstract class WeaponAction : MonoBehaviour, IWeaponAction
 {
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float m_chargeLevel1 = 1f;
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float m_chargeLevel2 = 1.5f;
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ3’iŠK")] protected float m_chargeLevel3 = 3f;
+    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float m_chargeLevel2 = 3f;
 
     [Tooltip("")] 
     bool m_attacked = false;
@@ -42,13 +41,13 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
         }
 
         //—­‚ßUŒ‚‚Ìˆ—(‹|–î‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚à‚±‚Ìˆ—j
-        if (Input.GetButton("Attack") && m_chrageCount < m_chargeLevel3)
+        if (Input.GetButton("Attack") && m_chrageCount < m_chargeLevel2)
         {
             m_chrageCount += Time.deltaTime;
         }
         else if (Input.GetButtonUp("Attack"))
         {
-            if(m_chrageCount > m_chargeLevel1)
+            if(m_chrageCount > 0f)
             {
                 WeaponChargeAttackMethod(m_chrageCount);
             }

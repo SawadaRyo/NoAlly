@@ -8,17 +8,15 @@ public class CombatAction : WeaponAction
     {
         var beforePower = m_weaponBase.RigitPower;
 
-        if (m_chrageCount > m_chargeLevel1 && m_chrageCount <= m_chargeLevel2)
+        if (m_chrageCount < m_chargeLevel1) return;
+
+        else if (m_chrageCount >= m_chargeLevel1 && m_chrageCount < m_chargeLevel2)
         {
-            m_weaponBase.RigitPower *= m_chargeLevel1;
+            m_weaponBase.RigitPower *= 1.5f;
         }
-        else if (m_chrageCount > m_chargeLevel2 && m_chrageCount <= m_chargeLevel3)
+        else if (m_chrageCount >= m_chargeLevel2)
         {
             m_weaponBase.RigitPower *= m_chargeLevel2;
-        }
-        else if(m_chrageCount > m_chargeLevel3)
-        {
-            m_weaponBase.RigitPower *= m_chargeLevel3;
         }
         m_animator.Play(m_weaponName + "Chrage");
         m_weaponBase.RigitPower = beforePower;

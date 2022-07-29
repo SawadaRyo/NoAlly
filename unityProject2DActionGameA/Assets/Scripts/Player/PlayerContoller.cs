@@ -135,8 +135,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             }
         }
 
-        //m_velo.x = m_h * moveSpeed;
-        var r = m_h * m_hitInfo.normal;
+        m_velo.x = m_h * moveSpeed;
         m_rb.velocity = new Vector3(m_velo.x, m_rb.velocity.y, 0);
         m_animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
     }
@@ -144,7 +143,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         Vector3 isGroundCenter = m_footPos.transform.position;
         Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out m_hitInfo, m_graundDistance, m_groundMask);
+        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
         return hitFlg;
     }
     void JumpMethod()

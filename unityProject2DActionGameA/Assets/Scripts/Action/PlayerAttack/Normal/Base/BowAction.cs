@@ -25,18 +25,19 @@ public class BowAction : WeaponAction
     {
         if (m_personType == PersonType.Player)
         {
+            Debug.Log(chrageCount);
             //í èÌíe
-            if (m_chrageCount <= m_chargeLevel1)
+            if (chrageCount <= m_chargeLevel1)
             {
                 m_bulletType = 0;
             }
             //ã≠óÕíe
-            else if (m_chrageCount > m_chargeLevel1 && m_chrageCount <= m_chargeLevel2)
+            else if (chrageCount > m_chargeLevel1 && chrageCount <= m_chargeLevel2)
             {
                 m_bulletType = 1;
             }
             //ëÂñC
-            else if (m_chrageCount > m_chargeLevel2)
+            else if (chrageCount > m_chargeLevel2)
             {
                 m_bulletType = 2;
             }
