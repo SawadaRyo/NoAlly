@@ -21,10 +21,11 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
     public float FirePower { get => m_firePower; set => m_firePower = value; }
     public float FrozenPower { get => m_frozenPower; set => m_frozenPower = value; }
 
-    public virtual void Start()
+    public virtual void Awake()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
         m_collider = GetComponent<Collider>();
+        RendererActive(false);
     }
     public virtual void Update()
     {
@@ -34,7 +35,7 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
     public virtual void MovementOfWeapon() { }
     public virtual void MovementOfWeapon(Collider target) { }
     public virtual void WeaponMode(ElementType type) { }
-    public void RendererActive(bool stats)
+    public virtual void RendererActive(bool stats)
     {
         foreach (var weaponRend in m_weaponRenderer)
         {

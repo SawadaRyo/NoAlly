@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class ItemBase : MonoBehaviour
 {
     [SerializeField] AudioClip m_getSound = default;
-    [SerializeField] AudioSource m_audio;
+    [SerializeField] AudioSource m_audio = default;
     public abstract void Activate(Collider other);
 
     private void OnTriggerEnter(Collider other)

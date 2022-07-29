@@ -33,20 +33,20 @@ public class MainMenu : SingletonBehaviour<MainMenu>
         WeaponBase beforeWeapon = null;
         if (type == EquipmentType.MAIN)
         {
-            beforeWeapon = WeaponChanger.Instance.MainWeapon;
-            WeaponChanger.Instance.MainWeapon = weapon;
-            if (WeaponChanger.Instance.MainWeapon == WeaponChanger.Instance.SubWeapon)
+            beforeWeapon = global::WeaponEquipment.Instance.MainWeapon;
+            global::WeaponEquipment.Instance.MainWeapon = weapon;
+            if (global::WeaponEquipment.Instance.MainWeapon == global::WeaponEquipment.Instance.SubWeapon)
             {
-                WeaponChanger.Instance.SubWeapon = beforeWeapon;
+                global::WeaponEquipment.Instance.SubWeapon = beforeWeapon;
             }
         }
         else if(type == EquipmentType.SUB)
         {
-            beforeWeapon = WeaponChanger.Instance.SubWeapon;
-            WeaponChanger.Instance.SubWeapon = weapon;
-            if (WeaponChanger.Instance.MainWeapon == WeaponChanger.Instance.SubWeapon)
+            beforeWeapon = global::WeaponEquipment.Instance.SubWeapon;
+            global::WeaponEquipment.Instance.SubWeapon = weapon;
+            if (global::WeaponEquipment.Instance.MainWeapon == global::WeaponEquipment.Instance.SubWeapon)
             {
-                WeaponChanger.Instance.MainWeapon = beforeWeapon;
+                global::WeaponEquipment.Instance.MainWeapon = beforeWeapon;
             }
         }
     }
