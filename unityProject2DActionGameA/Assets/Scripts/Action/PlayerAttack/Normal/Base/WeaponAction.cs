@@ -7,7 +7,7 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float m_chargeLevel2 = 3f;
 
     [Tooltip("")] 
-    bool m_attacked = false;
+    bool m_unStored = true;
     [Tooltip("—­‚ßUŒ‚‚Ì—­‚ßŽžŠÔ")] 
     protected float m_chrageCount = 0;
     [Tooltip("•Ší–¼")] 
@@ -19,15 +19,20 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
     [Tooltip("PlayerAnimationState‚ðŠi”[‚·‚é•Ï”")]
     PlayerAnimationState m_state;
 
-    public bool Attacked => m_attacked;
     public abstract void WeaponChargeAttackMethod(float chrageCount);
+    public virtual void Enable() { }
 
-    public virtual void Start()
+    void OnEnable()
     {
-        m_state = PlayerAnimationState.Instance;
-        m_weaponName = WeaponEquipment.Instance.EquipmentWeapon.name;
-        m_animator = PlayerContoller.Instance.GetComponent<Animator>();
-        m_weaponBase = GetComponent<WeaponBase>();
+        if(m_unStored)
+        {
+            Enable();
+            m_state = PlayerAnimationState.Instance;
+            m_weaponName = WeaponEquipment.Instance.EquipmentWeapon.name;
+            m_animator = PlayerContoller.Instance.GetComponent<Animator>();
+            m_weaponBase = GetComponent<WeaponBase>();
+            m_unStored = false;
+        }
     }
    
     public void WeaponAttackMethod(string weaponName)

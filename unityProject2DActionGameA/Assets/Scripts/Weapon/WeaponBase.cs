@@ -3,28 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class WeaponBase : MonoBehaviour, IObjectPool
+public abstract class WeaponBase : MonoBehaviour
 {
-    [SerializeField] protected float m_rigitPower = 5;
-    [SerializeField] protected float m_elekePower = 0;
-    [SerializeField] protected float m_firePower = 0;
-    [SerializeField] protected float m_frozenPower = 0;
-    [SerializeField] protected LayerMask enemyLayer = ~0;
-    [SerializeField] Renderer[] m_weaponRenderer = default;
+    [SerializeField] protected float _rigitPower = 5;
+    [SerializeField] protected float _elekePower = 0;
+    [SerializeField] protected float _firePower = 0;
+    [SerializeField] protected float _frozenPower = 0;
+    [SerializeField] protected LayerMask _enemyLayer = ~0;
+    [SerializeField] protected Renderer[] _weaponRenderer = default;
+    [SerializeField] WeaponAction _action;
 
-    bool m_isActive = false;
-    Collider m_collider = default;
 
-    public bool IsActive { get => m_isActive; set => m_isActive = value; }
-    public float RigitPower { get => m_rigitPower; set => m_rigitPower = value; }
-    public float ElekePower { get => m_elekePower; set => m_elekePower = value; }
-    public float FirePower { get => m_firePower; set => m_firePower = value; }
-    public float FrozenPower { get => m_frozenPower; set => m_frozenPower = value; }
+    public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
+    public float ElekePower { get => _elekePower; set => _elekePower = value; }
+    public float FirePower { get => _firePower; set => _firePower = value; }
+    public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
     public virtual void Awake()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
-        m_collider = GetComponent<Collider>();
         RendererActive(false);
     }
     public virtual void Update()
@@ -37,32 +34,10 @@ public abstract class WeaponBase : MonoBehaviour, IObjectPool
     public virtual void WeaponMode(ElementType type) { }
     public virtual void RendererActive(bool stats)
     {
-        foreach (var weaponRend in m_weaponRenderer)
+        foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = stats;
         }
-    }
-    public void Create()
-    {
-        foreach (var weaponRend in m_weaponRenderer)
-        {
-            weaponRend.enabled = true;
-        }
-        m_collider.enabled = true;
-    }
-
-    public void Disactive()
-    {
-        foreach (var weaponRend in m_weaponRenderer)
-        {
-            weaponRend.enabled = false;
-        }
-        m_collider.enabled = false;
-    }
-
-    public void DisactiveForInstantiate()
-    {
-
     }
 }
 

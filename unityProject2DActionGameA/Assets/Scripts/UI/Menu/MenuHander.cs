@@ -4,37 +4,37 @@ using UnityEngine.UI;
 
 public class MenuHander : SingletonBehaviour<MenuHander>
 {
-    [SerializeField] float m_interval = 1f;
+    [SerializeField] float _interval = 1f;
 
-    Image[] m_gameUIGauges = default;
-    GameObject[] m_gamePanels = new GameObject[2];
+    Image[] _gameUIGauges = default;
+    GameObject[] _gamePanels = new GameObject[2];
 
-    bool m_menuIsOpen = false;
-    bool m_safeZorn = false;
-    float m_crossH = 0;
-    float m_crossV = 0;
-    GameObject m_canvas = default;
-    Button m_targetButton = default;
-    Button[,] m_allButtons = default;
-    Interval m_canMove = default;
-    public bool SafeZorn { get => m_safeZorn; set => m_safeZorn = value; }
-    public bool MenuIsOpen => m_menuIsOpen;
+    bool _menuIsOpen = false;
+    bool _safeZorn = false;
+    float _crossH = 0;
+    float _crossV = 0;
+    GameObject _canvas = default;
+    Button _targetButton = default;
+    Button[,] _allButtons = default;
+    Interval _canMove = default;
+    public bool SafeZorn { get => _safeZorn; set => _safeZorn = value; }
+    public bool MenuIsOpen => _menuIsOpen;
 
     void Start()
     {
-        m_canMove = new Interval(m_interval);
+        _canMove = new Interval(_interval);
 
         //Canvas上の全てのButtonを取得する。
-        m_canvas = GameObject.FindGameObjectWithTag("Canvas");
-        m_allButtons = new Button[Enum.GetNames(typeof(EquipmentType)).Length, Enum.GetNames(typeof(ElementType)).Length];
+        _canvas = GameObject.FindGameObjectWithTag("Canvas");
+        _allButtons = new Button[Enum.GetNames(typeof(EquipmentType)).Length, Enum.GetNames(typeof(ElementType)).Length];
         int length = 0;
         Button[] buttonArray = GetComponentsInChildren<Button>(true);
 
-        for (int y = 0; y < m_allButtons.GetLength(0); y++)
+        for (int y = 0; y < _allButtons.GetLength(0); y++)
         {
-            for (int x = 0; x < m_allButtons.GetLength(1); x++)
+            for (int x = 0; x < _allButtons.GetLength(1); x++)
             {
-                m_allButtons[y, x] = buttonArray[length];
+                _allButtons[y, x] = buttonArray[length];
                 length++;
             }
         }
@@ -43,12 +43,12 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         //ToDo マジックナンバーを直す。
         for (int i = 0; i < 2; i++)
         {
-            m_gamePanels[i] = m_canvas.transform.GetChild(i).gameObject;
-            m_gamePanels[i].SetActive(false);
+            _gamePanels[i] = _canvas.transform.GetChild(i).gameObject;
+            _gamePanels[i].SetActive(false);
         }
 
-        m_gameUIGauges = m_canvas.transform.GetChild(2).GetComponentsInChildren<Image>();
-        foreach (Image image in m_gameUIGauges)
+        _gameUIGauges = _canvas.transform.GetChild(2).GetComponentsInChildren<Image>();
+        foreach (Image image in _gameUIGauges)
         {
             image.enabled = true;
         }
@@ -59,28 +59,28 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     {
         if (Input.GetButtonDown("MenuSwitch"))
         {
-            m_menuIsOpen = !m_menuIsOpen;
-            IsManuExpand(m_menuIsOpen);
+            _menuIsOpen = !_menuIsOpen;
+            IsManuExpand(_menuIsOpen);
         }
 
-        if (m_menuIsOpen)
+        if (_menuIsOpen)
         {
             float h = Input.GetAxisRaw("CrossKeyH");
             float v = Input.GetAxisRaw("CrossKeyV");
 
-            Debug.Log(m_canMove.IsCountUp());
-            if (m_canMove.IsCountUp())
+            Debug.Log(_canMove.IsCountUp());
+            if (_canMove.IsCountUp())
             {
-                m_targetButton = SelectButton(h, v);
-                if(m_targetButton != null)
+                _targetButton = SelectButton(h, v);
+                if(_targetButton != null)
                 {
-                    m_targetButton.Select();
+                    _targetButton.Select();
                 }
             }
-            Debug.Log($"{m_crossH},{m_crossV}");
+            Debug.Log($"{_crossH},{_crossV}");
             if (Input.GetButtonDown("Decision"))
             {
-                m_targetButton.onClick.Invoke();
+                _targetButton.onClick.Invoke();
             }
         }
     }
@@ -89,12 +89,12 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     void IsManuExpand(bool isOpen)
     {
         //ToDo メニューの開閉にアニメーションを加える
-        m_gamePanels[0].SetActive(isOpen);
-        if (m_safeZorn)
+        _gamePanels[0].SetActive(isOpen);
+        if (_safeZorn)
         {
-            m_gamePanels[1].SetActive(isOpen);
+            _gamePanels[1].SetActive(isOpen);
         }
-        foreach (Image image in m_gameUIGauges)
+        foreach (Image image in _gameUIGauges)
         {
             image.enabled = !isOpen;
         }
@@ -111,36 +111,36 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
     Button SelectButton(float h, float v)
     {
-        m_canMove.ResetTimer();
+        _canMove.ResetTimer();
         if (h > 0)
         {
-            m_crossH++;
-            if (m_crossH > m_allButtons.GetLength(1)) m_crossH = 0;
+            _crossH++;
+            if (_crossH > _allButtons.GetLength(1)) _crossH = 0;
         }
         if(v > 0)
         {
-            m_crossV--;
-            if (m_crossV < 0) m_crossV = m_allButtons.GetLength(0) - 1;
+            _crossV--;
+            if (_crossV < 0) _crossV = _allButtons.GetLength(0) - 1;
         }
         if(h < 0)
         {
-            m_crossH--;
-            if (m_crossH < 0) m_crossH = m_allButtons.GetLength(1) - 1;
+            _crossH--;
+            if (_crossH < 0) _crossH = _allButtons.GetLength(1) - 1;
         }
         if(v < 0)
         {
-            m_crossV++;
-            if (m_crossV > m_allButtons.GetLength(0)) m_crossV = 0;
+            _crossV++;
+            if (_crossV > _allButtons.GetLength(0)) _crossV = 0;
         }
 
-        return m_allButtons[(int)m_crossV, (int)m_crossH];
+        return _allButtons[(int)_crossV, (int)_crossH];
         
     }
 
     /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
     void MenuOpen()
     {
-        m_allButtons[0, 0].Select();
+        _allButtons[0, 0].Select();
     }
 
     /// <summary>メニュー画面縮小時に呼ぶ関数</summary>

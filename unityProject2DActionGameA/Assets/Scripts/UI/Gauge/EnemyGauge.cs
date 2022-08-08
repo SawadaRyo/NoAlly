@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyGauge : MonoBehaviour //敵やプレイヤーの体力を管理するスクリプト
+public class EnemyGauge : MonoBehaviour //敵の体力を管理するスクリプト
 {
     [SerializeField, Tooltip("オブジェクトのHPの上限")] int m_maxHP = 20;
     [SerializeField] float m_rigitDefensePercentage = 0.8f;

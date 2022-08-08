@@ -4,28 +4,37 @@ using UnityEngine;
 
 public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 {
-    [SerializeField, Tooltip("メイン武器")] WeaponBase m_mainWeaponBase = default;
-    [SerializeField, Tooltip("サブ武器")] WeaponBase m_subWeaponBase = default;
+    [SerializeField] string _filePath = "";
+    [SerializeField] WeaponBase[] _weapons = default;
 
-    [Tooltip("現在の属性")] ElementType type = default;
-    [Tooltip("武器切り替え")] bool m_weaponSwitch = false;
-    [Tooltip("装備中の武器")] WeaponBase m_equipmentWeapon = default;
-    WeaponAction m_weaponAction = default;
+    [Tooltip("武器切り替え")] bool _weaponSwitch = false;
+    [Tooltip("メイン武器")] WeaponBase _mainWeaponBase = default;
+    [Tooltip("サブ武器")] WeaponBase _subWeaponBase = default;
+    [Tooltip("装備中の武器")] WeaponBase _equipmentWeapon = default;
+    [Tooltip("現在の属性")] ElementType _type = default;
+    WeaponAction _weaponAction = default;
+    ObjectPool<Bullet>[] _pool = new ObjectPool<Bullet>[4];
 
-    public WeaponBase EquipmentWeapon { get => m_equipmentWeapon; set => m_equipmentWeapon = value; }
-    public WeaponBase MainWeapon { get => m_mainWeaponBase; set => m_mainWeaponBase = value; }
-    public WeaponBase SubWeapon { get => m_subWeaponBase; set => m_subWeaponBase = value; }
-    public WeaponAction EquipeWeaponAction => m_weaponAction;
+    public WeaponBase EquipmentWeapon { get => _equipmentWeapon; set => _equipmentWeapon = value; }
+    public WeaponBase MainWeapon { get => _mainWeaponBase; set => _mainWeaponBase = value; }
+    public WeaponBase SubWeapon { get => _subWeaponBase; set => _subWeaponBase = value; }
+    public WeaponAction EquipeWeaponAction => _weaponAction;
 
     private void Awake()
     {
-        m_equipmentWeapon = m_mainWeaponBase;
-        m_weaponAction = m_equipmentWeapon.GetComponent<WeaponAction>();
+        for (int x = 0; x < _weapons.Length; x++)
+        {
+            
+        }
+        _mainWeaponBase = MainMenu.Instance.Weapons[0];
+        _subWeaponBase = MainMenu.Instance.Weapons[1];
+        _equipmentWeapon = _mainWeaponBase;
+        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
 
     void Start()
     {
-        if (m_mainWeaponBase != null && m_subWeaponBase != null)
+        if (_mainWeaponBase != null && _subWeaponBase != null)
         {
             WeaponChangeMethod();
         }
@@ -40,35 +49,35 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 
         if (!MenuHander.Instance.MenuIsOpen)
         {
-            m_weaponAction.WeaponAttackMethod(m_equipmentWeapon.name);
+            _weaponAction.WeaponAttackMethod(_equipmentWeapon.name);
         }
 
         if(PlayerContoller.Instance.IsWalled())
         {
-            m_equipmentWeapon.RendererActive(false);
+            _equipmentWeapon.RendererActive(false);
         }
         else
         {
-            m_equipmentWeapon.RendererActive(true);
+            _equipmentWeapon.RendererActive(true);
         }
     }
     void WeaponChangeMethod()
     {
         //武器のメインとサブの表示を切り替える
 
-        m_weaponSwitch = !m_weaponSwitch;
-        m_mainWeaponBase.RendererActive(m_weaponSwitch);
-        m_subWeaponBase.RendererActive(!m_weaponSwitch);
+        _weaponSwitch = !_weaponSwitch;
+        _mainWeaponBase.RendererActive(_weaponSwitch);
+        _subWeaponBase.RendererActive(!_weaponSwitch);
 
         //メインとサブの武器を切り替える
-        if (m_weaponSwitch)
+        if (_weaponSwitch)
         {
-            m_equipmentWeapon = m_mainWeaponBase;
+            _equipmentWeapon = _mainWeaponBase;
         }
         else
         {
-            m_equipmentWeapon = m_subWeaponBase;
+            _equipmentWeapon = _subWeaponBase;
         }
-        m_weaponAction = m_equipmentWeapon.GetComponent<WeaponAction>();
+        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
 }

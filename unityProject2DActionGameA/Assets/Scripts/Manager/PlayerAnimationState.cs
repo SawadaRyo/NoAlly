@@ -26,25 +26,37 @@ public class PlayerAnimationState :SingletonBehaviour<PlayerAnimationState>
         m_weaponEquipment = WeaponEquipment.Instance;
         DetectionState();
     }
+    
     void DetectionState()
     {
-        IDisposable enterState = m_trigger
+            //m_trigger
+            //.OnStateEnterAsObservable()
+            //.Subscribe(onStateInfo =>
+            //{
+            //    if (onStateInfo.StateInfo.IsTag("Ground") || onStateInfo.StateInfo.IsName("JumpEnd"))
+            //    {
+            //        Debug.Log("Enter");
+            //        m_ableMove = false;
+            //        if (onStateInfo.StateInfo.IsName($"{m_weaponEquipment.name}+AttackFinish"))
+            //        {
+            //            m_ableInput = false;
+            //        }
+            //    }
+            //}).AddTo(this); 
+            m_trigger
             .OnStateEnterAsObservable()
-            .Subscribe(onStateInfo =>
+            //.Where(x => x.StateInfo.IsName("NoGround.JumpEnd"))
+            .Subscribe(x =>
             {
-                AnimatorStateInfo info = onStateInfo.StateInfo;
-                if (info.IsTag("Base Layer.Ground") || info.IsName("JumpEnd"))
-                {
                     Debug.Log("Enter");
                     m_ableMove = false;
-                    if (info.IsName($"{m_weaponEquipment.name}+AttackFinish"))
-                    {
-                        m_ableInput = false;
-                    }
-                }
+                    //if (onStateInfo.StateInfo.IsName($"{m_weaponEquipment.name}+AttackFinish"))
+                    //{
+                    //    m_ableInput = false;
+                    //}
             }).AddTo(this);
 
-        IDisposable exitState = m_trigger
+            m_trigger
             .OnStateExitAsObservable()
             .Subscribe(onStateInfo =>
             {
@@ -60,7 +72,7 @@ public class PlayerAnimationState :SingletonBehaviour<PlayerAnimationState>
                 }
             }).AddTo(this);
 
-        IDisposable isState = m_trigger
+            m_trigger
             .OnStateUpdateAsObservable()
             .Subscribe(onStateInfo =>
             {

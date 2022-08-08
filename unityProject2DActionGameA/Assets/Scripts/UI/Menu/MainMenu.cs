@@ -6,23 +6,24 @@ using UnityEngine.UI;
 
 public class MainMenu : SingletonBehaviour<MainMenu>
 {
-    [SerializeField] string m_filePath = "";
-    [SerializeField] Button[] m_mainWeapons = default;
-    [SerializeField] Button[] m_subWeapons = default;
-    [SerializeField] Button[] m_elements = default;
-    WeaponBase[] weapons = new WeaponBase[4];
-    ElementType m_elementType = default;
+    [SerializeField] string _filePath = "";
+    [SerializeField] Button[] _mainWeapons = default;
+    [SerializeField] Button[] _subWeapons = default;
+    [SerializeField] Button[] _elements = default;
+    WeaponBase[] _weapons = new WeaponBase[4];
+    ElementType _elementType = default;
 
+    public WeaponBase[] Weapons {get => _weapons; set => _weapons = value; }
     public event Action<ElementType> DisideElement;
 
     private void Start()
     {
-        weapons = Resources.LoadAll<WeaponBase>(m_filePath);
-        for (int i = 0; i < m_mainWeapons.Length; i++)
+        for (int y = 0; y < _weapons.Length; y++)
         {
-            m_mainWeapons[i].onClick.AddListener(() => WeaponEquipment(weapons[i],EquipmentType.MAIN)) ;
-            m_subWeapons[i].onClick.AddListener(() => WeaponEquipment(weapons[i],EquipmentType.SUB)) ;
-            m_elements[i].onClick.AddListener(() => ElementEquipent((ElementType)i));
+            var weaponData = _weapons[y];
+            _mainWeapons[y].onClick.AddListener(() => WeaponEquipment(weaponData,EquipmentType.MAIN)) ;
+            _subWeapons[y].onClick.AddListener(() => WeaponEquipment(weaponData, EquipmentType.SUB)) ;
+            _elements[y].onClick.AddListener(() => ElementEquipent((ElementType)y));
         }
     }
     /// <summary> ‚±‚±‚Å‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚éiMain‚ÆSub‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚éj</summary>

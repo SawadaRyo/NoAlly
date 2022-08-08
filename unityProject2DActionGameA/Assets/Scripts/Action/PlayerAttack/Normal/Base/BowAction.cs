@@ -15,9 +15,9 @@ public class BowAction : WeaponAction
 
     enum PersonType { Player, Enemy };
 
-    public override void Start()
+    public override void Enable()
     {
-        base.Start();
+        base.Enable();
         m_bulletPrefab = Resources.LoadAll<Bullet>(m_filePath);
     }
 

@@ -5,38 +5,37 @@ using UnityEngine;
 
 public class ObjectPool<T> where T : UnityEngine.Object,IObjectPool
 {
-    T BaseObj = null;
-    Transform Parent = null;
-    List<T> Pool = new List<T>();
-    int Index = 0;
+    T m_baseObj = null;
+    Transform m_parent = null;
+    List<T> m_pool = new List<T>();
+    int m_index = 0;
 
     public void SetBaseObj(T obj, Transform parent)
     {
-        BaseObj = obj;
-        Parent = parent;
+        m_baseObj = obj;
+        m_parent = parent;
     }
 
     public void Pooling(T obj)
     {
         obj.DisactiveForInstantiate();
-        Pool.Add(obj);
+        m_pool.Add(obj);
     }
 
     public void SetCapacity(int size)
     {
-        //既にオブジェクトサイズが大きいときは更新しない
         //if (size < Pool.Count) return;
 
-        for (int i = Pool.Count - 1; i < size; ++i)
+        for (int i = m_pool.Count - 1; i < size; ++i)
         {
             T obj = default(T);
-            if (Parent)
+            if (m_parent)
             {
-                obj = GameObject.Instantiate(BaseObj, Parent);
+                obj = GameObject.Instantiate(m_baseObj, m_parent);
             }
             else
             {
-                obj = GameObject.Instantiate(BaseObj);
+                obj = GameObject.Instantiate(m_baseObj);
             }
             Pooling(obj);
         }
@@ -45,17 +44,19 @@ public class ObjectPool<T> where T : UnityEngine.Object,IObjectPool
     public T Instantiate()
     {
         T ret = null;
-        for (int i = 0; i < Pool.Count; ++i)
+        for (int i = 0; i < m_pool.Count; ++i)
         {
-            int index = (Index + i) % Pool.Count;
-            if (Pool[index] == null)
+            int newSIze = 0;
+            int index = (m_index + i) % m_pool.Count;
+            if (m_pool[index] == null)
             {
-                SetCapacity(1);
+                newSIze++;
+                continue;
             }
-            else if (Pool[index].IsActive) continue;
+            else if (m_pool[index] != null && m_pool[index].IsActive) continue;
 
-            Pool[index].Create();
-            ret = Pool[index];
+            m_pool[index].Create();
+            ret = m_pool[index];
             break;
         }
 

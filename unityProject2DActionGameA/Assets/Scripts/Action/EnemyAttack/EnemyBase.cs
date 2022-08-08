@@ -70,4 +70,9 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(m_center, m_radius);
     }
+
+    public void RendererActive(bool stats)
+    {
+        throw new System.NotImplementedException();
+    }
 }
