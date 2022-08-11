@@ -45,15 +45,11 @@ public class PlayerAnimationState :SingletonBehaviour<PlayerAnimationState>
             //}).AddTo(this); 
             m_trigger
             .OnStateEnterAsObservable()
-            //.Where(x => x.StateInfo.IsName("NoGround.JumpEnd"))
+            .Where(x => x.StateInfo.IsName("NoGround.JumpEnd"))
             .Subscribe(x =>
             {
                     Debug.Log("Enter");
                     m_ableMove = false;
-                    //if (onStateInfo.StateInfo.IsName($"{m_weaponEquipment.name}+AttackFinish"))
-                    //{
-                    //    m_ableInput = false;
-                    //}
             }).AddTo(this);
 
             m_trigger

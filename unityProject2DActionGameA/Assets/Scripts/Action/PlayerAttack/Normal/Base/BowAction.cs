@@ -32,17 +32,17 @@ public class BowAction : WeaponAction
         {
             Debug.Log(chrageCount);
             //í èÌíe
-            if (chrageCount <= m_chargeLevel1)
+            if (chrageCount <= _chargeLevel1)
             {
                 m_bulletType = 0;
             }
             //ã≠óÕíe
-            else if (chrageCount > m_chargeLevel1 && chrageCount <= m_chargeLevel2)
+            else if (chrageCount > _chargeLevel1 && chrageCount <= _chargeLevel2)
             {
                 m_bulletType = 1;
             }
             //ëÂñC
-            else if (chrageCount > m_chargeLevel2)
+            else if (chrageCount > _chargeLevel2)
             {
                 m_bulletType = 2;
             }

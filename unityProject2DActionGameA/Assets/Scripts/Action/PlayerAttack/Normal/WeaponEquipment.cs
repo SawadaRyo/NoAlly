@@ -10,7 +10,6 @@ using UniRx;
 
 public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 {
-    [SerializeField] string _filePath = "";
     [SerializeField] WeaponBase[] _weapons = default;
 
     [Tooltip("武器切り替え")] bool _weaponSwitch = false;
@@ -22,35 +21,23 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     ObjectPool<Bullet>[] _pool = new ObjectPool<Bullet>[4];
 
     public WeaponBase EquipmentWeapon { get => _equipmentWeapon; set => _equipmentWeapon = value; }
-    public WeaponBase MainWeapon { get => _mainWeaponBase; set => _mainWeaponBase = value; }
-    public WeaponBase SubWeapon { get => _subWeaponBase; set => _subWeaponBase = value; }
     public WeaponAction EquipeWeaponAction => _weaponAction;
 
     private void Awake()
     {
-        for (int x = 0; x < _weapons.Length; x++)
-        {
-
-        }
-        //_mainWeaponBase = MainMenu.Instance.Weapons[0];
-        //_subWeaponBase = MainMenu.Instance.Weapons[1];
+        ChangeWeapon(EquipmentType.MAIN, WeaponName.SWORD);
+        ChangeWeapon(EquipmentType.SUB, WeaponName.LANCE);
         _equipmentWeapon = _mainWeaponBase;
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
 
-    void Start()
-    {
-        if (_mainWeaponBase != null && _subWeaponBase != null)
-        {
-            WeaponSwich();
-        }
-    }
+    
     void Update()
     {
         if (Input.GetButtonDown("WeaponChange")
             && !Input.GetButton("Attack"))
         {
-            WeaponSwich();
+            SwichWeapon();
         }
 
         if (!MenuHander.Instance.MenuIsOpen)
@@ -67,7 +54,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _equipmentWeapon.RendererActive(true);
         }
     }
-    void WeaponSwich()
+    void SwichWeapon()
     {
         //武器のメインとサブの表示を切り替える
 
@@ -86,10 +73,16 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         }
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
-    public void ChangeWeapon()
+    public void ChangeWeapon(EquipmentType equipmentType,WeaponName? weaponName)
     {
-        //switch ()
-        { }
-
+        if(equipmentType == EquipmentType.MAIN)
+        {
+            _mainWeaponBase = _weapons[(int)weaponName];
+        }
+        
+        else if(equipmentType == EquipmentType.SUB)
+        {
+            _subWeaponBase = _weapons[(int)weaponName];
+        }
     }
 }

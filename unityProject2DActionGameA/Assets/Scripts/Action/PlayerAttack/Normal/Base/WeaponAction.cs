@@ -3,63 +3,62 @@ using UnityEngine;
 
 public abstract class WeaponAction : MonoBehaviour, IWeaponAction
 {
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float m_chargeLevel1 = 1f;
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float m_chargeLevel2 = 3f;
+    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float _chargeLevel1 = 1f;
+    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float _chargeLevel2 = 3f;
 
     [Tooltip("")] 
-    bool m_unStored = true;
+    bool _unStored = true;
     [Tooltip("—­‚ßUŒ‚‚Ì—­‚ßŠÔ")] 
-    protected float m_chrageCount = 0;
+    protected float _chrageCount = 0;
     [Tooltip("•Ší–¼")] 
-    protected string m_weaponName;
+    protected string _weaponName;
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
-    protected Animator m_animator = default;
+    protected Animator _animator = default;
     [Tooltip("WeaponBase‚ğŠi”[‚·‚é•Ï”")] 
-    protected WeaponBase m_weaponBase = default;
+    protected WeaponBase _weaponBase = default;
     [Tooltip("PlayerAnimationState‚ğŠi”[‚·‚é•Ï”")]
-    PlayerAnimationState m_state;
+    PlayerAnimationState _state;
 
     public abstract void WeaponChargeAttackMethod(float chrageCount);
     public virtual void Enable() { }
 
     void OnEnable()
     {
-        if(m_unStored)
+        if(_unStored)
         {
             Enable();
-            m_state = PlayerAnimationState.Instance;
-            m_weaponName = WeaponEquipment.Instance.EquipmentWeapon.name;
-            m_animator = PlayerContoller.Instance.GetComponent<Animator>();
-            m_weaponBase = GetComponent<WeaponBase>();
-            m_unStored = false;
+            _state = PlayerAnimationState.Instance;
+            _animator = PlayerContoller.Instance.GetComponent<Animator>();
+            _weaponBase = GetComponent<WeaponBase>();
+            _unStored = false;
         }
     }
    
     public void WeaponAttack(string weaponName)
     {
-        if (!m_state.AbleInput) return;
+        if (!_state.AbleInput) return;
 
         ////’ÊíUŒ‚‚Ìˆ—
         if (Input.GetButtonDown("Attack"))
         {
-            m_animator.SetTrigger(weaponName);
+            _animator.SetTrigger(weaponName);
         }
 
         //—­‚ßUŒ‚‚Ìˆ—(‹|–î‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚à‚±‚Ìˆ—j
-        if (Input.GetButton("Attack") && m_chrageCount < m_chargeLevel2)
+        if (Input.GetButton("Attack") && _chrageCount < _chargeLevel2)
         {
-            m_chrageCount += Time.deltaTime;
+            _chrageCount += Time.deltaTime;
         }
         else if (Input.GetButtonUp("Attack"))
         {
-            if(m_chrageCount > 0f)
+            if(_chrageCount > 0f)
             {
-                WeaponChargeAttackMethod(m_chrageCount);
+                WeaponChargeAttackMethod(_chrageCount);
             }
-            m_chrageCount = 0f;
+            _chrageCount = 0f;
         }
 
-        m_animator.SetBool("Charge", Input.GetButton("Attack"));
+        _animator.SetBool("Charge", Input.GetButton("Attack"));
     }
 
     

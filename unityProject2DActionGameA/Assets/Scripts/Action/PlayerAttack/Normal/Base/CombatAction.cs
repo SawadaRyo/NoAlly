@@ -6,19 +6,19 @@ public class CombatAction : WeaponAction
 {
     public override void WeaponChargeAttackMethod(float chrageCount)
     {
-        var beforePower = m_weaponBase.RigitPower;
+        var beforePower = _weaponBase.RigitPower;
 
-        if (m_chrageCount < m_chargeLevel1) return;
+        if (_chrageCount < _chargeLevel1) return;
 
-        else if (m_chrageCount >= m_chargeLevel1 && m_chrageCount < m_chargeLevel2)
+        else if (_chrageCount >= _chargeLevel1 && _chrageCount < _chargeLevel2)
         {
-            m_weaponBase.RigitPower *= 1.5f;
+            _weaponBase.RigitPower *= 1.5f;
         }
-        else if (m_chrageCount >= m_chargeLevel2)
+        else if (_chrageCount >= _chargeLevel2)
         {
-            m_weaponBase.RigitPower *= m_chargeLevel2;
+            _weaponBase.RigitPower *= _chargeLevel2;
         }
-        m_animator.Play(m_weaponName + "Chrage");
-        m_weaponBase.RigitPower = beforePower;
+        _animator.Play(_weaponName + "Chrage");
+        _weaponBase.RigitPower = beforePower;
     }
 }

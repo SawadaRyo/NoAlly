@@ -9,7 +9,6 @@ using UniRx;
 
 public class MainMenu : SingletonBehaviour<MainMenu>
 {
-    [SerializeField] string _filePath = "";
     [SerializeField] Button[] _mainWeapons = default;
     [SerializeField] Button[] _subWeapons = default;
     [SerializeField] Button[] _elements = default;
@@ -18,8 +17,6 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     EquipmentState _sub = new EquipmentState();
     ElementType _elementType = default;
 
-    public EquipmentState Main => _main;
-    public EquipmentState Sub => _sub;
 
     public event Action<ElementType> DisideElement;
 
@@ -27,54 +24,44 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     {
         for (int y = 0; y < Enum.GetNames(typeof(WeaponName)).Length; y++)
         {
-            _mainWeapons[y].onClick.AddListener(() => EquipmentWeapon(EquipmentType.MAIN, (WeaponName)y));
-            _subWeapons[y].onClick.AddListener(() => EquipmentWeapon(EquipmentType.SUB, (WeaponName)y));
+            _mainWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.MAIN, (WeaponName)y));
+            _subWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.SUB, (WeaponName)y));
             _elements[y].onClick.AddListener(() => DisideElement((ElementType)y));
         }
     }
     /// <summary> ‚±‚±‚Å‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚éiMain‚ÆSub‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚éj</summary>
     /// <param name="weaponName"></param>
     /// <param name="type"></param>
-    void EquipmentWeapon(EquipmentType type, WeaponName weaponName)
+    void Equipment(EquipmentType type, WeaponName weaponName)
     {
         WeaponName? beforeWeapons = null;
         if (type == EquipmentType.MAIN)
         {
-            //beforeWeapon = global::WeaponEquipment.Instance.MainWeapon;
-            //global::WeaponEquipment.Instance.MainWeapon = weapon;
-            //if (global::WeaponEquipment.Instance.MainWeapon == global::WeaponEquipment.Instance.SubWeapon)
-            //{
-            //    global::WeaponEquipment.Instance.SubWeapon = beforeWeapon;
-            //}
-            beforeWeapons = _main.WeaponName;
-            _main.WeaponName = weaponName;
-            if (_sub.WeaponName == _main.WeaponName)
+           beforeWeapons = _main.Name;
+            _main.Name = weaponName;
+            if (_sub.Name == _main.Name)
             {
-                _sub.WeaponName = beforeWeapons;
+                _sub.Name = beforeWeapons;
             }
         }
         else if (type == EquipmentType.SUB)
         {
-            //beforeWeapon = WeaponEquipment.Instance.SubWeapon;
-            //WeaponEquipment.Instance.SubWeapon = weapon;
-            //if (WeaponEquipment.Instance.MainWeapon == WeaponEquipment.Instance.SubWeapon)
-            //{
-            //    WeaponEquipment.Instance.MainWeapon = beforeWeapon;
-            //}
-            beforeWeapons = _sub.WeaponName;
-            _sub.WeaponName = weaponName;
-            if (_main.WeaponName == _sub.WeaponName)
+            beforeWeapons = _sub.Name;
+            _sub.Name = weaponName;
+            if (_main.Name == _sub.Name)
             {
-                _main.WeaponName = beforeWeapons;
+                _main.Name = beforeWeapons;
             }
         }
+        WeaponEquipment.Instance.ChangeWeapon(_main.Type, _main.Name);
+        WeaponEquipment.Instance.ChangeWeapon(_sub.Type, _sub.Name);
     }
 }
 
 public struct EquipmentState
 {
     public EquipmentType Type;
-    public WeaponName? WeaponName;
+    public WeaponName? Name;
 }
 
 public enum EquipmentType
