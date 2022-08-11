@@ -1,6 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+
+
+/// <summary>
+/// 武器の装備を管理するコンポーネント
+/// </summary>
 
 public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 {
@@ -24,10 +30,10 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     {
         for (int x = 0; x < _weapons.Length; x++)
         {
-            
+
         }
-        _mainWeaponBase = MainMenu.Instance.Weapons[0];
-        _subWeaponBase = MainMenu.Instance.Weapons[1];
+        //_mainWeaponBase = MainMenu.Instance.Weapons[0];
+        //_subWeaponBase = MainMenu.Instance.Weapons[1];
         _equipmentWeapon = _mainWeaponBase;
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
@@ -36,7 +42,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     {
         if (_mainWeaponBase != null && _subWeaponBase != null)
         {
-            WeaponChangeMethod();
+            WeaponSwich();
         }
     }
     void Update()
@@ -44,15 +50,15 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         if (Input.GetButtonDown("WeaponChange")
             && !Input.GetButton("Attack"))
         {
-            WeaponChangeMethod();
+            WeaponSwich();
         }
 
         if (!MenuHander.Instance.MenuIsOpen)
         {
-            _weaponAction.WeaponAttackMethod(_equipmentWeapon.name);
+            _weaponAction.WeaponAttack(_equipmentWeapon.name);
         }
 
-        if(PlayerContoller.Instance.IsWalled())
+        if (PlayerContoller.Instance.IsWalled())
         {
             _equipmentWeapon.RendererActive(false);
         }
@@ -61,7 +67,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _equipmentWeapon.RendererActive(true);
         }
     }
-    void WeaponChangeMethod()
+    void WeaponSwich()
     {
         //武器のメインとサブの表示を切り替える
 
@@ -79,5 +85,11 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _equipmentWeapon = _subWeaponBase;
         }
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
+    }
+    public void ChangeWeapon()
+    {
+        //switch ()
+        { }
+
     }
 }

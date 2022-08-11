@@ -35,7 +35,7 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
         }
     }
    
-    public void WeaponAttackMethod(string weaponName)
+    public void WeaponAttack(string weaponName)
     {
         if (!m_state.AbleInput) return;
 

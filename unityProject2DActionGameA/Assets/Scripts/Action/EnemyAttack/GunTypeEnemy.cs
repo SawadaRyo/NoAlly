@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class GunTypeEnemy : EnemyBase
 {
-    [SerializeField] int m_bulletSize = 50;
-    [SerializeField] Transform m_attackPos;
-    [SerializeField] Bullet m_bulletPrefab;
-    ObjectPool<Bullet> m_bulletPool;
-    float m_interval = 2f;
+    [SerializeField] int _bulletSize = 50;
+    [SerializeField] Transform _attackPos;
+    [SerializeField] Bullet _bulletPrefab;
+    ObjectPool<Bullet> _bulletPool;
+    float _interval = 2f;
 
 
     public override void Start()
     {
         base.Start(); 
-        m_bulletPool.SetBaseObj(m_bulletPrefab, m_attackPos);
-        m_bulletPool.SetCapacity(m_bulletSize);
+        _bulletPool.SetBaseObj(_bulletPrefab, _attackPos);
+        _bulletPool.SetCapacity(_bulletSize);
     }
 
   
@@ -26,11 +26,11 @@ public class GunTypeEnemy : EnemyBase
     }
     public void InsBullet()
     {
-        m_bulletPool.Instantiate();
+        _bulletPool.Instantiate();
     }
     IEnumerator RapidFire(bool sightIn)
     {
-        var wait = new WaitForSeconds(m_interval);
+        var wait = new WaitForSeconds(_interval);
         while (sightIn)
         {
             m_enemyAnimator.SetTrigger("Fire");

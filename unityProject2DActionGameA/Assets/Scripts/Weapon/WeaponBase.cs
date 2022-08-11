@@ -11,7 +11,6 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float _frozenPower = 0;
     [SerializeField] protected LayerMask _enemyLayer = ~0;
     [SerializeField] protected Renderer[] _weaponRenderer = default;
-    [SerializeField] WeaponAction _action;
 
 
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }

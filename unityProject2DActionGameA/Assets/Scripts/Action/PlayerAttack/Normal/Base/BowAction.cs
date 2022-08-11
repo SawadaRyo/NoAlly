@@ -5,25 +5,30 @@ using UnityEngine;
 
 public class BowAction : WeaponAction
 {
-    [SerializeField] float m_bulletSpeed = 5;
-    [SerializeField] string m_filePath = "";
-    [SerializeField] Transform m_muzzleForward = default;
-    [SerializeField] PersonType m_personType = PersonType.Player;
+    [SerializeField] float _bulletSpeed = 5;
+    [SerializeField] string _filePath = "";
+    [SerializeField] Transform _muzzleForward = default;
+    [SerializeField] PersonType _personType = PersonType.Player;
 
     int m_bulletType = 0;
-    Bullet[] m_bulletPrefab = new Bullet[3];
+    ObjectPool<Bullet>[] _bulletPool = new ObjectPool<Bullet>[3];
+    Bullet[] _bulletPrefab = new Bullet[3];
 
     enum PersonType { Player, Enemy };
 
-    public override void Enable()
+    public void Start()
     {
-        base.Enable();
-        m_bulletPrefab = Resources.LoadAll<Bullet>(m_filePath);
+        _bulletPrefab = Resources.LoadAll<Bullet>(_filePath);
+        for(int i = 0;i < _bulletPool.Length;i++)
+        {
+            _bulletPool[i].SetBaseObj(_bulletPrefab[i], _muzzleForward);
+            _bulletPool[i].SetCapacity(10);
+        }
     }
 
     public override void WeaponChargeAttackMethod(float chrageCount)
     {
-        if (m_personType == PersonType.Player)
+        if (_personType == PersonType.Player)
         {
             Debug.Log(chrageCount);
             //í èÌíe
@@ -42,8 +47,8 @@ public class BowAction : WeaponAction
                 m_bulletType = 2;
             }
 
-            var bullletObj = Instantiate(m_bulletPrefab[m_bulletType], m_muzzleForward.position, Quaternion.Euler(0f, 0f, 90f));
-            bullletObj.GetComponent<Rigidbody>().velocity = m_muzzleForward.forward * m_bulletSpeed;
+            var bullletObj = _bulletPool[m_bulletType].Instantiate();
+            bullletObj.GetComponent<Rigidbody>().velocity = _muzzleForward.forward * _bulletSpeed;
             m_bulletType = 0; //ë≈ÇøèIÇÌÇ¡ÇΩå„íeÇÃprefabÇí èÌíeÇ…ñﬂÇ∑
         }
     }

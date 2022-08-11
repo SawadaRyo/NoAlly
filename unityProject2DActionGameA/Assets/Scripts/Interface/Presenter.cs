@@ -1,17 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class Presenter : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] WeaponEquipment _weaponEquipment = WeaponEquipment.Instance;
+    [SerializeField] MainMenu _mainMenu = MainMenu.Instance;
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
         
     }
