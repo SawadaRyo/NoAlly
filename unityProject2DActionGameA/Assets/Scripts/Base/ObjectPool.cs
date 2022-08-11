@@ -24,8 +24,6 @@ public class ObjectPool<T> where T : UnityEngine.Object,IObjectPool
 
     public void SetCapacity(int size)
     {
-        //if (size < Pool.Count) return;
-
         for (int i = m_pool.Count - 1; i < size; ++i)
         {
             T obj = default(T);
