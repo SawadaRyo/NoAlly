@@ -11,7 +11,7 @@ public class BowAction : WeaponAction
     [SerializeField] PersonType _personType = PersonType.Player;
 
     int m_bulletType = 0;
-    BulletPool[] _bPool = default;
+    //BulletPool[] _bPool = new BulletPool[3];
     Bullet[] _bulletPrefab = new Bullet[3];
 
     enum PersonType { Player, Enemy };
@@ -19,11 +19,11 @@ public class BowAction : WeaponAction
     public void Start()
     {
         _bulletPrefab = Resources.LoadAll<Bullet>(_filePath);
-        _bPool = new BulletPool[_bulletPrefab.Length];
+        //_bPool = new BulletPool[_bulletPrefab.Length];
         for(int i = 0;i < _bulletPrefab.Length;i++)
         {
-            _bPool[i].SetBaseObj(_bulletPrefab[i], _muzzleForward);
-            _bPool[i].SetCapacity(10);
+            //_bPool[i].SetBaseObj(_bulletPrefab[i], _muzzleForward);
+            //_bPool[i].SetCapacity(10);
         }
     }
 
@@ -48,7 +48,7 @@ public class BowAction : WeaponAction
                 m_bulletType = 2;
             }
 
-            var bullletObj = _bPool.[m_bulletType].Instantiate();
+            //var bullletObj = _bPool[m_bulletType].Instantiate();
             bullletObj.GetComponent<Rigidbody>().velocity = _muzzleForward.forward * _bulletSpeed;
             m_bulletType = 0; //ë≈ÇøèIÇÌÇ¡ÇΩå„íeÇÃprefabÇí èÌíeÇ…ñﬂÇ∑
         }

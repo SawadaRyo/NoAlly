@@ -15,7 +15,7 @@ public class EnemyGenerator : MonoBehaviour
         for(int i = 0;i < m_enemyiesPool.Length; i++)
         {
             var enmeyPos = gameObject.transform.GetChild(i);
-            m_enemyiesPool[i].SetBaseObj(m_prefabBases[i],enmeyPos);
+            m_enemyiesPool[i].SetBaseObj(m_prefabBases[i],enmeyPos,);
             m_enemyiesPool[i].SetCapacity(m_size);
         }
     }
@@ -24,4 +24,9 @@ public class EnemyGenerator : MonoBehaviour
     {
         
     }
+}
+public enum EnemyType
+{
+    GUN,
+    UAV,
 }

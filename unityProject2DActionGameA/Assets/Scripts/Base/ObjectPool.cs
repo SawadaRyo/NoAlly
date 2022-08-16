@@ -3,58 +3,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T : UnityEngine.Object,IObjectPool
+public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
 {
-    T m_baseObj = null;
-    Transform m_parent = null;
-    List<T> m_pool = new List<T>();
-    int m_index = 0;
+    T _baseObj = null;
+    int _key = 0;
+    Transform _parent = null;
+    List<T> _pool = new List<T>();
+    Dictionary<int, List<T>> _poolList = new Dictionary<int, List<T>>();
+    int _index = 0;
 
-    public void SetBaseObj(T obj, Transform parent)
+    public void SetBaseObj(T obj, Transform parent, int key)
     {
-        m_baseObj = obj;
-        m_parent = parent;
+        _baseObj = obj;
+        _parent = parent;
+        _key = key;
     }
 
     public void Pooling(T obj)
     {
         obj.DisactiveForInstantiate();
-        m_pool.Add(obj);
+        _pool.Add(obj);
     }
 
     public void SetCapacity(int size)
     {
-        for (int i = m_pool.Count - 1; i < size; ++i)
+        List<T> objList = default(List<T>);
+        for (int i = _pool.Count - 1; i < size; ++i)
         {
             T obj = default(T);
-            if (m_parent)
+            if (_parent)
             {
-                obj = GameObject.Instantiate(m_baseObj, m_parent);
+                obj = GameObject.Instantiate(_baseObj, _parent);
             }
             else
             {
-                obj = GameObject.Instantiate(m_baseObj);
+                obj = GameObject.Instantiate(_baseObj);
             }
-            Pooling(obj);
+            obj.DisactiveForInstantiate();
+            objList.Add(obj);
+            Dictionalize(_key, objList);
+
+            //Pooling(obj);
         }
+    }
+
+    public void Dictionalize(int key, List<T> value)
+    {
+        _poolList.Add(key, value);
     }
 
     public T Instantiate()
     {
         T ret = null;
-        for (int i = 0; i < m_pool.Count; ++i)
+        for (int i = 0; i < _pool.Count; ++i)
         {
             int newSIze = 0;
-            int index = (m_index + i) % m_pool.Count;
-            if (m_pool[index] == null)
+            int index = (_index + i) % _pool.Count;
+            if (_pool[index] == null)
             {
                 newSIze++;
                 continue;
             }
-            else if (m_pool[index] != null && m_pool[index].IsActive) continue;
+            else if (_pool[index] != null && _pool[index].IsActive) continue;
 
-            m_pool[index].Create();
-            ret = m_pool[index];
+            _pool[index].Create();
+            ret = _pool[index];
             break;
         }
 

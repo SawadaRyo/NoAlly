@@ -14,7 +14,7 @@ public class GunTypeEnemy : EnemyBase
     public override void Start()
     {
         base.Start(); 
-        _bulletPool.SetBaseObj(_bulletPrefab, _attackPos);
+        _bulletPool.SetBaseObj(_bulletPrefab, _attackPos,(int)BulletOwner.Enemy);
         _bulletPool.SetCapacity(_bulletSize);
     }
 
