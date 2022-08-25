@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -68,6 +67,29 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
 
             _pool[index].Create();
             ret = _pool[index];
+            break;
+        }
+
+        return ret;
+    }
+
+    public T Instantiate(int key)
+    {
+        T ret = null;
+        List<T> valueList = _poolList[key];
+        for (int i = 0; i < valueList.Count; ++i)
+        {
+            int newSIze = 0;
+            int index = (_index + i) % valueList.Count;
+            if (valueList[index] == null)
+            {
+                newSIze++;
+                continue;
+            }
+            else if (valueList[index] != null && valueList[index].IsActive) continue;
+
+            valueList[index].Create();
+            ret = valueList[index];
             break;
         }
 

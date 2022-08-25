@@ -15,15 +15,15 @@ public class MainMenu : SingletonBehaviour<MainMenu>
 
     EquipmentState _main = new EquipmentState();
     EquipmentState _sub = new EquipmentState();
-    ElementType _elementType = default;
 
 
     public event Action<ElementType> DisideElement;
 
-    private void Start()
+    private void Awake()
     {
         for (int y = 0; y < Enum.GetNames(typeof(WeaponName)).Length; y++)
         {
+            Debug.Log(y);
             _mainWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.MAIN, (WeaponName)y));
             _subWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.SUB, (WeaponName)y));
             _elements[y].onClick.AddListener(() => DisideElement((ElementType)y));
@@ -34,7 +34,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     /// <param name="type"></param>
     void Equipment(EquipmentType type, WeaponName weaponName)
     {
-        WeaponName? beforeWeapons = null;
+        WeaponName beforeWeapons = default;
         if (type == EquipmentType.MAIN)
         {
            beforeWeapons = _main.Name;
@@ -55,15 +55,16 @@ public class MainMenu : SingletonBehaviour<MainMenu>
         }
         WeaponEquipment.Instance.ChangeWeapon(_main.Type, _main.Name);
         WeaponEquipment.Instance.ChangeWeapon(_sub.Type, _sub.Name);
+        Debug.Log($"{_main.Type}:{_main.Name}");
+        Debug.Log($"{_sub.Type}:{_sub.Name}");
     }
 }
 
 public struct EquipmentState
 {
     public EquipmentType Type;
-    public WeaponName? Name;
+    public WeaponName Name;
 }
-
 public enum EquipmentType
 {
     MAIN,

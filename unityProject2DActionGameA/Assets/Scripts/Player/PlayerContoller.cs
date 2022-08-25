@@ -80,7 +80,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_animator = GetComponent<Animator>();
         m_animState = PlayerAnimationState.Instance;
     }
-
     void Update()
     {
         if (GameManager.Instance.IsGame)
@@ -91,8 +90,30 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             JumpMethod();
         }
     }
-
-    //Playerの動きを処理が書かれた関数----------------------------------------------//
+    void OnCollisionEnter(Collision other)
+    {
+        var otherCollider = other.gameObject;
+        if (otherCollider)
+        {
+            if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
+            {
+                transform.parent = other.gameObject.transform;
+            }
+        }
+    }
+    void OnCollisionExit()
+    {
+        transform.parent = null;
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 isGroundCenter = m_footPos.transform.position;
+        Ray ray = new Ray(isGroundCenter, Vector3.right);
+        Gizmos.DrawRay(ray);
+    }
+    //Playerの動きを処理が書かれた関数-------------------------------------//
+    /// <summary>プレイヤーの移動</summary>
     void MoveMethod()
     {
         m_isDash = Input.GetButton("Dash");
@@ -139,13 +160,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_rb.velocity = new Vector3(m_velo.x, m_rb.velocity.y, 0);
         m_animator.SetFloat("MoveSpeed", Mathf.Abs(m_velo.x));
     }
-    bool IsGrounded()
-    {
-        Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
-        return hitFlg;
-    }
+    /// <summary>プレイヤーのジャンプ</summary>
     void JumpMethod()
     {
         //ジャンプの処理
@@ -157,20 +172,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         m_animator.SetBool("Jump", !IsGrounded());
 
     }
-    public bool IsWalled()
-    {
-        if (IsGrounded()) return false;
-
-        Vector3 isWallCenter = m_gripPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
-
-        bool hitflg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-        || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
-
-        return hitflg;
-    }
-
+    /// <summary>プレイヤーの壁ジャンプ</summary>
     void WallJumpMethod()
     {
         m_animator.SetBool("WallGrip", IsWalled());
@@ -202,37 +204,37 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             m_rb.velocity = new Vector3(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -m_wallSlideSpeed, float.MaxValue));
         }
     }
+    /// <summary>接壁判定</summary>
+    public bool IsWalled()
+    {
+        if (IsGrounded()) return false;
+
+        Vector3 isWallCenter = m_gripPos.transform.position;
+        Ray rayRight = new Ray(isWallCenter, Vector3.right);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+
+        bool hitflg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
+        || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+
+        return hitflg;
+    }
+    /// <summary>接地判定</summary>
+    bool IsGrounded()
+    {
+        Vector3 isGroundCenter = m_footPos.transform.position;
+        Ray ray = new Ray(isGroundCenter, Vector3.down);
+        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
+        return hitFlg;
+    }
     //AnimatorEventで呼ぶ関数----------------------------------------------//
-    
     void WallJump()
     {
         m_audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
         m_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
     }
-
-    
-    void OnCollisionEnter(Collision other)
+    void FootSound(AudioClip footSound)
     {
-        var otherCollider = other.gameObject;
-        if (otherCollider)
-        {
-            if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
-            {
-                transform.parent = other.gameObject.transform;
-            }
-        }
-    }
-    void OnCollisionExit()
-    {
-        transform.parent = null;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.right);
-        Gizmos.DrawRay(ray);
+        
     }
 }

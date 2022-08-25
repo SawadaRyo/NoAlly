@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 public class MenuHander : SingletonBehaviour<MenuHander>
 {
-    [SerializeField] float _interval = 1f;
+    [SerializeField] float _interval = 0.2f;
 
     Image[] _gameUIGauges = default;
     GameObject[] _gamePanels = new GameObject[2];
 
     bool _menuIsOpen = false;
     bool _safeZorn = false;
-    float _crossH = 0;
-    float _crossV = 0;
+    int _crossH = 0;
+    int _crossV = 0;
     GameObject _canvas = default;
     Button _targetButton = default;
     Button[,] _allButtons = default;
@@ -41,7 +41,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
         //UIのゲーム起動時の初期設定
         //ToDo マジックナンバーを直す。
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < _gamePanels.Length; i++)
         {
             _gamePanels[i] = _canvas.transform.GetChild(i).gameObject;
             _gamePanels[i].SetActive(false);
@@ -69,15 +69,17 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             float v = Input.GetAxisRaw("CrossKeyV");
 
             Debug.Log(_canMove.IsCountUp());
-            if (_canMove.IsCountUp())
+            if (_canMove.IsCountUp() && (h != 0 || v != 0))
             {
-                _targetButton = SelectButton(h, v);
-                if(_targetButton != null)
+                //if (_targetButton != null)
+                Button b = SelectButton(h, v);
+                if (b != null)
                 {
+                    _targetButton = b;
                     _targetButton.Select();
                 }
             }
-            Debug.Log($"{_crossH},{_crossV}");
+
             if (Input.GetButtonDown("Decision"))
             {
                 _targetButton.onClick.Invoke();
@@ -90,10 +92,8 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     {
         //ToDo メニューの開閉にアニメーションを加える
         _gamePanels[0].SetActive(isOpen);
-        if (_safeZorn)
-        {
-            _gamePanels[1].SetActive(isOpen);
-        }
+        _gamePanels[1].SetActive(isOpen);
+
         foreach (Image image in _gameUIGauges)
         {
             image.enabled = !isOpen;
@@ -115,32 +115,32 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         if (h > 0)
         {
             _crossH++;
-            if (_crossH > _allButtons.GetLength(1)) _crossH = 0;
+            if (_crossH > _allButtons.GetLength(1) - 1) _crossH = 0;
         }
-        if(v > 0)
+        if (v < 0)
         {
-            _crossV--;
-            if (_crossV < 0) _crossV = _allButtons.GetLength(0) - 1;
+            _crossV++;
+            if (_crossV > _allButtons.GetLength(0) - 1) _crossV = 0;
         }
-        if(h < 0)
+        if (h < 0)
         {
             _crossH--;
             if (_crossH < 0) _crossH = _allButtons.GetLength(1) - 1;
         }
-        if(v < 0)
+        if (v > 0)
         {
-            _crossV++;
-            if (_crossV > _allButtons.GetLength(0)) _crossV = 0;
+            _crossV--;
+            if (_crossV < 0) _crossV = _allButtons.GetLength(0) - 1;
         }
 
-        return _allButtons[(int)_crossV, (int)_crossH];
-        
+        return _allButtons[_crossV, _crossH];
     }
 
     /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
     void MenuOpen()
     {
         _allButtons[0, 0].Select();
+        _targetButton = _allButtons[0, 0];
     }
 
     /// <summary>メニュー画面縮小時に呼ぶ関数</summary>
