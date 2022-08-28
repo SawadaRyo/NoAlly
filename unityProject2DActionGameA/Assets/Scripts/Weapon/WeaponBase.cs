@@ -12,6 +12,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected LayerMask _enemyLayer = ~0;
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
+    public bool IsActive = false;
 
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
@@ -37,6 +38,39 @@ public abstract class WeaponBase : MonoBehaviour
         {
             weaponRend.enabled = stats;
         }
+    }
+
+    public float ChangePower(TypeOfPower top,float magnification)
+    {
+        float refPower = 0;
+        switch (top)
+        {
+            case TypeOfPower.RIGIT:
+                refPower = _rigitPower;
+                break;
+            case TypeOfPower.ELEKE:
+                refPower = _enemyLayer;
+                break;
+            case TypeOfPower.FIRE:
+                refPower = _firePower;
+                break;
+            case TypeOfPower.FROZEN:
+                refPower = _frozenPower;
+                break;
+        }
+        if(magnification < 1)
+        {
+            magnification = 1;
+        }
+        return refPower * magnification;
+    }
+
+    public enum TypeOfPower
+    { 
+        RIGIT,
+        ELEKE,
+        FIRE,
+        FROZEN
     }
 }
 

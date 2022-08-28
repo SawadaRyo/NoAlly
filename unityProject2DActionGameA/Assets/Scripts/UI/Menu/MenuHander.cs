@@ -6,13 +6,13 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 {
     [SerializeField] float _interval = 0.2f;
 
-    Image[] _gameUIGauges = default;
-    GameObject[] _gamePanels = new GameObject[2];
 
     bool _menuIsOpen = false;
     bool _safeZorn = false;
     int _crossH = 0;
     int _crossV = 0;
+    Image[] _gameUIGauges = default;
+    Image[] _gamePanelsImages = default;
     GameObject _canvas = default;
     Button _targetButton = default;
     Button[,] _allButtons = default;
@@ -25,7 +25,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         _canMove = new Interval(_interval);
 
         //Canvas上の全てのButtonを取得する。
-        _canvas = GameObject.FindGameObjectWithTag("Canvas");
         _allButtons = new Button[Enum.GetNames(typeof(EquipmentType)).Length, Enum.GetNames(typeof(ElementType)).Length];
         int length = 0;
         Button[] buttonArray = GetComponentsInChildren<Button>(true);
@@ -35,16 +34,24 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             for (int x = 0; x < _allButtons.GetLength(1); x++)
             {
                 _allButtons[y, x] = buttonArray[length];
+                _allButtons[y, x].enabled = false;
                 length++;
             }
         }
 
-        //UIのゲーム起動時の初期設定
         //ToDo マジックナンバーを直す。
-        for (int i = 0; i < _gamePanels.Length; i++)
+        //for (int i = 0; i < _gamePanels.Length; i++)
+        //{
+        //    _gamePanels[i] = _canvas.transform.GetChild(i).gameObject;
+        //    _gamePanels[i].SetActive(false);
+        //}
+
+        //UIのゲーム起動時の初期設定
+        _canvas = GameObject.FindGameObjectWithTag("Canvas");
+        _gamePanelsImages = GetComponentsInChildren<Image>(true);
+        foreach(Image gpi in _gamePanelsImages)
         {
-            _gamePanels[i] = _canvas.transform.GetChild(i).gameObject;
-            _gamePanels[i].SetActive(false);
+            gpi.enabled = false;
         }
 
         _gameUIGauges = _canvas.transform.GetChild(2).GetComponentsInChildren<Image>();
@@ -91,8 +98,15 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     void IsManuExpand(bool isOpen)
     {
         //ToDo メニューの開閉にアニメーションを加える
-        _gamePanels[0].SetActive(isOpen);
-        _gamePanels[1].SetActive(isOpen);
+        foreach (Image gpi in _gamePanelsImages)
+        {
+            //if (gpi.gameObject.tag == "ChackFrame") return;
+            gpi.enabled = isOpen;
+        }
+        foreach(Button b in _allButtons)
+        {
+            b.enabled = isOpen;
+        }
 
         foreach (Image image in _gameUIGauges)
         {
@@ -139,8 +153,8 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
     void MenuOpen()
     {
-        _allButtons[0, 0].Select();
-        _targetButton = _allButtons[0, 0];
+        _allButtons[_crossV, _crossH].Select();
+        _targetButton = _allButtons[_crossV, _crossH];
     }
 
     /// <summary>メニュー画面縮小時に呼ぶ関数</summary>
