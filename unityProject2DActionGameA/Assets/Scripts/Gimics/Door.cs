@@ -5,26 +5,30 @@ using UnityEngine.UI;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] GameObject[] m_locks = default;
-    Material m_doorLight = default;
-    Animator m_animator = default;
-    int m_remainLock = 0;
-    bool m_unLock = false;
+    [SerializeField] DoorSwitchBase[] _locks = default;
+    Material _doorLight = default;
+    Animator _animator = default;
+    int _remainLock = 0;
+    bool _isLock = false;
+    public bool IsLock => _isLock;
 
     void Start()
     {
-        m_animator = GetComponent<Animator>();
-        m_doorLight = transform.GetChild(0).GetComponent<Renderer>().materials[1];
-        m_remainLock = m_locks.Length;
+        foreach(var dsb in _locks)
+        {
+            dsb.SetUp(this);
+        }
+        _animator = GetComponent<Animator>();
+        _doorLight = transform.GetChild(0).GetComponent<Renderer>().materials[1];
+        _remainLock = _locks.Length;
         UnLock();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent(out PlayerContoller p))
+        if (other.gameObject.TryGetComponent(out PlayerContoller p))
         {
             DoorState(true);
-            MenuHander.Instance.SafeZorn = !MenuHander.Instance.SafeZorn;
         }
     }
 
@@ -38,21 +42,17 @@ public class Door : MonoBehaviour
 
     void DoorState(bool doorLock)
     {
-        if (!m_unLock) return;
-        m_animator.SetBool("DoorLock", doorLock);
+        if (!_isLock) return;
+        _animator.SetBool("DoorLock", doorLock);
     }
 
     public void UnLock()
     {
-        if(m_remainLock > 0)
+        _remainLock--;
+        if (_remainLock <= 0)
         {
-            m_remainLock--;
-        }
-
-        if(m_remainLock == 0)
-        {
-            m_unLock = true;
-            m_doorLight.SetColor("Emission", Color.green);
+            _isLock = true;
+            _doorLight.SetColor("Emission", Color.green);
         }
     }
 }

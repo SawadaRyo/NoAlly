@@ -18,7 +18,6 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     [Tooltip("装備中の武器")] WeaponBase _equipmentWeapon = default;
     [Tooltip("現在の属性")] ElementType _type = default;
     WeaponAction _weaponAction = default;
-    ObjectPool<Bullet>[] _pool = new ObjectPool<Bullet>[4];
 
     public bool WeaponSwitch => _weaponSwitch;
     public WeaponAction EquipeWeaponAction => _weaponAction;
@@ -32,6 +31,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         ChangeWeapon(EquipmentType.MAIN, WeaponName.SWORD);
         ChangeWeapon(EquipmentType.SUB, WeaponName.LANCE);
         SetEquipment(_mainWeaponBase, _subWeaponBase);
+        _weaponSwitch = true;
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
 
@@ -58,27 +58,32 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _equipmentWeapon.RendererActive(true);
         }
     }
+    /// <summary>武器のメインとサブの表示を切り替える</summary>
     void SwichWeapon()
     {
-        //武器のメインとサブの表示を切り替える
-
+        WeaponBase unEquipmentWeapon = default;
         _weaponSwitch = !_weaponSwitch;
-        //_mainWeaponBase.RendererActive(_weaponSwitch);
-        //_subWeaponBase.RendererActive(!_weaponSwitch);
+
 
         //メインとサブの武器を切り替える
         if (_weaponSwitch)
         {
-            //_equipmentWeapon = _mainWeaponBase;
-            SetEquipment(_mainWeaponBase, _subWeaponBase);
+            _equipmentWeapon = _mainWeaponBase;
+            unEquipmentWeapon = _subWeaponBase;
+            //SetEquipment(_mainWeaponBase, _subWeaponBase);
         }
         else
         {
-            //_equipmentWeapon = _subWeaponBase;
-            SetEquipment(_subWeaponBase, _mainWeaponBase);
+            _equipmentWeapon = _subWeaponBase;
+            unEquipmentWeapon = _mainWeaponBase;
+            //SetEquipment(_subWeaponBase, _mainWeaponBase);
         }
+        SetEquipment(_equipmentWeapon, unEquipmentWeapon);
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
+    /// <summary>メイン武器・サブ武器を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
+    /// <param name="equipmentType"></param>
+    /// <param name="weaponName"></param>
     public void ChangeWeapon(EquipmentType equipmentType, WeaponName? weaponName)
     {
         if (equipmentType == EquipmentType.MAIN)
@@ -110,13 +115,13 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     /// ・第一引数：装備させる武器
     /// ・第二引数：装備させていた武器</summary>
     /// <param name="equipmentWeapon"></param>
-    /// <param name="athorWeapon"></param>
-    void SetEquipment(WeaponBase equipmentWeapon, WeaponBase athorWeapon)
+    /// <param name="unEquipmentWeapon"></param>
+    void SetEquipment(WeaponBase equipmentWeapon, WeaponBase unEquipmentWeapon)
     {
         _equipmentWeapon = equipmentWeapon;
+        unEquipmentWeapon.IsActive = false;
+        unEquipmentWeapon.RendererActive(false);
         _equipmentWeapon.IsActive = true;
-        athorWeapon.IsActive = false;
         _equipmentWeapon.RendererActive(true);
-        athorWeapon.RendererActive(false);
     }
 }

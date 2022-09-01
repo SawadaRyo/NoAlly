@@ -24,15 +24,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3562530485492207942}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: -0.025, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3562530485492506778}
   m_Father: {fileID: 5532610361359809666}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
 --- !u!95 &2722877322065192550
 Animator:
   serializedVersion: 4
@@ -101,7 +101,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3562530485492218160}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -214,12 +214,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2c0beebd9674e44bf6eb96325d4af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chargeLevel1: 1
-  m_chargeLevel2: 1.5
-  m_bulletSpeed: 5
-  m_filePath: PlayerBullet
-  m_muzzleForward: {fileID: 0}
-  m_personType: 0
+  _chargeLevel1: 1
+  _chargeLevel2: 3
+  _bulletSpeed: 5
+  _filePath: 
+  _muzzleForward: {fileID: 0}
+  _poolPos: {fileID: 0}
+  _personType: 0
 --- !u!114 &3955134002871198386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,12 +233,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3591d0d6770ce594c83e1e76e7c905cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rigitPower: 5
-  m_elekePower: 0
-  m_firePower: 0
-  m_frozenPower: 0
-  enemyLayer:
+  _rigitPower: 5
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _enemyLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_weaponRenderer:
-  - {fileID: 3562530485494454078}
+  _weaponRenderer: []

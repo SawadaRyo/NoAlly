@@ -12,8 +12,11 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected LayerMask _enemyLayer = ~0;
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
-    public bool IsActive = false;
+    protected bool _isActive = false;
+    Collider _myCollider = default;
+    ParticleSystem _myParticleSystem = default;
 
+    public bool IsActive { get => _isActive; set => _isActive = value; } 
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -23,6 +26,8 @@ public abstract class WeaponBase : MonoBehaviour
     {
         //Startä÷êîÇ≈åƒÇ—ÇΩÇ¢èàóùÇÕÇ±ÇÃä÷êîÇ…
         RendererActive(false);
+        _myCollider = GetComponent<Collider>();
+        _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void Update()
     {
@@ -40,7 +45,7 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
-    public float ChangePower(TypeOfPower top,float magnification)
+    public float ChargePower(TypeOfPower top,float magnification)
     {
         float refPower = 0;
         switch (top)
@@ -64,7 +69,12 @@ public abstract class WeaponBase : MonoBehaviour
         }
         return refPower * magnification;
     }
-
+    public void IsAttack(bool isAttack)
+    {
+        _myCollider.enabled = isAttack;
+        if (isAttack) _myParticleSystem.Play();
+        else _myParticleSystem.Pause();
+    }
     public enum TypeOfPower
     { 
         RIGIT,

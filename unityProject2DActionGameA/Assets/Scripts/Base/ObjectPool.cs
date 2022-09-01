@@ -18,15 +18,9 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
         _key = key;
     }
 
-    public void Pooling(T obj)
-    {
-        obj.DisactiveForInstantiate();
-        _pool.Add(obj);
-    }
-
     public void SetCapacity(int size)
     {
-        List<T> objList = default(List<T>);
+        List<T> objList = new List<T>();
         for (int i = _pool.Count - 1; i < size; ++i)
         {
             T obj = default(T);
@@ -40,10 +34,8 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
             }
             obj.DisactiveForInstantiate();
             objList.Add(obj);
-            Dictionalize(_key, objList);
-
-            //Pooling(obj);
         }
+        Dictionalize(_key, objList);
     }
 
     public void Dictionalize(int key, List<T> value)

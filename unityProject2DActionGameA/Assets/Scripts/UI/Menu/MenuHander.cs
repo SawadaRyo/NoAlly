@@ -8,7 +8,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
 
     bool _menuIsOpen = false;
-    bool _safeZorn = false;
     int _crossH = 0;
     int _crossV = 0;
     Image[] _gameUIGauges = default;
@@ -17,7 +16,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     Button _targetButton = default;
     Button[,] _allButtons = default;
     Interval _canMove = default;
-    public bool SafeZorn { get => _safeZorn; set => _safeZorn = value; }
+
     public bool MenuIsOpen => _menuIsOpen;
 
     void Start()
@@ -39,16 +38,9 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             }
         }
 
-        //ToDo マジックナンバーを直す。
-        //for (int i = 0; i < _gamePanels.Length; i++)
-        //{
-        //    _gamePanels[i] = _canvas.transform.GetChild(i).gameObject;
-        //    _gamePanels[i].SetActive(false);
-        //}
-
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
-        _gamePanelsImages = GetComponentsInChildren<Image>(true);
+        _gamePanelsImages = _canvas.GetComponentsInChildren<Image>(true);
         foreach(Image gpi in _gamePanelsImages)
         {
             gpi.enabled = false;
@@ -60,7 +52,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             image.enabled = true;
         }
     }
-
 
     void Update()
     {
@@ -122,7 +113,10 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             MenuClose();
         }
     }
-
+    /// <summary>メニューのボタン操作</summary>
+    /// <param name="h"></param>
+    /// <param name="v"></param>
+    /// <returns></returns>
     Button SelectButton(float h, float v)
     {
         _canMove.ResetTimer();
@@ -149,14 +143,12 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
         return _allButtons[_crossV, _crossH];
     }
-
     /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
     void MenuOpen()
     {
         _allButtons[_crossV, _crossH].Select();
         _targetButton = _allButtons[_crossV, _crossH];
     }
-
     /// <summary>メニュー画面縮小時に呼ぶ関数</summary>
     void MenuClose()
     {

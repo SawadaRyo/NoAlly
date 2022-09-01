@@ -1407,7 +1407,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 12182
+  m_VersionIndex: 11381
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2309,9 +2309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca29c3ea7c258141bc626f3bbb166b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chargeLevel1: 1
-  m_chargeLevel2: 1.5
-  m_chargeLevel3: 3
+  _chargeLevel1: 1
+  _chargeLevel2: 3
 --- !u!114 &-46491826598969884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2324,14 +2323,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 644edca998eaa234ea6a39a4edb64d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rigitPower: 3
-  m_elekePower: 0
-  m_firePower: 0
-  m_frozenPower: 0
-  enemyLayer:
+  _rigitPower: 5
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _enemyLayer:
     serializedVersion: 2
-    m_Bits: 256
-  m_weaponRenderer:
+    m_Bits: 4294967295
+  _weaponRenderer:
   - {fileID: 5100037510386225776}
   - {fileID: 4562211882351388450}
   - {fileID: 7595152486124618312}
@@ -2449,7 +2448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}

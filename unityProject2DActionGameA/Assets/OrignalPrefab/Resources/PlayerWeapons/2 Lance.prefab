@@ -193,7 +193,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8745504583168015379}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.087, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -216,17 +216,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a8bd55196fbc3e4db6ae35abf9e11c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rigitPower: 5
-  m_elekePower: 0
-  m_firePower: 0
-  m_frozenPower: 0
-  enemyLayer:
+  _rigitPower: 5
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _enemyLayer:
     serializedVersion: 2
-    m_Bits: 255
-  m_weaponRenderer:
-  - {fileID: 10376335919383839}
-  - {fileID: 318613260463566330}
-  - {fileID: 7765572504526034340}
+    m_Bits: 4294967295
+  _weaponRenderer: []
 --- !u!65 &2258026902165642782
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -252,9 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca29c3ea7c258141bc626f3bbb166b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chargeLevel1: 1
-  m_chargeLevel2: 1.5
-  m_chargeLevel3: 3
+  _chargeLevel1: 1
+  _chargeLevel2: 3
 --- !u!1 &9004432886736776135
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,6 +980,10 @@ PrefabInstance:
     - target: {fileID: 8713452603300891332, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
       propertyPath: m_Name
       value: LanceEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713452603300891332, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
