@@ -19,6 +19,8 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
     [Tooltip("PlayerAnimationState‚ðŠi”[‚·‚é•Ï”")]
     PlayerAnimationState _state;
 
+    public float ChrageCount => _chrageCount; 
+
     public abstract void WeaponChargeAttackMethod(float chrageCount);
     public virtual void Enable() { }
 
@@ -51,10 +53,10 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
         }
         else if (Input.GetButtonUp("Attack"))
         {
-            if(_chrageCount > 0f)
-            {
-                WeaponChargeAttackMethod(_chrageCount);
-            }
+            //if(_chrageCount > 0f)
+            //{
+            //    WeaponChargeAttackMethod(_chrageCount);
+            //}
             _chrageCount = 0f;
         }
 

@@ -18,6 +18,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     float _h;
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
+    bool _dashChack = false;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")]
@@ -35,7 +36,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
     [Header("WallJump")]
     [SerializeField, Tooltip("プレイヤーの壁キックの力")]
-    float m_wallJump = 7f;
+    float _wallJump = 7f;
+    [SerializeField]
+    float _wallJump2 = 7f;
     [SerializeField, Tooltip("壁をずり落ちる速度")]
     float m_wallSlideSpeed = 0.8f;
     [SerializeField, Tooltip("壁の接触判定のRayの射程")]
@@ -68,6 +71,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     delegate void WeaponAttacks();
+    WeaponAttacks _weaponAttack;
 
     void Start()
     {
@@ -85,7 +89,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");
             _jump = Input.GetButtonDown("Jump");
-            WallJumpMethod(_jump);
+            WallJumpMethod(_jump,_isDash);
             JumpMethod(_jump);
         }
     }
@@ -112,13 +116,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         transform.parent = null;
     }
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Vector3 isGroundCenter = m_footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.right);
-        Gizmos.DrawRay(ray);
-    }
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Vector3 isGroundCenter = m_footPos.transform.position;
+    //    Ray ray = new Ray(isGroundCenter, Vector3.right);
+    //    Gizmos.DrawRay(ray);
+    //}
     //Playerの動きを処理が書かれた関数-------------------------------------//
     /// <summary>プレイヤーの移動</summary>
     void MoveMethod(float h, bool dash)
@@ -126,7 +130,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         if (h > 0) h = 1;
         else if ((h < 0)) h = -1;
 
-        var moveSpeed = 0f;
+        float moveSpeed = 0f;
 
         //プレイヤーの方向転換
         if (h == -1)
@@ -148,17 +152,22 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                 if (dash)
                 {
                     moveSpeed = _dashSpeed;
+                    _dashChack = true;
                 }
                 else
                 {
                     moveSpeed = _speed;
+                    _dashChack = false;
                 }
                 _beforeSpeed = moveSpeed;
             }
             else
             {
-                moveSpeed = _beforeSpeed;
-                if (!dash || IsWalled())
+                if(_dashChack)
+                {
+                    moveSpeed = _dashSpeed;
+                }
+                else if (!_dashChack || IsWalled())
                 {
                     moveSpeed = _speed;
                 }
@@ -182,7 +191,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
     }
     /// <summary>プレイヤーの壁ジャンプ</summary>
-    void WallJumpMethod(bool jump)
+    void WallJumpMethod(bool jump ,bool isDash)
     {
         _animator.SetBool("WallGrip", IsWalled());
         if (IsGrounded())
@@ -200,7 +209,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                 _animator.SetTrigger("WallJump");
                 Vector3 vec = transform.up + m_hitInfo.normal;
                 //_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
-                _rb.velocity = new Vector3(_rb.velocity.x, m_wallJump, 0);
+
+                if (isDash) _rb.velocity = new Vector3(_rb.velocity.x, _wallJump2, 0);
+                else _rb.velocity = new Vector3(_rb.velocity.x, _wallJump, 0);
             }
         }
         else
@@ -241,7 +252,8 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         _audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
-        _rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
+        if(_isDash) _rb.AddForce(vec * _wallJump2, ForceMode.Impulse);
+        else _rb.AddForce(vec * _wallJump, ForceMode.Impulse);
     }
     void FootSound(AudioClip footSound)
     {

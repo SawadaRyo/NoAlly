@@ -9,12 +9,16 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     bool _ableMove = true;
     [Tooltip("“ü—Í‰Â”\‚©”»’è‚·‚é•Ï”")]
     bool _ableInput = true;
+
+    float _shootTiming = 0.35f;
     [Tooltip("Animation‚Ì‘JˆÚó‹µ")]
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ðŠi”[‚·‚é•Ï”")]
     Animator _animator = default;
-    [Tooltip("WeaponEquipment‚ðŠi”[‚·‚é•Ï”")]
+    [Tooltip("WeaponEquipmentƒNƒ‰ƒX‚ðŠi”[‚·‚é•Ï”")]
     WeaponEquipment _weaponEquipment;
+    [Tooltip("‘•”õ’†‚Ì•Ší‚ÌWeaponAction‚ðŠi”[‚·‚é•Ï”")]
+    WeaponAction _eWeapon = default;
 
     public bool AbleMove => _ableMove;
     public bool AbleInput => _ableInput;
@@ -24,31 +28,28 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _animator = GetComponent<Animator>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
         _weaponEquipment = WeaponEquipment.Instance;
+        _eWeapon = _weaponEquipment.EquipeWeaponAction;
         DetectionState();
+        AnimationEnter();
     }
 
     void DetectionState()
     {
-        //m_trigger
-        //.OnStateEnterAsObservable()
-        //.Subscribe(onStateInfo =>
-        //{
-        //    if (onStateInfo.StateInfo.IsTag("Ground") || onStateInfo.StateInfo.IsName("JumpEnd"))
-        //    {
-        //        Debug.Log("Enter");
-        //        m_ableMove = false;
-        //        if (onStateInfo.StateInfo.IsName($"{m_weaponEquipment.name}+AttackFinish"))
-        //        {
-        //            m_ableInput = false;
-        //        }
-        //    }
-        //}).AddTo(this); 
         IDisposable enterState = _trigger
         .OnStateEnterAsObservable()
         .Subscribe(onStateInfo =>
         {
             AnimatorStateInfo info = onStateInfo.StateInfo;
-            if (info.IsTag("GroundAttack"))
+            //Debug.Log(onStateInfo);
+            if (info.IsTag("Idle"))
+            {
+                _ableMove = true;
+                if (!_ableInput)
+                {
+                    _ableInput = true;
+                }
+            }
+            else if (info.IsTag("GroundAttack"))
             {
                 _ableMove = false;
             }
@@ -57,18 +58,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                 _ableInput = false;
                 _ableMove = false;
             }
-            else if(info.IsTag("Idle"))
-            {
-                _ableMove = true;
-                if (!_ableInput)
-                {
-                    _ableInput = true;
-                }
-            }
 
         }).AddTo(this);
 
-        IDisposable exitState =_trigger
+        IDisposable exitState = _trigger
             .OnStateExitAsObservable()
             .Subscribe(onStateInfo =>
             {
@@ -76,7 +69,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                 if (info.IsTag("GroundAttack") || info.IsName("JumpEnd"))
                 {
                     Debug.Log("Exit");
-                    
+
                 }
             }).AddTo(this);
 
@@ -89,6 +82,19 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             {
                 //if(info.length == )
             }
+        }).AddTo(this);
+    }
+
+    void AnimationEnter()
+    {
+        IDisposable bowAnimationEnter = _trigger
+        .OnStateEnterAsObservable()
+        .Where(x => x.StateInfo.IsTag("Shoot"))
+        .Where(x => x.StateInfo.normalizedTime >= _shootTiming)
+        .Take(1)
+        .Subscribe(x =>
+        {
+            _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
 }
