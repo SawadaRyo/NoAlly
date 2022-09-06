@@ -50,7 +50,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _weaponAction.WeaponAttack(_equipmentWeapon.name);
         }
 
-        if (PlayerContoller.Instance.IsWalled() || PlayerContoller.Instance.DashChack)
+        if (PlayerContoller.Instance.IsWalled())
         {
             _equipmentWeapon.RendererActive(false);
         }

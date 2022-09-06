@@ -31,7 +31,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _weaponEquipment = WeaponEquipment.Instance;
         _eWeapon = _weaponEquipment.EquipeWeaponAction;
         DetectionState();
-        AnimationEnter();
+        WeaponAnimationUpdate();
     }
 
     void DetectionState()
@@ -81,10 +81,32 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         }).AddTo(this);
     }
 
-    void AnimationEnter()
+    void WeaponAnimationUpdate()
     {
-        IDisposable bowAnimationEnter = _trigger
-        .OnStateEnterAsObservable()
+        //IDisposable bowAnimationEnter = _trigger
+        //.OnStateEnterAsObservable()
+        //.Where(x => x.StateInfo.IsTag("Shoot"))
+        //.Where(x => x.StateInfo.normalizedTime >= _shootTiming)
+        //.Take(1)
+        //.Subscribe(x =>
+        //{
+        //    _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
+        //}).AddTo(this);
+        IDisposable bowAnimationUpdate = _trigger
+        .OnStateUpdateAsObservable()
+        .Where(x => x.StateInfo.IsTag("Shoot"))
+        .Where(x => x.StateInfo.normalizedTime >= _shootTiming)
+        .Take(1)
+        .Subscribe(x =>
+        {
+            _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
+        }).AddTo(this);
+    }
+
+    void PlayerAnimationEnter()
+    {
+        IDisposable bowAnimationUpdate = _trigger
+        .OnStateUpdateAsObservable()
         .Where(x => x.StateInfo.IsTag("Shoot"))
         .Where(x => x.StateInfo.normalizedTime >= _shootTiming)
         .Take(1)

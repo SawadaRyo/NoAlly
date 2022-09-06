@@ -14,6 +14,8 @@ public class ManeuverDateEntity
 public enum WeaponType
 {
     Sword = 0,
-    Lance = 1
+    Lance = 1,
+    Bow = 2,
+    Brastar = 3
 }
 
