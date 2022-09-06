@@ -73,6 +73,8 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     delegate void WeaponAttacks();
     WeaponAttacks _weaponAttack;
 
+    public bool DashChack => _dashChack;
+
     void Start()
     {
         //orgLocalQuaternion = this.transform.localRotation;
@@ -203,6 +205,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         else if (IsWalled())
         {
             m_slideWall = true;
+            if (_dashChack) _dashChack = false;
             _h = 0;
             if (jump)
             {

@@ -7,13 +7,15 @@ public class Bullet : WeaponBase, IObjectPool
     [SerializeField] float _bulletSpeed = 0;
     [SerializeField] BulletOwner _owner = default;
     [SerializeField] Collider _collider = default;
+    bool _isActive = false;
     float _time = 0f;
     Transform _muzzulPos = default;
 
+    public bool IsActive => _isActive;
 
     public void FixedUpdate()
     {
-        if (!_isActive) return;
+        if (!_operation) return;
 
         _time += Time.deltaTime;
         this.transform.position = new Vector3(_bulletSpeed + _muzzulPos.position.x, 0f, 0f) * _time;
@@ -37,7 +39,7 @@ public class Bullet : WeaponBase, IObjectPool
     public void Create()
     {
         this.transform.position = _muzzulPos.position;
-        _isActive = true;
+        _operation = true;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = true;
@@ -47,7 +49,7 @@ public class Bullet : WeaponBase, IObjectPool
 
     public void Disactive()
     {
-        _isActive = false;
+        _operation = false;
         _time = 0f;
         foreach (var weaponRend in _weaponRenderer)
         {
@@ -58,7 +60,7 @@ public class Bullet : WeaponBase, IObjectPool
 
     public void DisactiveForInstantiate()
     {
-        _isActive = false;
+        _operation = false;
         _muzzulPos = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
         foreach (var weaponRend in _weaponRenderer)
         {

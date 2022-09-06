@@ -20,6 +20,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     WeaponAction _weaponAction = default;
 
     public bool WeaponSwitch => _weaponSwitch;
+
     public WeaponAction EquipeWeaponAction => _weaponAction;
 
     private void Awake()
@@ -49,14 +50,12 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             _weaponAction.WeaponAttack(_equipmentWeapon.name);
         }
 
-        if (PlayerContoller.Instance.IsWalled())
+        if (PlayerContoller.Instance.IsWalled() || PlayerContoller.Instance.DashChack)
         {
             _equipmentWeapon.RendererActive(false);
         }
-        else
-        {
-            _equipmentWeapon.RendererActive(true);
-        }
+        else _equipmentWeapon.RendererActive(true);
+
     }
     /// <summary>武器のメインとサブの表示を切り替える</summary>
     void SwichWeapon()
@@ -84,30 +83,26 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     /// <summary>メイン武器・サブ武器を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
     /// <param name="equipmentType"></param>
     /// <param name="weaponName"></param>
-    public void ChangeWeapon(EquipmentType equipmentType, WeaponName? weaponName)
+    public void ChangeWeapon(EquipmentType equipmentType, WeaponName weaponName)
     {
         if (equipmentType == EquipmentType.MAIN)
         {
-            if (_mainWeaponBase.IsActive)
+            if (_mainWeaponBase.Operation)
             {
                 SetEquipment(_weapons[(int)weaponName], _mainWeaponBase);
             }
-            else
-            {
-                _mainWeaponBase = _weapons[(int)weaponName];
-            }
+            _mainWeaponBase = _weapons[(int)weaponName];
+
         }
 
         else if (equipmentType == EquipmentType.SUB)
         {
-            if (_subWeaponBase.IsActive)
+            if (_subWeaponBase.Operation)
             {
                 SetEquipment(_weapons[(int)weaponName], _subWeaponBase);
             }
-            else
-            {
-                _subWeaponBase = _weapons[(int)weaponName];
-            }
+            _subWeaponBase = _weapons[(int)weaponName];
+
         }
     }
 
@@ -119,9 +114,9 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     void SetEquipment(WeaponBase equipmentWeapon, WeaponBase unEquipmentWeapon)
     {
         _equipmentWeapon = equipmentWeapon;
-        unEquipmentWeapon.IsActive = false;
+        unEquipmentWeapon.Operation = false;
         unEquipmentWeapon.RendererActive(false);
-        _equipmentWeapon.IsActive = true;
+        _equipmentWeapon.Operation = true;
         _equipmentWeapon.RendererActive(true);
     }
 }

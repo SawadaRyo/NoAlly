@@ -12,11 +12,11 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected LayerMask _enemyLayer = ~0;
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
-    protected bool _isActive = false;
+    protected bool _operation = false;
     Collider _myCollider = default;
     ParticleSystem _myParticleSystem = default;
 
-    public bool IsActive { get => _isActive; set => _isActive = value; } 
+    public bool Operation { get => _operation; set => _operation = value; } 
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
