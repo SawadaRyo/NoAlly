@@ -18,7 +18,7 @@ public class Bullet : WeaponBase, IObjectPool
         if (!_operation) return;
 
         _time += Time.deltaTime;
-        this.transform.position = new Vector3(_bulletSpeed + _muzzulPos.position.x, 0f, 0f) * _time;
+        this.transform.position += new Vector3(_bulletSpeed + _muzzulPos.position.x, 0f, 0f) * _time;
         if (_time > 5f)
         {
             Disactive();
@@ -36,9 +36,20 @@ public class Bullet : WeaponBase, IObjectPool
         }
         Disactive();
     }
+
+    [System.Obsolete]
     public void Create()
     {
         this.transform.position = _muzzulPos.position;
+        if(PlayerContoller.Instance.transform.rotation.y > 0)
+        {
+            this.transform.rotation = Quaternion.EulerRotation(0,0,90);
+        }
+        else if(PlayerContoller.Instance.transform.rotation.y < 0)
+        {
+            this.transform.rotation = Quaternion.EulerRotation(0,0,-90);
+            _bulletSpeed *= -1;
+        }
         _operation = true;
         foreach (var weaponRend in _weaponRenderer)
         {

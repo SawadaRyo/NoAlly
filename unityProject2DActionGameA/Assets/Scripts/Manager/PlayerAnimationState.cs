@@ -18,8 +18,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     Animator _animator = default;
     [Tooltip("WeaponEquipmentƒNƒ‰ƒX‚ðŠi”[‚·‚é•Ï”")]
     WeaponEquipment _weaponEquipment;
-    [Tooltip("‘•”õ’†‚Ì•Ší‚ÌWeaponAction‚ðŠi”[‚·‚é•Ï”")]
-    WeaponAction _eWeapon = default;
 
     public bool AbleMove => _ableMove;
     public bool AbleInput => _ableInput;
@@ -29,7 +27,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _animator = GetComponent<Animator>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
         _weaponEquipment = WeaponEquipment.Instance;
-        _eWeapon = _weaponEquipment.EquipeWeaponAction;
         DetectionState();
         WeaponAnimationUpdate();
     }
@@ -99,7 +96,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         .Take(1)
         .Subscribe(x =>
         {
-            _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
+            //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
 
@@ -112,7 +109,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         .Take(1)
         .Subscribe(x =>
         {
-            _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
+            //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
 
@@ -128,4 +125,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             _reset = false;
         }
     }
+    
+    
 }

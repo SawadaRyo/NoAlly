@@ -29,9 +29,9 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         _mainWeaponBase = _weapons[0];
         _subWeaponBase = _weapons[1];
 
+        SetEquipment(_mainWeaponBase, _subWeaponBase);
         ChangeWeapon(EquipmentType.MAIN, WeaponName.SWORD);
         ChangeWeapon(EquipmentType.SUB, WeaponName.LANCE);
-        SetEquipment(_mainWeaponBase, _subWeaponBase);
         _weaponSwitch = true;
         _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
@@ -92,7 +92,6 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
                 SetEquipment(_weapons[(int)weaponName], _mainWeaponBase);
             }
             _mainWeaponBase = _weapons[(int)weaponName];
-
         }
 
         else if (equipmentType == EquipmentType.SUB)
@@ -102,8 +101,8 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
                 SetEquipment(_weapons[(int)weaponName], _subWeaponBase);
             }
             _subWeaponBase = _weapons[(int)weaponName];
-
         }
+        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
     }
 
     /// <summary>ïêäÌÇÃëïîıÇåàÇﬂÇÈä÷êî
@@ -118,5 +117,11 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         unEquipmentWeapon.RendererActive(false);
         _equipmentWeapon.Operation = true;
         _equipmentWeapon.RendererActive(true);
+    }
+
+
+    void BulletFIre()
+    {
+        WeaponEquipment.Instance.EquipeWeaponAction.WeaponChargeAttackMethod(WeaponEquipment.Instance.EquipeWeaponAction.ChrageCount);
     }
 }
