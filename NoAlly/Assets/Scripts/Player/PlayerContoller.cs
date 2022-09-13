@@ -19,6 +19,8 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
     bool _dashChack = false;
+    [Tooltip("プレイヤーの直前の移動方向")]
+    float _beforeRot = 0f;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")]
@@ -70,8 +72,6 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     RaycastHit m_hitInfo;
 
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-    delegate void WeaponAttacks();
-    WeaponAttacks _weaponAttack;
 
     public bool DashChack => _dashChack;
 
@@ -91,7 +91,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");
             _jump = Input.GetButtonDown("Jump");
-            WallJumpMethod(_jump,_isDash);
+            WallJumpMethod(_jump, _isDash);
             JumpMethod(_jump);
         }
     }
@@ -100,24 +100,24 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         if (GameManager.Instance.IsGame)
         {
             MoveMethod(_h, _isDash);
-
+            Debug.Log(_beforeRot);
         }
     }
-    void OnCollisionEnter(Collision other)
-    {
-        var otherCollider = other.gameObject;
-        if (otherCollider)
-        {
-            if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
-            {
-                transform.parent = other.gameObject.transform;
-            }
-        }
-    }
-    void OnCollisionExit()
-    {
-        transform.parent = null;
-    }
+    //void OnCollisionEnter(Collision other)
+    //{
+    //    var otherCollider = other.gameObject;
+    //    if (otherCollider)
+    //    {
+    //        if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
+    //        {
+    //            transform.parent = other.gameObject.transform;
+    //        }
+    //    }
+    //}
+    //void OnCollisionExit()
+    //{
+    //    transform.parent = null;
+    //}
     //void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.red;
@@ -129,21 +129,33 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     /// <summary>プレイヤーの移動</summary>
     void MoveMethod(float h, bool dash)
     {
-        if (h > 0) h = 1;
-        else if ((h < 0)) h = -1;
+        if (h != 0)
+        {
+            if (h > 0) h = 1;
+            else if ((h < 0)) h = -1;
+            _beforeRot = h;
+        }
 
         float moveSpeed = 0f;
 
         //プレイヤーの方向転換
-        if (h == -1)
         {
-            Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
-        }
-        else if (h == 1)
-        {
-            Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
+
+            if (h == -1)
+            {
+                Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
+            }
+            else if (h == 1)
+            {
+                Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
+            }
+            else if (h == 0)
+            {
+                Quaternion newRotation = Quaternion.LookRotation(new Vector3(_beforeRot, 0f, 0f));
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, newRotation, Time.deltaTime * _turnSpeed);
+            }
         }
 
         //プレイヤーの移動
@@ -165,7 +177,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
             }
             else
             {
-                if(_dashChack)
+                if (_dashChack)
                 {
                     moveSpeed = _dashSpeed;
                 }
@@ -193,7 +205,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
 
     }
     /// <summary>プレイヤーの壁ジャンプ</summary>
-    void WallJumpMethod(bool jump ,bool isDash)
+    void WallJumpMethod(bool jump, bool isDash)
     {
         _animator.SetBool("WallGrip", IsWalled());
         if (IsGrounded())
@@ -254,7 +266,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         _audio.PlayOneShot(m_jumpSound);
         Vector3 vec = transform.up + m_hitInfo.normal;
-        if(_isDash) _rb.AddForce(vec * _wallJump2, ForceMode.Impulse);
+        if (_isDash) _rb.AddForce(vec * _wallJump2, ForceMode.Impulse);
         else _rb.AddForce(vec * _wallJump, ForceMode.Impulse);
     }
     void FootSound(AudioClip footSound)
