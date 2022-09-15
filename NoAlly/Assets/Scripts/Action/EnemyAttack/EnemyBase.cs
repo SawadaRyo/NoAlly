@@ -4,21 +4,21 @@ using System.Linq;
 using UnityEngine;
 public abstract class EnemyBase : MonoBehaviour, IObjectPool
 {
-    [SerializeField] protected float m_radius = 5f;
-    [SerializeField] protected Animator m_enemyAnimator;
+    [SerializeField] protected float _radius = 5f;
+    [SerializeField] protected Animator _enemyAnimator;
+    [SerializeField] protected LayerMask _playerLayer = ~0;
     [SerializeField] Renderer[] _enemyRenderer = default;
-    [SerializeField] LayerMask m_playerLayer = ~0;
-    bool m_isActive = false;
-    protected Vector3 m_center = Vector3.zero;
-    RaycastHit m_hitInfo;
+    bool _isActive = false;
+    protected Vector3 _center = Vector3.zero;
+    RaycastHit _hitInfo;
 
-    public bool IsActive { get => m_isActive; set => m_isActive = value; }
+    public bool IsActive { get => _isActive; set => _isActive = value; }
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerExit(Collider other) { }
     public abstract void EnemyAttack();
     public virtual void Start() 
     {
-        m_center = transform.position;
+        _center = transform.position;
     }
     public void FixedUpdate()
     {
@@ -27,8 +27,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
 
     public bool InSight()
     {
-        Ray ray = new Ray(m_center, Vector3.forward);
-        var inSight = Physics.OverlapSphere(m_center, m_radius, m_playerLayer);
+        var inSight = Physics.OverlapSphere(_center, _radius, _playerLayer);
         foreach (var s in inSight)
         {
             var player = s.gameObject.GetComponent<PlayerContoller>();
@@ -49,12 +48,12 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
             r.enabled = true;
         }
         gameObject.GetComponent<CapsuleCollider>().enabled = true;
-        m_enemyAnimator.SetBool("Death", false);
-        m_enemyAnimator.Play("RifleIdle");
+        _enemyAnimator.SetBool("Death", false);
+        _enemyAnimator.Play("RifleIdle");
     }
     public void Disactive()
     {
-        m_enemyAnimator.SetBool("Death", true);
+        _enemyAnimator.SetBool("Death", true);
     }
     public void DisactiveForInstantiate()
     {

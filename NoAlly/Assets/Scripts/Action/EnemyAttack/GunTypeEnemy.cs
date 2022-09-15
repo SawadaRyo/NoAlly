@@ -21,7 +21,7 @@ public class GunTypeEnemy : EnemyBase
   
     public override void EnemyAttack()
     {
-        m_enemyAnimator.SetBool("Aiming", InSight());
+        _enemyAnimator.SetBool("Aiming", InSight());
         StartCoroutine(RapidFire(InSight()));
     }
     public void InsBullet()
@@ -33,7 +33,7 @@ public class GunTypeEnemy : EnemyBase
         var wait = new WaitForSeconds(_interval);
         while (sightIn)
         {
-            m_enemyAnimator.SetTrigger("Fire");
+            _enemyAnimator.SetTrigger("Fire");
             yield return wait;
         }
     }

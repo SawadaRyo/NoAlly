@@ -1,20 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
 {
-    [SerializeField] float m_power = 3;
-    [SerializeField] float m_speed = 2;
-    [SerializeField] LayerMask m_fieldLayer = ~0;
-    Rigidbody m_rb = default;
-    Vector3 m_distance = Vector2.zero;
-    bool m_hit = false;
+    [SerializeField] float _power = 3;
+    [SerializeField] float _speed = 2;
+    [SerializeField] float _moveMagnification = 2f;
+    [SerializeField] float _attackRadius = 1.6f;
+    [SerializeField] Transform _attackPos = default;
+    [SerializeField] LayerMask _fieldLayer = ~0;
+    Rigidbody _rb = default;
+    Vector3 _distance = Vector2.zero;
+    bool _hit = false;
 
     public override void Start()
     {
         base.Start();
-        m_rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
     public override void EnemyAttack()
     {
@@ -23,43 +27,45 @@ public class UAVTypeEnemy : EnemyBase
 
         if (InSight())
         {
-            m_distance = (targetPos - transform.position);
-            if (m_hit)
+            _distance = (targetPos - transform.position).normalized;
+            if (_hit)
             {
-                m_rb.velocity = m_distance.normalized * (-m_speed * 2);
-                if (m_distance.magnitude > m_radius - 2f) m_hit = false;
+                _rb.velocity = _distance * (-_speed * _moveMagnification);
+                if (_distance.magnitude > _radius - 2f) _hit = false;
             }
             else
             {
-                m_rb.velocity = m_distance.normalized * m_speed;
+                _rb.velocity = _distance.normalized * _speed;
             }
         }
         else
         {
-            m_distance = Vector3.zero;
+            _distance = Vector3.zero;
             Debug.Log("0");
         }
-        Debug.Log(m_hit);
-        Debug.Log(m_distance);
+        Debug.Log(_hit);
+        Debug.Log(_distance);
     }
-    public override void OnTriggerEnter(Collider other)
+    //public override void OnTriggerEnter(Collider other)
+    //{
+    //    base.OnTriggerEnter(other);
+    //    if (other.gameObject.TryGetComponent(out PlayerGauge playerGauge))
+    //    {
+    //        Debug.Log('A');
+    //        _hit = true;
+    //        playerGauge.DamageMethod(0, 0, _power, 0);
+    //    }
+    //}
+
+    void OnField()
     {
-        base.OnTriggerEnter(other);
-        if (other.gameObject.TryGetComponent(out PlayerGauge playerGauge))
+        var playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
+        foreach(var col in playerCol)
         {
-            Debug.Log('A');
-            m_hit = true;
-            playerGauge.DamageMethod(m_power, 0, 0, 0);
+            if(col.TryGetComponent<PlayerGauge>(out PlayerGauge playerGauge))
+            {
+                playerGauge.DamageMethod(0, 0, _power, 0);
+            }
         }
-    }
-
-    bool OnField()
-    {
-        bool hit = Physics.Raycast(m_center, m_distance, m_fieldLayer);
-        return hit;
-    }
-    void SearchPlayer()
-    {
-
     }
 }
