@@ -7,9 +7,9 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     [SerializeField] protected float _radius = 5f;
     [SerializeField] protected Animator _enemyAnimator;
     [SerializeField] protected LayerMask _playerLayer = ~0;
+    [SerializeField] protected Transform _center = default;
     [SerializeField] Renderer[] _enemyRenderer = default;
     bool _isActive = false;
-    protected Vector3 _center = Vector3.zero;
     RaycastHit _hitInfo;
 
     public bool IsActive { get => _isActive; set => _isActive = value; }
@@ -18,7 +18,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     public abstract void EnemyAttack();
     public virtual void Start() 
     {
-        _center = transform.position;
+        
     }
     public void FixedUpdate()
     {
@@ -27,7 +27,8 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
 
     public bool InSight()
     {
-        var inSight = Physics.OverlapSphere(_center, _radius, _playerLayer);
+        //_center = transform.position;
+        var inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
             var player = s.gameObject.GetComponent<PlayerContoller>();
@@ -64,11 +65,11 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
     }
 
-    //public void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(m_center, m_radius);
-    //}
+    public virtual void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(_center.position, _radius);
+    }
     public void RendererActive(bool stats)
     {
         foreach(var r in _enemyRenderer)

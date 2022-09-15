@@ -14,6 +14,7 @@ public class UAVTypeEnemy : EnemyBase
     Rigidbody _rb = default;
     Vector3 _distance = Vector2.zero;
     bool _hit = false;
+    float _isSpeed = 0f;
 
     public override void Start()
     {
@@ -27,24 +28,33 @@ public class UAVTypeEnemy : EnemyBase
 
         if (InSight())
         {
-            _distance = (targetPos - transform.position).normalized;
+            _distance = (targetPos - transform.position);
             if (_hit)
             {
-                _rb.velocity = _distance * (-_speed * _moveMagnification);
-                if (_distance.magnitude > _radius - 2f) _hit = false;
+                _isSpeed = (-_speed * _moveMagnification);
+                if (_distance.magnitude > _radius - 2f)
+                {
+                    _hit = false;
+                }
             }
             else
             {
-                _rb.velocity = _distance.normalized * _speed;
+                _isSpeed = _speed;
+                PlayerGauge playerGauge = CallPlayerGauge();
+
+                if (playerGauge != null)
+                {
+                    playerGauge.DamageMethod(0f, 0f, _power, 0f);
+                    _hit = true;
+                }
             }
         }
         else
         {
             _distance = Vector3.zero;
-            Debug.Log("0");
         }
-        Debug.Log(_hit);
-        Debug.Log(_distance);
+        _rb.velocity = _distance.normalized * _isSpeed;
+        //Debug.Log(_hit);
     }
     //public override void OnTriggerEnter(Collider other)
     //{
@@ -57,15 +67,21 @@ public class UAVTypeEnemy : EnemyBase
     //    }
     //}
 
-    void OnField()
+    PlayerGauge CallPlayerGauge()
     {
         var playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
-        foreach(var col in playerCol)
+        foreach (var col in playerCol)
         {
-            if(col.TryGetComponent<PlayerGauge>(out PlayerGauge playerGauge))
+            if (col.TryGetComponent<PlayerGauge>(out PlayerGauge playerGauge))
             {
-                playerGauge.DamageMethod(0, 0, _power, 0);
+                return playerGauge;
             }
         }
+        return null;
     }
+    //public override void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(_attackPos.position, _attackRadius);
+    //}
 }

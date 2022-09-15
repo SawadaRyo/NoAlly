@@ -334,16 +334,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _radius: 5
   _enemyAnimator: {fileID: 1479103677212101138}
-  _enemyRenderer:
-  - {fileID: 4621375451197745689}
-  - {fileID: 4159492387287902439}
   _playerLayer:
     serializedVersion: 2
     m_Bits: 128
+  _enemyRenderer:
+  - {fileID: 4621375451197745689}
+  - {fileID: 4159492387287902439}
   _power: 3
-  m_speed: 2
-  _moveMagniification: 2
-  m_fieldLayer:
+  _speed: 2
+  _moveMagnification: 2
+  _attackRadius: 1.6
+  _attackPos: {fileID: 439650603609753885}
+  _fieldLayer:
     serializedVersion: 2
     m_Bits: 72
 --- !u!54 &8964265821834317574

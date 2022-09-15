@@ -100,7 +100,7 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         if (GameManager.Instance.IsGame)
         {
             MoveMethod(_h, _isDash);
-            Debug.Log(_beforeRot);
+            //Debug.Log(_beforeRot);
         }
     }
     //void OnCollisionEnter(Collision other)
