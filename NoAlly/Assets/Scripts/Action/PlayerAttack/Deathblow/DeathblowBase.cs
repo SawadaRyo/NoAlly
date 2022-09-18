@@ -6,8 +6,8 @@ public abstract class DeathblowBase : MonoBehaviour
 {
     [SerializeField] protected PlayerGauge m_playerHP = default;
     [SerializeField] protected int m_power = 20;
-    [SerializeField] int needSAP = 20;
     [SerializeField] protected LayerMask m_targetLayer = ~0;
+    [SerializeField] int needSAP = 20;
     protected Animator m_playerAnimator = default;
     public abstract void DeathblowAbility();
 
