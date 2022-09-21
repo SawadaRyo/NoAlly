@@ -2,32 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBullet : WeaponBase
+public class EnemyBullet : WeaponBase, IObjectPool
 {
-    [SerializeField] float m_bulletSpeed = 5;
+    [SerializeField] float _bulletSpeed = 5;
 
-    float m_time = 0f;
-    Transform m_muzzleForward = default;
-    Rigidbody m_rb = default;
+    float _time = 0f;
+    Transform _enemyMuzzleTrans = default;
+    Rigidbody _rb = default;
 
-    private void OnEnable()
-    {
-        m_rb = GetComponent<Rigidbody>();
-        //m_muzzleForward = GameObject.FindGameObjectWithTag("EnemyMuzzle").transform;
-        m_muzzleForward.position = transform.position;
-    }
+    public bool IsActive => _operation;
+    public Transform EnemyMuzzleTrans { get => _enemyMuzzleTrans; set => _enemyMuzzleTrans = value; }
+
     public override void Update()
     {
-        m_time += Time.deltaTime;
-        if (m_time > 5f)
+        if (_operation)
         {
-            Destroy(gameObject);
+            _time += Time.deltaTime;
+            if (_time > 5f)
+            {
+                Disactive();
+            }
         }
     }
-    public override void MovementOfWeapon()
+    public override void WeaponMovement()
     {
-        base.MovementOfWeapon();
-        m_rb.velocity = m_muzzleForward.transform.forward * m_bulletSpeed * m_time;
+        base.WeaponMovement();
+        _rb.velocity = _enemyMuzzleTrans.transform.forward * _bulletSpeed * _time;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -38,5 +38,37 @@ public class EnemyBullet : WeaponBase
         }
     }
 
-   
+    public void Create()
+    {
+        this.transform.position = _enemyMuzzleTrans.position;
+        _operation = true;
+        foreach (var weaponRend in _weaponRenderer)
+        {
+            weaponRend.enabled = true;
+        }
+        _myCollider.enabled = true;
+    }
+
+    public void Disactive()
+    {
+        _operation = false;
+        _time = 0f;
+        foreach (var weaponRend in _weaponRenderer)
+        {
+            weaponRend.enabled = false;
+        }
+        _myCollider.enabled = false;
+    }
+
+    public void DisactiveForInstantiate()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _operation = false;
+        //_enemyMuzzleTrans = GameObject.FindObjectOfType<GunTypeEnemy>().MuzzleTrans;
+        foreach (var weaponRend in _weaponRenderer)
+        {
+            weaponRend.enabled = false;
+        }
+        _myCollider.enabled = false;
+    }
 }

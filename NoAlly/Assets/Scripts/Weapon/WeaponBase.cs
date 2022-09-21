@@ -13,7 +13,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
     protected bool _operation = false;
-    Collider _myCollider = default;
+    protected Collider _myCollider = default;
     ParticleSystem _myParticleSystem = default;
 
     public bool Operation { get => _operation; set => _operation = value; } 
@@ -34,8 +34,8 @@ public abstract class WeaponBase : MonoBehaviour
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
     public virtual void OnApplicationQuit() { }
-    public virtual void MovementOfWeapon() { }
-    public virtual void MovementOfWeapon(Collider target) { }
+    public virtual void WeaponMovement() { }
+    public virtual void WeaponMovement(Collider target) { }
     public virtual void WeaponMode(ElementType type) { }
     public virtual void RendererActive(bool stats)
     {
