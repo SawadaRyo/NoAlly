@@ -44,6 +44,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             {
                 _ableMove = false;
             }
+            else if(info.IsTag("AirAttack") || info.IsTag("AirAttack"))
+            {
+                _ableInput = false;
+            }
             else if (info.IsTag("GroundAttackFinish"))
             {
                 _ableInput = false;
@@ -62,7 +66,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                 if (info.IsTag("GroundAttack") || info.IsName("JumpEnd"))
                 {
                     Debug.Log("Exit");
-
+                }
+                else if (info.IsTag("AirAttack") || info.IsTag("AirAttack"))
+                {
+                    _ableInput = true;
                 }
             }).AddTo(this);
 
@@ -125,6 +132,9 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             _reset = false;
         }
     }
-    
+    void AttackToCombatWeapon(bool isAttack)
+    {
+        _weaponEquipment.EquipeWeapon
+    }
     
 }

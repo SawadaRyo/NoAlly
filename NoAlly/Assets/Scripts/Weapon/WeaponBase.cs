@@ -14,7 +14,7 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected bool _operation = false;
     protected Collider _myCollider = default;
-    ParticleSystem _myParticleSystem = default;
+    protected ParticleSystem _myParticleSystem = default;
 
     public bool Operation { get => _operation; set => _operation = value; } 
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
@@ -45,6 +45,7 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
+    
     public float ChargePower(TypeOfPower top,float magnification)
     {
         float refPower = 0;
@@ -68,12 +69,6 @@ public abstract class WeaponBase : MonoBehaviour
             magnification = 1;
         }
         return refPower * magnification;
-    }
-    public void IsAttack(bool isAttack)
-    {
-        _myCollider.enabled = isAttack;
-        if (isAttack) _myParticleSystem.Play();
-        else _myParticleSystem.Pause();
     }
     public enum TypeOfPower
     { 
