@@ -12,6 +12,8 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     [Tooltip("u_ablecv‚Ì•Ï”‚Ì’l‚ğ‰Šú‰»‚·‚é‚©”»’è‚·‚é•Ï”")]
     bool _reset;
     float _shootTiming = 0.35f;
+    [Tooltip("‹ßÚUŒ‚‚Ì”»’è‹–‰Â")]
+    bool _onHit = false;
     [Tooltip("Animation‚Ì‘JˆÚó‹µ")]
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
@@ -24,6 +26,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
 
     private void Start()
     {
+        _onHit = false;
         _animator = GetComponent<Animator>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
         _weaponEquipment = WeaponEquipment.Instance;
@@ -132,9 +135,17 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             _reset = false;
         }
     }
-    void AttackToCombatWeapon(bool isAttack)
+    public void AttackToCombatWeapon()
     {
-        _weaponEquipment.EquipeWeapon
+        _onHit = !_onHit;
+        StartCoroutine(_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit));
+        //_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit);
     }
-    
+    void BulletFIre()
+    {
+        float chrageCount = WeaponEquipment.Instance.EquipeWeaponAction.ChrageCount;
+        WeaponEquipment
+            .Instance.EquipeWeaponAction
+            .WeaponChargeAttackMethod(chrageCount);
+    }
 }

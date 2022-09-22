@@ -10,6 +10,7 @@ public class CombatWeapon : WeaponBase
     [SerializeField] protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
 
     bool _completedAttack = false;
+    bool _attack = false;
 
     protected Vector3 _normalHarfExtents = new Vector3(0.25f, 1.2f, 0.1f);
     protected Vector3 _pawerUpHarfExtents = new Vector3(0.4f, 1.7f, 0.1f);
@@ -28,11 +29,18 @@ public class CombatWeapon : WeaponBase
     //        WeaponMovement(targetHp);
     //    }
     //}
+
+    public override void Awake()
+    {
+        base.Awake();
+        _myParticleSystem.Stop();
+    }
     public void AttackOfCloseRenge(bool isAttack)
     {
         if (isAttack)
         {
             Collider[] enemiesInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
+            Debug.Log(enemiesInRenge.Length);
             if (enemiesInRenge.Length > 0)
             {
                 foreach (Collider enemy in enemiesInRenge)
@@ -44,17 +52,18 @@ public class CombatWeapon : WeaponBase
                 }
                 _completedAttack = true;
             }
-            _myParticleSystem.Play();
         }
     }
     public IEnumerator LoopJud(bool isAttack)
     {
-        while (isAttack)
+        _attack = isAttack;
+        _myParticleSystem.Play();
+        while (_attack)
         {
             if (_completedAttack)
             {
                 _completedAttack = false;
-                _myParticleSystem.Pause();
+                _myParticleSystem.Stop();
                 break;
             }
             else
@@ -63,6 +72,8 @@ public class CombatWeapon : WeaponBase
             }
             yield return null;
         }
+        _completedAttack = false;
+        _myParticleSystem.Stop();
     }
 
     //private void OnDrawGizmos()

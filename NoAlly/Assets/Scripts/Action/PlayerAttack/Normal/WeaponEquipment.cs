@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UniRx;
 
@@ -22,6 +23,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     public bool WeaponSwitch => _weaponSwitch;
 
     public WeaponAction EquipeWeaponAction => _weaponAction;
+    public CombatWeapon EquipeCombatWeapon => (CombatWeapon)_equipmentWeapon;
 
     private void Awake()
     {
@@ -117,11 +119,5 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
         unEquipmentWeapon.RendererActive(false);
         _equipmentWeapon.Operation = true;
         _equipmentWeapon.RendererActive(true);
-    }
-
-
-    void BulletFIre()
-    {
-        WeaponEquipment.Instance.EquipeWeaponAction.WeaponChargeAttackMethod(WeaponEquipment.Instance.EquipeWeaponAction.ChrageCount);
     }
 }

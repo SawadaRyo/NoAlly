@@ -1347,6 +1347,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1806108300736351922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3981730672759946808}
+  m_Layer: 0
+  m_Name: AttackCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3981730672759946808
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806108300736351922}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 835445112549933972}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1923528161251370116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2680,7 +2711,6 @@ GameObject:
   - component: {fileID: 5785630500104816687}
   - component: {fileID: 181822740134755367}
   - component: {fileID: -46491826598969884}
-  - component: {fileID: 4285788304995840971}
   m_Layer: 0
   m_Name: 4 Brastar
   m_TagString: Untagged
@@ -2703,6 +2733,7 @@ Transform:
   - {fileID: 2228516813256258399}
   - {fileID: 2481541043112930658}
   - {fileID: 3380785882989612414}
+  - {fileID: 3981730672759946808}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2760,15 +2791,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _weaponRenderer:
-  - {fileID: 0}
+  - {fileID: 2715473356051015709}
   - {fileID: 4562211882351388450}
   - {fileID: 7595152486124618312}
   - {fileID: 102234549639727999}
   - {fileID: 3669150992641963488}
   - {fileID: 7937494181717447543}
   - {fileID: 5879992171350816154}
-  - {fileID: 6313160543925003466}
   - {fileID: 500926683776433360}
+  - {fileID: 6313160543925003466}
+  - {fileID: 7917774525933969236}
   - {fileID: 1044509749941540704}
   - {fileID: 6111978984340143496}
   - {fileID: 5072376740046301744}
@@ -2776,19 +2808,11 @@ MonoBehaviour:
   - {fileID: 1815868058893952802}
   - {fileID: 4974487182170526306}
   - {fileID: 2145287005305607120}
---- !u!65 &4285788304995840971
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9153705405047431978}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.25, y: 1.1, z: 0.1}
-  m_Center: {x: 0, y: 0.65, z: 0}
+  - {fileID: 8142533464562918449}
+  - {fileID: 8793131453558647583}
+  - {fileID: 2433419642434349965}
+  _center: {fileID: 3981730672759946808}
+  _harfExtents: {x: 0.25, y: 1.2, z: 0.1}
 --- !u!1001 &2755886906027241184
 PrefabInstance:
   m_ObjectHideFlags: 0

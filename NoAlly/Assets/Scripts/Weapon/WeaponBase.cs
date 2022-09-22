@@ -13,7 +13,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
     protected bool _operation = false;
-    protected Collider _myCollider = default;
+    
     protected ParticleSystem _myParticleSystem = default;
 
     public bool Operation { get => _operation; set => _operation = value; } 
@@ -26,7 +26,6 @@ public abstract class WeaponBase : MonoBehaviour
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
         RendererActive(false);
-        _myCollider = GetComponent<Collider>();
         _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void Update()
