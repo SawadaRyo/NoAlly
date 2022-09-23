@@ -36630,14 +36630,14 @@ AnimationClip:
   - time: 0.3
     functionName: FootSound
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 8300000, guid: 80239785e252f734a942b4bd5c1b91e1, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.73333335
     functionName: FootSound
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 8300000, guid: 80239785e252f734a942b4bd5c1b91e1, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
