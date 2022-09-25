@@ -8,83 +8,73 @@ using UniRx.Triggers;
 
 public class Elevator : MonoBehaviour
 {
-    [SerializeField] float m_timeForPoint = 3f;
+    [SerializeField] float _timeForPoint = 3f;
     [SerializeField] Transform _movePos1;
     [SerializeField] Transform _movePos2;
-    [SerializeField] Text m_rideText;
+    [SerializeField] Text _rideText;
+
+    [Tooltip("エレベーターの起動判定")]
+    bool _moving = false;
+    [Tooltip("エレベーターのAnimator")]
     Animator _animator;
     [Tooltip("プレイヤーのRIgitbody")]
     Rigidbody _playerRb = default;
-    [Tooltip("プレイヤーの位置調整")]
-    Transform _putPlayerPos;
-    [Tooltip("Animationの遷移状況")]
-    ObservableStateMachineTrigger _trigger = default;
+    //[Tooltip("Animationの遷移状況")]
+    //ObservableStateMachineTrigger _trigger = default;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        m_rideText.enabled = false;
-        _putPlayerPos = transform.GetChild(0);
+        //m_rideText.enabled = false;
         _playerRb = PlayerContoller.Instance.gameObject.GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-        _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
+        //_trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
     }
 
 
     void OnTriggerEnter(Collider other)
     {
-        m_rideText.enabled = true;
+        _rideText.enabled = true;
     }
     void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.gameObject.GetComponent<PlayerContoller>())
         {
-            MovePoint();
+            if(Input.GetButtonDown("Decision") && !_moving)
+            {
+                MovePoint();
+            }
         }
     }
     void OnTriggerExit(Collider other)
     {
-        m_rideText.enabled = false;
-        //m_player = null;
-        //if (m_podType == PodType.ElvaterType)
-        //{
-        //    MovePoint();
-        //}
+        _rideText.enabled = false;
     }
 
     void MovePoint()
     {
         DOTween.To(() => _movePos1.position,
             x => transform.position = x,
-            _movePos2.position, m_timeForPoint)
-            .OnStart(() => RideOnPod(false))
-            .OnComplete(() => RideOnPod(true));
+            _movePos2.position, _timeForPoint)
+            .OnStart(() => RideOnPod(true))
+            .OnComplete(() => RideOnPod(false));
     }
 
-    void RideOnPod(bool activeUnityChan)
+    void RideOnPod(bool activeElevator)
     {
-        if (!activeUnityChan)
+        if (activeElevator)
         {
-            _animator.SetBool("Lock", true);
-            PlayerContoller.Instance.transform.position = _putPlayerPos.position;
-            _playerRb.constraints =
-                RigidbodyConstraints.FreezePositionX |
-                RigidbodyConstraints.FreezePositionY;
+            _animator.SetBool("Open", false);
             PlayerContoller.Instance.transform.parent = gameObject.transform;
+            _playerRb.constraints = RigidbodyConstraints.None;
         }
         else
         {
-            _animator.SetBool("Lock", false);
-            _playerRb.constraints = RigidbodyConstraints.None;
-            _playerRb.constraints = RigidbodyConstraints.FreezePositionZ |
-                RigidbodyConstraints.FreezeRotation;
+            _animator.SetBool("Open", true);
+            PlayerContoller.Instance.transform.parent = null;
+            _playerRb.constraints = RigidbodyConstraints.FreezePositionZ;
             (_movePos1, _movePos2) = (_movePos2, _movePos1);
         }
-    }
-
-    enum PodType
-    {
-        LiftType, ElvaterType
     }
 }
