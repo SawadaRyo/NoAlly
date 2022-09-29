@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class WeaponBase : MonoBehaviour
+public abstract class WeaponBase : MonoBehaviour, IWeapon
 {
     [SerializeField] protected float _rigitPower = 5;
     [SerializeField] protected float _elekePower = 0;

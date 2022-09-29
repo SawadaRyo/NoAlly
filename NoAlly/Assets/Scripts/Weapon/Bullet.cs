@@ -10,6 +10,7 @@ public class Bullet : WeaponBase, IObjectPool
     bool _isActive = false;
     float _time = 0f;
     Transform _muzzleForward = default;
+    Rigidbody _rb = default;
 
     public bool IsActive => _isActive;
 
@@ -18,7 +19,7 @@ public class Bullet : WeaponBase, IObjectPool
         if (!_operation) return;
 
         _time += Time.deltaTime;
-        this.transform.position += new Vector3(_bulletSpeed + _muzzleForward.position.x, 0f, 0f) * _time;
+        this.transform.position += new Vector3(_bulletSpeed + _muzzleForward.position.x, 0f, 0f);
         if (_time > 5f)
         {
             Disactive();
@@ -72,6 +73,7 @@ public class Bullet : WeaponBase, IObjectPool
     public void DisactiveForInstantiate()
     {
         _operation = false;
+        _rb = GetComponent<Rigidbody>();
         _muzzleForward = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
         foreach (var weaponRend in _weaponRenderer)
         {

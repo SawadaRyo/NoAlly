@@ -9,6 +9,7 @@ public class EnemyBullet : WeaponBase, IObjectPool
     float _time = 0f;
     Transform _enemyMuzzleTrans = default;
     Rigidbody _rb = default;
+    Collider _myCollider = default;
 
     public bool IsActive => _operation;
     public Transform EnemyMuzzleTrans { get => _enemyMuzzleTrans; set => _enemyMuzzleTrans = value; }
@@ -18,6 +19,8 @@ public class EnemyBullet : WeaponBase, IObjectPool
         if (_operation)
         {
             _time += Time.deltaTime;
+
+            WeaponMovement();
             if (_time > 5f)
             {
                 Disactive();
@@ -27,17 +30,16 @@ public class EnemyBullet : WeaponBase, IObjectPool
     public override void WeaponMovement()
     {
         base.WeaponMovement();
-        _rb.velocity = _enemyMuzzleTrans.transform.forward * _bulletSpeed * _time;
+        _rb.velocity = _enemyMuzzleTrans.forward.normalized * _bulletSpeed;
     }
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out PlayerGauge player))
         {
             player.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
-            Destroy(gameObject);
+            Disactive();
         }
     }
-
     public void Create()
     {
         this.transform.position = _enemyMuzzleTrans.position;
@@ -48,7 +50,6 @@ public class EnemyBullet : WeaponBase, IObjectPool
         }
         _myCollider.enabled = true;
     }
-
     public void Disactive()
     {
         _operation = false;
@@ -59,12 +60,12 @@ public class EnemyBullet : WeaponBase, IObjectPool
         }
         _myCollider.enabled = false;
     }
-
     public void DisactiveForInstantiate()
     {
         _rb = GetComponent<Rigidbody>();
+        _myCollider = GetComponent<BoxCollider>();
         _operation = false;
-        //_enemyMuzzleTrans = GameObject.FindObjectOfType<GunTypeEnemy>().MuzzleTrans;
+        _enemyMuzzleTrans = GetComponentInParent<GunTypeEnemy>().MuzzleTrans;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = false;
