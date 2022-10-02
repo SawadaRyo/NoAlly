@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -19,8 +18,8 @@ public class Elevator : MonoBehaviour
     Animator _animator;
     [Tooltip("ƒvƒŒƒCƒ„[‚ÌRIgitbody")]
     Rigidbody _playerRb = default;
-    //[Tooltip("Animation‚Ì‘JˆÚó‹µ")]
-    //ObservableStateMachineTrigger _trigger = default;
+    [Tooltip("Animation‚Ì‘JˆÚó‹µ")]
+    ObservableStateMachineTrigger _trigger = default;
 
 
     // Start is called before the first frame update
@@ -29,27 +28,78 @@ public class Elevator : MonoBehaviour
         //m_rideText.enabled = false;
         _playerRb = PlayerContoller.Instance.gameObject.GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-        //_trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
+        _animator.SetBool("Open", true);
+        _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
+        RideOnPod();
     }
 
 
     void OnTriggerEnter(Collider other)
     {
         _rideText.enabled = true;
+        WeaponEquipment.Instance.AvailableWeapon(false);
     }
     void OnTriggerStay(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerContoller>())
         {
-            if(Input.GetButtonDown("Decision") && !_moving)
+            if (Input.GetButtonDown("Decision") && !_moving)
             {
-                MovePoint();
+                //MovePoint();
+                _animator.SetBool("Open", false);
             }
         }
     }
     void OnTriggerExit(Collider other)
     {
         _rideText.enabled = false;
+        WeaponEquipment.Instance.AvailableWeapon(true);
+    }
+
+
+    //void RideOnPod(bool activeElevator)
+    //{
+    //    if (activeElevator)
+    //    {
+    //        _animator.SetBool("Open", false);
+    //        PlayerContoller.Instance.transform.parent = gameObject.transform;
+    //        _playerRb.constraints = RigidbodyConstraints.None;
+    //    }
+    //    else
+    //    {
+    //        _animator.SetBool("Open", true);
+    //        PlayerContoller.Instance.transform.parent = null;
+    //        _playerRb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+    //        (_movePos1, _movePos2) = (_movePos2, _movePos1);
+    //    }
+    //}
+    void RideOnPod()
+    {
+        IDisposable exitState = _trigger
+        .OnStateExitAsObservable()
+        .Subscribe(onStateInfo =>
+        {
+            AnimatorStateInfo info = onStateInfo.StateInfo;
+            if (info.IsName("ElevatorClose"))
+            {
+                _moving = true;
+                PlayerContoller.Instance.transform.parent = gameObject.transform;
+                _playerRb.constraints = RigidbodyConstraints.None;
+                //MovePoint();
+                DOTween.To(() => _movePos1.position,
+                    x => transform.position = x,
+                    _movePos2.position, _timeForPoint)
+                    .OnComplete(() => _animator.SetBool("Open", true));
+            }
+            else if (info.IsName("ElevatorOpen"))
+            {
+                _moving = false;
+                PlayerContoller.Instance.transform.parent = null;
+                _playerRb.constraints = RigidbodyConstraints.FreezePositionZ
+                                      | RigidbodyConstraints.FreezeRotation;
+                (_movePos1, _movePos2) = (_movePos2, _movePos1);
+            }
+        }).AddTo(this);
     }
 
     void MovePoint()
@@ -57,24 +107,6 @@ public class Elevator : MonoBehaviour
         DOTween.To(() => _movePos1.position,
             x => transform.position = x,
             _movePos2.position, _timeForPoint)
-            .OnStart(() => RideOnPod(true))
-            .OnComplete(() => RideOnPod(false));
-    }
-
-    void RideOnPod(bool activeElevator)
-    {
-        if (activeElevator)
-        {
-            _animator.SetBool("Open", false);
-            PlayerContoller.Instance.transform.parent = gameObject.transform;
-            _playerRb.constraints = RigidbodyConstraints.None;
-        }
-        else
-        {
-            _animator.SetBool("Open", true);
-            PlayerContoller.Instance.transform.parent = null;
-            _playerRb.constraints = RigidbodyConstraints.FreezePositionZ;
-            (_movePos1, _movePos2) = (_movePos2, _movePos1);
-        }
+            .OnComplete(() => _animator.SetBool("Open", true));
     }
 }
