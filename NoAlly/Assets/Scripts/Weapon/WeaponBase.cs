@@ -5,18 +5,34 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour, IWeapon
 {
+    [Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
     [SerializeField] protected float _rigitPower = 5;
+    [Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
     [SerializeField] protected float _elekePower = 0;
+    [Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
     [SerializeField] protected float _firePower = 0;
+    [Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
     [SerializeField] protected float _frozenPower = 0;
+    [Tooltip("")]
+    [SerializeField] Transform _center = default;
+    [Tooltip("•Ší‚ÌUŒ‚”»’èƒŒƒCƒ„[")]
     [SerializeField] protected LayerMask _enemyLayer = ~0;
+    [Tooltip("•Ší‚ÌRenderer")]
     [SerializeField] protected Renderer[] _weaponRenderer = default;
 
-    protected bool _operation = false;
-    
+    [Tooltip("")]
+    bool _attack = false;
+
+    protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
+    [Tooltip("•Ší‚ªŽg—p’†‚©‚Ç‚¤‚©")]
+    protected bool _operated = false;
+    [Tooltip("•Ší‚ª•ÏŒ`’†‚©‚Ç‚¤‚©")]
+    protected bool _isDeformated = false;
+    [Tooltip("•Ší‚ÌŽaŒ‚ƒGƒtƒFƒNƒg")]
     protected ParticleSystem _myParticleSystem = default;
 
-    public bool Operation { get => _operation; set => _operation = value; } 
+    public bool Deformated => _isDeformated;
+    public bool Operated { get => _operated; set => _operated = value; }
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -43,9 +59,37 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
             weaponRend.enabled = stats;
         }
     }
+    public void AttackOfCloseRenge(bool isAttack)
+    {
+        if (isAttack)
+        {
+            Collider[] enemiesInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
+            if (enemiesInRenge.Length > 0)
+            {
+                foreach (Collider enemy in enemiesInRenge)
+                {
+                    if (enemy.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHp))
+                    {
+                        enemyHp.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
+                    }
+                }
+            }
+        }
+    }
+    public IEnumerator LoopJud(bool isAttack)
+    {
+        _attack = isAttack;
+        _myParticleSystem.Play();
+        while (_attack)
+        {
+            AttackOfCloseRenge(true);
+            yield return null;
+        }
+        _myParticleSystem.Stop();
+    }
 
-    
-    public float ChargePower(TypeOfPower top,float magnification)
+
+    public float ChargePower(TypeOfPower top, float magnification)
     {
         float refPower = 0;
         switch (top)
@@ -63,14 +107,14 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
                 refPower = _frozenPower;
                 break;
         }
-        if(magnification < 1)
+        if (magnification < 1)
         {
             magnification = 1;
         }
         return refPower * magnification;
     }
     public enum TypeOfPower
-    { 
+    {
         RIGIT,
         ELEKE,
         FIRE,

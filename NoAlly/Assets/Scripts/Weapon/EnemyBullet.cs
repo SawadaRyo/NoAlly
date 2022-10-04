@@ -11,12 +11,12 @@ public class EnemyBullet : WeaponBase, IObjectPool
     Rigidbody _rb = default;
     Collider _myCollider = default;
 
-    public bool IsActive => _operation;
+    public bool IsActive => _operated;
     public Transform EnemyMuzzleTrans { get => _enemyMuzzleTrans; set => _enemyMuzzleTrans = value; }
 
     public override void Update()
     {
-        if (_operation)
+        if (_operated)
         {
             _time += Time.deltaTime;
 
@@ -43,7 +43,7 @@ public class EnemyBullet : WeaponBase, IObjectPool
     public void Create()
     {
         this.transform.position = _enemyMuzzleTrans.position;
-        _operation = true;
+        _operated = true;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = true;
@@ -52,7 +52,7 @@ public class EnemyBullet : WeaponBase, IObjectPool
     }
     public void Disactive()
     {
-        _operation = false;
+        _operated = false;
         _time = 0f;
         foreach (var weaponRend in _weaponRenderer)
         {
@@ -64,7 +64,7 @@ public class EnemyBullet : WeaponBase, IObjectPool
     {
         _rb = GetComponent<Rigidbody>();
         _myCollider = GetComponent<BoxCollider>();
-        _operation = false;
+        _operated = false;
         _enemyMuzzleTrans = GetComponentInParent<GunTypeEnemy>().MuzzleTrans;
         foreach (var weaponRend in _weaponRenderer)
         {

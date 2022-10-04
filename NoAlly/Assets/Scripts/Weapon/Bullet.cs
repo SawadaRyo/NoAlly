@@ -6,20 +6,20 @@ public class Bullet : WeaponBase, IObjectPool
 {
     [SerializeField] float _bulletSpeed = 0;
     [SerializeField] BulletOwner _owner = default;
-    [SerializeField] Collider _collider = default;
     bool _isActive = false;
     float _time = 0f;
-    Transform _muzzleForward = default;
+    Transform _muzzlePos = default;
+    Vector3 _muzzleForwardPos = default;
     Rigidbody _rb = default;
 
     public bool IsActive => _isActive;
 
     public void FixedUpdate()
     {
-        if (!_operation) return;
+        if (!_operated) return;
 
         _time += Time.deltaTime;
-        this.transform.position += new Vector3(_bulletSpeed + _muzzleForward.position.x, 0f, 0f);
+        this.transform.position += new Vector3(_bulletSpeed + _muzzleForwardPos.x, 0f, 0f);
         if (_time > 5f)
         {
             Disactive();
@@ -27,7 +27,7 @@ public class Bullet : WeaponBase, IObjectPool
     }
     void OnTriggerEnter(Collider other)
     {
-        if (_owner == BulletOwner.Player && other.gameObject.TryGetComponent<EnemyGauge>(out EnemyGauge enemyHP))
+        if (_owner == BulletOwner.Player && other.gameObject.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHP))
         {
             enemyHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
         }
@@ -41,7 +41,8 @@ public class Bullet : WeaponBase, IObjectPool
     [System.Obsolete]
     public void Create()
     {
-        this.transform.position = _muzzleForward.position;
+        _muzzleForwardPos = _muzzlePos.forward;
+        this.transform.position = _muzzleForwardPos;
         if(PlayerContoller.Instance.transform.rotation.y > 0)
         {
             this.transform.rotation = Quaternion.EulerRotation(0,0,90);
@@ -51,35 +52,32 @@ public class Bullet : WeaponBase, IObjectPool
             this.transform.rotation = Quaternion.EulerRotation(0,0,-90);
             _bulletSpeed *= -1;
         }
-        _operation = true;
+        _operated = true;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = true;
         }
-        _collider.enabled = true;
     }
 
     public void Disactive()
     {
-        _operation = false;
+        _operated = false;
         _time = 0f;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = false;
         }
-        _collider.enabled = false;
     }
 
     public void DisactiveForInstantiate()
     {
-        _operation = false;
+        _operated = false;
         _rb = GetComponent<Rigidbody>();
-        _muzzleForward = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
+        _muzzlePos = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = false;
         }
-        _collider.enabled = false;
     }
 }
 public enum BulletOwner
