@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3841495722823744901}
-  m_Layer: 0
+  - component: {fileID: 8345586909965234888}
+  m_Layer: 3
   m_Name: Floors1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1863613814377006188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6899038804055753591}
@@ -40,6 +41,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8345586909965234888
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863613814377006188}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9, y: 0.1, z: 9}
+  m_Center: {x: 0, y: -0.05, z: 0}
 --- !u!1001 &407749419340766740
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50,6 +64,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -95,7 +113,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &407038505262011350 stripped
 Transform:
@@ -112,6 +131,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -157,7 +180,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &2184314568179294845 stripped
 Transform:
@@ -174,6 +198,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -219,7 +247,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &4142869346960601038 stripped
 Transform:
@@ -236,6 +265,14 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -281,7 +318,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &5329314667800017147 stripped
 Transform:
@@ -298,6 +336,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -343,7 +385,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &5811794681414529945 stripped
 Transform:
@@ -360,6 +403,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -405,7 +452,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &6421646953918102169 stripped
 Transform:
@@ -422,6 +470,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -467,7 +519,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &6899038804055753591 stripped
 Transform:
@@ -484,6 +537,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -529,7 +586,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &7865557438794566392 stripped
 Transform:
@@ -546,6 +604,10 @@ PrefabInstance:
     - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_Name
       value: Gen_Floor_04_snaps002 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176885138236256, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4093150761176514, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
       propertyPath: m_RootOrder
@@ -591,7 +653,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65180757707965978, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 42e949fded9304745a989ca004f5bf58, type: 3}
 --- !u!4 &7954415611642497972 stripped
 Transform:
