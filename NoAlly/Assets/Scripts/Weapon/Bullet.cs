@@ -43,15 +43,6 @@ public class Bullet : WeaponBase, IObjectPool
     {
         _muzzleForwardPos = _muzzlePos.forward;
         this.transform.position = _muzzleForwardPos;
-        if(PlayerContoller.Instance.transform.rotation.y > 0)
-        {
-            this.transform.rotation = Quaternion.EulerRotation(0,0,90);
-        }
-        else if(PlayerContoller.Instance.transform.rotation.y < 0)
-        {
-            this.transform.rotation = Quaternion.EulerRotation(0,0,-90);
-            _bulletSpeed *= -1;
-        }
         _operated = true;
         foreach (var weaponRend in _weaponRenderer)
         {

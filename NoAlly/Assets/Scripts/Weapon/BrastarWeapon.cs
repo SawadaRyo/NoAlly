@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BrastarWeapon : CombatWeapon, IWeapon
@@ -30,6 +27,7 @@ public class BrastarWeapon : CombatWeapon, IWeapon
                 _harfExtents = _pawerUpHarfExtents;
                 _rigitPower = _powerUpRigit;
                 _elekePower = _powerUpEleke;
+                _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
                 _isDeformated = false;
@@ -38,7 +36,7 @@ public class BrastarWeapon : CombatWeapon, IWeapon
                 _elekePower = _normalEleke;
                 foreach (Renderer bR in _bladeRenderer)
                 {
-                    BladeFadeIn(bR.material.color);
+                    BladeFadeIn(bR);
                 }
                 break;
         }
