@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f21505f1287120940ae66a13496529bc, type: 3}
+  m_Name: WeaponTable
+  m_EditorClassIdentifier: 
+  WeaponData:
+  - Name: 0
+    RigitPower: 5
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 0
+  - Name: 1
+    RigitPower: 4
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 0
+  - Name: 2
+    RigitPower: 3
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 0
+  - Name: 3
+    RigitPower: 7
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 0
