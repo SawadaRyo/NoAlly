@@ -1,3 +1,4 @@
+using MVRP.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,115 +10,113 @@ using UniRx;
 /// 武器の装備を管理するコンポーネント
 /// </summary>
 
-public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
+namespace MVRP.Views
 {
-    [SerializeField] WeaponBase[] _weapons = default;
-
-    [Tooltip("武器切り替え")] bool _weaponSwitch = false;
-    [Tooltip("メイン武器")] WeaponBase _mainWeaponBase = default;
-    [Tooltip("サブ武器")] WeaponBase _subWeaponBase = default;
-    [Tooltip("装備中の武器")] WeaponBase _equipmentWeapon = default;
-    [Tooltip("現在の属性")] ElementType _type = default;
-    WeaponAction _weaponAction = default;
-
-    public bool WeaponSwitch => _weaponSwitch;
-
-    public WeaponAction EquipeWeaponAction => _weaponAction;
-    public CombatWeapon EquipeCombatWeapon => (CombatWeapon)_equipmentWeapon;
-
-    private void Awake()
+    public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
     {
-        //TODO:武器設定をExcelから行えるようにする
-        _mainWeaponBase = _weapons[0];
-        _subWeaponBase = _weapons[1];
+        [SerializeField] WeaponAction[] _weapons = new WeaponAction[4];
 
-        SetEquipment(_mainWeaponBase, _subWeaponBase);
-        ChangeWeapon(EquipmentType.MAIN, WeaponName.SWORD);
-        ChangeWeapon(EquipmentType.SUB, WeaponName.LANCE);
-        _weaponSwitch = true;
-        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
-    }
+        [Tooltip("武器が使用可能か判定するための変数")]
+        bool _available = true;
+        //[Tooltip("武器切り替え")]
+        //bool _weaponSwitch = Input.GetButton("SubWeaponSwitch");
 
+        [Tooltip("メイン武器")]
+        WeaponAction _mainWeaponBase = default;
+        [Tooltip("サブ武器")]
+        WeaponAction _subWeaponBase = default;
+        [Tooltip("装備中の武器")]
+        WeaponAction _equipmentWeapon = default;
 
-    void Update()
-    {
-        if (Input.GetButtonDown("WeaponChange")
-            && !Input.GetButton("Attack"))
+        //public bool WeaponSwitch => _weaponSwitch;
+        public bool Available => _available;
+        public WeaponAction[] Weapons => _weapons;
+        public WeaponAction EquipeWeapon => _equipmentWeapon;
+
+        public void Init()
         {
-            SwichWeapon();
+            //TODO:武器設定をExcelから行えるようにする
+            _mainWeaponBase = _weapons[0];
+            _subWeaponBase = _weapons[1];
+
+            SetEquipment(_mainWeaponBase, _subWeaponBase);
         }
 
-        if (!MenuHander.Instance.MenuIsOpen)
-        {
-            _weaponAction.WeaponAttack(_equipmentWeapon.name);
-        }
 
-        if (PlayerContoller.Instance.IsWalled())
+        void Update()
         {
-            _equipmentWeapon.RendererActive(false);
-        }
-        else _equipmentWeapon.RendererActive(true);
-
-    }
-    /// <summary>武器のメインとサブの表示を切り替える</summary>
-    void SwichWeapon()
-    {
-        WeaponBase unEquipmentWeapon = default;
-        _weaponSwitch = !_weaponSwitch;
-
-
-        //メインとサブの武器を切り替える
-        if (_weaponSwitch)
-        {
-            _equipmentWeapon = _mainWeaponBase;
-            unEquipmentWeapon = _subWeaponBase;
-            //SetEquipment(_mainWeaponBase, _subWeaponBase);
-        }
-        else
-        {
-            _equipmentWeapon = _subWeaponBase;
-            unEquipmentWeapon = _mainWeaponBase;
-            //SetEquipment(_subWeaponBase, _mainWeaponBase);
-        }
-        SetEquipment(_equipmentWeapon, unEquipmentWeapon);
-        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
-    }
-    /// <summary>メイン武器・サブ武器を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
-    /// <param name="equipmentType"></param>
-    /// <param name="weaponName"></param>
-    public void ChangeWeapon(EquipmentType equipmentType, WeaponName weaponName)
-    {
-        if (equipmentType == EquipmentType.MAIN)
-        {
-            if (_mainWeaponBase.Operation)
+            if (!MenuHander.Instance.MenuIsOpen)
             {
-                SetEquipment(_weapons[(int)weaponName], _mainWeaponBase);
-            }
-            _mainWeaponBase = _weapons[(int)weaponName];
-        }
+                _equipmentWeapon.WeaponAttack();
 
-        else if (equipmentType == EquipmentType.SUB)
+                if (!Input.GetButton("Attack") && !PlayerAnimationState.Instance.IsAttack)
+                {
+                    SwichWeapon(Input.GetButton("SubWeaponSwitch"));
+                }
+            }
+        }
+        /// <summary>メイン武器・サブ武器の表示を切り替える関数</summary>
+        void SwichWeapon(bool weaponSwitch)
         {
-            if (_subWeaponBase.Operation)
-            {
-                SetEquipment(_weapons[(int)weaponName], _subWeaponBase);
-            }
-            _subWeaponBase = _weapons[(int)weaponName];
-        }
-        _weaponAction = _equipmentWeapon.GetComponent<WeaponAction>();
-    }
+            WeaponAction unEquipmentWeapon = default;
 
-    /// <summary>武器の装備を決める関数
-    /// ・第一引数：装備させる武器
-    /// ・第二引数：装備させていた武器</summary>
-    /// <param name="equipmentWeapon"></param>
-    /// <param name="unEquipmentWeapon"></param>
-    void SetEquipment(WeaponBase equipmentWeapon, WeaponBase unEquipmentWeapon)
-    {
-        _equipmentWeapon = equipmentWeapon;
-        unEquipmentWeapon.Operation = false;
-        unEquipmentWeapon.RendererActive(false);
-        _equipmentWeapon.Operation = true;
-        _equipmentWeapon.RendererActive(true);
+            if (PlayerAnimationState.Instance.IsAttack) return;
+
+            //メインとサブの武器を切り替える
+            if (!weaponSwitch)
+            {
+                _equipmentWeapon = _mainWeaponBase;
+                unEquipmentWeapon = _subWeaponBase;
+            }
+            else
+            {
+                _equipmentWeapon = _subWeaponBase;
+                unEquipmentWeapon = _mainWeaponBase;
+            }
+            SetEquipment(_equipmentWeapon, unEquipmentWeapon);
+        }
+        /// <summary>メイン武器・サブ武器の装備を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
+        /// <param name="equipmentType"></param>
+        /// <param name="weaponName"></param>
+        public void ChangeWeapon(CommandType equipmentType, WeaponName weaponName)
+        {
+            _equipmentWeapon.Base.RendererActive(false);
+            switch (equipmentType)
+            {
+                case CommandType.MAIN:
+                    _mainWeaponBase = _weapons[(int)weaponName];
+                    break;
+                case CommandType.SUB:
+                    _subWeaponBase = _weapons[(int)weaponName];
+                    break;
+                default:
+                    break;
+            }
+            SetEquipment(_mainWeaponBase, _subWeaponBase);
+            MainMenu.Instance.DisideElement(MainMenu.Instance.Type);
+        }
+
+        /// <summary>_equipmentWeaponの中身を変更する関数
+        /// ・第一引数：装備させる武器
+        /// ・第二引数：装備させていた武器</summary>
+        /// <param name="equipmentWeapon"></param>
+        /// <param name="unEquipmentWeapon"></param>
+        void SetEquipment(WeaponAction equipmentWeapon, WeaponAction unEquipmentWeapon)
+        {
+            if (_equipmentWeapon != null)
+            {
+                _equipmentWeapon.Base.Operated = false;
+            }
+            _equipmentWeapon = equipmentWeapon;
+            _equipmentWeapon.Base.Operated = true;
+            _equipmentWeapon.Base.RendererActive(true);
+            unEquipmentWeapon.Base.RendererActive(false);
+        }
+
+        public void AvailableWeapon(bool available)
+        {
+            _equipmentWeapon.Base.RendererActive(available);
+            _available = available;
+        }
     }
 }
