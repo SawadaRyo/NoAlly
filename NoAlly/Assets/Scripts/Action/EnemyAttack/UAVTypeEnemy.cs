@@ -23,16 +23,17 @@ public class UAVTypeEnemy : EnemyBase
     }
     public override void EnemyAttack()
     {
-        var targetPos = PlayerContoller.Instance.transform.position + new Vector3(0f, 1.8f, 0f);
-        transform.LookAt(targetPos);
-
-        if (InSight())
+        PlayerContoller player = InSight();
+        if (player)
         {
+            var targetPos = player.transform.position + new Vector3(0f, 1.8f, 0f);
+            transform.LookAt(targetPos);
             _distance = (targetPos - transform.position);
             if (_hit)
             {
                 _isSpeed = (-_speed * _moveMagnification);
-                if (_distance.magnitude > _radius - 2f)
+                float time = Time.deltaTime;
+                if (time > 1f)
                 {
                     _hit = false;
                 }
@@ -48,24 +49,14 @@ public class UAVTypeEnemy : EnemyBase
                     _hit = true;
                 }
             }
+            _enemyAnimator.SetBool("InSight",InSight());
         }
         else
         {
             _distance = Vector3.zero;
         }
         _rb.velocity = _distance.normalized * _isSpeed;
-        //Debug.Log(_hit);
     }
-    //public override void OnTriggerEnter(Collider other)
-    //{
-    //    base.OnTriggerEnter(other);
-    //    if (other.gameObject.TryGetComponent(out PlayerGauge playerGauge))
-    //    {
-    //        Debug.Log('A');
-    //        _hit = true;
-    //        playerGauge.DamageMethod(0, 0, _power, 0);
-    //    }
-    //}
 
     PlayerGauge CallPlayerGauge()
     {
@@ -78,6 +69,13 @@ public class UAVTypeEnemy : EnemyBase
             }
         }
         return null;
+    }
+
+    public override void Disactive()
+    {
+        base.Disactive();
+        RendererActive(false);
+        _rb.velocity = Vector3.zero;
     }
     //public override void OnDrawGizmos()
     //{

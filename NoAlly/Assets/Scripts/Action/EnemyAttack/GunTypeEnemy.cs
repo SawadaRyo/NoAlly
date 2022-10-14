@@ -7,25 +7,27 @@ public class GunTypeEnemy : EnemyBase
     #region フィールド / プロパティ 群
     [SerializeField] int _bulletSize = 10;
     [SerializeField] Transform _muzzleTrans;
+    [SerializeField] Transform _poolTrans;
     [SerializeField] EnemyBullet _bulletPrefab;
     Vector3 _distance = Vector3.zero;
     const float _turnSpeed = 10f;
-    [SerializeField] float _interval = 2f;
+    float _interval = 1f;
     ObjectPool<EnemyBullet> _bulletPool = new ObjectPool<EnemyBullet>();
 
+    public Transform MuzzleTrans => _muzzleTrans;
     public Vector3 Distance => _distance;
     #endregion
 
     public override void Start()
     {
         base.Start();
-        _bulletPool.SetBaseObj(_bulletPrefab, _muzzleTrans, (int)BulletOwner.Enemy);
+        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)BulletOwner.Enemy);
         _bulletPool.SetCapacity(_bulletSize);
     }
 
-    void EnemeyRotate()
+    void EnemeyRotate(PlayerContoller player)
     {
-        Vector3 _distance = (PlayerContoller.Instance.transform.position - this.transform.position).normalized;
+        Vector3 _distance = (player.transform.position - this.transform.position).normalized;
         if (_distance.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
@@ -40,19 +42,20 @@ public class GunTypeEnemy : EnemyBase
 
     public override void EnemyAttack()
     {
-        if (InSight())
+        PlayerContoller player = InSight();
+        if (player)
         {
-            EnemeyRotate();
+            EnemeyRotate(player);
         }
         _enemyAnimator.SetBool("Aiming", InSight());
         StartCoroutine(RapidFire(InSight()));
     }
     public void InsBullet()
     {
-        var bullet = _bulletPool.Instantiate();
+        var bullet = _bulletPool.Instantiate((int)BulletOwner.Enemy);
         if(!bullet.EnemyMuzzleTrans)
         {
-            bullet.EnemyMuzzleTrans = _muzzleTrans;
+            bullet.EnemyMuzzleTrans.position = _muzzleTrans.position;
         }
     }
     IEnumerator RapidFire(bool sightIn)
@@ -63,5 +66,10 @@ public class GunTypeEnemy : EnemyBase
             _enemyAnimator.SetTrigger("Fire");
             yield return wait;
         }
+    }
+    public override void Disactive()
+    {
+        base.Disactive();
+        _enemyAnimator.SetBool("Death", true);
     }
 }

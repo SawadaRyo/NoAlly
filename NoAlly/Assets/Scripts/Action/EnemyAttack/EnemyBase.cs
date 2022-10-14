@@ -9,41 +9,49 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     [SerializeField] protected LayerMask _playerLayer = ~0;
     [SerializeField] protected Transform _center = default;
     [SerializeField] Renderer[] _enemyRenderer = default;
-    bool _isActive = false;
+
+    bool _isActive = true;
+    Collider _collider = default;
     RaycastHit _hitInfo;
 
+    
+
+
     public bool IsActive { get => _isActive; set => _isActive = value; }
-    public virtual void OnTriggerEnter(Collider other) { }
-    public virtual void OnTriggerExit(Collider other) { }
     public abstract void EnemyAttack();
-    public virtual void Start() 
+    public virtual void Start()
     {
-        
+        _collider = GetComponent<Collider>();
     }
     public void FixedUpdate()
     {
-        EnemyAttack();
+        if (_isActive)
+        {
+            EnemyAttack();
+        }
     }
+    public virtual void OnTriggerEnter(Collider other) { }
+    public virtual void OnTriggerExit(Collider other) { }
 
-    public bool InSight()
+    public PlayerContoller InSight()
     {
         //_center = transform.position;
-        var inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
+        Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
-            var player = s.gameObject.GetComponent<PlayerContoller>();
-            if (player)
+            if (s.gameObject.TryGetComponent<PlayerContoller>(out PlayerContoller player))
             {
-                return true;
+                return player;
             }
         }
-        return false;
+        return null;
 
     }
 
     //ê∂ê¨Ç∆îjâÛéûÇÃèàóù
-    public void Create()
+    public virtual void Create()
     {
+        _isActive = true;
         foreach (var r in _enemyRenderer)
         {
             r.enabled = true;
@@ -52,11 +60,13 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         _enemyAnimator.SetBool("Death", false);
         _enemyAnimator.Play("RifleIdle");
     }
-    public void Disactive()
+    public virtual void Disactive()
     {
-        _enemyAnimator.SetBool("Death", true);
+        _isActive = false;
+        _collider.enabled = false;
+        
     }
-    public void DisactiveForInstantiate()
+    public virtual void DisactiveForInstantiate()
     {
         foreach (var r in _enemyRenderer)
         {
@@ -72,7 +82,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     }
     public void RendererActive(bool stats)
     {
-        foreach(var r in _enemyRenderer)
+        foreach (var r in _enemyRenderer)
         {
             r.enabled = stats;
         }
