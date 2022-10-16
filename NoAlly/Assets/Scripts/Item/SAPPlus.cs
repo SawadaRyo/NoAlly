@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class SAPPlus : ItemBase
 {
-    [SerializeField] int m_SAPPlusParameter = 4;
-    PlayerGauge m_playerGagueManager;
-    public override void Activate(Collider other)
+    [SerializeField] int _SAPPlusParameter = 4;
+    public override void Activate(Collider other,PlayerGauge gauge)
     {
-        m_playerGagueManager = other.gameObject.GetComponent<PlayerGauge>();
-        m_playerGagueManager.SAPPuls(m_SAPPlusParameter);
+        gauge.SAPPuls(_SAPPlusParameter);
     }
 }

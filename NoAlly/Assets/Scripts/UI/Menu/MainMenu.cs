@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
@@ -12,78 +14,116 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     [SerializeField] Button[] _mainWeapons = default;
     [SerializeField] Button[] _subWeapons = default;
     [SerializeField] Button[] _elements = default;
+    [SerializeField] WeaponTable _weaponsData;
 
-    EquipmentState _main = default;
-    EquipmentState _sub = default;
+    List<IWeapon> _equipmentWeapons = new();
+    ReactiveProperty<WeaponDateEntity> _main = new ReactiveProperty<WeaponDateEntity>();
+    ReactiveProperty<WeaponDateEntity> _sub = new ReactiveProperty<WeaponDateEntity>();
+    ElementType _elementType = default;
 
 
-    public event Action<ElementType> DisideElement;
+    public ElementType Type => _elementType;
+    public WeaponTable WeaponsData => _weaponsData;
+    public IReadOnlyReactiveProperty<WeaponDateEntity> Main => _main;
+    public IReadOnlyReactiveProperty<WeaponDateEntity> Sub => _sub;
 
-    private void Awake()
+    //public event Action<ElementType> DisideElement;
+
+    public void Init()
     {
-        for (int y = 0; y < Enum.GetNames(typeof(WeaponName)).Length; y++)
+        int weaponIndexNumber = Enum.GetNames(typeof(WeaponName)).Length;
+        for (int y = 0; y < weaponIndexNumber; y++)
         {
             int index = y;
-            _mainWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.MAIN, (WeaponName)index));
-            _subWeapons[y].onClick.AddListener(() => Equipment(EquipmentType.SUB, (WeaponName)index));
+            _mainWeapons[y].onClick.AddListener(() => Equipment(CommandType.MAIN, _weaponsData.WeaponData[index]));
+            _subWeapons[y].onClick.AddListener(() => Equipment(CommandType.SUB, _weaponsData.WeaponData[index]));
             _elements[y].onClick.AddListener(() => DisideElement((ElementType)index));
+            _equipmentWeapons.Add(WeaponEquipment.Instance.Weapons[y].Base);
         }
-        _main = new EquipmentState(EquipmentType.MAIN, WeaponName.SWORD);
-        _sub = new EquipmentState(EquipmentType.SUB, WeaponName.LANCE);
+        _main.Value = _weaponsData.WeaponData[0];
+        _sub.Value = _weaponsData.WeaponData[1];
     }
     /// <summary> ‚±‚±‚Å‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚éiMain‚ÆSub‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚éj</summary>
     /// <param name="weaponName"></param>
     /// <param name="type"></param>
-    void Equipment(EquipmentType type, WeaponName weaponName)
+    public void Equipment(CommandType type, WeaponDateEntity weaponName)
     {
-        WeaponName beforeWeapons = default;
-        if (type == EquipmentType.MAIN)
+        WeaponDateEntity beforeWeapons = default;
+        if (type == CommandType.MAIN)
         {
-           beforeWeapons = _main.Name;
-            _main.Name = weaponName;
-            if (_sub.Name == _main.Name)
+            beforeWeapons = _main.Value;
+            _main.Value = weaponName;
+            if (_sub.Value.Name == _main.Value.Name)
             {
-                _sub.Name = beforeWeapons;
+                _sub.Value = beforeWeapons;
             }
         }
-        else if (type == EquipmentType.SUB)
+        else if (type == CommandType.SUB)
         {
-            beforeWeapons = _sub.Name;
-            _sub.Name = weaponName;
-            if (_main.Name == _sub.Name)
+            beforeWeapons = _sub.Value;
+            _sub.Value = weaponName;
+            if (_main.Value.Name == _sub.Value.Name)
             {
-                _main.Name = beforeWeapons;
+                _main.Value = beforeWeapons;
             }
         }
 
-        WeaponEquipment.Instance.ChangeWeapon(_main.Type, _main.Name);
-        WeaponEquipment.Instance.ChangeWeapon(_sub.Type, _sub.Name);
+        //WeaponEquipment.Instance.ChangeWeapon(CommandType.MAIN, _main.Name);
+        //WeaponEquipment.Instance.ChangeWeapon(CommandType.SUB, _sub.Name);
+    }
+    public void DisideElement(ElementType element)
+    {
+        _elementType = element;
+        _equipmentWeapons.ToList().ForEach(x => x.WeaponMode(element));
+    }
+
+    private void OnDisable()
+    {
+        _main.Dispose();
+        _sub.Dispose();
     }
 }
 
-public struct EquipmentState
+public class MenuCommandButton
 {
-    public EquipmentType Type;
-    public WeaponName Name;
+    bool _isSelected;
+    Button _commund;
+    WeaponName _weaponName;
+    ElementType _elementType;
+    CommandType _type;
 
-    public EquipmentState(EquipmentType type, WeaponName name)
+    public bool IsSelected => _isSelected;
+    public Button Command => _commund;
+    public WeaponName Name => _weaponName;
+    public ElementType ElementType => _elementType;
+    public CommandType Type => _type;
+    public MenuCommandButton(bool isSelected, Button button, WeaponName name, CommandType type)
     {
-        Type = type;
-        Name = name;
+        _isSelected = isSelected;
+        _commund = button;
+        _weaponName = name;
+        _type = type;
+    }
+    public MenuCommandButton(bool isSelected, Button button, ElementType element, CommandType type)
+    {
+        _isSelected = isSelected;
+        _commund = button;
+        _elementType = element;
+        _type = type;
     }
 }
-public enum EquipmentType
+public enum CommandType
 {
-    MAIN,
-    SUB,
-    ElEMENT
+    MAIN = 0,
+    SUB = 1,
+    ElEMENT = 2
 }
 public enum WeaponName
 {
     SWORD = 0,
     LANCE = 1,
     BOW = 2,
-    BRASTAR = 3,
+    BRASTER = 3,
 }
 public enum ElementType
 {
