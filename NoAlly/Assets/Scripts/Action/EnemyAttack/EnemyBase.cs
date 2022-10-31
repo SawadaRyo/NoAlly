@@ -52,11 +52,8 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     public virtual void Create()
     {
         _isActive = true;
-        foreach (var r in _enemyRenderer)
-        {
-            r.enabled = true;
-        }
-        gameObject.GetComponent<CapsuleCollider>().enabled = true;
+        _collider.enabled = true;
+        RendererActive(true);
         _enemyAnimator.SetBool("Death", false);
         _enemyAnimator.Play("RifleIdle");
     }
@@ -64,15 +61,15 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     {
         _isActive = false;
         _collider.enabled = false;
+        RendererActive(false);
         
     }
     public virtual void DisactiveForInstantiate()
     {
-        foreach (var r in _enemyRenderer)
-        {
-            r.enabled = false;
-        }
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        _isActive = false;
+        _collider = gameObject.GetComponent<CapsuleCollider>();
+        _collider.enabled = false;
+        RendererActive(false);
     }
 
     public virtual void OnDrawGizmos()
@@ -87,4 +84,9 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
             r.enabled = stats;
         }
     }
+}
+public enum EnemyType
+{
+    GUN = 0,
+    UAV = 1,
 }

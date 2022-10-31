@@ -4,29 +4,29 @@ using UnityEngine;
 
 public class EnemyGenerator : MonoBehaviour
 {
-    [SerializeField] int m_size = 5;
-    EnemyBase[] m_prefabBases = default;
-    ObjectPool<EnemyBase>[] m_enemyiesPool = default;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] Transform _poolPos = null;
+    [SerializeField] EnemyBase _prefabBases = null;
+    [SerializeField] EnemyType _enemyType;
+
+    int _size = 1;
+    Transform[] _enmeyPositions;
+    ObjectPool<EnemyBase> _enemyiesPool = new ObjectPool<EnemyBase>();
+
+
+    public void Start()
     {
-        m_prefabBases = Resources.LoadAll<EnemyBase>("Enemy");
-        m_enemyiesPool = new ObjectPool<EnemyBase>[m_prefabBases.Length];
-        for(int i = 0;i < m_enemyiesPool.Length; i++)
+        _enmeyPositions = gameObject.GetComponentsInChildren<Transform>();
+        _enemyiesPool.SetBaseObj(_prefabBases, _poolPos, (int)_enemyType);
+        _enemyiesPool.SetCapacity(_enmeyPositions.Length);
+        EnemyGenerate();
+    }
+    public void EnemyGenerate()
+    {
+        foreach (Transform enmeyPosition in _enmeyPositions)
         {
-            var enmeyPos = gameObject.transform.GetChild(i);
-            m_enemyiesPool[i].SetBaseObj(m_prefabBases[i],enmeyPos,(int)EnemyType.GUN);
-            m_enemyiesPool[i].SetCapacity(m_size);
+            EnemyBase enmey = _enemyiesPool.Instantiate((int)_enemyType);
+            enmey.transform.position = enmeyPosition.position;
         }
     }
+}
 
-    private void FixedUpdate()
-    {
-        
-    }
-}
-public enum EnemyType
-{
-    GUN = 0,
-    UAV = 1,
-}

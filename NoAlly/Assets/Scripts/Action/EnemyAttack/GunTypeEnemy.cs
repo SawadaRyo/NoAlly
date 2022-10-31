@@ -50,6 +50,11 @@ public class GunTypeEnemy : EnemyBase
         _enemyAnimator.SetBool("Aiming", InSight());
         StartCoroutine(RapidFire(InSight()));
     }
+    public override void Disactive()
+    {
+        base.Disactive();
+        _enemyAnimator.SetBool("Death", true);
+    }
     public void InsBullet()
     {
         var bullet = _bulletPool.Instantiate((int)BulletOwner.Enemy);
@@ -66,10 +71,5 @@ public class GunTypeEnemy : EnemyBase
             _enemyAnimator.SetTrigger("Fire");
             yield return wait;
         }
-    }
-    public override void Disactive()
-    {
-        base.Disactive();
-        _enemyAnimator.SetBool("Death", true);
     }
 }
