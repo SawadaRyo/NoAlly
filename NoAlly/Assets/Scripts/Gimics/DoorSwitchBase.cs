@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class DoorSwitchBase : MonoBehaviour
 {
-    Door _parentDoor = default;
+    Door _parentDoor = null;
 
     public abstract void ObjectAction();
 
@@ -18,10 +18,6 @@ public abstract class DoorSwitchBase : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetComponent<WeaponBase>() != null)
-        {
-            if (!_parentDoor.IsLock) return;
-            _parentDoor.UnLock();
-        }
+        
     }
 }
