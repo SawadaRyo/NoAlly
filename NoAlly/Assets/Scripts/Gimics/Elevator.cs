@@ -7,6 +7,7 @@ using UniRx.Triggers;
 
 public class Elevator : MonoBehaviour
 {
+    [SerializeField] bool _rotObj = false;
     [SerializeField] float _timeForPoint = 3f;
     [SerializeField] Transform _movePos1;
     [SerializeField] Transform _movePos2;
@@ -33,7 +34,7 @@ public class Elevator : MonoBehaviour
         _animator = GetComponent<Animator>();
         _animator.SetBool("Open", true);
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
-        RideOnPod();
+        PodMotion();
     }
 
 
@@ -41,7 +42,6 @@ public class Elevator : MonoBehaviour
     {
         if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
         {
-            _riding = true;
             _rideText.enabled = true;
             _playerContoller = player;
             _playerRb = player.Rb;
@@ -52,7 +52,7 @@ public class Elevator : MonoBehaviour
     {
         if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
         {
-            if (Input.GetButtonDown("Decision") && _riding)
+            if (Input.GetButtonDown("Decision") && player)
             {
                 _animator.SetBool("Open", false);
             }
@@ -62,7 +62,6 @@ public class Elevator : MonoBehaviour
     {
         if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
         {
-            _riding = false;
             _rideText.enabled = false;
             _playerContoller = null;
             _playerRb = null;
@@ -87,7 +86,7 @@ public class Elevator : MonoBehaviour
     //        (_movePos1, _movePos2) = (_movePos2, _movePos1);
     //    }
     //}
-    void RideOnPod()
+    void PodMotion()
     {
         IDisposable exitState = _trigger
         .OnStateExitAsObservable()
@@ -101,6 +100,10 @@ public class Elevator : MonoBehaviour
                     _moving = true;
                     _playerContoller.transform.parent = this.gameObject.transform;
                     _playerRb.constraints = RigidbodyConstraints.None;
+                    if(_rotObj)
+                    {
+                        this.transform.DORotate(new Vector3(0f, 180f, 0f), _timeForPoint, RotateMode.LocalAxisAdd);
+                    }
                     DOTween.To(() => _movePos1.position,
                         x => transform.position = x,
                         _movePos2.position, _timeForPoint)
@@ -121,11 +124,4 @@ public class Elevator : MonoBehaviour
         }).AddTo(this);
     }
 
-    void MovePoint()
-    {
-        DOTween.To(() => _movePos1.position,
-            x => transform.position = x,
-            _movePos2.position, _timeForPoint)
-            .OnComplete(() => _animator.SetBool("Open", true));
-    }
 }

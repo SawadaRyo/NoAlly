@@ -1,4 +1,3 @@
-using MVRP.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,113 +9,112 @@ using UniRx;
 /// 武器の装備を管理するコンポーネント
 /// </summary>
 
-namespace MVRP.Views
+
+public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 {
-    public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
+    [SerializeField] WeaponAction[] _weapons = new WeaponAction[4];
+
+    [Tooltip("武器が使用可能か判定するための変数")]
+    bool _available = true;
+    //[Tooltip("武器切り替え")]
+    //bool _weaponSwitch = Input.GetButton("SubWeaponSwitch");
+
+    [Tooltip("メイン武器")]
+    WeaponAction _mainWeaponBase = null;
+    [Tooltip("サブ武器")]
+    WeaponAction _subWeaponBase = null;
+    [Tooltip("装備中の武器")]
+    WeaponAction _equipmentWeapon = null;
+
+    //public bool WeaponSwitch => _weaponSwitch;
+    public bool Available => _available;
+    public WeaponAction[] Weapons => _weapons;
+    public WeaponAction EquipeWeapon => _equipmentWeapon;
+
+    public void Init()
     {
-        [SerializeField] WeaponAction[] _weapons = new WeaponAction[4];
+        //TODO:武器設定をExcelから行えるようにする
+        _mainWeaponBase = _weapons[0];
+        _subWeaponBase = _weapons[1];
 
-        [Tooltip("武器が使用可能か判定するための変数")]
-        bool _available = true;
-        //[Tooltip("武器切り替え")]
-        //bool _weaponSwitch = Input.GetButton("SubWeaponSwitch");
+        SetEquipment(_mainWeaponBase, _subWeaponBase);
+    }
 
-        [Tooltip("メイン武器")]
-        WeaponAction _mainWeaponBase = default;
-        [Tooltip("サブ武器")]
-        WeaponAction _subWeaponBase = default;
-        [Tooltip("装備中の武器")]
-        WeaponAction _equipmentWeapon = default;
 
-        //public bool WeaponSwitch => _weaponSwitch;
-        public bool Available => _available;
-        public WeaponAction[] Weapons => _weapons;
-        public WeaponAction EquipeWeapon => _equipmentWeapon;
-
-        public void Init()
+    void Update()
+    {
+        //if (!MenuHander.Instance.MenuIsOpen)
         {
-            //TODO:武器設定をExcelから行えるようにする
-            _mainWeaponBase = _weapons[0];
-            _subWeaponBase = _weapons[1];
+            _equipmentWeapon.WeaponAttack();
 
-            SetEquipment(_mainWeaponBase, _subWeaponBase);
-        }
-
-
-        void Update()
-        {
-            if (!MenuHander.Instance.MenuIsOpen)
+            if (!Input.GetButton("Attack"))
             {
-                _equipmentWeapon.WeaponAttack();
-
-                if (!Input.GetButton("Attack") && !PlayerAnimationState.Instance.IsAttack)
-                {
-                    SwichWeapon(Input.GetButton("SubWeaponSwitch"));
-                }
+                var swichFlg = Input.GetButton("SubWeaponSwitch");
+                SwichWeapon(swichFlg);
             }
         }
-        /// <summary>メイン武器・サブ武器の表示を切り替える関数</summary>
-        void SwichWeapon(bool weaponSwitch)
-        {
-            WeaponAction unEquipmentWeapon = default;
+    }
+    /// <summary>メイン武器・サブ武器の表示を切り替える関数</summary>
+    void SwichWeapon(bool weaponSwitch)
+    {
+        WeaponAction unEquipmentWeapon = null;
 
-            if (PlayerAnimationState.Instance.IsAttack) return;
+        if (PlayerAnimationState.Instance.IsAttack) return;
 
-            //メインとサブの武器を切り替える
-            if (!weaponSwitch)
-            {
-                _equipmentWeapon = _mainWeaponBase;
-                unEquipmentWeapon = _subWeaponBase;
-            }
-            else
-            {
-                _equipmentWeapon = _subWeaponBase;
-                unEquipmentWeapon = _mainWeaponBase;
-            }
-            SetEquipment(_equipmentWeapon, unEquipmentWeapon);
-        }
-        /// <summary>メイン武器・サブ武器の装備を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
-        /// <param name="equipmentType"></param>
-        /// <param name="weaponName"></param>
-        public void ChangeWeapon(CommandType equipmentType, WeaponName weaponName)
+        //メインとサブの武器を切り替える
+        if (!weaponSwitch)
         {
-            _equipmentWeapon.Base.RendererActive(false);
-            switch (equipmentType)
-            {
-                case CommandType.MAIN:
-                    _mainWeaponBase = _weapons[(int)weaponName];
-                    break;
-                case CommandType.SUB:
-                    _subWeaponBase = _weapons[(int)weaponName];
-                    break;
-                default:
-                    break;
-            }
-            SetEquipment(_mainWeaponBase, _subWeaponBase);
-            MainMenu.Instance.DisideElement(MainMenu.Instance.Type);
+            _equipmentWeapon = _mainWeaponBase;
+            unEquipmentWeapon = _subWeaponBase;
         }
+        else
+        {
+            _equipmentWeapon = _subWeaponBase;
+            unEquipmentWeapon = _mainWeaponBase;
+        }
+        SetEquipment(_equipmentWeapon, unEquipmentWeapon);
+    }
+    /// <summary>メイン武器・サブ武器の装備を切り替える関数・第一引数：メインかサブか指定・変更したい武器の名前</summary>
+    /// <param name="equipmentType"></param>
+    /// <param name="weaponName"></param>
+    public void ChangeWeapon(CommandType equipmentType, WeaponName weaponName)
+    {
+        _equipmentWeapon.Base.RendererActive(false);
+        switch (equipmentType)
+        {
+            case CommandType.MAIN:
+                _mainWeaponBase = _weapons[(int)weaponName];
+                break;
+            case CommandType.SUB:
+                _subWeaponBase = _weapons[(int)weaponName];
+                break;
+            default:
+                break;
+        }
+        SetEquipment(_mainWeaponBase, _subWeaponBase);
+        MainMenu.Instance.DisideElement(MainMenu.Instance.Type);
+    }
 
-        /// <summary>_equipmentWeaponの中身を変更する関数
-        /// ・第一引数：装備させる武器
-        /// ・第二引数：装備させていた武器</summary>
-        /// <param name="equipmentWeapon"></param>
-        /// <param name="unEquipmentWeapon"></param>
-        void SetEquipment(WeaponAction equipmentWeapon, WeaponAction unEquipmentWeapon)
+    /// <summary>_equipmentWeaponの中身を変更する関数
+    /// ・第一引数：装備させる武器
+    /// ・第二引数：装備させていた武器</summary>
+    /// <param name="equipmentWeapon"></param>
+    /// <param name="unEquipmentWeapon"></param>
+    void SetEquipment(WeaponAction equipmentWeapon, WeaponAction unEquipmentWeapon)
+    {
+        if (_equipmentWeapon != null)
         {
-            if (_equipmentWeapon != null)
-            {
-                _equipmentWeapon.Base.Operated = false;
-            }
-            _equipmentWeapon = equipmentWeapon;
-            _equipmentWeapon.Base.Operated = true;
-            _equipmentWeapon.Base.RendererActive(true);
-            unEquipmentWeapon.Base.RendererActive(false);
+            _equipmentWeapon.Base.Operated = false;
         }
+        _equipmentWeapon = equipmentWeapon;
+        _equipmentWeapon.Base.Operated = true;
+        _equipmentWeapon.Base.RendererActive(true);
+        unEquipmentWeapon.Base.RendererActive(false);
+    }
 
-        public void AvailableWeapon(bool available)
-        {
-            _equipmentWeapon.Base.RendererActive(available);
-            _available = available;
-        }
+    public void AvailableWeapon(bool available)
+    {
+        _equipmentWeapon.Base.RendererActive(available);
+        _available = available;
     }
 }

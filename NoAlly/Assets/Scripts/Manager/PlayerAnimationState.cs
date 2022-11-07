@@ -14,102 +14,124 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     float _shootTiming = 0.35f;
     [Tooltip("‹ßÚUŒ‚‚Ì”»’è‹–‰Â")]
     bool _onHit = false;
+    [Tooltip("UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚É‘JˆÚ‚µ‚Ä‚¢‚é‚©Šm”F‚·‚é•Ï”")]
+    bool _isAttack = false;
     [Tooltip("Animation‚Ì‘JˆÚó‹µ")]
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ðŠi”[‚·‚é•Ï”")]
     Animator _animator = default;
     [Tooltip("WeaponEquipmentƒNƒ‰ƒX‚ðŠi”[‚·‚é•Ï”")]
     WeaponEquipment _weaponEquipment;
+    [Tooltip("PlayerController‚ðŠi”[‚·‚é•Ï”")]
+    PlayerContoller _playerContoller = null;
 
     public bool AbleMove => _ableMove;
     public bool AbleInput => _ableInput;
+    public bool IsAttack => _isAttack;
 
     private void Start()
     {
         _onHit = false;
         _animator = GetComponent<Animator>();
-        _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();
+        _playerContoller = GetComponent<PlayerContoller>();
+        _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //Animator‚ÉƒAƒ^ƒbƒ`‚µ‚Ä‚¢‚éObservableStateMachineTrigger‚ðŽæ‚Á‚Ä‚­‚é
         _weaponEquipment = WeaponEquipment.Instance;
-        DetectionState();
-        WeaponAnimationUpdate();
+        DetectionStateEnterToAttack();
+        DetectionStateUpdateToAttack();
+        DetectionStateExitToAttack();
     }
 
-    void DetectionState()
+    void DetectionStateEnterToAttack()
     {
         IDisposable enterState = _trigger
-        .OnStateEnterAsObservable()
+        .OnStateEnterAsObservable()@@//Animation‚Ì‘JˆÚŠJŽn‚ðŒŸ’m
         .Subscribe(onStateInfo =>
         {
-            AnimatorStateInfo info = onStateInfo.StateInfo;
-            //Debug.Log(onStateInfo);
-            
-            if (info.IsTag("GroundAttack"))
+            AnimatorStateInfo info = onStateInfo.StateInfo;@//Œ»Ý‚ÌAnimator‚Ì‘JˆÚó‹µ
+
+            //ˆÈ‰º‚ÌƒR[ƒh‚ÉŽÀs‚µ‚½‚¢ˆ—‚ð‘‚­
+            if(info.IsTag("Idle"))
+            {
+                if (_reset)
+                {
+                    _ableMove = true;
+                    _isAttack = false;
+                    if (!_ableInput)
+                    {
+                        _ableInput = true;
+                    }
+                    _reset = false;
+                }
+            }
+            else if (info.IsTag("GroundAttack"))
             {
                 _ableMove = false;
             }
-            else if(info.IsTag("AirAttack") || info.IsTag("AirAttack"))
+            else if (info.IsTag("AirAttack") || info.IsTag("MoveAttack"))
             {
                 _ableInput = false;
             }
             else if (info.IsTag("GroundAttackFinish"))
             {
+                if (info.IsName("SwordAttackFinish"))
+                {
+                    
+                }
                 _ableInput = false;
                 _ableMove = false;
             }
+            _isAttack = true;
 
             if (!_reset) _reset = true;
 
         }).AddTo(this);
 
-        IDisposable exitState = _trigger
-            .OnStateExitAsObservable()
-            .Subscribe(onStateInfo =>
-            {
-                AnimatorStateInfo info = onStateInfo.StateInfo;
-                if (info.IsTag("GroundAttack") || info.IsName("JumpEnd"))
-                {
-                    Debug.Log("Exit");
-                }
-                else if (info.IsTag("AirAttack") || info.IsTag("AirAttack"))
-                {
-                    _ableInput = true;
-                }
-            }).AddTo(this);
+        
 
         IDisposable updateState = _trigger
         .OnStateUpdateAsObservable()
         .Subscribe(onStateInfo =>
         {
             AnimatorStateInfo info = onStateInfo.StateInfo;
-            if (info.IsTag("Ground") || info.IsName("NoGround.JumpEnd"))
+            if (info.IsTag("Ground"))
             {
                 //if(info.length == )
             }
         }).AddTo(this);
     }
-
-    void WeaponAnimationUpdate()
+    void DetectionStateUpdateToAttack()
     {
-        //IDisposable bowAnimationEnter = _trigger
-        //.OnStateEnterAsObservable()
-        //.Where(x => x.StateInfo.IsTag("Shoot"))
-        //.Where(x => x.StateInfo.normalizedTime >= _shootTiming)
-        //.Take(1)
-        //.Subscribe(x =>
-        //{
-        //    _eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
-        //}).AddTo(this);
         IDisposable bowAnimationUpdate = _trigger
         .OnStateUpdateAsObservable()
-        .Where(x => x.StateInfo.IsTag("Shoot"))
-        .Where(x => x.StateInfo.normalizedTime >= _shootTiming)
-        .Take(1)
-        .Subscribe(x =>
+        .Subscribe(onStateInfo =>
         {
-            //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
+            AnimatorStateInfo info = onStateInfo.StateInfo;
+            if (info.IsTag("GroundAttackFinish"))
+            {
+                if (info.IsName("SwordAttackFinish"))
+                {
+                    
+                }
+            }
         }).AddTo(this);
     }
-
+    void DetectionStateExitToAttack()
+    {
+        IDisposable exitState = _trigger
+        .OnStateExitAsObservable()
+        .Subscribe(onStateInfo =>
+        {
+            AnimatorStateInfo info = onStateInfo.StateInfo;
+            if (info.IsTag("GroundAttack") || info.IsName("JumpEnd"))
+            {
+                Debug.Log("Exit");
+            }
+            else if (info.IsTag("AirAttack") || info.IsTag("AirAttack"))
+            {
+                _ableInput = true;
+            }
+        }).AddTo(this);
+    }
     void PlayerAnimationEnter()
     {
         IDisposable bowAnimationUpdate = _trigger
@@ -122,30 +144,30 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
-
-    void ResetInput()
-    {
-        if(_reset)
-        {
-            _ableMove = true;
-            if (!_ableInput)
-            {
-                _ableInput = true;
-            }
-            _reset = false;
-        }
-    }
-    public void AttackToCombatWeapon()
+    //void ResetInput()
+    //{
+    //    if (_reset)
+    //    {
+    //        _ableMove = true;
+    //        _isAttack = false;
+    //        if (!_ableInput)
+    //        {
+    //            _ableInput = true;
+    //        }
+    //        _reset = false;
+    //    }
+    //}
+    void AttackToCombatWeapon()
     {
         _onHit = !_onHit;
-        StartCoroutine(_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit));
+        StartCoroutine(_weaponEquipment.EquipeWeapon.Base.LoopJud(_onHit));
         //_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit);
     }
     void BulletFIre()
     {
-        float chrageCount = WeaponEquipment.Instance.EquipeWeaponAction.ChrageCount;
+        float chrageCount = WeaponEquipment.Instance.EquipeWeapon.ChrageCount;
         WeaponEquipment
-            .Instance.EquipeWeaponAction
+            .Instance.EquipeWeapon
             .WeaponChargeAttackMethod(chrageCount);
     }
 }

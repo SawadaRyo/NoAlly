@@ -17,13 +17,13 @@ public class SuperImpalse : DeathblowBase
     {
         for(int i = 1; i <= 5;i++)
         {
-            var enemyCollider = Physics.OverlapSphere(this.transform.position, m_deathBlowRange, m_targetLayer);
+            var enemyCollider = Physics.OverlapSphere(this.transform.position, m_deathBlowRange, _targetLayer);
             foreach (var ec in enemyCollider)
             {
-                var enemyHp = ec.gameObject.GetComponent<EnemyGauge>();
+                var enemyHp = ec.gameObject.GetComponent<EnemyStatus>();
                 if (enemyHp)
                 {
-                    enemyHp.DamageMethod(m_power, 0, 0, 0);
+                    enemyHp.DamageMethod(_power, 0, 0, 0);
                 }
             }
             m_deathBlowRange += i;

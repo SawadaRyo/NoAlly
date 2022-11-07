@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerContoller : SingletonBehaviour<PlayerContoller>
+public class PlayerContoller : MonoBehaviour
 {
     [Header("Ground")]
 
@@ -19,22 +19,22 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
     bool _dashChack = false;
-    [Tooltip("プレイヤーの直前の移動方向")]
-    float _beforeRot = 0f;
+    [Tooltip("プレイヤーカメラ")]
+    Camera _playerCamera= null;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")]
-    float m_jump = 5f;
+    float _jumpPower = 5f;
     [SerializeField, Tooltip("接地判定のRayの射程")]
-    float m_graundDistance = 1f;
+    float _graundDistance = 1f;
     [SerializeField, Tooltip("接地判定のRayの射出点")]
-    Transform m_footPos;
+    Transform _footPos;
     [SerializeField, Tooltip("接地判定のSphierCastの半径")]
-    float m_isGroundRengeRadios = 1f;
+    float _isGroundRengeRadios = 1f;
     [SerializeField, Tooltip("接地判定のLayerMask")]
-    LayerMask m_groundMask = ~0;
+    LayerMask _groundMask = ~0;
     [Tooltip("ジャンプの入力判定")]
-    bool _jump = false;
+    bool _isJump = false;
 
     [Header("WallJump")]
     [SerializeField, Tooltip("プレイヤーの壁キックの力")]
@@ -42,15 +42,15 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [SerializeField]
     float _wallJump2 = 7f;
     [SerializeField, Tooltip("壁をずり落ちる速度")]
-    float m_wallSlideSpeed = 0.8f;
+    float _wallSlideSpeed = 0.8f;
     [SerializeField, Tooltip("壁の接触判定のRayの射程")]
-    float m_walldistance = 0.1f;
+    float _walldistance = 0.1f;
     [SerializeField, Tooltip("壁の接触判定")]
-    LayerMask m_wallMask = ~0;
+    LayerMask _wallMask = ~0;
     [SerializeField, Tooltip("接地判定のRayの射出点")]
-    Transform m_gripPos = default;
+    Transform _gripPos = null;
     [Tooltip("壁のずり落ち判定")]
-    bool m_slideWall = false;
+    bool _slideWall = false;
 
     [Header("Animation")]
     [Tooltip("Animationを取得する為の変数")]
@@ -67,17 +67,18 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     [Tooltip("Rigidbodyコンポーネントの取得")]
     Rigidbody _rb;
     [Tooltip("プレイヤーの移動ベクトルを取得")]
-    Vector3 _velo = default;
+    Vector3 _velo = Vector3.zero;
     [Tooltip("接触しているオブジェクトの情報")]
-    RaycastHit m_hitInfo;
+    RaycastHit _hitInfo;
 
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-
     public bool DashChack => _dashChack;
+    public Rigidbody Rb => _rb;
+    public RaycastHit HitInfo => _hitInfo;
 
     void Start()
     {
-        //orgLocalQuaternion = this.transform.localRotation;
+        _playerCamera = GameObject.FindObjectOfType<Camera>();
         _rb = GetComponent<Rigidbody>();
         _audio = gameObject.AddComponent<AudioSource>();
         _velo = _rb.velocity;
@@ -86,13 +87,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     }
     void Update()
     {
-        if (GameManager.Instance.IsGame)
+        if (GameManager.Instance.IsGame && PlayerGauge.Instance.Living)
         {
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");
-            _jump = Input.GetButtonDown("Jump");
-            WallJumpMethod(_jump, _isDash);
-            JumpMethod(_jump);
+            _isJump = Input.GetButtonDown("Jump");
+            WallJumpMethod(_isJump, _isDash);
+            JumpMethod(_isJump);
         }
     }
     void FixedUpdate()
@@ -129,17 +130,11 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     /// <summary>プレイヤーの移動</summary>
     void MoveMethod(float h, bool dash)
     {
-        if (h != 0)
-        {
-            if (h > 0) h = 1;
-            else if ((h < 0)) h = -1;
-            _beforeRot = h;
-        }
-
-        float moveSpeed = 0f;
-
+        //if (h != 0)
         //プレイヤーの方向転換
         {
+            if (h > 0) h = _playerCamera.transform.right.x;
+            else if ((h < 0)) h = _playerCamera.transform.right.x * - 1;
 
             if (h == -1)
             {
@@ -151,12 +146,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                 Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
             }
-            else if (h == 0)
-            {
-                Quaternion newRotation = Quaternion.LookRotation(new Vector3(_beforeRot, 0f, 0f));
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, newRotation, Time.deltaTime * _turnSpeed);
-            }
         }
+
+        float moveSpeed = 0f;
 
         //プレイヤーの移動
         if (h != 0 && _animState.AbleMove)
@@ -187,8 +179,9 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
                 }
             }
         }
-
-        _velo.x = h * moveSpeed;
+        Vector3 normalVector = _hitInfo.normal;
+        Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h,0f,0f), normalVector);
+        _velo.x = onPlane.x * moveSpeed;
         _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
         _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
     }
@@ -196,10 +189,10 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     void JumpMethod(bool jump)
     {
         //ジャンプの処理
-        if (jump && IsGrounded())
+        if (jump && IsGrounded() && _animState.AbleMove)
         {
             //m_audio.PlayOneShot(m_jumpSound);
-            _rb.AddForce(0f, m_jump, 0f, ForceMode.Impulse);
+            _rb.AddForce(0f, _jumpPower, 0f, ForceMode.Impulse);
         }
         _animator.SetBool("Jump", !IsGrounded());
 
@@ -210,13 +203,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         _animator.SetBool("WallGrip", IsWalled());
         if (IsGrounded())
         {
-            m_slideWall = false;
+            _slideWall = false;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsWalled())
         {
-            m_slideWall = true;
+            _slideWall = true;
             if (_dashChack) _dashChack = false;
             _h = 0;
             if (jump)
@@ -230,13 +223,13 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
         }
         else
         {
-            m_slideWall = false;
+            _slideWall = false;
         }
 
 
-        if (m_slideWall)
+        if (_slideWall)
         {
-            _rb.velocity = new Vector3(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, -m_wallSlideSpeed, float.MaxValue));
+            _rb.velocity = new Vector3(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, -_wallSlideSpeed, float.MaxValue));
         }
     }
     /// <summary>接壁判定</summary>
@@ -244,38 +237,45 @@ public class PlayerContoller : SingletonBehaviour<PlayerContoller>
     {
         if (IsGrounded()) return false;
 
-        Vector3 isWallCenter = m_gripPos.transform.position;
+        Vector3 isWallCenter = _gripPos.transform.position;
         Ray rayRight = new Ray(isWallCenter, Vector3.right);
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
 
-        bool hitflg = Physics.Raycast(rayRight, out m_hitInfo, m_walldistance, m_wallMask)
-        || Physics.Raycast(rayLeft, out m_hitInfo, m_walldistance, m_wallMask);
+        bool hitflg = Physics.Raycast(rayRight, out _hitInfo, _walldistance, _wallMask)
+        || Physics.Raycast(rayLeft, out _hitInfo, _walldistance, _wallMask);
 
         return hitflg;
     }
     /// <summary>接地判定</summary>
     bool IsGrounded()
     {
-        Vector3 isGroundCenter = m_footPos.transform.position;
+        Vector3 isGroundCenter = _footPos.transform.position;
         Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, m_isGroundRengeRadios, out _, m_graundDistance, m_groundMask);
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);
         return hitFlg;
     }
     //AnimatorEventで呼ぶ関数----------------------------------------------//
     void WallJump()
     {
         _audio.PlayOneShot(m_jumpSound);
-        Vector3 vec = transform.up + m_hitInfo.normal;
+        Vector3 vec = transform.up + _hitInfo.normal;
         if (_isDash) _rb.AddForce(vec * _wallJump2, ForceMode.Impulse);
         else _rb.AddForce(vec * _wallJump, ForceMode.Impulse);
     }
+    //TODO:効果音やBGMはSoundManagerで管理する
     void FootSound(AudioClip footSound)
     {
-
+        _audio.PlayOneShot(footSound);
     }
     Vector3 NomarizedMoveVecter()
     {
         Vector3 refVecter = Vector3.zero;
         return refVecter;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f,_graundDistance,0f), _isGroundRengeRadios);
     }
 }

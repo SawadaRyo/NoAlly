@@ -108,6 +108,7 @@ public class CombatWeapon : WeaponBase
         Color bRc = bR.material.color;
         DOTween.To( x => bRc.a = x
                     ,_fadeInColor
-                    ,_fadeOutColor, _fadeTime).OnUpdate(() => bR.material.color = bRc);
+                    ,_fadeOutColor, _fadeTime)
+                    .OnUpdate(() => bR.material.color = bRc);
     }
 }

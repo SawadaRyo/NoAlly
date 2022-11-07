@@ -4,16 +4,16 @@ using UnityEngine;
 
 public abstract class DeathblowBase : MonoBehaviour
 {
-    [SerializeField] protected PlayerGauge m_playerHP = default;
-    [SerializeField] protected int m_power = 20;
-    [SerializeField] protected LayerMask m_targetLayer = ~0;
-    [SerializeField] int needSAP = 20;
-    protected Animator m_playerAnimator = default;
+    [SerializeField] protected PlayerGauge _playerHP = default;
+    [SerializeField] protected float _power = 20;
+    [SerializeField] protected LayerMask _targetLayer = ~0;
+    [SerializeField] float _needSAP = 20;
+    protected Animator _playerAnimator = default;
     public abstract void DeathblowAbility();
 
     void Start()
     {
-        m_playerAnimator = gameObject.GetComponentInParent<Animator>();
+        _playerAnimator = gameObject.GetComponentInParent<Animator>();
     }
 
     void Update()
@@ -21,10 +21,10 @@ public abstract class DeathblowBase : MonoBehaviour
         if(Input.GetButtonDown("SpecialAction"))
         {
             Debug.Log("a");
-            if(m_playerHP.SAP >= needSAP)
+            if(_playerHP.SAP.Value >= _needSAP)
             {
-                m_playerAnimator.SetTrigger("DeathBlow");
-                m_playerHP.SAP -= needSAP;
+                _playerAnimator.SetTrigger("DeathBlow");
+                _playerHP.UseSAP(_needSAP);
             }
         }
     }

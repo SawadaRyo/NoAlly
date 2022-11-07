@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class MenuHander : SingletonBehaviour<MenuHander>
 {
-    [SerializeField] float _interval = 0.2f;
+    [SerializeField] float _interval = 0.3f;
+    [SerializeField] MainMenu _mainManu = null;
 
 
     bool _menuIsOpen = false;
@@ -49,8 +50,10 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 _allButtons[y, x].Command.enabled = false;
                 length++;
             }
-            //DisideCommand(_selectedButtons);
         }
+        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN,(int)_mainManu.Main.Value.Name];
+        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.Sub.Value.Name];
+        _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
 
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
@@ -158,33 +161,37 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     }
     void DisideCommand(MenuCommandButton selectedButton)
     {
+        if (_selectedButtons[(int)selectedButton.Type].Command != null)
+        {
+            _selectedButtons[(int)selectedButton.Type].Command.image.color = Color.white;
+        }
 
         switch (selectedButton.Type)
         {
             case CommandType.MAIN:
                 if (selectedButton.Name == _selectedButtons[(int)CommandType.SUB].Name)
                 {
-                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)selectedButton.Name];
-                    _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.yellow;
+                    var beforeWeapon = _selectedButtons[(int)CommandType.MAIN];
+                    _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.white;
+                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeWeapon.Name];
                 }
                 break;
             case CommandType.SUB:
                 if (selectedButton.Name == _selectedButtons[(int)CommandType.MAIN].Name)
                 {
-                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)selectedButton.Name];
-                    _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.yellow;
+                    var beforeWeapon = _selectedButtons[(int)CommandType.SUB];
+                    _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.white;
+                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeWeapon.Name];
                 }
                 break;
             default:
                 break;
         }
-
-        if (_selectedButtons[(int)selectedButton.Type].Command != null)
-        {
-            _selectedButtons[(int)selectedButton.Type].Command.image.color = Color.white;
-        }
+        
         _selectedButtons[(int)selectedButton.Type] = selectedButton;
-        _selectedButtons[(int)selectedButton.Type].Command.image.color = Color.yellow;
+        _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.yellow;
+        _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.yellow;
+        _selectedButtons[(int)CommandType.ElEMENT].Command.image.color = Color.yellow;
     }
     /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
     void MenuOpen()

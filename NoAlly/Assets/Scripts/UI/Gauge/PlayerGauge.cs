@@ -42,7 +42,7 @@ using UniRx;
         public void Init()
         {
             _hp = new FloatReactiveProperty(_maxHP);
-            _sap = new FloatReactiveProperty(_maxSAP);
+            _sap = new FloatReactiveProperty(0);
             _living = true;
             _animator = GetComponentInParent<Animator>();
         }

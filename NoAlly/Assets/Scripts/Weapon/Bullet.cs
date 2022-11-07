@@ -5,12 +5,12 @@ using UnityEngine;
 public class Bullet : WeaponBase, IObjectPool
 {
     [SerializeField] float _bulletSpeed = 0;
-    [SerializeField] BulletOwner _owner = default;
+    [SerializeField] BulletOwner _owner = BulletOwner.Player;
     bool _isActive = false;
     float _time = 0f;
-    Transform _muzzlePos = default;
-    Vector3 _muzzleForwardPos = default;
-    Rigidbody _rb = default;
+    Transform _muzzlePos = null;
+    Vector3 _muzzleForwardPos = Vector3.zero;
+    Rigidbody _rb = null;
 
     public bool IsActive => _isActive;
 

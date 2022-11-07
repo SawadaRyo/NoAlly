@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Interval
 {
-    float m_interval = 1f;
-    float m_time = 0;
+    float _interval = 1f;
+    float _time = 0;
     public Interval(float interval)
     {
-        m_interval = interval;
+        _interval = interval;
     }
 
     public bool IsCountUp()
     {
-        m_time += Time.deltaTime;
-        if(m_time < m_interval)
+        _time += Time.deltaTime;
+        if(_time < _interval)
         {
             return false;
         }
@@ -23,6 +23,6 @@ public class Interval
 
     public void ResetTimer()
     {
-        m_time = 0;
+        _time = 0;
     }
 }
