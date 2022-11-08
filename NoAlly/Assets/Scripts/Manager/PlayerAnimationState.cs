@@ -10,7 +10,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     [Tooltip("入力可能か判定する変数")]
     bool _ableInput = true;
     [Tooltip("「_able…」の変数の値を初期化するか判定する変数")]
-    bool _reset;
     float _shootTiming = 0.35f;
     [Tooltip("近接攻撃の判定許可")]
     bool _onHit = false;
@@ -50,43 +49,39 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             AnimatorStateInfo info = onStateInfo.StateInfo;　//現在のAnimatorの遷移状況
 
             //以下のコードに実行したい処理を書く
-            if(info.IsTag("Idle"))
+            if (info.IsTag("Idle"))
             {
-                if (_reset)
+                _ableMove = true;
+                _isAttack = false;
+                if (!_ableInput)
                 {
-                    _ableMove = true;
-                    _isAttack = false;
-                    if (!_ableInput)
+                    _ableInput = true;
+                }
+            }
+            else
+            {
+                if (info.IsTag("GroundAttack"))
+                {
+                    _ableMove = false;
+                }
+                else if (info.IsTag("AirAttack") || info.IsTag("MoveAttack"))
+                {
+                    _ableInput = false;
+                }
+                else if (info.IsTag("GroundAttackFinish"))
+                {
+                    if (info.IsName("SwordAttackFinish"))
                     {
-                        _ableInput = true;
+
                     }
-                    _reset = false;
+                    _ableInput = false;
+                    _ableMove = false;
                 }
+                _isAttack = true;
             }
-            else if (info.IsTag("GroundAttack"))
-            {
-                _ableMove = false;
-            }
-            else if (info.IsTag("AirAttack") || info.IsTag("MoveAttack"))
-            {
-                _ableInput = false;
-            }
-            else if (info.IsTag("GroundAttackFinish"))
-            {
-                if (info.IsName("SwordAttackFinish"))
-                {
-                    
-                }
-                _ableInput = false;
-                _ableMove = false;
-            }
-            _isAttack = true;
-
-            if (!_reset) _reset = true;
-
         }).AddTo(this);
 
-        
+
 
         IDisposable updateState = _trigger
         .OnStateUpdateAsObservable()
@@ -110,7 +105,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             {
                 if (info.IsName("SwordAttackFinish"))
                 {
-                    
+
                 }
             }
         }).AddTo(this);
@@ -144,19 +139,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
-    //void ResetInput()
-    //{
-    //    if (_reset)
-    //    {
-    //        _ableMove = true;
-    //        _isAttack = false;
-    //        if (!_ableInput)
-    //        {
-    //            _ableInput = true;
-    //        }
-    //        _reset = false;
-    //    }
-    //}
     void AttackToCombatWeapon()
     {
         _onHit = !_onHit;

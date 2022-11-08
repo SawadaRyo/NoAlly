@@ -16,8 +16,6 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
 
     [Tooltip("武器が使用可能か判定するための変数")]
     bool _available = true;
-    //[Tooltip("武器切り替え")]
-    //bool _weaponSwitch = Input.GetButton("SubWeaponSwitch");
 
     [Tooltip("メイン武器")]
     WeaponAction _mainWeaponBase = null;
@@ -50,6 +48,7 @@ public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
             if (!Input.GetButton("Attack"))
             {
                 var swichFlg = Input.GetButton("SubWeaponSwitch");
+                Debug.Log(PlayerAnimationState.Instance.IsAttack);
                 SwichWeapon(swichFlg);
             }
         }

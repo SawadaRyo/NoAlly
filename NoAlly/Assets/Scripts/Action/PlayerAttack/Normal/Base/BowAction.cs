@@ -11,7 +11,7 @@ public class BowAction : WeaponAction
     [SerializeField] Transform _poolPos = default;
     [SerializeField] PersonType _personType = PersonType.Player;
 
-    int m_bulletType = 0;
+    int _bulletType = 0;
     ObjectPool<Bullet> _bPool = new ObjectPool<Bullet>();
     Bullet[] _bulletPrefab = new Bullet[3];
     
@@ -35,22 +35,22 @@ public class BowAction : WeaponAction
             //’Êí’e
             if (chrageCount <= _chargeLevel1)
             {
-                m_bulletType = 0;
+                _bulletType = 0;
             }
             //‹­‰»’e
             else if (chrageCount > _chargeLevel1 && chrageCount <= _chargeLevel2)
             {
-                m_bulletType = 1;
+                _bulletType = 1;
             }
             //‘å–C
             else if (chrageCount > _chargeLevel2)
             {
-                m_bulletType = 2;
+                _bulletType = 2;
             }
 
-            var bullletObj = _bPool.Instantiate(m_bulletType);
+            var bullletObj = _bPool.Instantiate(_bulletType);
             //bullletObj.GetComponent<Rigidbody>().velocity = _muzzleForward.forward * _bulletSpeed;
-            m_bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
+            _bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
         }
     }
 

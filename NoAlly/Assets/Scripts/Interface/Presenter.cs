@@ -34,6 +34,7 @@ public class Presenter : MonoBehaviour
     }
     void WeaponState()
     {
+        //•Ší‚Ì‘•”õî•ñ
         _mainMenu.Main
             .Subscribe(mainWeapon =>
             {

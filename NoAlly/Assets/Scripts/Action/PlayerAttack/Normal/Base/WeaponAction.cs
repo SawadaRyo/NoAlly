@@ -56,7 +56,6 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
                 //{
                 //    WeaponChargeAttackMethod(_chrageCount);
                 //}
-                _chrageCount = 0f;
             }
 
             _animator.SetBool("Charge", Input.GetButton("Attack"));
