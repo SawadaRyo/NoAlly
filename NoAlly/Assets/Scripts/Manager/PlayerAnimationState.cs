@@ -34,7 +34,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _animator = GetComponent<Animator>();
         _playerContoller = GetComponent<PlayerContoller>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //AnimatorにアタッチしているObservableStateMachineTriggerを取ってくる
-        _weaponEquipment = WeaponEquipment.Instance;
+        _weaponEquipment = _playerContoller.GetComponent<WeaponEquipment>();
         DetectionStateEnterToAttack();
         DetectionStateUpdateToAttack();
         DetectionStateExitToAttack();
@@ -147,9 +147,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     }
     void BulletFIre()
     {
-        float chrageCount = WeaponEquipment.Instance.EquipeWeapon.ChrageCount;
-        WeaponEquipment
-            .Instance.EquipeWeapon
-            .WeaponChargeAttackMethod(chrageCount);
+        float chrageCount = _weaponEquipment.EquipeWeapon.ChrageCount;
+        _weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod(chrageCount);
     }
 }

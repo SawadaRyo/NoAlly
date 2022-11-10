@@ -19,8 +19,8 @@ public class Elevator : MonoBehaviour
     bool _moving = false;
     [Tooltip("エレベーターのAnimator")]
     Animator _animator;
-    [Tooltip("プレイヤー")]
-    PlayerContoller _playerContoller = default;
+    [Tooltip("プレイヤーにアタッチされているWeaponEquipment")]
+    WeaponEquipment _weaponEquipment = default;
     [Tooltip("プレイヤー")]
     Rigidbody _playerRb = default;
     [Tooltip("Animationの遷移状況")]
@@ -40,19 +40,19 @@ public class Elevator : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.TryGetComponent<WeaponEquipment>(out WeaponEquipment equipment))
         {
             _rideText.enabled = true;
-            _playerContoller = player;
-            _playerRb = player.Rb;
+            _weaponEquipment = equipment;
+            _playerRb = other.GetComponent<Rigidbody>();
+            equipment.AvailableWeapon(false);
         }
-        WeaponEquipment.Instance.AvailableWeapon(false);
     }
     void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.TryGetComponent<WeaponEquipment>(out WeaponEquipment equipment))
         {
-            if (Input.GetButtonDown("Decision") && player)
+            if (Input.GetButtonDown("Decision") && equipment)
             {
                 _animator.SetBool("Open", false);
             }
@@ -60,13 +60,13 @@ public class Elevator : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.TryGetComponent<WeaponEquipment>(out WeaponEquipment equipment))
         {
             _rideText.enabled = false;
-            _playerContoller = null;
+            _weaponEquipment = null;
             _playerRb = null;
+            equipment.AvailableWeapon(true);
         }
-        WeaponEquipment.Instance.AvailableWeapon(true);
     }
 
 
@@ -95,12 +95,12 @@ public class Elevator : MonoBehaviour
             AnimatorStateInfo info = onStateInfo.StateInfo;
             if (info.IsName("ElevatorClose"))
             {
-                if (_playerContoller)
+                if (_weaponEquipment)
                 {
                     _moving = true;
-                    _playerContoller.transform.parent = this.gameObject.transform;
+                    _weaponEquipment.transform.parent = this.gameObject.transform;
                     _playerRb.constraints = RigidbodyConstraints.None;
-                    if(_rotObj)
+                    if (_rotObj)
                     {
                         this.transform.DORotate(new Vector3(0f, 180f, 0f), _timeForPoint, RotateMode.LocalAxisAdd);
                     }
@@ -112,10 +112,10 @@ public class Elevator : MonoBehaviour
             }
             else if (info.IsName("ElevatorOpen"))
             {
-                if (_playerContoller)
+                if (_weaponEquipment)
                 {
                     _moving = false;
-                    _playerContoller.transform.parent = null;
+                    _weaponEquipment.transform.parent = null;
                     _playerRb.constraints = RigidbodyConstraints.FreezePositionZ
                                           | RigidbodyConstraints.FreezeRotation;
                     (_movePos1, _movePos2) = (_movePos2, _movePos1);

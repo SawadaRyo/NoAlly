@@ -11,11 +11,12 @@ using UniRx;
 
 public class MainMenu : SingletonBehaviour<MainMenu>
 {
-    [SerializeField] Button[] _mainWeapons = default;
-    [SerializeField] Button[] _subWeapons = default;
-    [SerializeField] Button[] _elements = default;
+    [SerializeField] Button[] _mainWeapons = null;
+    [SerializeField] Button[] _subWeapons = null;
+    [SerializeField] Button[] _elements = null;
     [SerializeField] WeaponTable _weaponsData;
 
+    WeaponEquipment _weaponEquipment = null;
     List<IWeapon> _equipmentWeapons = new();
     ReactiveProperty<WeaponDateEntity> _main = new ReactiveProperty<WeaponDateEntity>();
     ReactiveProperty<WeaponDateEntity> _sub = new ReactiveProperty<WeaponDateEntity>();
@@ -31,6 +32,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
 
     public void Init()
     {
+        _weaponEquipment = GameObject.FindObjectOfType<WeaponEquipment>();
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponName)).Length;
         for (int y = 0; y < weaponIndexNumber; y++)
         {
@@ -38,7 +40,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
             _mainWeapons[y].onClick.AddListener(() => Equipment(CommandType.MAIN, _weaponsData.WeaponData[index]));
             _subWeapons[y].onClick.AddListener(() => Equipment(CommandType.SUB, _weaponsData.WeaponData[index]));
             _elements[y].onClick.AddListener(() => DisideElement((ElementType)index));
-            _equipmentWeapons.Add(WeaponEquipment.Instance.Weapons[y].Base);
+            _equipmentWeapons.Add(_weaponEquipment.Weapons[y].Base);
         }
         _main.Value = _weaponsData.WeaponData[0];
         _sub.Value = _weaponsData.WeaponData[1];

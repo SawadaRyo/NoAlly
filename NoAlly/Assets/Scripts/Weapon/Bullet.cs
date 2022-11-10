@@ -61,7 +61,6 @@ public class Bullet : WeaponBase, IObjectPool
     {
         _rb.isKinematic = true;
         _time = 0f;
-        this.transform.position
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = false;

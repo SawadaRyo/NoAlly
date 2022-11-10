@@ -10,7 +10,7 @@ using UniRx;
 /// </summary>
 
 
-public class WeaponEquipment : SingletonBehaviour<WeaponEquipment>
+public class WeaponEquipment : MonoBehaviour
 {
     [SerializeField] WeaponAction[] _weapons = new WeaponAction[4];
 

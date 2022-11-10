@@ -13,11 +13,14 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
     [Tooltip("ïêäÌñº")]
     protected string _weaponName;
     [Tooltip("PlayerÇÃAnimatorÇäiî[Ç∑ÇÈïœêî")]
-    protected Animator _animator = default;
+    protected Animator _animator = null;
     [Tooltip("WeaponBaseÇäiî[Ç∑ÇÈïœêî")]
-    protected WeaponBase _weaponBase = default;
+    protected WeaponBase _weaponBase = null;
     [Tooltip("PlayerAnimationStateÇäiî[Ç∑ÇÈïœêî")]
-    PlayerAnimationState _state;
+    PlayerAnimationState _state = null;
+    [Tooltip("WeaponEquipmentÇäiî[Ç∑ÇÈïœêî")]
+    WeaponEquipment _weaponEquipment = null;
+
     public float ChrageCount => _chrageCount;
     public WeaponBase Base => _weaponBase;
 
@@ -29,6 +32,7 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
         if (_unStored)
         {
             Enable();
+            _weaponEquipment = GetComponentInParent<WeaponEquipment>();
             _state = PlayerAnimationState.Instance;
             _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
             _weaponBase = GetComponent<WeaponBase>();
@@ -38,7 +42,7 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
 
     public void WeaponAttack()
     {
-        if (_state.AbleInput && WeaponEquipment.Instance.Available)
+        if (_state.AbleInput && _weaponEquipment.Available)
         {
             ////í èÌçUåÇÇÃèàóù
             if (Input.GetButtonDown("Attack"))

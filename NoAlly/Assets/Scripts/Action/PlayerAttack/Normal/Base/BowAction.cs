@@ -49,7 +49,6 @@ public class BowAction : WeaponAction
             }
 
             var bullletObj = _bPool.Instantiate(_bulletType);
-            //bullletObj.GetComponent<Rigidbody>().velocity = _muzzleForward.forward * _bulletSpeed;
             _bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
         }
     }
