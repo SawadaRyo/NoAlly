@@ -35,12 +35,15 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _playerContoller = GetComponent<PlayerContoller>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //AnimatorにアタッチしているObservableStateMachineTriggerを取ってくる
         _weaponEquipment = _playerContoller.GetComponent<WeaponEquipment>();
+
+        DetectionStateEnterToNormalAction();
         DetectionStateEnterToAttack();
         DetectionStateUpdateToAttack();
         DetectionStateExitToAttack();
-    }
 
-    void DetectionStateEnterToAttack()
+
+    }
+    void DetectionStateEnterToNormalAction()
     {
         IDisposable enterState = _trigger
         .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
@@ -58,40 +61,36 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                     _ableInput = true;
                 }
             }
-            else
-            {
-                if (info.IsTag("GroundAttack"))
-                {
-                    _ableMove = false;
-                }
-                else if (info.IsTag("AirAttack") || info.IsTag("MoveAttack"))
-                {
-                    _ableInput = false;
-                }
-                else if (info.IsTag("GroundAttackFinish"))
-                {
-                    if (info.IsName("SwordAttackFinish"))
-                    {
-
-                    }
-                    _ableInput = false;
-                    _ableMove = false;
-                }
-                _isAttack = true;
-            }
         }).AddTo(this);
-
-
-
-        IDisposable updateState = _trigger
-        .OnStateUpdateAsObservable()
+    }
+    void DetectionStateEnterToAttack()
+    {
+        IDisposable enterState = _trigger
+        .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
         .Subscribe(onStateInfo =>
         {
-            AnimatorStateInfo info = onStateInfo.StateInfo;
-            if (info.IsTag("Ground"))
+            AnimatorStateInfo info = onStateInfo.StateInfo; //現在のAnimatorの遷移状況
+            if (info.IsTag("GroundAttack"))
             {
-                //if(info.length == )
+                _ableMove = false;
+                _isAttack = true;
             }
+            else if (info.IsTag("AirAttack") || info.IsTag("MoveAttack"))
+            {
+                _ableInput = false;
+                _isAttack = true;
+            }
+            else if (info.IsTag("GroundAttackFinish"))
+            {
+                if (info.IsName("SwordAttackFinish"))
+                {
+
+                }
+                _ableInput = false;
+                _ableMove = false;
+                _isAttack = true;
+            }
+
         }).AddTo(this);
     }
     void DetectionStateUpdateToAttack()
@@ -147,7 +146,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     }
     void BulletFIre()
     {
-        float chrageCount = _weaponEquipment.EquipeWeapon.ChrageCount;
-        _weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod(chrageCount);
+        _weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod();
+        _weaponEquipment.EquipeWeapon.ResetValue();
     }
 }

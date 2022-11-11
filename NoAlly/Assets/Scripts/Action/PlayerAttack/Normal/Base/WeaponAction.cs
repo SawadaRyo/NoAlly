@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class WeaponAction : MonoBehaviour, IWeaponAction
+public class WeaponAction : MonoBehaviour, IWeaponAction
 {
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float _chargeLevel1 = 1f;
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float _chargeLevel2 = 3f;
@@ -21,17 +21,21 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
     [Tooltip("WeaponEquipment‚ğŠi”[‚·‚é•Ï”")]
     WeaponEquipment _weaponEquipment = null;
 
-    public float ChrageCount => _chrageCount;
     public WeaponBase Base => _weaponBase;
 
-    public abstract void WeaponChargeAttackMethod(float chrageCount);
+    public virtual void WeaponChargeAttackMethod() { }
     public virtual void Enable() { }
+    public virtual void ResetValue()
+    {
+        _chrageCount = 0;
+    }
 
     void OnEnable()
     {
         if (_unStored)
         {
             Enable();
+            _weaponName = this.gameObject.name;
             _weaponEquipment = GetComponentInParent<WeaponEquipment>();
             _state = PlayerAnimationState.Instance;
             _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
@@ -47,7 +51,7 @@ public abstract class WeaponAction : MonoBehaviour, IWeaponAction
             ////’ÊíUŒ‚‚Ìˆ—
             if (Input.GetButtonDown("Attack"))
             {
-                _animator.SetTrigger(this.gameObject.name);
+                _animator.SetTrigger(_weaponName);
             }
             //—­‚ßUŒ‚‚Ìˆ—(‹|–î‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚à‚±‚Ìˆ—j
             if (Input.GetButton("Attack") && _chrageCount < _chargeLevel2)

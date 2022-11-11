@@ -9,9 +9,8 @@ public class Bullet : WeaponBase, IObjectPool
     bool _isActive = false;
     float _time = 0f;
     Transform _muzzlePos = null;
-    Vector3 _muzzleForwardPos = Vector3.zero;
-    Vector3 _velo = Vector3.zero;
     Rigidbody _rb = null;
+    Vector3 _muzzleForwardPos = Vector3.zero;
 
     public bool IsActive => _isActive;
 
@@ -20,8 +19,7 @@ public class Bullet : WeaponBase, IObjectPool
         if (!_isActive) return;
 
         _time += Time.deltaTime;
-        _velo.x = _bulletSpeed * _muzzleForwardPos.x;
-        _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
+        _rb.velocity = _bulletSpeed * _muzzleForwardPos.normalized;
         if (_time > 5f)
         {
             Disactive();
@@ -41,7 +39,6 @@ public class Bullet : WeaponBase, IObjectPool
         {
             Disactive();
         }
-        Disactive();
     }
 
     [System.Obsolete]
@@ -72,8 +69,8 @@ public class Bullet : WeaponBase, IObjectPool
     {
         _isActive = false;
         _rb = GetComponent<Rigidbody>();
-        _velo = _rb.velocity;
         _muzzlePos = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
+        _muzzlePos.TransformPoint(_muzzlePos.localPosition);
         foreach (var weaponRend in _weaponRenderer)
         {
             weaponRend.enabled = false;

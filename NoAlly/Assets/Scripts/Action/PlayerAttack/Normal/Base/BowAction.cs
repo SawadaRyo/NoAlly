@@ -27,33 +27,37 @@ public class BowAction : WeaponAction
         }
     }
 
-    public override void WeaponChargeAttackMethod(float chrageCount)
+    public override void WeaponChargeAttackMethod()
     {
         if (_personType == PersonType.Player)
         {
-            Debug.Log(chrageCount);
+            Debug.Log(_chrageCount);
             //’Êí’e
-            if (chrageCount <= _chargeLevel1)
+            if (_chrageCount <= _chargeLevel1)
             {
                 _bulletType = 0;
             }
             //‹­‰»’e
-            else if (chrageCount > _chargeLevel1 && chrageCount <= _chargeLevel2)
+            else if (_chrageCount > _chargeLevel1 && _chrageCount <= _chargeLevel2)
             {
                 _bulletType = 1;
             }
             //‘å–C
-            else if (chrageCount > _chargeLevel2)
+            else if (_chrageCount > _chargeLevel2)
             {
                 _bulletType = 2;
             }
 
             var bullletObj = _bPool.Instantiate(_bulletType);
-            _bulletType = 0; //‘Å‚¿I‚í‚Á‚½Œã’e‚Ìprefab‚ğ’Êí’e‚É–ß‚·
+            
         }
     }
 
-
+    public override void ResetValue()
+    {
+        base.ResetValue();
+        _bulletType = 0;
+    }
 }
 public enum BulletType
 {

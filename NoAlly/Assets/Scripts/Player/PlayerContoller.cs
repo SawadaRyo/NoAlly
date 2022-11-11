@@ -20,7 +20,7 @@ public class PlayerContoller : MonoBehaviour
     bool _isDash = false;
     bool _dashChack = false;
     [Tooltip("プレイヤーカメラ")]
-    Camera _playerCamera= null;
+    Camera _playerCamera = null;
 
     [Header("Jump")]
     [SerializeField, Tooltip("プレイヤーのジャンプ力")]
@@ -134,7 +134,7 @@ public class PlayerContoller : MonoBehaviour
         //プレイヤーの方向転換
         {
             if (h > 0) h = _playerCamera.transform.right.x;
-            else if ((h < 0)) h = _playerCamera.transform.right.x * - 1;
+            else if ((h < 0)) h = _playerCamera.transform.right.x * -1;
 
             if (h == -1)
             {
@@ -180,9 +180,17 @@ public class PlayerContoller : MonoBehaviour
             }
         }
         Vector3 normalVector = _hitInfo.normal;
-        Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h,0f,0f), normalVector);
+        Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
         _velo.x = onPlane.x * moveSpeed;
-        _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
+        _velo.y = onPlane.y * moveSpeed;
+        if (Mathf.Abs(_velo.y) <= 0.01f)
+        {
+            _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
+        }
+        else if (Mathf.Abs(_velo.y) > 0.01f)
+        {
+            _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
+        }
         _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
     }
     /// <summary>プレイヤーのジャンプ</summary>
@@ -276,6 +284,6 @@ public class PlayerContoller : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f,_graundDistance,0f), _isGroundRengeRadios);
+        Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
     }
 }

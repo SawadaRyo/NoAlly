@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CombatAction : WeaponAction
 {
-    public override void WeaponChargeAttackMethod(float chrageCount)
+    public override void WeaponChargeAttackMethod()
     {
         if (_chrageCount < _chargeLevel1)
         {
