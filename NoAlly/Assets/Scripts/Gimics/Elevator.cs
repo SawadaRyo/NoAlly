@@ -69,23 +69,6 @@ public class Elevator : MonoBehaviour
         }
     }
 
-
-    //void RideOnPod(bool activeElevator)
-    //{
-    //    if (activeElevator)
-    //    {
-    //        _animator.SetBool("Open", false);
-    //        PlayerContoller.Instance.transform.parent = gameObject.transform;
-    //        _playerRb.constraints = RigidbodyConstraints.None;
-    //    }
-    //    else
-    //    {
-    //        _animator.SetBool("Open", true);
-    //        PlayerContoller.Instance.transform.parent = null;
-    //        _playerRb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-    //        (_movePos1, _movePos2) = (_movePos2, _movePos1);
-    //    }
-    //}
     void PodMotion()
     {
         IDisposable exitState = _trigger
@@ -123,5 +106,15 @@ public class Elevator : MonoBehaviour
             }
         }).AddTo(this);
     }
-
+    public void SetPosition(Transform pos1,Transform pos2)
+    {
+        _movePos1 = pos1;
+        _movePos2 = pos2;
+    }
+}
+public enum ElevatorState
+{
+    Normal = 0,
+    Locked = 1,
+    Othor = 2,
 }
