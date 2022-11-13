@@ -63,14 +63,18 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     {
         if (isAttack)
         {
-            Collider[] enemiesInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
-            if (enemiesInRenge.Length > 0)
+            Collider[] objectsInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
+            if (objectsInRenge.Length > 0)
             {
-                foreach (Collider enemy in enemiesInRenge)
+                foreach (Collider obj in objectsInRenge)
                 {
-                    if (enemy.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHp))
+                    if (obj.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHp))
                     {
-                        enemyHp.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
+                        enemyHp.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
+                    }
+                    else if(obj.TryGetComponent<IHit>(out IHit hitObj))
+                    {
+                        hitObj.BehaviorOfHit(MainMenu.Instance.Type);
                     }
                 }
             }

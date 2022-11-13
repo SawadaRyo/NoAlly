@@ -23,7 +23,7 @@ public class SuperImpalse : DeathblowBase
                 var enemyHp = ec.gameObject.GetComponent<EnemyStatus>();
                 if (enemyHp)
                 {
-                    enemyHp.DamageMethod(_power, 0, 0, 0);
+                    //enemyHp.DamageMethod(_power, 0, 0, 0);
                 }
             }
             m_deathBlowRange += i;
