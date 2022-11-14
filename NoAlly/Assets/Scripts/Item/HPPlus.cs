@@ -5,7 +5,7 @@ using UnityEngine;
 public class HPPlus : ItemBase
 {
     [SerializeField] int _HPPlusParameter = 4;
-    public override void Activate(Collider other,PlayerGauge gauge)
+    public override void Activate(Collider other,PlayerStats gauge)
     {
         gauge.HPPuls(_HPPlusParameter);
 

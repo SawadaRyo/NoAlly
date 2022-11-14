@@ -72,7 +72,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
                     {
                         enemyHp.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
                     }
-                    else if(obj.TryGetComponent<IHit>(out IHit hitObj))
+                    else if(obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
                     {
                         hitObj.BehaviorOfHit(MainMenu.Instance.Type);
                     }

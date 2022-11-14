@@ -87,7 +87,7 @@ public class PlayerContoller : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.Instance.IsGame && PlayerGauge.Instance.Living)
+        if (GameManager.Instance.IsGame && PlayerStats.Instance.Living)
         {
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");

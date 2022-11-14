@@ -19,7 +19,7 @@ public class Bullet : WeaponBase, IObjectPool
         if (!_isActive) return;
 
         _time += Time.deltaTime;
-        _rb.velocity = _bulletSpeed * _muzzleForwardPos.normalized;
+        _rb.velocity = _bulletSpeed * _muzzleForwardPos;
         if (_time > 5f)
         {
             Disactive();
@@ -31,7 +31,7 @@ public class Bullet : WeaponBase, IObjectPool
         {
             enemyHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
         }
-        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent<PlayerGauge>(out PlayerGauge playerHP))
+        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent<PlayerStats>(out PlayerStats playerHP))
         {
             playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
         }

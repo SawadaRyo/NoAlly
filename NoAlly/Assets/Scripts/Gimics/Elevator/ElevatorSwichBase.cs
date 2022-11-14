@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ElevatorSwichBase : IHit
+public class ElevatorSwichBase : IHitBehavorOfGimic
 {
     [SerializeField] Elevator _targetElevator = null;
 
