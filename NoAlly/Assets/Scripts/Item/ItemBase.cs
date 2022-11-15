@@ -17,11 +17,11 @@ public class ItemBase : MonoBehaviour,IObjectPool
         _audio = GameObject.FindObjectOfType<AudioSource>();
     }
     public virtual void Activate(Collider other) { }
-    public virtual void Activate(Collider other,PlayerStats gauge) { }
+    public virtual void Activate(Collider other,PlayerStatus gauge) { }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PlayerStats>(out PlayerStats playerGauge) && _isActive)
+        if (other.TryGetComponent<PlayerStatus>(out PlayerStatus playerGauge) && _isActive)
         {
             _audio.PlayOneShot(_getSound);
             Activate(other,playerGauge);

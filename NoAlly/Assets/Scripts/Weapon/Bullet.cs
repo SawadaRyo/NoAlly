@@ -31,7 +31,7 @@ public class Bullet : WeaponBase, IObjectPool
         {
             enemyHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
         }
-        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent<PlayerStats>(out PlayerStats playerHP))
+        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent<PlayerStatus>(out PlayerStatus playerHP))
         {
             playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
         }

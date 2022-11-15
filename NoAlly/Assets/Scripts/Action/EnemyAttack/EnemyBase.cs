@@ -85,8 +85,3 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         }
     }
 }
-public enum EnemyType
-{
-    GUN = 0,
-    UAV = 1,
-}

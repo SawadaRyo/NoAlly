@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class DeathblowBase : MonoBehaviour
 {
-    [SerializeField] protected PlayerStats _playerHP = default;
+    [SerializeField] protected PlayerStatus _playerHP = default;
     [SerializeField] protected float _power = 20;
     [SerializeField] protected LayerMask _targetLayer = ~0;
     [SerializeField] float _needSAP = 20;

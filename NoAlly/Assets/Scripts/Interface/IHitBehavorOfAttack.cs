@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHitBehavorOfAttack
 {
-    public void BehaviorOfHit(float weaponPower, float firePower, float elekePower, float frozenPower,ElementType type);
+    public float BehaviorOfHit(float weaponPower, float firePower, float elekePower, float frozenPower,ElementType type);
 }

@@ -8,7 +8,7 @@ public class Presenter : MonoBehaviour
     [SerializeField] MainMenu _mainMenu = null;
     [SerializeField] MenuHander _menuHander = null;
 
-    [SerializeField] PlayerStats _playerGauge = null;
+    [SerializeField] PlayerStatus _playerGauge = null;
     [SerializeField] GameObject[] _playerSlider = null;
 
     GaugeLarp _playerHPLarp = null;

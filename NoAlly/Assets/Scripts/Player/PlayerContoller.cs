@@ -70,11 +70,14 @@ public class PlayerContoller : MonoBehaviour
     Vector3 _velo = Vector3.zero;
     [Tooltip("接触しているオブジェクトの情報")]
     RaycastHit _hitInfo;
+    [Tooltip("プレイヤーのステータス")]
+    PlayerStatus _playerStatus = null;
 
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     public bool DashChack => _dashChack;
     public Rigidbody Rb => _rb;
     public RaycastHit HitInfo => _hitInfo;
+
 
     void Start()
     {
@@ -84,10 +87,11 @@ public class PlayerContoller : MonoBehaviour
         _velo = _rb.velocity;
         _animator = GetComponent<Animator>();
         _animState = PlayerAnimationState.Instance;
+        _playerStatus = GetComponent<PlayerStatus>();
     }
     void Update()
     {
-        if (GameManager.Instance.IsGame && PlayerStats.Instance.Living)
+        if (GameManager.Instance.IsGame && _playerStatus.Living)
         {
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");

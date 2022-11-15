@@ -41,7 +41,7 @@ public class UAVTypeEnemy : EnemyBase
             else
             {
                 _isSpeed = _speed;
-                PlayerStats playerGauge = CallPlayerGauge();
+                PlayerStatus playerGauge = CallPlayerGauge();
 
                 if (playerGauge != null)
                 {
@@ -58,12 +58,12 @@ public class UAVTypeEnemy : EnemyBase
         _rb.velocity = _distance.normalized * _isSpeed;
     }
 
-    PlayerStats CallPlayerGauge()
+    PlayerStatus CallPlayerGauge()
     {
         var playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
         foreach (var col in playerCol)
         {
-            if (col.TryGetComponent<PlayerStats>(out PlayerStats playerGauge))
+            if (col.TryGetComponent<PlayerStatus>(out PlayerStatus playerGauge))
             {
                 return playerGauge;
             }
