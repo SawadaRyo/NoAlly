@@ -68,9 +68,9 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
             {
                 foreach (Collider obj in objectsInRenge)
                 {
-                    if (obj.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHp))
+                    if (obj.TryGetComponent<IHitBehavorOfAttack>(out IHitBehavorOfAttack enemyHp))
                     {
-                        enemyHp.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
+                        enemyHp.BehaviorOfHit(this,MainMenu.Instance.Type);
                     }
                     else if(obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
                     {

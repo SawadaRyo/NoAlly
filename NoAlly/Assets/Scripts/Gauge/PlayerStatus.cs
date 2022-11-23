@@ -18,21 +18,20 @@ public class PlayerStatus : StatusBase
     public float MaxSAP => _maxSAP;
     public FloatReactiveProperty SAP => _sap;
 
-    void Awake()
-    {
-        _animator = gameObject.GetComponent<Animator>();
-    }
     public override void Init()
     {
         base.Init();
+        _animator = gameObject.GetComponent<Animator>();
         _sap = new FloatReactiveProperty(0);
     }
 
     void Update()
     {
-        if (_living) return;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
-        _animator.SetBool("Death", true);
+
+    }
+    void DamageMethod(float weaponPower,ElementType type)
+    {
+        _hp.Value -= weaponPower;
     }
     //ダメージ計算
     public void DamageMethod(float weaponPower, float firePower, float elekePower, float frozenPower)
@@ -47,6 +46,8 @@ public class PlayerStatus : StatusBase
         if (_hp.Value <= 0)
         {
             _living = false;
+            gameObject.GetComponent<CapsuleCollider>().enabled = false;
+            _animator.SetBool("Death", true);
         }
         else return;
     }
@@ -78,10 +79,17 @@ public class PlayerStatus : StatusBase
         _sap.Value -= useSAP;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         _hp.Dispose();
         _sap.Dispose();
+    }
+
+    void IsLiving(bool live)
+    {
+        _living = live;
+        gameObject.GetComponent<CapsuleCollider>().enabled = live;
+        _animator.SetBool("Death", !live);
     }
 }
 

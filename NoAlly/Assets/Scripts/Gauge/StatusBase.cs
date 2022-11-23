@@ -33,6 +33,10 @@ public class StatusBase : MonoBehaviour
     public bool IsInvincible => _invincibleTime.IsCountUp();
     public FloatReactiveProperty HP => _hp;
 
+    private void Awake()
+    {
+        Init();
+    }
     public virtual void Init()
     {
         _hp = new FloatReactiveProperty(_maxHP);

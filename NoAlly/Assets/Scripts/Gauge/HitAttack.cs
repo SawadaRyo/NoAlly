@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class HitAttack : MonoBehaviour, IHitBehavorOfAttack
 {
     [SerializeField, Tooltip("オブジェクトのStatusBase")]
@@ -14,21 +15,25 @@ public class HitAttack : MonoBehaviour, IHitBehavorOfAttack
     float _elekeDifansePercentage = 0f;
     [SerializeField, Tooltip("氷結防御力")]
     float _frozenDifansePercentage = 0f;
-    public float BehaviorOfHit(float weaponPower, float firePower, float elekePower, float frozenPower, ElementType type)
+
+    
+    public float BehaviorOfHit(WeaponBase weaponStatus, ElementType type)
     {
         float currentHP = status.HP.Value;
-        float baseDamage = weaponPower * _rigitDefensePercentage;
+        float baseDamage = weaponStatus.RigitPower * _rigitDefensePercentage;
         float elemantDamage = 0;
         switch (type)
         {
             case ElementType.FIRE:
-                elemantDamage = firePower * _fireDifansePercentage;
+                elemantDamage = weaponStatus.FirePower * _fireDifansePercentage;
                 break;
             case ElementType.ELEKE:
-                elemantDamage = elekePower * _elekeDifansePercentage;
+                elemantDamage = weaponStatus.ElekePower * _elekeDifansePercentage;
                 break;
             case ElementType.FROZEN:
-                elemantDamage = frozenPower * _frozenDifansePercentage;
+                elemantDamage = weaponStatus.FrozenPower * _frozenDifansePercentage;
+                break;
+            default:
                 break;
         }
         currentHP -= (baseDamage + elemantDamage);

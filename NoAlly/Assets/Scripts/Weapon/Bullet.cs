@@ -27,18 +27,23 @@ public class Bullet : WeaponBase, IObjectPool
     }
     void OnTriggerEnter(Collider other)
     {
-        if (_owner == BulletOwner.Player && other.gameObject.TryGetComponent<EnemyStatus>(out EnemyStatus enemyHP))
+        if (_owner == BulletOwner.Player)
         {
-            enemyHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower,MainMenu.Instance.Type);
+            if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack enemyHP))
+            {
+                enemyHP.BehaviorOfHit(this, MainMenu.Instance.Type);
+            }
+            else if (other.gameObject.TryGetComponent(out IHitBehavorOfGimic hitObj))
+            {
+                hitObj.BehaviorOfHit(MainMenu.Instance.Type);
+            }
         }
-        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent<PlayerStatus>(out PlayerStatus playerHP))
+
+        if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent(out IHitBehavorOfAttack playerHP))
         {
             playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
         }
-        else if(other.gameObject.tag == "TargetObject")
-        {
-            Disactive();
-        }
+        Disactive();
     }
 
     [System.Obsolete]
