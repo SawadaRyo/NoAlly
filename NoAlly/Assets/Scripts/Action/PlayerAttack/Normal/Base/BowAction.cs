@@ -12,14 +12,14 @@ public class BowAction : WeaponAction
     [SerializeField] PersonType _personType = PersonType.Player;
 
     int _bulletType = 0;
-    ObjectPool<Bullet> _bPool = new ObjectPool<Bullet>();
-    Bullet[] _bulletPrefab = new Bullet[3];
+    ObjectPool<BulletBase> _bPool = new ObjectPool<BulletBase>();
+    BulletBase[] _bulletPrefab = new BulletBase[3];
     
     public Transform MuzzlePos => _muzzleForward;
 
     public void Start()
     {
-        _bulletPrefab = Resources.LoadAll<Bullet>(_filePath);
+        _bulletPrefab = Resources.LoadAll<BulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _bPool.SetBaseObj(_bulletPrefab[i], _poolPos, i);

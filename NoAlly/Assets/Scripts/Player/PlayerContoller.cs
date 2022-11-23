@@ -83,11 +83,11 @@ public class PlayerContoller : MonoBehaviour
     {
         _playerCamera = GameObject.FindObjectOfType<Camera>();
         _rb = GetComponent<Rigidbody>();
-        _audio = gameObject.AddComponent<AudioSource>();
         _velo = _rb.velocity;
         _animator = GetComponent<Animator>();
+        _playerStatus = GetComponentInChildren<PlayerStatus>();
+        _audio = gameObject.AddComponent<AudioSource>();
         _animState = PlayerAnimationState.Instance;
-        _playerStatus = GetComponent<PlayerStatus>();
     }
     void Update()
     {

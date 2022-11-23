@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : WeaponBase, IObjectPool
+public class BulletBase : WeaponBase, IObjectPool
 {
     [SerializeField] float _bulletSpeed = 0;
     [SerializeField] BulletOwner _owner = BulletOwner.Player;
@@ -39,9 +39,9 @@ public class Bullet : WeaponBase, IObjectPool
             }
         }
 
-        if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent(out IHitBehavorOfAttack playerHP))
+        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent(out IHitBehavorOfAttack playerHP))
         {
-            playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
+            //playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
         }
         Disactive();
     }
