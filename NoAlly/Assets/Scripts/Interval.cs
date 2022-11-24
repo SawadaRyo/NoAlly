@@ -25,4 +25,16 @@ public class Interval
     {
         _time = 0;
     }
+    public IEnumerator StartCountDown()
+    {
+        while (true)
+        {
+            if (IsCountUp())
+            {
+                ResetTimer();
+                break;
+            }
+            yield return null;
+        }
+    }
 }

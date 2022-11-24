@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHitBehavorOfAttack
 {
-    public float BehaviorOfHit(WeaponBase weaponStatus, ElementType type);
+    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type);
 }

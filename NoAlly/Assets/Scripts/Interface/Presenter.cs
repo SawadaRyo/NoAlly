@@ -8,7 +8,7 @@ public class Presenter : MonoBehaviour
     [SerializeField] MainMenu _mainMenu = null;
     [SerializeField] MenuHander _menuHander = null;
 
-    [SerializeField] PlayerStatus _playerGauge = null;
+    [SerializeField] PlayerStatus _playerStatus = null;
     [SerializeField] GameObject[] _playerSlider = null;
 
     GaugeLarp _playerHPLarp = null;
@@ -28,7 +28,7 @@ public class Presenter : MonoBehaviour
         _mainMenu.Init();
         _menuHander.Init();
         _weaponEquipment.Init();
-        _playerGauge.Init();
+        _playerStatus.Init();
         WeaponState();
         PlayerHpState();
     }
@@ -48,15 +48,15 @@ public class Presenter : MonoBehaviour
     }
     void PlayerHpState()
     {
-        _playerGauge.HP
+        _playerStatus.HP
             .Subscribe(hp =>
             {
-                _playerHPLarp.SetSliderValue(_hpSlider, _playerGauge.HP.Value / _playerGauge.MaxHP);
+                _playerHPLarp.SetSliderValue(_hpSlider, _playerStatus.HP.Value / _playerStatus.MaxHP);
             }).AddTo(this);
-        _playerGauge.SAP
+        _playerStatus.SAP
             .Subscribe(hp =>
             {
-                _playerSAPLarp.SetSliderValue(_sapSlider, _playerGauge.SAP.Value / _playerGauge.MaxSAP);
+                _playerSAPLarp.SetSliderValue(_sapSlider, _playerStatus.SAP.Value / _playerStatus.MaxSAP);
             }).AddTo(this);
     }
 }

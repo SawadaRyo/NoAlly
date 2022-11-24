@@ -5,27 +5,22 @@ using UniRx;
 
 public class StatusBase : MonoBehaviour
 {
+    [SerializeField, Tooltip("ƒ_ƒ[ƒWƒTƒEƒ“ƒh")]
+    protected AudioClip _damageSound;
+    [SerializeField, Tooltip("–³“GŽžŠÔ‚Ì’l")]
+    float _invincibleTimeValue = 1f;
+    [SerializeField, Tooltip("HP‚ÌãŒÀ")]
+    protected float _maxHP = 5;
+
+
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚Ì¶Ž€”»’è")]
     protected bool _living = true;
-    [SerializeField, Tooltip("“G‚ÌHP‚ÌãŒÀ")]
-    protected float _maxHP = 5;
-    [SerializeField, Tooltip("“G‚Ì•¨—‘Ï«")]
-    protected float _rigitDefensePercentage = 1f;
-    [SerializeField, Tooltip("“G‚Ì‰Š‘Ï«")]
-    protected float _fireDifansePercentage = 1f;
-    [SerializeField, Tooltip("“G‚Ì—‹‘Ï«")]
-    protected float _elekeDifansePercentage = 1f;
-    [SerializeField, Tooltip("“G‚Ì•XŒ‹‘Ï«")]
-    protected float _frozenDifansePercentage = 1f;
-
     [Tooltip("ƒIƒuƒWƒFƒNƒg‚ÌŒ»Ý‚ÌHP")]
     protected FloatReactiveProperty _hp;
     [Tooltip("–³“GŽžŠÔ")]
-    protected Interval _invincibleTime = new Interval(0.4f);
+    protected Interval _invincibleTime = null;
     [Tooltip("AudioSource‚ðŠi”[‚·‚é•Ï”")]
     protected AudioSource _audioSource = null;
-    [SerializeField, Tooltip("ƒ_ƒ[ƒWƒTƒEƒ“ƒh")]
-    protected AudioClip _damageSound;
     [Tooltip("Animator‚ÌŠi”[•Ï”")]
     protected Animator _animator;
 
@@ -33,15 +28,42 @@ public class StatusBase : MonoBehaviour
     public bool IsInvincible => _invincibleTime.IsCountUp();
     public FloatReactiveProperty HP => _hp;
 
-    private void Awake()
+    private void Start()
     {
         Init();
     }
     public virtual void Init()
     {
-        _hp = new FloatReactiveProperty(_maxHP);
         _living = true;
+        _hp = new FloatReactiveProperty(_maxHP);
+        _invincibleTime = new Interval(_invincibleTimeValue);
         _animator = GetComponentInParent<Animator>();
+        if (!GetComponentInChildren<DifanseParameter>())
+        {
+            Debug.LogError("HitAttck‚ª‚ ‚è‚Ü‚¹‚ñ");
+        }
+        StartCoroutine(_invincibleTime.StartCountDown());
     }
 
+    public virtual void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type)
+    {
+        float baseDamage = weaponStatus.RigitPower * difanse.RigitDefensePercentage;
+        float elemantDamage = 0;
+        switch (type)
+        {
+            case ElementType.FIRE:
+                elemantDamage = weaponStatus.FirePower * difanse.FireDifansePercentage;
+                break;
+            case ElementType.ELEKE:
+                elemantDamage = weaponStatus.ElekePower * difanse.ElekeDifansePercentage;
+                break;
+            case ElementType.FROZEN:
+                elemantDamage = weaponStatus.FrozenPower * difanse.FrozenDifansePercentage;
+                break;
+            default:
+                break;
+        }
+        _hp.Value -= (baseDamage + elemantDamage);
+        StartCoroutine(_invincibleTime.StartCountDown());
+    }
 }

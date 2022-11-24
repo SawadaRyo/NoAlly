@@ -34,9 +34,9 @@ public class EnemyBullet : WeaponBase, IObjectPool
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out PlayerStatus player))
+        if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack player))
         {
-            player.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
+            player.BehaviorOfHit(this, MainMenu.Instance.Type);
             Disactive();
         }
     }

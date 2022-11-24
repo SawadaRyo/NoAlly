@@ -5,16 +5,27 @@ using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
 {
-    [SerializeField] float _power = 3;
-    [SerializeField] float _speed = 2;
-    [SerializeField] float _moveMagnification = 2f;
-    [SerializeField] float _attackRadius = 1.6f;
-    [SerializeField] Transform _attackPos = default;
-    [SerializeField] LayerMask _fieldLayer = ~0;
+    [SerializeField,Tooltip("")] 
+    float _power = 3;
+    [SerializeField, Tooltip("")] 
+    float _speed = 2;
+    [SerializeField, Tooltip("")] 
+    float _moveMagnification = 2f;
+    [SerializeField, Tooltip("")] 
+    float _attackRadius = 1.6f;
+    [SerializeField, Tooltip("")] 
+    Transform _attackPos = default;
+    [SerializeField, Tooltip("")] 
+    LayerMask _fieldLayer = ~0;
+
+    [Tooltip("")]
     Rigidbody _rb = default;
+    [Tooltip("")]
     Vector3 _distance = Vector2.zero;
+    [Tooltip("")]
     bool _hit = false;
-    float _isSpeed = 0f;
+    [Tooltip("")]
+    float _currentSpeed = 0f;
 
     public override void Start()
     {
@@ -23,15 +34,15 @@ public class UAVTypeEnemy : EnemyBase
     }
     public override void EnemyAttack()
     {
-        PlayerContoller player = InSight();
-        if (player)
+        if (InSight())
         {
+            PlayerContoller player = InSight();
             var targetPos = player.transform.position + new Vector3(0f, 1.8f, 0f);
             transform.LookAt(targetPos);
             _distance = (targetPos - transform.position);
             if (_hit)
             {
-                _isSpeed = (-_speed * _moveMagnification);
+                _currentSpeed = (-_speed * _moveMagnification);
                 float time = Time.deltaTime;
                 if (time > 1f)
                 {
@@ -40,12 +51,11 @@ public class UAVTypeEnemy : EnemyBase
             }
             else
             {
-                _isSpeed = _speed;
-                PlayerStatus playerGauge = CallPlayerGauge();
-
-                if (playerGauge != null)
+                _currentSpeed = _speed;
+                IHitBehavorOfAttack playerStatus = CallPlayerGauge();
+                if (playerStatus != null)
                 {
-                    playerGauge.DamageMethod(0f, 0f, _power, 0f);
+                    //playerStatus.BehaviorOfHit(,MainMenu.Instance.Type);
                     _hit = true;
                 }
             }
@@ -55,15 +65,15 @@ public class UAVTypeEnemy : EnemyBase
         {
             _distance = Vector3.zero;
         }
-        _rb.velocity = _distance.normalized * _isSpeed;
+        _rb.velocity = _distance.normalized * _currentSpeed;
     }
 
-    PlayerStatus CallPlayerGauge()
+    IHitBehavorOfAttack CallPlayerGauge()
     {
-        var playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
-        foreach (var col in playerCol)
+        Collider[] playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
+        foreach (Collider col in playerCol)
         {
-            if (col.TryGetComponent<PlayerStatus>(out PlayerStatus playerGauge))
+            if (col.TryGetComponent(out IHitBehavorOfAttack playerGauge))
             {
                 return playerGauge;
             }
