@@ -28,9 +28,12 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     public IReadOnlyReactiveProperty<WeaponDateEntity> Main => _main;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Sub => _sub;
 
-    //public event Action<ElementType> DisideElement;
+    void Awake()
+    {
+        Init();
+    }
 
-    public void Init()
+    void Init()
     {
         _weaponEquipment = GameObject.FindObjectOfType<WeaponEquipment>();
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponName)).Length;

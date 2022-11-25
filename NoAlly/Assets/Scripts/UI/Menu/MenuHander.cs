@@ -23,6 +23,11 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
     public bool MenuIsOpen => _menuIsOpen;
 
+    void Start()
+    {
+        Init();
+    }
+
     public void Init()
     {
         _canMove = new Interval(_interval);

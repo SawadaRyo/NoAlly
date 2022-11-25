@@ -25,10 +25,6 @@ public class Presenter : MonoBehaviour
         _hpSlider = _playerSlider[0].GetComponent<Slider>();
         _sapSlider = _playerSlider[1].GetComponent<Slider>();
 
-        _mainMenu.Init();
-        _menuHander.Init();
-        _weaponEquipment.Init();
-        _playerStatus.Init();
         WeaponState();
         PlayerHpState();
     }

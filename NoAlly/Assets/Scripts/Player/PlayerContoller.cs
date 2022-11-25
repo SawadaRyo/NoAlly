@@ -227,10 +227,6 @@ public class PlayerContoller : MonoBehaviour
             if (jump)
             {
                 _animator.SetTrigger("WallJump");
-                //Vector3 vec = transform.up + m_hitInfo.normal;
-                //_rb.AddForce(vec * m_wallJump, ForceMode.Impulse);
-                //if (isDash) _rb.velocity = new Vector3(_rb.velocity.x, _wallJump2, 0);
-                //else _rb.velocity = new Vector3(_rb.velocity.x, _wallJump, 0);
             }
         }
         else

@@ -29,6 +29,10 @@ public class WeaponEquipment : MonoBehaviour
     public WeaponAction[] Weapons => _weapons;
     public WeaponAction EquipeWeapon => _equipmentWeapon;
 
+    void Awake()
+    {
+        Init();
+    }
     public void Init()
     {
         //TODO:•Šíİ’è‚ğExcel‚©‚çs‚¦‚é‚æ‚¤‚É‚·‚é

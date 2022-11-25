@@ -10,13 +10,18 @@ public class StatusBase : MonoBehaviour
     [SerializeField, Tooltip("無敵時間の値")]
     float _invincibleTimeValue = 1f;
     [SerializeField, Tooltip("HPの上限")]
-    protected float _maxHP = 5;
+    protected float _maxHP = 5; 
+    [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
+    protected float _maxSAP = 20;
+
 
 
     [Tooltip("オブジェクトの生死判定")]
     protected bool _living = true;
     [Tooltip("オブジェクトの現在のHP")]
     protected FloatReactiveProperty _hp;
+    [Tooltip("オブジェクトの現在の必殺技ゲージ")]
+    protected FloatReactiveProperty _sap = null;
     [Tooltip("無敵時間")]
     protected Interval _invincibleTime = null;
     [Tooltip("AudioSourceを格納する変数")]
@@ -36,6 +41,7 @@ public class StatusBase : MonoBehaviour
     {
         _living = true;
         _hp = new FloatReactiveProperty(_maxHP);
+        _sap = new FloatReactiveProperty(0);
         _invincibleTime = new Interval(_invincibleTimeValue);
         _animator = GetComponentInParent<Animator>();
         if (!GetComponentInChildren<DifanseParameter>())
