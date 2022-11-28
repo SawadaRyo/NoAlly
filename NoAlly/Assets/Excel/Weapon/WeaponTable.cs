@@ -6,5 +6,6 @@ using UnityEngine;
 [ExcelAsset]
 public class WeaponTable : ScriptableObject
 {
-	public List<WeaponDateEntity> WeaponData;// Replace 'EntityType' to an actual type that is serializable.
+	public List<WeaponDateEntity> WeaponData;
+	public List<WeaponDateEntity> ElementWeaponData;
 }

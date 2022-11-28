@@ -33,3 +33,24 @@ MonoBehaviour:
     ElekePower: 0
     FirePower: 0
     FrozenPower: 0
+  ElementWeaponData:
+  - Name: 0
+    RigitPower: 3
+    ElekePower: 0
+    FirePower: 5
+    FrozenPower: 0
+  - Name: 1
+    RigitPower: 2
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 5.5
+  - Name: 2
+    RigitPower: 3
+    ElekePower: 0
+    FirePower: 0
+    FrozenPower: 0
+  - Name: 3
+    RigitPower: 3.5
+    ElekePower: 6
+    FirePower: 0
+    FrozenPower: 0
