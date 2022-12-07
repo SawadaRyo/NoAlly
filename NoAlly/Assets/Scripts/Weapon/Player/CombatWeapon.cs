@@ -23,7 +23,7 @@ public class CombatWeapon : WeaponBase
     [Tooltip("")]
     protected Renderer[] _bladeRenderer = default;
 
-    public override void Awake()
+    public override void Start()
     {
         _weaponAnimator = GetComponent<Animator>();
         if (_weaponAnimator != null)
@@ -39,7 +39,7 @@ public class CombatWeapon : WeaponBase
                 bR.enabled = false;
             }
         }
-        base.Awake();
+        base.Start();
         _myParticleSystem.Stop();
     }
     public override void RendererActive(bool stats)

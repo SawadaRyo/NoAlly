@@ -9,9 +9,9 @@ public class LanceWeapon : CombatWeapon, IWeapon
     float _powerUpRigit = 3.5f;
     float _powerUpFrozen = 5f;
 
-    public override void Awake()
+    public override void Start()
     {
-        base.Awake();
+        base.Start();
         _normalRigit = _rigitPower;
         _normalFrozen = _frozenPower;
         _normalHarfExtents = new Vector3(0.1f, 0.8f, 1f);

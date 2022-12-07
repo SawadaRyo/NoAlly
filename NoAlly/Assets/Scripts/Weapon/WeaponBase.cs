@@ -38,7 +38,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void Awake()
+    public virtual void Start()
     {
         //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
         RendererActive(false);
@@ -48,7 +48,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     {
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
-    public virtual void OnApplicationQuit() { }
     public virtual void WeaponMovement() { }
     public virtual void WeaponMovement(Collider target) { }
     public virtual void WeaponMode(ElementType type) { }
@@ -86,7 +85,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
         _myParticleSystem.Play();
         while (_attack)
         {
-            AttackOfCloseRenge(true);
+            AttackOfCloseRenge(_attack);
             yield return null;
         }
         _myParticleSystem.Stop();
