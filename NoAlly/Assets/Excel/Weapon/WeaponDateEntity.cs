@@ -4,16 +4,24 @@ using UnityEngine;
 using UniRx;
 
 [System.Serializable]
-public class WeaponDateEntity
+public struct WeaponDateEntity
 {
-    [Tooltip("•Ší–¼")]
-    public WeaponName Name;
-    [Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
-    [SerializeField] public float RigitPower;
-    [Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
-    [SerializeField] public float ElekePower;
-    [Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
-    [SerializeField] public float FirePower;
-    [Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
-    [SerializeField] public float FrozenPower;
+    [SerializeField,Tooltip("•Ší‚ÌƒvƒŒƒnƒu")]
+    public WeaponBase Weapon;
+    [SerializeField,Tooltip("•Ší–¼")]
+    public WeaponType Type;
+    [SerializeField,Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
+    public float RigitPower;
+    [SerializeField, Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
+    public float ElekePower;
+    [SerializeField, Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
+    public float FirePower;
+    [SerializeField, Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
+    public float FrozenPower;
+}
+
+[System.Serializable]
+public struct Weapons
+{
+    public WeaponDateEntity[] Entitys;
 }
