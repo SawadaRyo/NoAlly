@@ -91,21 +91,20 @@ public class PlayerContoller : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.Instance.IsGame && _playerStatus.Living)
+        if (GameManager.Instance.IsGame == GameState.InGame && _playerStatus.Living)
         {
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");
             _isJump = Input.GetButtonDown("Jump");
-            WallJumpMethod(_isJump, _isDash);
-            JumpMethod(_isJump);
         }
     }
     void FixedUpdate()
     {
-        if (GameManager.Instance.IsGame)
+        if (GameManager.Instance.IsGame == GameState.InGame)
         {
             MoveMethod(_h, _isDash);
-            //Debug.Log(_beforeRot);
+            WallJumpMethod(_isJump, _isDash);
+            JumpMethod(_isJump);
         }
     }
     //void OnCollisionEnter(Collision other)

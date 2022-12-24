@@ -44,8 +44,8 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             {
                 if ((CommandType)y != CommandType.ElEMENT)
                 {
-                    _allButtons[y, x] = new MenuCommandButton(false, buttonArray[length], (WeaponName)x, (CommandType)y);
-                    _selectedButtons[y] = new MenuCommandButton(false, null, (WeaponName)x, (CommandType)y);
+                    _allButtons[y, x] = new MenuCommandButton(false, buttonArray[length], (WeaponType)x, (CommandType)y);
+                    _selectedButtons[y] = new MenuCommandButton(false, null, (WeaponType)x, (CommandType)y);
                 }
                 else
                 {
@@ -56,8 +56,8 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 length++;
             }
         }
-        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN,(int)_mainManu.Main.Value.Name];
-        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.Sub.Value.Name];
+        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN,(int)_mainManu.Main.Value.Type];
+        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.Sub.Value.Type];
         _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
 
         //UIÇÃÉQÅ[ÉÄãNìÆéûÇÃèâä˙ê›íË

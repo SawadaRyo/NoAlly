@@ -24,7 +24,6 @@ public class MainMenu : SingletonBehaviour<MainMenu>
 
 
     public ElementType Type => _elementType;
-    public WeaponTable WeaponsData => _weaponsData;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Main => _main;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Sub => _sub;
 
@@ -36,7 +35,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     void Init()
     {
         _weaponEquipment = GameObject.FindObjectOfType<WeaponEquipment>();
-        int weaponIndexNumber = Enum.GetNames(typeof(WeaponName)).Length;
+        int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length;
         for (int y = 0; y < weaponIndexNumber; y++)
         {
             int index = y;
@@ -58,7 +57,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
         {
             beforeWeapons = _main.Value;
             _main.Value = weaponName;
-            if (_sub.Value.Name == _main.Value.Name)
+            if (_sub.Value.Type == _main.Value.Type)
             {
                 _sub.Value = beforeWeapons;
             }
@@ -67,7 +66,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
         {
             beforeWeapons = _sub.Value;
             _sub.Value = weaponName;
-            if (_main.Value.Name == _sub.Value.Name)
+            if (_main.Value.Type == _sub.Value.Type)
             {
                 _main.Value = beforeWeapons;
             }
@@ -93,16 +92,16 @@ public class MenuCommandButton
 {
     bool _isSelected;
     Button _commund;
-    WeaponName _weaponName;
+    WeaponType _weaponName;
     ElementType _elementType;
     CommandType _type;
 
     public bool IsSelected => _isSelected;
     public Button Command => _commund;
-    public WeaponName Name => _weaponName;
+    public WeaponType Name => _weaponName;
     public ElementType ElementType => _elementType;
     public CommandType Type => _type;
-    public MenuCommandButton(bool isSelected, Button button, WeaponName name, CommandType type)
+    public MenuCommandButton(bool isSelected, Button button, WeaponType name, CommandType type)
     {
         _isSelected = isSelected;
         _commund = button;
@@ -123,7 +122,7 @@ public enum CommandType
     SUB = 1,
     ElEMENT = 2
 }
-public enum WeaponName
+public enum WeaponType
 {
     SWORD = 0,
     LANCE = 1,

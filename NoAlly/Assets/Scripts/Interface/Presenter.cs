@@ -34,12 +34,12 @@ public class Presenter : MonoBehaviour
         _mainMenu.Main
             .Subscribe(mainWeapon =>
             {
-                _weaponEquipment.ChangeWeapon(CommandType.MAIN, mainWeapon.Name);
+                _weaponEquipment.ChangeWeapon(CommandType.MAIN, mainWeapon.Type);
             }).AddTo(this);
         _mainMenu.Sub
             .Subscribe(subWeapon =>
             {
-                _weaponEquipment.ChangeWeapon(CommandType.SUB, subWeapon.Name);
+                _weaponEquipment.ChangeWeapon(CommandType.SUB, subWeapon.Type);
             }).AddTo(this);
     }
     void PlayerHpState()
