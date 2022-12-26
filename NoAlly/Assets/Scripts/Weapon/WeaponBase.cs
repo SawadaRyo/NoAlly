@@ -1,28 +1,31 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour, IWeapon
 {
-    [Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
-    [SerializeField] protected float _rigitPower = 5;
-    [Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
-    [SerializeField] protected float _elekePower = 0;
-    [Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
-    [SerializeField] protected float _firePower = 0;
-    [Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
-    [SerializeField] protected float _frozenPower = 0;
-    [Tooltip("")]
-    [SerializeField] Transform _center = default;
-    [Tooltip("•Ší‚ÌUŒ‚”»’èƒŒƒCƒ„[")]
-    [SerializeField] protected LayerMask _enemyLayer = ~0;
-    [Tooltip("•Ší‚ÌRenderer")]
-    [SerializeField] protected Renderer[] _weaponRenderer = default;
+    [SerializeField, Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
+    protected float _rigitPower = 5;
+    [SerializeField, Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
+    protected float _elekePower = 0;
+    [SerializeField, Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
+    protected float _firePower = 0;
+    [SerializeField,Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
+    protected float _frozenPower = 0;
+    
+    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] 
+    protected float _chargeLevel1 = 1f;
+    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] 
+    protected float _chargeLevel2 = 3f;
 
-    [Tooltip("")]
-    bool _attack = false;
+    [SerializeField, Tooltip("•Ší‚ÌUŒ‚”»’èƒŒƒCƒ„[")]
+    protected LayerMask _enemyLayer = ~0;
+    [SerializeField, Tooltip("•Ší‚ÌRenderer")]
+    protected Renderer[] _weaponRenderer = default;
+    [SerializeField, Tooltip("•Ší‚ÌUŒ‚”»’è‚ÌƒZƒ“ƒ^[")]
+    Transform _center = default;
 
+    [Tooltip("•Ší‚ÌUŒ‚”»’è‰ÓŠ‚Ì‘å‚«‚³")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
     [Tooltip("•Ší‚ªŽg—p’†‚©‚Ç‚¤‚©")]
     protected bool _operated = false;
@@ -30,6 +33,8 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     protected bool _isDeformated = false;
     [Tooltip("•Ší‚ÌŽaŒ‚ƒGƒtƒFƒNƒg")]
     protected ParticleSystem _myParticleSystem = default;
+    [Tooltip("")]
+    bool _attack = false;
 
     public bool Deformated => _isDeformated;
     public bool Operated { get => _operated; set => _operated = value; }
@@ -48,20 +53,18 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     {
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
     }
-    public virtual void WeaponMovement() { }
-    public virtual void WeaponMovement(Collider target) { }
+    public virtual void WeaponAttackMovement() { }
+    public virtual void WeaponAttackMovement(Collider target) { }
     public virtual void WeaponMode(ElementType type) { }
     public virtual void RendererActive(bool stats)
     {
-        foreach (var weaponRend in _weaponRenderer)
-        {
-            weaponRend.enabled = stats;
-        }
+        Array.ForEach(_weaponRenderer, x => x.enabled = stats);
     }
-    public void AttackOfCloseRenge(bool isAttack)
+    public void AttackOfRenge(bool isAttack)
     {
         if (isAttack)
         {
+            //ToDo‚±‚±‚Ìˆ—‚ð3D‚Å‚Í‚È‚­2D‚É‚·‚é
             Collider[] objectsInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
             if (objectsInRenge.Length > 0)
             {
@@ -85,28 +88,28 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
         _myParticleSystem.Play();
         while (_attack)
         {
-            AttackOfCloseRenge(_attack);
+            AttackOfRenge(_attack);
             yield return null;
         }
         _myParticleSystem.Stop();
     }
 
 
-    public float ChargePower(TypeOfPower top, float magnification)
+    public float ChargePower(ElementType top, float magnification)
     {
         float refPower = 0;
         switch (top)
         {
-            case TypeOfPower.RIGIT:
+            case ElementType.RIGIT:
                 refPower = _rigitPower;
                 break;
-            case TypeOfPower.ELEKE:
+            case ElementType.ELEKE:
                 refPower = _enemyLayer;
                 break;
-            case TypeOfPower.FIRE:
+            case ElementType.FIRE:
                 refPower = _firePower;
                 break;
-            case TypeOfPower.FROZEN:
+            case ElementType.FROZEN:
                 refPower = _frozenPower;
                 break;
         }
@@ -115,13 +118,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
             magnification = 1;
         }
         return refPower * magnification;
-    }
-    public enum TypeOfPower
-    {
-        RIGIT,
-        ELEKE,
-        FIRE,
-        FROZEN
     }
 }
 

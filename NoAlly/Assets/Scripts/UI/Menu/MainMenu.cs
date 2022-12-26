@@ -29,10 +29,10 @@ public class MainMenu : SingletonBehaviour<MainMenu>
 
     void Awake()
     {
-        Init();
+        Initialize();
     }
 
-    void Init()
+    void Initialize()
     {
         _weaponEquipment = GameObject.FindObjectOfType<WeaponEquipment>();
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length;

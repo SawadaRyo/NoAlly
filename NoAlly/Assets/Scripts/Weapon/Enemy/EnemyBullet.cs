@@ -20,16 +20,16 @@ public class EnemyBullet : WeaponBase, IObjectPool
         {
             _time += Time.deltaTime;
 
-            WeaponMovement();
+            WeaponAttackMovement();
             if (_time > 5f)
             {
                 Disactive();
             }
         }
     }
-    public override void WeaponMovement()
+    public override void WeaponAttackMovement()
     {
-        base.WeaponMovement();
+        base.WeaponAttackMovement();
         _rb.velocity = _enemyMuzzleTrans.forward.normalized * _bulletSpeed;
     }
     void OnTriggerEnter(Collider other)

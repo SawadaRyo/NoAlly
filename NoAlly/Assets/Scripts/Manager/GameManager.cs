@@ -11,6 +11,7 @@ public class GameManager
 {
     [Tooltip("GameManagerのインスタンス")]
     static GameManager _instance = new GameManager();
+    
     [Tooltip("ゲーム中かどうか判定する変数")]
     GameState _state = GameState.GameStart;
 
@@ -30,16 +31,26 @@ public class GameManager
     public delegate void DoGameState();
     public DoGameState[] _doGameStates = new DoGameState[Enum.GetNames(typeof(GameState)).Length];
 
+    public GameManager()
+    {
+        Initialize();
+    }
+    void Initialize()
+    {
+        ChangedState(GameState.GameStart);
+    }
     /// <summary>
     /// 引数で指定したステート時の処理を実行する関数
     /// </summary>
     /// <param name="state">遷移するステート</param>
     public void ChangedState(GameState state)
     {
-        //_doGameStates[(int)state];
-        switch(state)
+
+        _doGameStates[(int)state]();
+        switch (state)
         {
             case GameState.GameStart:
+                ChangedState(GameState.InGame);
                 break;
             case GameState.InGame:
                 break;

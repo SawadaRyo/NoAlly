@@ -6,9 +6,9 @@ public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
     [Tooltip("このオブジェクトにアタッチされているEnemyBaseを取得する変数")]
     EnemyBase _enemyBase = null;
 
-    public override void Init()
+    public override void Initialize()
     {
-        base.Init();
+        base.Initialize();
         _enemyBase = GetComponentInParent<EnemyBase>();
     }
 

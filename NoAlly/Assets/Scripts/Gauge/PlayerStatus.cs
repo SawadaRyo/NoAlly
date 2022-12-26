@@ -11,9 +11,9 @@ public class PlayerStatus : StatusBase
     public float MaxSAP => _maxSAP;
     public FloatReactiveProperty SAP => _sap;
 
-    public override void Init()
+    public override void Initialize()
     {
-        base.Init();
+        base.Initialize();
         _animator = gameObject.GetComponent<Animator>();
     }
 

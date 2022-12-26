@@ -35,9 +35,9 @@ public class StatusBase : MonoBehaviour
 
     private void Start()
     {
-        Init();
+        Initialize();
     }
-    public virtual void Init()
+    public virtual void Initialize()
     {
         _living = true;
         _hp = new FloatReactiveProperty(_maxHP);

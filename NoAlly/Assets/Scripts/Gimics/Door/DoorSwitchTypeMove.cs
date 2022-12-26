@@ -12,7 +12,7 @@ public class DoorSwitchTypeMove : DoorSwitchBase
    
     public override void ObjectAction()
     {
-        if (GameManager.Instance.IsGame)
+        if (GameManager.Instance.IsGame == GameState.InGame)
         {
             _cycle += Time.deltaTime;
 
