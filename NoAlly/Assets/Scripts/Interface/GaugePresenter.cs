@@ -2,12 +2,8 @@ using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
 
-public class Presenter : MonoBehaviour
+public class GaugePresenter : MonoBehaviour
 {
-    [SerializeField] WeaponEquipment _weaponEquipment = null;
-    [SerializeField] MainMenu _mainMenu = null;
-    [SerializeField] MenuHander _menuHander = null;
-
     [SerializeField] PlayerStatus _playerStatus = null;
     [SerializeField] GameObject[] _playerSlider = null;
 
@@ -25,23 +21,9 @@ public class Presenter : MonoBehaviour
         _hpSlider = _playerSlider[0].GetComponent<Slider>();
         _sapSlider = _playerSlider[1].GetComponent<Slider>();
 
-        WeaponState();
         PlayerHpState();
     }
-    void WeaponState()
-    {
-        //•Ší‚Ì‘•”õî•ñ
-        _mainMenu.Main
-            .Subscribe(mainWeapon =>
-            {
-                _weaponEquipment.ChangeWeapon(CommandType.MAIN, mainWeapon.Type);
-            }).AddTo(this);
-        _mainMenu.Sub
-            .Subscribe(subWeapon =>
-            {
-                _weaponEquipment.ChangeWeapon(CommandType.SUB, subWeapon.Type);
-            }).AddTo(this);
-    }
+
     void PlayerHpState()
     {
         _playerStatus.HP
