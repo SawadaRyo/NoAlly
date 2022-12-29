@@ -146,7 +146,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     }
     void BulletFIre()
     {
-        _weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod();
-        _weaponEquipment.EquipeWeapon.ResetValue();
+        //_weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod();
+        //_weaponEquipment.EquipeWeapon.ResetValue();
     }
 }

@@ -46,7 +46,7 @@ public class GameManager
     public void ChangedState(GameState state)
     {
 
-        _doGameStates[(int)state]();
+        //_doGameStates[(int)state]();
         switch (state)
         {
             case GameState.GameStart:
