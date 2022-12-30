@@ -6,17 +6,21 @@ using UniRx;
 [System.Serializable]
 public struct WeaponDateEntity
 {
-    [SerializeField,Tooltip("•Ší‚ÌƒvƒŒƒnƒu")]
-    public WeaponBase Weapon;
-    [SerializeField,Tooltip("•Ší–¼")]
+    [SerializeField,Header("•Ší‚Ì‹@”\")]
+    public WeaponBase Base;
+    [SerializeField, Header("•Ší‚ÌUŒ‚ƒ‚[ƒVƒ‡ƒ“")]
+    public WeaponAction Action;
+    [SerializeField, Header("•Ší‚Ìƒ^ƒCƒv")]
     public WeaponType Type;
-    [SerializeField,Tooltip("•Ší‚Ì•¨—UŒ‚—Í")]
+    [SerializeField, Header("•Ší‚ğ“üè‚µ‚Ä‚¢‚é‚©")]
+    public bool IsGetWeapon;
+    [SerializeField, Header("•Ší‚Ì•¨—UŒ‚—Í")]
     public float RigitPower;
-    [SerializeField, Tooltip("•Ší‚Ì—‹UŒ‚—Í")]
+    [SerializeField, Header("•Ší‚Ì—‹UŒ‚—Í")]
     public float ElekePower;
-    [SerializeField, Tooltip("•Ší‚Ì‰ŠUŒ‚—Í")]
+    [SerializeField, Header("•Ší‚Ì‰ŠUŒ‚—Í")]
     public float FirePower;
-    [SerializeField, Tooltip("•Ší‚Ì•XŒ‹UŒ‚—Í")]
+    [SerializeField, Header("•Ší‚Ì•XŒ‹UŒ‚—Í")]
     public float FrozenPower;
 }
 

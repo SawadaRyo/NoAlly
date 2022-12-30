@@ -9,9 +9,9 @@ public class SwordWeapon : CombatWeapon
     float _powerUpRigit = 3.5f;
     float _powerUpFire = 5f;
 
-    public override void Start()
+    public override void Initialize()
     {
-        base.Start();
+        base.Initialize();
         _normalRigit = _rigitPower;
         _normalFire = _elekePower;
         _normalHarfExtents = new Vector3(0.11f, 1f, 0.1f);

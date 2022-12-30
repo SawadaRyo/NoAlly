@@ -10,13 +10,13 @@ using UniRx;
 
 public class WeaponEquipment : MonoBehaviour
 {
-    [SerializeField]
-    WeaponDateEntity[] _weapons = new WeaponDateEntity[Enum.GetNames(typeof(GameState)).Length];
     [SerializeField,Tooltip("武器の配置座標")]
-    Transform[] _weaponTransform = new Transform[Enum.GetNames(typeof(GameState)).Length];
+    Transform[] _weaponTransform = new Transform[Enum.GetNames(typeof(WeaponType)).Length];
 
     [Tooltip("武器が使用可能か判定するための変数")]
     bool _available = true;
+    [Tooltip("各武器のプレハブ")]
+    WeaponPrefab[] _weaponPrefabs = new WeaponPrefab[Enum.GetNames(typeof(WeaponType)).Length-1];
 
     [Tooltip("メイン武器")]
     WeaponDateEntity _mainWeaponBase;
@@ -48,6 +48,10 @@ public class WeaponEquipment : MonoBehaviour
     }
     public void Initialize()
     {
+        for(int index = 0;index < _weaponPrefabs.Length;index++)
+        {
+            _weaponPrefabs[index] = Instantiate(new WeaponPrefab((WeaponType)index), _weaponTransform[index]);
+        }
         _mainWeaponBase = SetWeaponData.Instance.GetWeapon(WeaponType.SWORD);
         _subWeaponBase = SetWeaponData.Instance.GetWeapon(WeaponType.LANCE);
 

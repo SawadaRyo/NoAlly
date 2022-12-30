@@ -14,16 +14,14 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     [SerializeField] Button[] _mainWeapons = null;
     [SerializeField] Button[] _subWeapons = null;
     [SerializeField] Button[] _elements = null;
-    [SerializeField] WeaponTable _weaponsData;
 
-    WeaponEquipment _weaponEquipment = null;
-    List<IWeapon> _equipmentWeapons = new();
+    List<IWeapon> _weaponMethods = new();
     ReactiveProperty<WeaponDateEntity> _main = new ReactiveProperty<WeaponDateEntity>();
     ReactiveProperty<WeaponDateEntity> _sub = new ReactiveProperty<WeaponDateEntity>();
     ElementType _elementType = default;
 
 
-    public ElementType Type => _elementType;
+    public ElementType Element => _elementType;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Main => _main;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Sub => _sub;
 
@@ -34,18 +32,17 @@ public class MainMenu : SingletonBehaviour<MainMenu>
 
     void Initialize()
     {
-        _weaponEquipment = GameObject.FindObjectOfType<WeaponEquipment>();
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length;
-        for (int y = 0; y < weaponIndexNumber; y++)
+        for (int index = 0; index < weaponIndexNumber; index++)
         {
-            int index = y;
-            _mainWeapons[y].onClick.AddListener(() => Equipment(CommandType.MAIN, _weaponsData.WeaponData[index]));
-            _subWeapons[y].onClick.AddListener(() => Equipment(CommandType.SUB, _weaponsData.WeaponData[index]));
-            _elements[y].onClick.AddListener(() => DisideElement((ElementType)index));
-            _equipmentWeapons.Add(_weaponEquipment.Weapons[y].Base);
+            WeaponDateEntity weapon = SetWeaponData.Instance.GetWeapon((WeaponType)index);
+            _mainWeapons[index].onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
+            _subWeapons[index].onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
+            _elements[index].onClick.AddListener(() => DisideElement((ElementType)index));
+            _weaponMethods.Add(weapon.Base);
         }
-        _main.Value = _weaponsData.WeaponData[0];
-        _sub.Value = _weaponsData.WeaponData[1];
+        _main.Value = SetWeaponData.Instance.GetWeapon(WeaponType.SWORD);
+        _sub.Value = SetWeaponData.Instance.GetWeapon(WeaponType.LANCE);
     }
     /// <summary> ‚±‚±‚Å‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚éiMain‚ÆSub‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚éj</summary>
     /// <param name="weaponName"></param>
@@ -71,14 +68,11 @@ public class MainMenu : SingletonBehaviour<MainMenu>
                 _main.Value = beforeWeapons;
             }
         }
-
-        //WeaponEquipment.Instance.ChangeWeapon(CommandType.MAIN, _main.Name);
-        //WeaponEquipment.Instance.ChangeWeapon(CommandType.SUB, _sub.Name);
     }
     public void DisideElement(ElementType element)
     {
         _elementType = element;
-        _equipmentWeapons.ToList().ForEach(x => x.WeaponMode(element));
+        _weaponMethods.ToList().ForEach(x => x.WeaponMode(element));
     }
 
     private void OnDisable()
@@ -88,53 +82,5 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     }
 }
 
-public class MenuCommandButton
-{
-    bool _isSelected;
-    Button _commund;
-    WeaponType _weaponName;
-    ElementType _elementType;
-    CommandType _type;
-
-    public bool IsSelected => _isSelected;
-    public Button Command => _commund;
-    public WeaponType Name => _weaponName;
-    public ElementType ElementType => _elementType;
-    public CommandType Type => _type;
-    public MenuCommandButton(bool isSelected, Button button, WeaponType name, CommandType type)
-    {
-        _isSelected = isSelected;
-        _commund = button;
-        _weaponName = name;
-        _type = type;
-    }
-    public MenuCommandButton(bool isSelected, Button button, ElementType element, CommandType type)
-    {
-        _isSelected = isSelected;
-        _commund = button;
-        _elementType = element;
-        _type = type;
-    }
-}
-public enum CommandType
-{
-    MAIN = 0,
-    SUB = 1,
-    ElEMENT = 2
-}
-public enum WeaponType
-{
-    SWORD = 0,
-    LANCE = 1,
-    BOW = 2,
-    BRASTER = 3,
-}
-public enum ElementType
-{
-    RIGIT = 0,
-    FIRE = 1,
-    ELEKE = 2,
-    FROZEN = 3
-}
 
 

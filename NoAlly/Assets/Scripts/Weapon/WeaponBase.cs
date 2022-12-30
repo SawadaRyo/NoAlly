@@ -22,11 +22,11 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     protected LayerMask _enemyLayer = ~0;
     [SerializeField, Tooltip("武器のRenderer")]
     protected Renderer[] _weaponRenderer = default;
-    [SerializeField, Tooltip("武器の攻撃判定のセンター")]
+    [SerializeField, Tooltip("武器の攻撃判定の中心点")]
     Transform _center = default;
-
     [Tooltip("武器の攻撃判定箇所の大きさ")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
+
     [Tooltip("武器が使用中かどうか")]
     protected bool _operated = false;
     [Tooltip("武器が変形中かどうか")]
@@ -43,15 +43,19 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void Start()
+    void Start()
     {
-        //Start関数で呼びたい処理はこの関数に
-        RendererActive(false);
-        _myParticleSystem = GetComponentInChildren<ParticleSystem>();
+
     }
     public virtual void Update()
     {
         //Update関数で呼びたい処理はこの関数に
+    }
+    public virtual void Initialize()
+    {
+        //Start関数で呼びたい処理はこの関数に
+        RendererActive(false);
+        _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void WeaponAttackMovement() { }
     public virtual void WeaponAttackMovement(Collider target) { }
@@ -72,11 +76,11 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
                 {
                     if (obj.TryGetComponent<IHitBehavorOfAttack>(out IHitBehavorOfAttack enemyHp))
                     {
-                        enemyHp.BehaviorOfHit(this,MainMenu.Instance.Type);
+                        enemyHp.BehaviorOfHit(this,MainMenu.Instance.Element);
                     }
                     else if(obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
                     {
-                        hitObj.BehaviorOfHit(MainMenu.Instance.Type);
+                        hitObj.BehaviorOfHit(MainMenu.Instance.Element);
                     }
                 }
             }
@@ -93,8 +97,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
         }
         _myParticleSystem.Stop();
     }
-
-
     public float ChargePower(ElementType top, float magnification)
     {
         float refPower = 0;

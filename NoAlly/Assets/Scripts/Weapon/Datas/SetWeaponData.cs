@@ -5,7 +5,7 @@ using UnityEngine;
 public class SetWeaponData
 {
     [Tooltip("このクラスのインスタンス")]
-    static SetWeaponData _instance;
+    static SetWeaponData _instance = new SetWeaponData();
     [Tooltip("武器のスクリプタブルオブジェクト")]
     WeaponScriptableObjects _weaponDatas = null;
 
@@ -22,13 +22,13 @@ public class SetWeaponData
     }
     public WeaponScriptableObjects WeaponDatas { get => _weaponDatas; set => _weaponDatas = value; }
 
-    public Weapons GetAllWeapons()
+    public WeaponDateEntity[] GetAllWeapons()
     {
-        return _weaponDatas.WeaponPrefab;
+        return _weaponDatas.WeaponDatas.Entitys;
     }
 
     public WeaponDateEntity GetWeapon(WeaponType type)
     {
-        return _weaponDatas.WeaponPrefab.Entitys[(int)type];
+        return _weaponDatas.WeaponDatas.Entitys[(int)type];
     }
 }

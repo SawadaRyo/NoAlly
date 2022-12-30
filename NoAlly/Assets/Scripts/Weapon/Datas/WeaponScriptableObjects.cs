@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponData", menuName = "ScriptableObjects/WeaponDatas", order = 1)]
+[CreateAssetMenu(fileName = "WeaponDataObject", menuName = "ScriptableObject/WeaponDatas", order = 1)]
 public class WeaponScriptableObjects : ScriptableObject
 {
-    [SerializeField,Tooltip("武器のプレハブ")]
-    Weapons _weaponPrefab;
+    [SerializeField,Tooltip("各武器のデータ")]
+    Weapons _weaponDatas;
 
-    public Weapons WeaponPrefab => _weaponPrefab;
+    public Weapons WeaponDatas => _weaponDatas;
 }

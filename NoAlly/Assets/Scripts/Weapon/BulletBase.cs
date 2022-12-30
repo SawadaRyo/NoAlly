@@ -19,23 +19,6 @@ public class BulletBase : WeaponBase, IObjectPool
     Rigidbody _rb = null;
     Vector3 _muzzleForwardPos = Vector3.zero;
     Vector3 _velo = Vector3.zero;
-    Interval _interval = null;
-
-    //テストコードなのでこのクラスとは関係ないよ
-    public struct BB
-    {
-        float OO;
-        private static readonly BB a = new BB(1f);
-        public BB(float o)
-        {
-            OO = o;
-        }
-        public BB AA
-        {
-            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => a;
-        }
-    }
 
     public bool IsActive => _isActive;
 
@@ -57,11 +40,11 @@ public class BulletBase : WeaponBase, IObjectPool
         {
             if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack enemyHP))
             {
-                enemyHP.BehaviorOfHit(this, MainMenu.Instance.Type);
+                enemyHP.BehaviorOfHit(this, MainMenu.Instance.Element);
             }
             else if (other.gameObject.TryGetComponent(out IHitBehavorOfGimic hitObj))
             {
-                hitObj.BehaviorOfHit(MainMenu.Instance.Type);
+                hitObj.BehaviorOfHit(MainMenu.Instance.Element);
             }
         }
 

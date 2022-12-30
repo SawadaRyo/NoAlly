@@ -10,9 +10,9 @@ public class MenuCommandButton
 
     public bool IsSelected => _isSelected;
     public Button Command => _commund;
-    public WeaponType Name => _weaponName;
-    public ElementType ElementType => _elementType;
-    public CommandType Type => _type;
+    public WeaponType TypeOfWeapon => _weaponName;
+    public ElementType TypeOfElement => _elementType;
+    public CommandType TypeOfCommand => _type;
 
     public MenuCommandButton(bool isSelected,Button button)
     {

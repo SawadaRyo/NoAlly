@@ -6,38 +6,51 @@ using UnityEngine.UI;
 
 public class MenuHander : SingletonBehaviour<MenuHander>
 {
-    [SerializeField] float _interval = 0.3f;
-    [SerializeField] MainMenu _mainManu = null;
+    [SerializeField, Tooltip("ボタン選択のインターバル")]
+    float _interval = 0.3f;
+    [SerializeField, Tooltip("メインメニューのプレハブ")] MainMenu _mainManu = null;
 
 
+    [Tooltip("メニュー画面の開閉確認")] 
     bool _menuIsOpen = false;
+    [Tooltip("横入力")] 
     int _crossH = 0;
+    [Tooltip("縦入力")] 
     int _crossV = 0;
+    [Tooltip("")] 
     Image[] _gameUIGauges = default;
+    [Tooltip("")] 
     Image[] _gamePanelsImages = default;
+    [Tooltip("")] 
     GameObject _canvas = default;
+    [Tooltip("選択中のボタン")]
     MenuCommandButton _targetButton = default;
+    [Tooltip("")] 
     MenuCommandButton[] _selectedButtons = null;
+    [Tooltip("")]
     MenuCommandButton[,] _allButtons = default;
+    [Tooltip("")] 
     Interval _canMove = default;
 
     public bool MenuIsOpen => _menuIsOpen;
 
     void Start()
     {
-        Init();
+        Initializer();
     }
 
-    public void Init()
+    public void Initializer()
     {
         _canMove = new Interval(_interval);
 
-        //Canvas上の全てのButtonを取得する。
-        _allButtons = new MenuCommandButton[Enum.GetNames(typeof(CommandType)).Length, Enum.GetNames(typeof(ElementType)).Length];
+        _allButtons = new MenuCommandButton[Enum.GetNames(typeof(CommandType)).Length, Enum.GetNames(typeof(ElementType)).Length]; 
         _selectedButtons = new MenuCommandButton[Enum.GetNames(typeof(CommandType)).Length];
         int length = 0;
+
+        //Canvas上の全てのButtonを取得する。
         Button[] buttonArray = GetComponentsInChildren<Button>(true);
 
+        //MenuCommandButtonをインスタンスする
         for (int y = 0; y < _allButtons.GetLength(0); y++)
         {
             for (int x = 0; x < _allButtons.GetLength(1); x++)
@@ -56,7 +69,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 length++;
             }
         }
-        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN,(int)_mainManu.Main.Value.Type];
+        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.Main.Value.Type];
         _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.Sub.Value.Type];
         _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
 
@@ -101,7 +114,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             if (Input.GetButtonDown("Decision"))
             {
                 DisideCommand(_targetButton);
-                _targetButton.Command.onClick.Invoke();
             }
         }
     }
@@ -135,7 +147,9 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             MenuClose();
         }
     }
-    /// <summary>メニューのボタン操作</summary>
+    /// <summary>
+    /// メニューのボタン操作
+    /// </summary>
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
@@ -164,47 +178,56 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         }
         return _allButtons[_crossV, _crossH];
     }
-    void DisideCommand(MenuCommandButton selectedButton)
+    /// <summary>
+    /// 選択されたボタンの色を変える関数
+    /// </summary>
+    /// <param name="targetButton"></param>
+    void DisideCommand(MenuCommandButton targetButton)
     {
-        if (_selectedButtons[(int)selectedButton.Type].Command != null)
+        if (_selectedButtons[(int)targetButton.TypeOfCommand].Command != null)
         {
-            _selectedButtons[(int)selectedButton.Type].Command.image.color = Color.white;
+            _selectedButtons[(int)targetButton.TypeOfCommand].Command.image.color = Color.white;
         }
 
-        switch (selectedButton.Type)
+        switch (targetButton.TypeOfCommand)
         {
             case CommandType.MAIN:
-                if (selectedButton.Name == _selectedButtons[(int)CommandType.SUB].Name)
+                if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.SUB].TypeOfWeapon)
                 {
                     var beforeWeapon = _selectedButtons[(int)CommandType.MAIN];
                     _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.white;
-                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeWeapon.Name];
+                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeWeapon.TypeOfWeapon];
                 }
                 break;
             case CommandType.SUB:
-                if (selectedButton.Name == _selectedButtons[(int)CommandType.MAIN].Name)
+                if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.MAIN].TypeOfWeapon)
                 {
                     var beforeWeapon = _selectedButtons[(int)CommandType.SUB];
                     _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.white;
-                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeWeapon.Name];
+                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeWeapon.TypeOfWeapon];
                 }
                 break;
             default:
                 break;
         }
-        
-        _selectedButtons[(int)selectedButton.Type] = selectedButton;
+
+        targetButton.Command.onClick.Invoke();
+        _selectedButtons[(int)targetButton.TypeOfCommand] = targetButton;
         _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.yellow;
         _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.yellow;
         _selectedButtons[(int)CommandType.ElEMENT].Command.image.color = Color.yellow;
     }
-    /// <summary>メニュー画面展開時に呼ぶ関数 </summary>
+    /// <summary>
+    /// メニュー画面展開時に呼ぶ関数
+    /// </summary>
     void MenuOpen()
     {
         _allButtons[_crossV, _crossH].Command.Select();
         _targetButton = _allButtons[_crossV, _crossH];
     }
-    /// <summary>メニュー画面縮小時に呼ぶ関数</summary>
+    /// <summary>
+    /// メニュー画面縮小時に呼ぶ関数
+    /// </summary>
     void MenuClose()
     {
 

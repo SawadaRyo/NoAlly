@@ -36,7 +36,7 @@ public class EnemyBullet : WeaponBase, IObjectPool
     {
         if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack player))
         {
-            player.BehaviorOfHit(this, MainMenu.Instance.Type);
+            player.BehaviorOfHit(this, MainMenu.Instance.Element);
             Disactive();
         }
     }
