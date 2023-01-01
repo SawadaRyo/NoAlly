@@ -6,8 +6,6 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float _chargeLevel1 = 1f;
     [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float _chargeLevel2 = 3f;
 
-    [Tooltip("•ŠíƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì‰Šú‰»")]
-    bool _unStored = true;
     [Tooltip("—­‚ßUŒ‚‚Ì—­‚ßŠÔ")]
     protected float _chrageCount = 0;
     [Tooltip("•Ší–¼")]
@@ -25,38 +23,43 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
 
     public virtual void WeaponChargeAttackMethod() { }
     public virtual void Enable() { }
-    public virtual void ResetValue()
+
+    public void Initialize()
     {
-        _chrageCount = 0;
+        Enable();
+        _weaponName = this.gameObject.name;
+        _weaponEquipment = GetComponentInParent<WeaponEquipment>();
+        _state = PlayerAnimationState.Instance;
+        _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
+        _weaponBase = GetComponent<WeaponBase>();
     }
 
-    void OnEnable()
-    {
-        if (_unStored)
-        {
-            Enable();
-            _weaponName = this.gameObject.name;
-            _weaponEquipment = GetComponentInParent<WeaponEquipment>();
-            _state = PlayerAnimationState.Instance;
-            _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
-            _weaponBase = GetComponent<WeaponBase>();
-            _unStored = false;
-        }
-    }
-
-    public void WeaponAttack()
+    public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType)
     {
         if (_state.AbleInput && _weaponEquipment.Available)
         {
-            ////’ÊíUŒ‚‚Ìˆ—
-            if (Input.GetButtonDown("Attack"))
+            switch(actionType)
             {
-                _animator.SetTrigger(_weaponName);
+                case WeaponActionType.Attack:
+                    //_animator.SetTrigger(_weaponName);
+                    _animator.SetInteger("Attack",(int)weaponType);
+                    break;
+                case WeaponActionType.Charging:
+                    _chrageCount += Time.deltaTime;
+                    break;
+                case WeaponActionType.ChargeAttack:
+                    _animator.SetBool("Charge", true);
+                    break;
+            }
+            ////’ÊíUŒ‚‚Ìˆ—
+            if (actionType == WeaponActionType.Attack)
+            {
+                
             }
             //—­‚ßUŒ‚‚Ìˆ—(‹|–î‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚à‚±‚Ìˆ—j
             if (Input.GetButton("Attack") && _chrageCount < _chargeLevel2)
             {
-                _chrageCount += Time.deltaTime;
+                
             }
             else if (Input.GetButtonUp("Attack"))
             {
@@ -66,7 +69,19 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
                 //}
             }
 
-            _animator.SetBool("Charge", Input.GetButton("Attack"));
+            
         }
     }
+    public virtual void ResetValue()
+    {
+        _chrageCount = 0;
+    }
+}
+
+public enum WeaponActionType
+{
+    None,
+    Attack,
+    Charging,
+    ChargeAttack,
 }

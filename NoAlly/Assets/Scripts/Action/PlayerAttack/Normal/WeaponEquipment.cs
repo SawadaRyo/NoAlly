@@ -4,7 +4,7 @@ using UniRx;
 
 
 /// <summary>
-/// 武器の装備を管理するコンポーネント
+/// 武器装備を切り替えるクラス
 /// </summary>
 
 
@@ -15,9 +15,6 @@ public class WeaponEquipment : MonoBehaviour
 
     [Tooltip("武器が使用可能か判定するための変数")]
     bool _available = true;
-    [Tooltip("各武器のプレハブ")]
-    WeaponPrefab[] _weaponPrefabs = new WeaponPrefab[Enum.GetNames(typeof(WeaponType)).Length-1];
-
     [Tooltip("メイン武器")]
     WeaponDateEntity _mainWeaponBase;
     [Tooltip("サブ武器")]
@@ -25,19 +22,17 @@ public class WeaponEquipment : MonoBehaviour
     [Tooltip("装備中の武器")]
     WeaponDateEntity _equipmentWeapon;
 
-    //public bool WeaponSwitch => _weaponSwitch;
+    [Tooltip("武器のプレハブ")]
+    GameObject[] _weaponPrefabs = new GameObject[Enum.GetNames(typeof(WeaponType)).Length-1];
+
     public bool Available => _available;
     public WeaponDateEntity EquipeWeapon => _equipmentWeapon;
 
-    void Awake()
-    {
-        Initialize();
-    }
+    
     void Update()
     {
         if (!MenuHander.Instance.MenuIsOpen)
         {
-            _equipmentWeapon.Action.WeaponAttack();
             if (!Input.GetButton("Attack"))
             {
                 var swichFlg = Input.GetButton("SubWeaponSwitch");
@@ -48,13 +43,16 @@ public class WeaponEquipment : MonoBehaviour
     }
     public void Initialize()
     {
-        for(int index = 0;index < _weaponPrefabs.Length;index++)
-        {
-            _weaponPrefabs[index] = Instantiate(new WeaponPrefab((WeaponType)index), _weaponTransform[index]);
+        //武器のプレハブを生成
+        WeaponDateEntity[] allWeapon = SetWeaponData.Instance.GetAllWeapons();
+        for (int index = 0;index < _weaponPrefabs.Length;index++)
+        { 
+            _weaponPrefabs[index] = Instantiate(allWeapon[index].Prefab, _weaponTransform[index]);
         }
+
+        //開始時に装備する武器を指定
         _mainWeaponBase = SetWeaponData.Instance.GetWeapon(WeaponType.SWORD);
         _subWeaponBase = SetWeaponData.Instance.GetWeapon(WeaponType.LANCE);
-
         SetEquipment(_mainWeaponBase, _subWeaponBase);
     }
     /// <summary>
@@ -97,13 +95,13 @@ public class WeaponEquipment : MonoBehaviour
                 break;
         }
         SetEquipment(_mainWeaponBase, _subWeaponBase);
-        MainMenu.Instance.DisideElement(MainMenu.Instance.Element);
+        //MainMenu.Instance.DisideElement(MainMenu.Instance.Element);
     }
-    /// <summary>_equipmentWeaponの中身を変更する関数
-    /// ・第一引数：装備させる武器
-    /// ・第二引数：装備させていた武器</summary>
-    /// <param name="equipmentWeapon"></param>
-    /// <param name="unEquipmentWeapon"></param>
+    /// <summary>_
+    /// equipmentWeaponの表示を管理する関数
+    /// </summary>
+    /// <param name="equipmentWeapon">装備させる武器</param>
+    /// <param name="unEquipmentWeapon">直前まで装備させていた武器</param>
     void SetEquipment(WeaponDateEntity equipmentWeapon, WeaponDateEntity unEquipmentWeapon)
     {
         if (_equipmentWeapon.Type == WeaponType.NONE)
@@ -120,4 +118,5 @@ public class WeaponEquipment : MonoBehaviour
         _equipmentWeapon.Base.RendererActive(available);
         _available = available;
     }
+
 }

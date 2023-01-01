@@ -22,6 +22,16 @@ public class SetWeaponData
     }
     public WeaponScriptableObjects WeaponDatas { get => _weaponDatas; set => _weaponDatas = value; }
 
+    SetWeaponData()
+    {
+        foreach (WeaponDateEntity weaponData in _weaponDatas.WeaponDatas.Entitys)
+        {
+            weaponData.Base.Initialize();
+            weaponData.Action.Initialize();
+        }
+    }
+
+
     public WeaponDateEntity[] GetAllWeapons()
     {
         return _weaponDatas.WeaponDatas.Entitys;

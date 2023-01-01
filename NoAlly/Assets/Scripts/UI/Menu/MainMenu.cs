@@ -72,7 +72,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     public void DisideElement(ElementType element)
     {
         _elementType = element;
-        _weaponMethods.ToList().ForEach(x => x.WeaponMode(element));
+        _weaponMethods.ForEach(x => x.WeaponMode(element));
     }
 
     private void OnDisable()

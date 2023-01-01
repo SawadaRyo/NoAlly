@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IWeaponAction
 {
     public void WeaponChargeAttackMethod();
-    public void WeaponAttack();
+    public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType);
 }
