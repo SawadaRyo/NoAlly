@@ -7,11 +7,12 @@ public class WeaponDataInitializer : MonoBehaviour
     [SerializeField,Tooltip("武器のスクリプタブルオブジェクト")]
     WeaponScriptableObjects _weaponDatas = null;
 
-    private void Awake()
+    void Awake()
     {
         if(SetWeaponData.Instance.WeaponDatas == null)
         {
             SetWeaponData.Instance.WeaponDatas = _weaponDatas;
+            SetWeaponData.Instance.Initialize();
         }
         Destroy(gameObject);
     }

@@ -43,10 +43,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    void Start()
-    {
-
-    }
     public virtual void Update()
     {
         //UpdateŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É

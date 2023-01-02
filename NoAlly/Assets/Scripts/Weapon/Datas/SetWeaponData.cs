@@ -22,12 +22,12 @@ public class SetWeaponData
     }
     public WeaponScriptableObjects WeaponDatas { get => _weaponDatas; set => _weaponDatas = value; }
 
-    SetWeaponData()
+    public void Initialize()
     {
-        foreach (WeaponDateEntity weaponData in _weaponDatas.WeaponDatas.Entitys)
+        for(int i = 0;i < _weaponDatas.WeaponDatas.Entitys.Length;i++)
         {
-            weaponData.Base.Initialize();
-            weaponData.Action.Initialize();
+            _weaponDatas.WeaponDatas.Entitys[i].Action.Initialize();
+            _weaponDatas.WeaponDatas.Entitys[i].Base.Initialize();
         }
     }
 

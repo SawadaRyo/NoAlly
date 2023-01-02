@@ -25,7 +25,7 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     public IReadOnlyReactiveProperty<WeaponDateEntity> Main => _main;
     public IReadOnlyReactiveProperty<WeaponDateEntity> Sub => _sub;
 
-    void Awake()
+    void Start()
     {
         Initialize();
     }
