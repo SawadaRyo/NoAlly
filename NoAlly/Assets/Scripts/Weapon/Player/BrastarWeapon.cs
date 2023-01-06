@@ -34,10 +34,6 @@ public class BrastarWeapon : CombatWeapon, IWeapon
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _elekePower = _normalEleke;
-                foreach (Renderer bR in _bladeRenderer)
-                {
-                    BladeFadeIn(bR);
-                }
                 break;
         }
     }

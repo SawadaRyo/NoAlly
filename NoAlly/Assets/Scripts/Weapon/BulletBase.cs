@@ -61,7 +61,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.forward;
         this.transform.position = _muzzleForwardPos;
-        RendererActive(_isActive);
+        ActiveWeapon(_isActive);
     }
 
     public void Disactive()
@@ -69,7 +69,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _isActive = false;
         _rb.isKinematic = true;
         __intervalTime = 0f;
-        RendererActive(_isActive);
+        ActiveWeapon(_isActive);
     }
 
     public void DisactiveForInstantiate()

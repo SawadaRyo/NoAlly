@@ -37,7 +37,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     bool _attack = false;
 
     public bool Deformated => _isDeformated;
-    public bool Operated { get => _operated; set => _operated = value; }
+    public bool Operated => _operated;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -49,15 +49,15 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     }
     public virtual void Initialize()
     {
-        //StartŠÖ”‚ÅŒÄ‚Ñ‚½‚¢ˆ—‚Í‚±‚ÌŠÖ”‚É
-        RendererActive(false);
+        ActiveWeapon(false);
         _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void WeaponAttackMovement() { }
     public virtual void WeaponAttackMovement(Collider target) { }
     public virtual void WeaponMode(ElementType type) { }
-    public virtual void RendererActive(bool stats)
+    public virtual void ActiveWeapon(bool stats)
     {
+        _operated = stats;
         Array.ForEach(_weaponRenderer, x => x.enabled = stats);
     }
     public void AttackOfRenge(bool isAttack)

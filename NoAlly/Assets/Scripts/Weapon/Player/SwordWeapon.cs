@@ -36,10 +36,7 @@ public class SwordWeapon : CombatWeapon
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _firePower = _normalFire;
-                foreach (Renderer bR in _bladeRenderer)
-                {
-                    BladeFadeIn(bR);
-                }
+                _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
     }

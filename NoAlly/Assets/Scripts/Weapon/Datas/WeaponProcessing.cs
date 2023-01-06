@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -7,15 +6,21 @@ using UnityEngine;
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
+    [SerializeField, Tooltip("武器のスクリプタブルオブジェクト")]
+    WeaponScriptableObjects _weaponDatas = null;
     [SerializeField, Header("プレイヤーの武器装備クラス")]
     WeaponEquipment _weaponEquipment = null;
 
     [Tooltip("プレイヤーの入力")]
     WeaponActionType _actionType;
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        _weaponEquipment.Initialize();
+        if (SetWeaponData.Instance.WeaponDatas == null)
+        {
+            _weaponEquipment.Initialize();
+            SetWeaponData.Instance.WeaponDatas = _weaponDatas;
+            SetWeaponData.Instance.Initialize();
+        }
     }
 
     // Update is called once per frame
@@ -27,7 +32,7 @@ public class WeaponProcessing : MonoBehaviour
             _actionType = WeaponActionType.Attack;
         }
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-        if (Input.GetButton("Attack"))
+        else if (Input.GetButton("Attack"))
         {
             _actionType = WeaponActionType.Charging;
         }
@@ -35,10 +40,14 @@ public class WeaponProcessing : MonoBehaviour
         {
             _actionType = WeaponActionType.ChargeAttack;
         }
+        else
+        {
+            _actionType = WeaponActionType.None;
+        }
         _weaponEquipment.EquipeWeapon.Action.WeaponAttack(_actionType,_weaponEquipment.EquipeWeapon.Type);
-        _actionType = WeaponActionType.None;
     }
 }
+
 
 
 

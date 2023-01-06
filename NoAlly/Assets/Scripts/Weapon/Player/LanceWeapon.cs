@@ -36,10 +36,6 @@ public class LanceWeapon : CombatWeapon, IWeapon
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _frozenPower = _normalFrozen;
-                foreach (Renderer bR in _bladeRenderer)
-                {
-                    BladeFadeIn(bR);
-                }
                 break;
         }
     }

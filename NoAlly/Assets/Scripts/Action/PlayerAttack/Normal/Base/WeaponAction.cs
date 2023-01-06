@@ -50,26 +50,9 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
                 case WeaponActionType.ChargeAttack:
                     _animator.SetBool("Charge", true);
                     break;
+                default:
+                    break;
             }
-            ////通常攻撃の処理
-            if (actionType == WeaponActionType.Attack)
-            {
-                
-            }
-            //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-            if (Input.GetButton("Attack") && _chrageCount < _chargeLevel2)
-            {
-                
-            }
-            else if (Input.GetButtonUp("Attack"))
-            {
-                //if(_chrageCount > 0f)
-                //{
-                //    WeaponChargeAttackMethod(_chrageCount);
-                //}
-            }
-
-            
         }
     }
     public virtual void ResetValue()
