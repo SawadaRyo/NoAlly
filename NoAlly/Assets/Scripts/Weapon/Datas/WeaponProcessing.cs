@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
-    [SerializeField, Tooltip("武器のスクリプタブルオブジェクト")]
+    [SerializeField, Header("武器のスクリプタブルオブジェクト")]
     WeaponScriptableObjects _weaponDatas = null;
     [SerializeField, Header("プレイヤーの武器装備クラス")]
     WeaponEquipment _weaponEquipment = null;

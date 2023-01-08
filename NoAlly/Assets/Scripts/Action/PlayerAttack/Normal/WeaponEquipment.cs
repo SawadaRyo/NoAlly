@@ -45,6 +45,7 @@ public class WeaponEquipment : MonoBehaviour
         for (int index = 0; index < _weaponPrefabs.Length; index++)
         {
             _weaponPrefabs[index] = Instantiate(allWeapon[index].Prefab, _weaponTransform[index]);
+            Renderer[] renderers = _weaponPrefabs[index].GetComponentsInChildren<Renderer>();
         }
     }
     /// <summary>

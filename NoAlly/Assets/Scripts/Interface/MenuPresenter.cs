@@ -19,12 +19,12 @@ public class MenuPresenter : MonoBehaviour
         _mainMenu.Main
             .Subscribe(mainWeapon =>
             {
-                _weaponEquipment.SetEquipment(CommandType.MAIN, mainWeapon.Type);
+                //_weaponEquipment.SetEquipment(CommandType.MAIN, mainWeapon.Type);
             }).AddTo(this);
         _mainMenu.Sub
             .Subscribe(subWeapon =>
             {
-                _weaponEquipment.SetEquipment(CommandType.SUB, subWeapon.Type);
+                //_weaponEquipment.SetEquipment(CommandType.SUB, subWeapon.Type);
             }).AddTo(this);
     }
 }
