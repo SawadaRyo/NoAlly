@@ -1,30 +1,35 @@
 using System;
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// 武器のモーションや可視化などの武器にまつわる処理を行うクラス
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
-    [SerializeField, Header("武器のスクリプタブルオブジェクト")]
-    WeaponScriptableObjects _weaponDatas = null;
-    [SerializeField, Header("プレイヤーの武器装備クラス")]
-    WeaponEquipment _weaponEquipment = null;
-
+    [Tooltip("装備している武器")] 
+    WeaponDateEntity _targetweapon;
     [Tooltip("プレイヤーの入力")]
     WeaponActionType _actionType;
-    void Awake()
-    {
-        if (SetWeaponData.Instance.WeaponDatas == null)
-        {
-            _weaponEquipment.Initialize();
-            SetWeaponData.Instance.WeaponDatas = _weaponDatas;
-            SetWeaponData.Instance.Initialize();
-        }
-    }
+
+    BoolReactiveProperty _isSwichWeapon = new BoolReactiveProperty();
+
+    public WeaponDateEntity TargetWeapon { get => _targetweapon; set => _targetweapon = value; }
+    public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon; 
 
     // Update is called once per frame
     void Update()
+    {
+        if (!MenuHander.Instance.MenuIsOpen && !Input.GetButton("Attack"))
+        {
+            _isSwichWeapon.Value = Input.GetButton("SubWeaponSwitch");
+        }
+        WeaponAttack();
+    }
+
+    
+
+    void WeaponAttack()
     {
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack"))
@@ -44,7 +49,7 @@ public class WeaponProcessing : MonoBehaviour
         {
             _actionType = WeaponActionType.None;
         }
-        _weaponEquipment.EquipeWeapon.Action.WeaponAttack(_actionType,_weaponEquipment.EquipeWeapon.Type);
+        _targetweapon.Action.WeaponAttack(_actionType, _targetweapon.Type);
     }
 }
 

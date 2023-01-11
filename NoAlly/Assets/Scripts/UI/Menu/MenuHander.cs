@@ -8,7 +8,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
-    [SerializeField, Tooltip("メインメニューのプレハブ")] MainMenu _mainManu = null;
+    [SerializeField, Tooltip("メインメニューのプレハブ")] WeaponEquipment _mainManu = null;
 
 
     [Tooltip("メニュー画面の開閉確認")] 
@@ -69,8 +69,8 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 length++;
             }
         }
-        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.Main.Value.Type];
-        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.Sub.Value.Type];
+        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.MainWeapon.Value.Type];
+        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.SubWeapon.Value.Type];
         _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
 
         //UIのゲーム起動時の初期設定

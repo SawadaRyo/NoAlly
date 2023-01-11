@@ -16,10 +16,6 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
     protected WeaponBase _weaponBase = null;
     [Tooltip("PlayerAnimationState‚ðŠi”[‚·‚é•Ï”")]
     PlayerAnimationState _state = null;
-    [Tooltip("WeaponEquipment‚ðŠi”[‚·‚é•Ï”")]
-    WeaponEquipment _weaponEquipment = null;
-
-    public WeaponBase Base => _weaponBase;
 
     public virtual void WeaponChargeAttackMethod() { }
     public virtual void Enable() { }
@@ -28,7 +24,6 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
     {
         Enable();
         _weaponName = this.gameObject.name;
-        _weaponEquipment = GetComponentInParent<WeaponEquipment>();
         _state = PlayerAnimationState.Instance;
         _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
         _weaponBase = GetComponent<WeaponBase>();
@@ -36,7 +31,7 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
 
     public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType)
     {
-        if (_state.AbleInput && _weaponEquipment.Available)
+        if (_state.AbleInput)
         {
             switch(actionType)
             {

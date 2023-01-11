@@ -7,18 +7,27 @@ using System.Linq;
 
 public class BulletBase : WeaponBase, IObjectPool
 {
-    [SerializeField] 
+    [SerializeField,Header("’e‚Ì‘¬“x")]
     float _bulletSpeed = 0;
-    [SerializeField] 
+    [SerializeField, Header("’e‚ÌŽc—¯ŽžŠÔ")]
     float __intervalTime = 0f;
-    [SerializeField] 
-    BulletOwner _owner = BulletOwner.Player;
+    [SerializeField, Header("’e‚ÌRigitbody")]
+    Rigidbody _rb = default;
+    [SerializeField, Header("’e‚ÌObjectVisual")]
+    ObjectVisual _thisObject = null;
+    [SerializeField, Header("’e‚ÌƒI[ƒi[")]
+    WeaponOwner _owner = WeaponOwner.Player;
 
+    [Tooltip("Žg—p’†‚©”»’è‚·‚é•Ï”")]
     bool _isActive = false;
+    [Tooltip("”­ŽË‚³‚ê‚é’¼‘O‚Ì‰ŠúˆÊ’u")]
     Transform _muzzlePos = null;
-    Rigidbody _rb = null;
+    [Tooltip("”­ŽË‚³‚ê‚é•ûŒü")]
     Vector3 _muzzleForwardPos = Vector3.zero;
+    [Tooltip("’e‚Ì‰Á‘¬“x")]
     Vector3 _velo = Vector3.zero;
+    [Tooltip("’e‚Ì‘®«")]
+    ElementType _weaponEquipment;
 
     public bool IsActive => _isActive;
 
@@ -36,21 +45,13 @@ public class BulletBase : WeaponBase, IObjectPool
     }
     void OnTriggerEnter(Collider other)
     {
-        if (_owner == BulletOwner.Player)
+        if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack enemyHP))
         {
-            if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack enemyHP))
-            {
-                enemyHP.BehaviorOfHit(this, MainMenu.Instance.Element);
-            }
-            else if (other.gameObject.TryGetComponent(out IHitBehavorOfGimic hitObj))
-            {
-                hitObj.BehaviorOfHit(MainMenu.Instance.Element);
-            }
+            enemyHP.BehaviorOfHit(this, _weaponEquipment, _owner);
         }
-
-        else if (_owner == BulletOwner.Enemy && other.gameObject.TryGetComponent(out IHitBehavorOfAttack playerHP))
+        else if (other.gameObject.TryGetComponent(out IHitBehavorOfGimic hitObj))
         {
-            //playerHP.DamageMethod(_rigitPower, _firePower, _elekePower, _frozenPower);
+            hitObj.BehaviorOfHit(_weaponEquipment);
         }
         Disactive();
     }
@@ -61,7 +62,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.forward;
         this.transform.position = _muzzleForwardPos;
-        ActiveWeapon(_isActive);
+        _thisObject.ActiveWeapon(_isActive);
     }
 
     public void Disactive()
@@ -69,25 +70,17 @@ public class BulletBase : WeaponBase, IObjectPool
         _isActive = false;
         _rb.isKinematic = true;
         __intervalTime = 0f;
-        ActiveWeapon(_isActive);
+        _thisObject.ActiveWeapon(_isActive);
     }
 
-    public void DisactiveForInstantiate()
+    public void DisactiveForInstantiate<T>(T owner) where T : IObjectGenerator
     {
         _isActive = false;
         _rb = GetComponent<Rigidbody>();
-        _muzzlePos = GameObject.FindObjectOfType<BowAction>().MuzzlePos;
+        _muzzlePos = owner.GenerateTrance;
         _velo = _rb.velocity;
-        foreach (var weaponRend in _weaponRenderer)
-        {
-            weaponRend.enabled = false;
-        }
+        _thisObject.ActiveWeapon(_isActive);
     }
-}
-public enum BulletOwner
-{
-    Player = 0,
-    Enemy = 1
 }
 
 

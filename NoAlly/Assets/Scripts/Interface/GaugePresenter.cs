@@ -21,6 +21,7 @@ public class GaugePresenter : MonoBehaviour
         _hpSlider = _playerSlider[0].GetComponent<Slider>();
         _sapSlider = _playerSlider[1].GetComponent<Slider>();
 
+        _playerStatus.Initialize();
         PlayerHpState();
     }
 

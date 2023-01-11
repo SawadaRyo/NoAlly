@@ -13,6 +13,8 @@ public class StatusBase : MonoBehaviour
     protected float _maxHP = 5; 
     [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
     protected float _maxSAP = 20;
+    [SerializeField,Header("このクラスのオーナー")]
+    WeaponOwner _owner = WeaponOwner.NONE;
 
 
 
@@ -31,12 +33,9 @@ public class StatusBase : MonoBehaviour
 
     public bool Living => _living;
     public bool IsInvincible => _invincibleTime.IsCountUp();
-    public FloatReactiveProperty HP => _hp;
+    public IReadOnlyReactiveProperty<float> HP => _hp;
 
-    private void Start()
-    {
-        Initialize();
-    }
+    
     public virtual void Initialize()
     {
         _living = true;
@@ -51,8 +50,10 @@ public class StatusBase : MonoBehaviour
         StartCoroutine(_invincibleTime.StartCountDown());
     }
 
-    public virtual void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type)
+    public virtual void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type,WeaponOwner owner)
     {
+        if (_owner == owner) return;
+
         float baseDamage = weaponStatus.RigitPower * difanse.RigitDefensePercentage;
         float elemantDamage = 0;
         switch (type)

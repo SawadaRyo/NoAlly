@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGenerator : MonoBehaviour
+public class EnemyGenerator : MonoBehaviour,IObjectGenerator
 {
     [SerializeField] Transform _poolPos = null;
     [SerializeField] EnemyBase _prefabBases = null;
@@ -12,12 +12,13 @@ public class EnemyGenerator : MonoBehaviour
     Transform[] _enmeyPositions;
     ObjectPool<EnemyBase> _enemyiesPool = new ObjectPool<EnemyBase>();
 
+    public Transform GenerateTrance => _poolPos;
 
     public void Start()
     {
         _enmeyPositions = gameObject.GetComponentsInChildren<Transform>();
         _enemyiesPool.SetBaseObj(_prefabBases, _poolPos, (int)_enemyType);
-        _enemyiesPool.SetCapacity(_enmeyPositions.Length);
+        _enemyiesPool.SetCapacity(this,_enmeyPositions.Length);
         EnemyGenerate();
     }
     public void EnemyGenerate()

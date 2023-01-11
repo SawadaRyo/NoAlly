@@ -20,7 +20,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
     Animator _animator = default;
     [Tooltip("WeaponEquipmentƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
-    WeaponEquipment _weaponEquipment;
+    WeaponProcessing _weaponProcessing;
     [Tooltip("PlayerController‚ğŠi”[‚·‚é•Ï”")]
     PlayerContoller _playerContoller = null;
 
@@ -34,7 +34,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _animator = GetComponent<Animator>();
         _playerContoller = GetComponent<PlayerContoller>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //Animator‚ÉƒAƒ^ƒbƒ`‚µ‚Ä‚¢‚éObservableStateMachineTrigger‚ğæ‚Á‚Ä‚­‚é
-        _weaponEquipment = _playerContoller.GetComponent<WeaponEquipment>();
+        _weaponProcessing = _playerContoller.GetComponent<WeaponProcessing>();
 
         DetectionStateEnterToNormalAction();
         DetectionStateEnterToAttack();
@@ -141,7 +141,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     void AttackToCombatWeapon()
     {
         _onHit = !_onHit;
-        StartCoroutine(_weaponEquipment.EquipeWeapon.Base.LoopJud(_onHit));
+        StartCoroutine(_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit));
         //_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit);
     }
     void BulletFIre()

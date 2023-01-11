@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DifanseParameter : MonoBehaviour, IHitBehavorOfAttack
 {
-    [Tooltip("オブジェクトのStatusBase")]
-    StatusBase _status = null;
     [Range(0f,2f),SerializeField, Tooltip("物理防御力")]
     float _rigitDefensePercentage = 0f;
     [Range(0f, 2f), SerializeField, Tooltip("炎防御力")]
@@ -15,6 +13,8 @@ public class DifanseParameter : MonoBehaviour, IHitBehavorOfAttack
     float _elekeDifansePercentage = 0f;
     [Range(0f, 2f), SerializeField, Tooltip("氷結防御力")]
     float _frozenDifansePercentage = 0f;
+    [Tooltip("オブジェクトのStatusBase")]
+    StatusBase _status = null;
 
     public float RigitDefensePercentage => _rigitDefensePercentage;
     public float FireDifansePercentage => _fireDifansePercentage;
@@ -25,9 +25,8 @@ public class DifanseParameter : MonoBehaviour, IHitBehavorOfAttack
     {
         _status = GetComponentInParent<StatusBase>();
     }
-
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type)
+    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type, WeaponOwner owner)
     {
-        _status.DamageCalculation(weaponStatus, this, type);
+        _status.DamageCalculation(weaponStatus, this, type, owner);
     }
 }

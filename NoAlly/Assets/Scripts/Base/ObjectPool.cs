@@ -18,7 +18,7 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
         _key = key;
     }
 
-    public void SetCapacity(int size)
+    public void SetCapacity(IObjectGenerator owner,int size)
     {
         List<T> objList = new List<T>();
         for (int i = _pool.Count - 1; i < size; ++i)
@@ -32,7 +32,7 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
             {
                 obj = GameObject.Instantiate(_baseObj);
             }
-            obj.DisactiveForInstantiate();
+            obj.DisactiveForInstantiate(owner);
             objList.Add(obj);
         }
         Dictionalize(_key, objList);

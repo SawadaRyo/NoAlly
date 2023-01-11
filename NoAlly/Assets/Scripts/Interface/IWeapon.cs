@@ -5,7 +5,6 @@ using UniRx;
 
 public interface IWeapon
 {
-    public bool Operated { get; }
     public bool Deformated { get; }
     public void WeaponAttackMovement();
     public void WeaponAttackMovement(Collider target);

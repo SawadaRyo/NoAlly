@@ -7,7 +7,7 @@ using UniRx;
 public struct WeaponDateEntity
 {
     [SerializeField, Header("武器のプレハブ")]
-    public GameObject Prefab;
+    public ObjectVisual Prefab;
     [SerializeField,Header("武器の機能")]
     public WeaponBase Base;
     [SerializeField, Header("武器の攻撃モーション")]

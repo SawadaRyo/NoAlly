@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunTypeEnemy : EnemyBase
+public class GunTypeEnemy : EnemyBase, IObjectGenerator
 {
     #region フィールド / プロパティ 群
     [SerializeField] int _bulletSize = 10;
@@ -14,15 +14,16 @@ public class GunTypeEnemy : EnemyBase
     float _interval = 1f;
     ObjectPool<EnemyBullet> _bulletPool = new ObjectPool<EnemyBullet>();
 
-    public Transform MuzzleTrans => _muzzleTrans;
+    public Transform GenerateTrance => _muzzleTrans;
     public Vector3 Distance => _distance;
+
     #endregion
 
     public override void Start()
     {
         base.Start();
-        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)BulletOwner.Enemy);
-        _bulletPool.SetCapacity(_bulletSize);
+        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)WeaponOwner.Enemy);
+        _bulletPool.SetCapacity(this, _bulletSize);
     }
 
     void EnemeyRotate(PlayerContoller player)
@@ -57,11 +58,8 @@ public class GunTypeEnemy : EnemyBase
     }
     public void InsBullet()
     {
-        var bullet = _bulletPool.Instantiate((int)BulletOwner.Enemy);
-        if(!bullet.EnemyMuzzleTrans)
-        {
-            bullet.EnemyMuzzleTrans.position = _muzzleTrans.position;
-        }
+        var bullet = _bulletPool.Instantiate((int)WeaponOwner.Enemy);
+        bullet.transform.position = _muzzleTrans.position;
     }
     IEnumerator RapidFire(bool sightIn)
     {

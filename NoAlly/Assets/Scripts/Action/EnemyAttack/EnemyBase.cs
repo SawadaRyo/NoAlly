@@ -8,7 +8,7 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     [SerializeField] protected Animator _enemyAnimator;
     [SerializeField] protected LayerMask _playerLayer = ~0;
     [SerializeField] protected Transform _center = default;
-    [SerializeField] Renderer[] _enemyRenderer = default;
+    [SerializeField] ObjectVisual _thisObject = default;
 
     bool _isActive = true;
     Collider _collider = default;
@@ -52,24 +52,15 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     public virtual void Create()
     {
         _isActive = true;
-        _collider.enabled = true;
-        RendererActive(true);
-        _enemyAnimator.SetBool("Death", false);
-        _enemyAnimator.Play("RifleIdle");
+        _thisObject.ActiveWeapon(_isActive);
+        _enemyAnimator.SetBool("Death", !_isActive);
     }
     public virtual void Disactive()
     {
         _isActive = false;
-        _collider.enabled = false;
-        RendererActive(false);
-        
-    }
-    public virtual void DisactiveForInstantiate()
-    {
-        _isActive = false;
-        _collider = gameObject.GetComponent<CapsuleCollider>();
-        _collider.enabled = false;
-        RendererActive(false);
+        _thisObject.ActiveWeapon(_isActive);
+        _enemyAnimator.SetBool("Death", !_isActive);
+
     }
 
     public virtual void OnDrawGizmos()
@@ -77,11 +68,11 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_center.position, _radius);
     }
-    public void RendererActive(bool stats)
+    
+
+    public void DisactiveForInstantiate<T>(T Owner) where T : IObjectGenerator
     {
-        foreach (var r in _enemyRenderer)
-        {
-            r.enabled = stats;
-        }
+        _isActive = false;
+        _thisObject.ActiveWeapon(_isActive);
     }
 }

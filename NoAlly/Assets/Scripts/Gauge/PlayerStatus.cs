@@ -17,15 +17,16 @@ public class PlayerStatus : StatusBase
         _animator = gameObject.GetComponent<Animator>();
     }
 
-    public override void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type)
+    public override void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type, WeaponOwner owner)
     {
-        base.DamageCalculation(weaponStatus, difanse, type);
+        base.DamageCalculation(weaponStatus, difanse, type, owner);
         if (_hp.Value <= 0)
         {
             CharacterDead(false);
         }
-        else return;
     }
+
+    
 
     /// <summary>
     /// ÉvÉåÉCÉÑÅ[ÇÃHPâÒïú

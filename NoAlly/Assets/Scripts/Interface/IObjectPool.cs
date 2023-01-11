@@ -7,5 +7,5 @@ public interface IObjectPool
     public bool IsActive { get;}
     public void Create();
     public void Disactive();
-    public void DisactiveForInstantiate();
+    public void DisactiveForInstantiate<T>(T Owner) where T:IObjectGenerator;
 }

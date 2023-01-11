@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemBase : MonoBehaviour,IObjectPool
 {
     [SerializeField] AudioClip _getSound = null;
-    [SerializeField] Renderer[] _renderer = null;
+    [SerializeField] ObjectVisual _weaponVisual = null;
 
     bool _isActive = true;
     AudioSource _audio = null;
@@ -32,27 +32,18 @@ public class ItemBase : MonoBehaviour,IObjectPool
     public void Create()
     {
         _isActive = true;
-        foreach (Renderer r in _renderer)
-        {
-            r.enabled = true;
-        }
+        _weaponVisual.ActiveWeapon(_isActive);
     }
 
     public void Disactive()
     {
         _isActive = false;
-        foreach(Renderer r in _renderer)
-        {
-            r.enabled = false;
-        }
+        _weaponVisual.ActiveWeapon(_isActive);
     }
 
-    public void DisactiveForInstantiate()
+    public void DisactiveForInstantiate<T>(T owner) where T : IObjectGenerator
     {
         _isActive = false;
-        foreach (Renderer r in _renderer)
-        {
-            r.enabled = false;
-        }
+        _weaponVisual.ActiveWeapon(_isActive);
     }
 }

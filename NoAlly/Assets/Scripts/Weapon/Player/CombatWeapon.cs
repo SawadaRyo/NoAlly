@@ -21,11 +21,6 @@ public class CombatWeapon : WeaponBase
         _weaponAnimator = GetComponent<Animator>();
         _myParticleSystem.Stop();
     }
-    public override void ActiveWeapon(bool stats)
-    {
-        base.ActiveWeapon(stats);
-        _weaponAnimator.enabled = stats;
-    }
     //protected void BladeState()
     //{
     //    IDisposable exitState = _trigger

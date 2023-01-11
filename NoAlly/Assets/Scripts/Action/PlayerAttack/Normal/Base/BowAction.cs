@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BowAction : WeaponAction
+public class BowAction : WeaponAction,IObjectGenerator
 {
     [SerializeField] float _bulletSpeed = 5;
     [SerializeField] string _filePath = "";
@@ -11,11 +11,11 @@ public class BowAction : WeaponAction
     [SerializeField] Transform _poolPos = default;
     [SerializeField] PersonType _personType = PersonType.Player;
 
-    int _bulletType = 0;
+    BulletType _bulletType = BulletType.NORMAL;
     ObjectPool<BulletBase> _bPool = new ObjectPool<BulletBase>();
     BulletBase[] _bulletPrefab = new BulletBase[3];
     
-    public Transform MuzzlePos => _muzzleForward;
+    public Transform GenerateTrance => _muzzleForward;
 
     public void Start()
     {
@@ -23,7 +23,7 @@ public class BowAction : WeaponAction
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _bPool.SetBaseObj(_bulletPrefab[i], _poolPos, i);
-            _bPool.SetCapacity(10);
+            _bPool.SetCapacity(this,10);
         }
     }
 
@@ -35,20 +35,20 @@ public class BowAction : WeaponAction
             //’Êí’e
             if (_chrageCount <= _chargeLevel1)
             {
-                _bulletType = 0;
+                _bulletType = BulletType.NORMAL;
             }
             //‹­‰»’e
             else if (_chrageCount > _chargeLevel1 && _chrageCount <= _chargeLevel2)
             {
-                _bulletType = 1;
+                _bulletType = BulletType.STRENGTHEN;
             }
             //‘å–C
             else if (_chrageCount > _chargeLevel2)
             {
-                _bulletType = 2;
+                _bulletType = BulletType.CANNON;
             }
 
-            var bullletObj = _bPool.Instantiate(_bulletType);
+            var bullletObj = _bPool.Instantiate((int)_bulletType);
             
         }
     }

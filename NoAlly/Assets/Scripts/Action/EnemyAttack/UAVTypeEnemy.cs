@@ -84,7 +84,6 @@ public class UAVTypeEnemy : EnemyBase
     public override void Disactive()
     {
         base.Disactive();
-        RendererActive(false);
         _rb.velocity = Vector3.zero;
     }
     //public override void OnDrawGizmos()

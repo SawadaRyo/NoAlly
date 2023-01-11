@@ -4,61 +4,51 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour, IWeapon
 {
-    [SerializeField, Tooltip("ïêäÌÇÃï®óùçUåÇóÕ")]
+    [SerializeField, Header("ïêäÌÇÃï®óùçUåÇóÕ")]
     protected float _rigitPower = 5;
-    [SerializeField, Tooltip("ïêäÌÇÃóãçUåÇóÕ")]
+    [SerializeField, Header("ïêäÌÇÃóãçUåÇóÕ")]
     protected float _elekePower = 0;
-    [SerializeField, Tooltip("ïêäÌÇÃâäçUåÇóÕ")]
+    [SerializeField, Header("ïêäÌÇÃâäçUåÇóÕ")]
     protected float _firePower = 0;
-    [SerializeField,Tooltip("ïêäÌÇÃïXåãçUåÇóÕ")]
+    [SerializeField, Header("ïêäÌÇÃïXåãçUåÇóÕ")]
     protected float _frozenPower = 0;
-    
-    [SerializeField, Tooltip("ó≠ÇﬂçUåÇëÊ1íiäK")] 
+    [SerializeField, Header("ó≠ÇﬂçUåÇëÊ1íiäK")] 
     protected float _chargeLevel1 = 1f;
-    [SerializeField, Tooltip("ó≠ÇﬂçUåÇëÊ2íiäK")] 
+    [SerializeField, Header("ó≠ÇﬂçUåÇëÊ2íiäK")] 
     protected float _chargeLevel2 = 3f;
-
-    [SerializeField, Tooltip("ïêäÌÇÃçUåÇîªíËÉåÉCÉÑÅ[")]
+    [SerializeField, Header("ïêäÌÇÃçUåÇîªíËÉåÉCÉÑÅ[")]
     protected LayerMask _enemyLayer = ~0;
-    [SerializeField, Tooltip("ïêäÌÇÃRenderer")]
-    protected Renderer[] _weaponRenderer = default;
-    [SerializeField, Tooltip("ïêäÌÇÃçUåÇîªíËÇÃíÜêSì_")]
+    [SerializeField, Header("ïêäÌÇÃçUåÇîªíËÇÃíÜêSì_")]
     Transform _center = default;
+    [SerializeField,Header("ïêäÌÇÃÉIÅ[ÉiÅ[")]
+    WeaponOwner _owner = WeaponOwner.Player;
+
     [Tooltip("ïêäÌÇÃçUåÇîªíËâ”èäÇÃëÂÇ´Ç≥")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
-
-    [Tooltip("ïêäÌÇ™égópíÜÇ©Ç«Ç§Ç©")]
-    protected bool _operated = false;
     [Tooltip("ïêäÌÇ™ïœå`íÜÇ©Ç«Ç§Ç©")]
     protected bool _isDeformated = false;
     [Tooltip("ïêäÌÇÃéaåÇÉGÉtÉFÉNÉg")]
     protected ParticleSystem _myParticleSystem = default;
     [Tooltip("")]
     bool _attack = false;
+    [Tooltip("ïêäÌÇÃëÆê´")]
+    ElementType _type;
 
     public bool Deformated => _isDeformated;
-    public bool Operated => _operated;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void Update()
-    {
-        //Updateä÷êîÇ≈åƒÇ—ÇΩÇ¢èàóùÇÕÇ±ÇÃä÷êîÇ…
-    }
     public virtual void Initialize()
     {
-        ActiveWeapon(false);
         _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void WeaponAttackMovement() { }
     public virtual void WeaponAttackMovement(Collider target) { }
-    public virtual void WeaponMode(ElementType type) { }
-    public virtual void ActiveWeapon(bool stats)
+    public virtual void WeaponMode(ElementType type) 
     {
-        _operated = stats;
-        Array.ForEach(_weaponRenderer, x => x.enabled = stats);
+        _type = type;
     }
     public void AttackOfRenge(bool isAttack)
     {
@@ -72,11 +62,11 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
                 {
                     if (obj.TryGetComponent<IHitBehavorOfAttack>(out IHitBehavorOfAttack enemyHp))
                     {
-                        enemyHp.BehaviorOfHit(this,MainMenu.Instance.Element);
+                        enemyHp.BehaviorOfHit(this,_type,_owner);
                     }
                     else if(obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
                     {
-                        hitObj.BehaviorOfHit(MainMenu.Instance.Element);
+                        hitObj.BehaviorOfHit(_type);
                     }
                 }
             }
