@@ -8,13 +8,13 @@ using UniRx;
 public class WeaponProcessing : MonoBehaviour
 {
     [Tooltip("‘•”õ‚µ‚Ä‚¢‚é•Ší")] 
-    WeaponDateEntity _targetweapon;
+    WeaponDataEntity _targetweapon;
     [Tooltip("ƒvƒŒƒCƒ„[‚Ì“ü—Í")]
     WeaponActionType _actionType;
 
     BoolReactiveProperty _isSwichWeapon = new BoolReactiveProperty();
 
-    public WeaponDateEntity TargetWeapon { get => _targetweapon; set => _targetweapon = value; }
+    public WeaponDataEntity TargetWeapon { get => _targetweapon; set => _targetweapon = value; }
     public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon; 
 
     // Update is called once per frame

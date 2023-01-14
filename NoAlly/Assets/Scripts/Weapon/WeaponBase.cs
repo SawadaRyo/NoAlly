@@ -40,8 +40,12 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void Initialize()
+    public virtual void Initialize(WeaponDataEntity weaponData)
     {
+        _rigitPower = weaponData.RigitPower;
+        _firePower = weaponData.FirePower;
+        _elekePower = weaponData.ElekePower;
+        _frozenPower = weaponData.FrozenPower;
         _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void WeaponAttackMovement() { }

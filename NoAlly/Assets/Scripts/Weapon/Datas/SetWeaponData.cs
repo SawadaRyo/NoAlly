@@ -8,17 +8,20 @@ public class SetWeaponData
     WeaponScriptableObjects _weaponDatas = null;
 
     public WeaponScriptableObjects Datas => _weaponDatas;
-    public WeaponDateEntity[] GetAllWeapons => _weaponDatas.WeaponDatas.Entitys;
-    public WeaponDateEntity GetWeapon(WeaponType type) => _weaponDatas.WeaponDatas.Entitys[(int)type];
+    public WeaponDataEntity[] GetAllWeapons => _weaponDatas.WeaponDatas.Entitys;
+    public WeaponDataEntity GetWeapon(WeaponType type) => _weaponDatas.WeaponDatas.Entitys[(int)type];
 
 
-    public void Initialize()
+    public void Initialize(WeaponScriptableObjects weapon,PlayerContoller player)
     {
-        _weaponDatas = Resources.Load<WeaponScriptableObjects>("WeaponData");
+        if (_weaponDatas != null) return;
+        Animator animator = player.GetComponent<Animator>();
+
+        _weaponDatas = weapon;
         for (int i = 0; i < _weaponDatas.WeaponDatas.Entitys.Length; i++)
         {
-            _weaponDatas.WeaponDatas.Entitys[i].Action.Initialize();
-            _weaponDatas.WeaponDatas.Entitys[i].Base.Initialize();
+            _weaponDatas.WeaponDatas.Entitys[i].Base.Initialize(_weaponDatas.WeaponDatas.Entitys[i]);
+            _weaponDatas.WeaponDatas.Entitys[i].Action.Initialize(animator,_weaponDatas.WeaponDatas.Entitys[i].Base);
         }
     }
 }

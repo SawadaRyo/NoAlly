@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 
 [System.Serializable]
-public struct WeaponDateEntity
+public struct WeaponDataEntity
 {
     [SerializeField, Header("•Ší‚ÌƒvƒŒƒnƒu")]
     public ObjectVisual Prefab;
@@ -37,5 +37,5 @@ public struct WeaponDateEntity
 [System.Serializable]
 public struct Weapons
 {
-    public WeaponDateEntity[] Entitys;
+    public WeaponDataEntity[] Entitys;
 }

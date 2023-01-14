@@ -15,9 +15,10 @@ public class CombatWeapon : WeaponBase
     [Tooltip("武器のアニメーション")]
     protected Animator _weaponAnimator = default;
 
-    public override void Initialize()
+
+    public override void Initialize(WeaponDataEntity weaponData)
     {
-        base.Initialize();
+        base.Initialize(weaponData);
         _weaponAnimator = GetComponent<Animator>();
         _myParticleSystem.Stop();
     }

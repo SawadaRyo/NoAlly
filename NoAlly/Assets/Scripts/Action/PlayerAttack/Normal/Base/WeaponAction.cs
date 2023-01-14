@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class WeaponAction : MonoBehaviour, IWeaponAction
 {
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ1’iŠK")] protected float _chargeLevel1 = 1f;
-    [SerializeField, Tooltip("—­‚ßUŒ‚‘æ2’iŠK")] protected float _chargeLevel2 = 3f;
+    [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")] 
+    protected float _chargeLevel1 = 1f;
+    [SerializeField, Header("—­‚ßUŒ‚‘æ2’iŠK")] 
+    protected float _chargeLevel2 = 3f;
 
     [Tooltip("—­‚ßUŒ‚‚Ì—­‚ßŠÔ")]
     protected float _chrageCount = 0;
@@ -18,15 +20,13 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
     PlayerAnimationState _state = null;
 
     public virtual void WeaponChargeAttackMethod() { }
-    public virtual void Enable() { }
 
-    public void Initialize()
+    public void Initialize(Animator playerAnim,WeaponBase weaponBase)
     {
-        Enable();
         _weaponName = this.gameObject.name;
         _state = PlayerAnimationState.Instance;
-        _animator = GetComponentInParent<PlayerContoller>().GetComponent<Animator>();
-        _weaponBase = GetComponent<WeaponBase>();
+        _animator = playerAnim;
+        _weaponBase = weaponBase;
     }
 
     public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType)
