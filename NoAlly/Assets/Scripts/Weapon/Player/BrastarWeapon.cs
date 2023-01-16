@@ -23,14 +23,14 @@ public class BrastarWeapon : CombatWeapon, IWeapon
         switch (type)
         {
             case ElementType.ELEKE:
-                _isDeformated = true;
+                _isDeformated = WeaponDeformation.Deformation;
                 _harfExtents = _pawerUpHarfExtents;
                 _rigitPower = _powerUpRigit;
                 _elekePower = _powerUpEleke;
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
-                _isDeformated = false;
+                _isDeformated = WeaponDeformation.None;
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _elekePower = _normalEleke;

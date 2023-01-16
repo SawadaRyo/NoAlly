@@ -20,13 +20,13 @@ public struct WeaponDataEntity
     public bool IsGetWeapon;
 
     [SerializeField, Header("•Ší‚Ì•¨—UŒ‚—Í")]
-    public float RigitPower;
+    public float[] RigitPower;
     [SerializeField, Header("•Ší‚Ì—‹UŒ‚—Í")]
-    public float ElekePower;
+    public float[] ElekePower;
     [SerializeField, Header("•Ší‚Ì‰ŠUŒ‚—Í")]
-    public float FirePower;
+    public float[] FirePower;
     [SerializeField, Header("•Ší‚Ì•XŒ‹UŒ‚—Í")]
-    public float FrozenPower;
+    public float[] FrozenPower;
 
     [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")]
     public float _chargeLevel1;

@@ -25,14 +25,14 @@ public class SwordWeapon : CombatWeapon
         switch (type)
         {
             case ElementType.FIRE:
-                _isDeformated = true;
+                _isDeformated = WeaponDeformation.Deformation;
                 _harfExtents = _pawerUpHarfExtents;
                 _rigitPower = _powerUpRigit;
                 _firePower = _powerUpFire;
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
-                _isDeformated = false;
+                _isDeformated = WeaponDeformation.None;
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _firePower = _normalFire;

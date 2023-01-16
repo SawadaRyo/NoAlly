@@ -6,25 +6,30 @@ using UnityEngine;
 public class BowAction : WeaponAction,IObjectGenerator
 {
     [SerializeField] float _bulletSpeed = 5;
-    [SerializeField] string _filePath = "";
-    [SerializeField] Transform _muzzleForward = default;
+    [SerializeField] string _filePath = "PlayerBullet";
+    [SerializeField] string _findMuzzlePath = "PlayerB/Muzzle";
     [SerializeField] Transform _poolPos = default;
     [SerializeField] PersonType _personType = PersonType.Player;
 
-    BulletType _bulletType = BulletType.NORMAL;
+    Transform _muzzleForward = default;
     ObjectPool<BulletBase> _bPool = new ObjectPool<BulletBase>();
     BulletBase[] _bulletPrefab = new BulletBase[3];
+    BulletType _bulletType = BulletType.NORMAL;
     
     public Transform GenerateTrance => _muzzleForward;
 
-    public void Start()
+
+    public override void Initialize(PlayerContoller player, WeaponBase weaponBase)
     {
+        base.Initialize(player, weaponBase);
+        _muzzleForward = GameObject.Find(_findMuzzlePath).transform;
         _bulletPrefab = Resources.LoadAll<BulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _bPool.SetBaseObj(_bulletPrefab[i], _poolPos, i);
-            _bPool.SetCapacity(this,10);
+            _bPool.SetCapacity(this, 10);
         }
+
     }
 
     public override void WeaponChargeAttackMethod()

@@ -15,8 +15,6 @@ public class BulletBase : WeaponBase, IObjectPool
     Rigidbody _rb = default;
     [SerializeField, Header("弾のObjectVisual")]
     ObjectVisual _thisObject = null;
-    [SerializeField, Header("弾のオーナー")]
-    WeaponOwner _owner = WeaponOwner.Player;
 
     [Tooltip("使用中か判定する変数")]
     bool _isActive = false;

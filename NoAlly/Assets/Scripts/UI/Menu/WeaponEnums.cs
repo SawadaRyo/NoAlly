@@ -24,3 +24,16 @@ public enum ElementType
     ELEKE = 2,
     FROZEN = 3
 }
+public enum WeaponOwner
+{
+    NONE = -1,
+    Player = 0,
+    Enemy = 1
+}
+
+public enum WeaponDeformation
+{
+    None = 0,
+    Deformation = 1
+}
+

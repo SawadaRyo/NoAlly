@@ -25,14 +25,14 @@ public class LanceWeapon : CombatWeapon, IWeapon
         switch (type)
         {
             case ElementType.FROZEN:
-                _isDeformated = true;
+                _isDeformated = WeaponDeformation.Deformation;
                 _harfExtents = _pawerUpHarfExtents;
                 _rigitPower = _powerUpRigit;
                 _frozenPower = _powerUpFrozen;
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
-                _isDeformated = false;
+                _isDeformated = WeaponDeformation.None;
                 _harfExtents = _normalHarfExtents;
                 _rigitPower = _normalRigit;
                 _frozenPower = _normalFrozen;

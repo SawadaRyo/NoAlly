@@ -21,11 +21,11 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
 
     public virtual void WeaponChargeAttackMethod() { }
 
-    public void Initialize(Animator playerAnim,WeaponBase weaponBase)
+    public virtual void Initialize(PlayerContoller player,WeaponBase weaponBase)
     {
         _weaponName = this.gameObject.name;
         _state = PlayerAnimationState.Instance;
-        _animator = playerAnim;
+        _animator = player.PlayerAnimator;
         _weaponBase = weaponBase;
     }
 
@@ -36,7 +36,7 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
             switch(actionType)
             {
                 case WeaponActionType.Attack:
-                    //_animator.SetTrigger(_weaponName);
+                    _animator.SetTrigger("AttackTrigger");
                     _animator.SetInteger("Attack",(int)weaponType);
                     break;
                 case WeaponActionType.Charging:

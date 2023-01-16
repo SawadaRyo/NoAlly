@@ -73,9 +73,8 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("プレイヤーのステータス")]
     PlayerStatus _playerStatus = null;
 
+    public Animator PlayerAnimator => _animator;
     public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-    public bool DashChack => _dashChack;
-    public Rigidbody Rb => _rb;
     public RaycastHit HitInfo => _hitInfo;
 
 
@@ -107,21 +106,6 @@ public class PlayerContoller : MonoBehaviour
             JumpMethod(_isJump);
         }
     }
-    //void OnCollisionEnter(Collision other)
-    //{
-    //    var otherCollider = other.gameObject;
-    //    if (otherCollider)
-    //    {
-    //        if (otherCollider.tag == "Pendulam" || otherCollider.tag == "Ffield")
-    //        {
-    //            transform.parent = other.gameObject.transform;
-    //        }
-    //    }
-    //}
-    //void OnCollisionExit()
-    //{
-    //    transform.parent = null;
-    //}
     //void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.red;
@@ -152,7 +136,6 @@ public class PlayerContoller : MonoBehaviour
         }
 
         float moveSpeed = 0f;
-
         //プレイヤーの移動
         if (h != 0 && _animState.AbleMove)
         {

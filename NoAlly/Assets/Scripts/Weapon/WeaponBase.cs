@@ -18,15 +18,15 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     protected float _chargeLevel2 = 3f;
     [SerializeField, Header("武器の攻撃判定レイヤー")]
     protected LayerMask _enemyLayer = ~0;
+    [SerializeField,Header("武器のオーナー")]
+    protected WeaponOwner _owner = WeaponOwner.Player;
     [SerializeField, Header("武器の攻撃判定の中心点")]
     Transform _center = default;
-    [SerializeField,Header("武器のオーナー")]
-    WeaponOwner _owner = WeaponOwner.Player;
 
     [Tooltip("武器の攻撃判定箇所の大きさ")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
     [Tooltip("武器が変形中かどうか")]
-    protected bool _isDeformated = false;
+    protected WeaponDeformation _isDeformated = WeaponDeformation.None;
     [Tooltip("武器の斬撃エフェクト")]
     protected ParticleSystem _myParticleSystem = default;
     [Tooltip("")]
@@ -34,7 +34,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     [Tooltip("武器の属性")]
     ElementType _type;
 
-    public bool Deformated => _isDeformated;
+    public WeaponDeformation Deformated => _isDeformated;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -42,10 +42,10 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
 
     public virtual void Initialize(WeaponDataEntity weaponData)
     {
-        _rigitPower = weaponData.RigitPower;
-        _firePower = weaponData.FirePower;
-        _elekePower = weaponData.ElekePower;
-        _frozenPower = weaponData.FrozenPower;
+        _rigitPower = weaponData.RigitPower[(int)_isDeformated];
+        _firePower = weaponData.FirePower[(int)_isDeformated];
+        _elekePower = weaponData.ElekePower[(int)_isDeformated];
+        _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
         _myParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
     public virtual void WeaponAttackMovement() { }

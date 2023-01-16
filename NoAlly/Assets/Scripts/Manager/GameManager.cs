@@ -51,6 +51,7 @@ public class GameManager
         {
             case GameState.GameStart:
                 ChangedState(GameState.InGame);
+                state = GameState.InGame;
                 break;
             case GameState.InGame:
                 break;
