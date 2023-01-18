@@ -19,6 +19,10 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
     [Tooltip("PlayerAnimationState‚ðŠi”[‚·‚é•Ï”")]
     PlayerAnimationState _state = null;
 
+    public float ChargeLevel1 => _chargeLevel1;
+    public float ChargeLevel2 => _chargeLevel2;
+    public WeaponBase Base => _weaponBase;
+
     public virtual void WeaponChargeAttackMethod() { }
 
     public virtual void Initialize(PlayerContoller player,WeaponBase weaponBase)
@@ -37,13 +41,14 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
             {
                 case WeaponActionType.Attack:
                     _animator.SetTrigger("AttackTrigger");
-                    _animator.SetInteger("Attack",(int)weaponType);
+                    _animator.SetInteger("WeaponType",(int)weaponType);
                     break;
                 case WeaponActionType.Charging:
                     _chrageCount += Time.deltaTime;
+                    _animator.SetBool("Charge", true);
                     break;
                 case WeaponActionType.ChargeAttack:
-                    _animator.SetBool("Charge", true);
+                    _animator.SetBool("Charge", false);
                     break;
                 default:
                     break;

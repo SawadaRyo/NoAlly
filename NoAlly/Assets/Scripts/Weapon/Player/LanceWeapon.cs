@@ -20,23 +20,18 @@ public class LanceWeapon : CombatWeapon, IWeapon
     }
     public override void WeaponMode(ElementType type)
     {
-        base.WeaponMode(type);
-
         switch (type)
         {
             case ElementType.FROZEN:
                 _isDeformated = WeaponDeformation.Deformation;
                 _harfExtents = _pawerUpHarfExtents;
-                _rigitPower = _powerUpRigit;
-                _frozenPower = _powerUpFrozen;
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
                 _isDeformated = WeaponDeformation.None;
                 _harfExtents = _normalHarfExtents;
-                _rigitPower = _normalRigit;
-                _frozenPower = _normalFrozen;
                 break;
         }
+        base.WeaponMode(type);
     }
 }

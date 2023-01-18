@@ -18,8 +18,6 @@ public class BrastarWeapon : CombatWeapon, IWeapon
     }
     public override void WeaponMode(ElementType type)
     {
-        base.WeaponMode(type);
-
         switch (type)
         {
             case ElementType.ELEKE:
@@ -36,5 +34,6 @@ public class BrastarWeapon : CombatWeapon, IWeapon
                 _elekePower = _normalEleke;
                 break;
         }
+        base.WeaponMode(type);
     }
 }

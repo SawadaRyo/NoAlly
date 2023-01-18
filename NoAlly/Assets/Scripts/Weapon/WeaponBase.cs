@@ -25,6 +25,8 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
 
     [Tooltip("武器の攻撃判定箇所の大きさ")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
+    [Tooltip("この武器のデータ")]
+    protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.None;
     [Tooltip("武器の斬撃エフェクト")]
@@ -42,6 +44,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
 
     public virtual void Initialize(WeaponDataEntity weaponData)
     {
+        _weaponData = weaponData;
         _rigitPower = weaponData.RigitPower[(int)_isDeformated];
         _firePower = weaponData.FirePower[(int)_isDeformated];
         _elekePower = weaponData.ElekePower[(int)_isDeformated];
@@ -52,7 +55,12 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     public virtual void WeaponAttackMovement(Collider target) { }
     public virtual void WeaponMode(ElementType type) 
     {
+        _rigitPower = _weaponData.RigitPower[(int)_isDeformated];
+        _firePower = _weaponData.FirePower[(int)_isDeformated];
+        _elekePower = _weaponData.ElekePower[(int)_isDeformated];
+        _frozenPower = _weaponData.FrozenPower[(int)_isDeformated];
         _type = type;
+
     }
     public void AttackOfRenge(bool isAttack)
     {

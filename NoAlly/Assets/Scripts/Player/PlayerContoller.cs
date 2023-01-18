@@ -53,8 +53,8 @@ public class PlayerContoller : MonoBehaviour
     bool _slideWall = false;
 
     [Header("Animation")]
-    [Tooltip("Animationを取得する為の変数")]
-    Animator _animator;
+    [SerializeField,Tooltip("Animationを取得する為の変数")]
+    Animator _animator = null;
 
     [Header("Audio")]
     [SerializeField, Tooltip("ジャンプのサウンド")]
@@ -95,6 +95,8 @@ public class PlayerContoller : MonoBehaviour
             _h = Input.GetAxisRaw("Horizontal");
             _isDash = Input.GetButton("Dash");
             _isJump = Input.GetButtonDown("Jump");
+
+            JumpMethod(_isJump);
         }
     }
     void FixedUpdate()
@@ -103,7 +105,6 @@ public class PlayerContoller : MonoBehaviour
         {
             MoveMethod(_h, _isDash);
             WallJumpMethod(_isJump, _isDash);
-            JumpMethod(_isJump);
         }
     }
     //void OnDrawGizmos()
