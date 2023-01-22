@@ -6,6 +6,6 @@ using UnityEngine;
 [ExcelAsset]
 public class WeaponTable : ScriptableObject
 {
-	public List<WeaponDateEntity> WeaponData;
-	public List<WeaponDateEntity> ElementWeaponData;
+	public List<WeaponDataEntity> WeaponData;
+	public List<WeaponDataEntity> ElementWeaponData;
 }

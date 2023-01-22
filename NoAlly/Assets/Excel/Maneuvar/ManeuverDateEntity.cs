@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class ManeuverDateEntity
 {
-    public WeaponName Name;
+    public WeaponType Name;
     public int TargetId;
     public string ManeuverName;
     public int Level;
