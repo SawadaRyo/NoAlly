@@ -36,7 +36,7 @@ public class UAVTypeEnemy : EnemyBase
     {
         if (InSight())
         {
-            PlayerContoller player = InSight();
+            PlayerStatus player = InSight();
             var targetPos = player.transform.position + new Vector3(0f, 1.8f, 0f);
             transform.LookAt(targetPos);
             _distance = (targetPos - transform.position);

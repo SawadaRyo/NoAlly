@@ -5,59 +5,59 @@ using UnityEngine.UI;
 public class PlayerContoller : MonoBehaviour
 {
     [Header("Ground")]
-
-    [SerializeField, Tooltip("プレイヤーの移動速度")]
+    [SerializeField, Header("プレイヤーの移動速度")]
     float _speed = 5f;
-    [Tooltip("変化直前のプレイヤーの移動速度")]
-    float _beforeSpeed = 0f;
-    [SerializeField, Tooltip("ダッシュの倍率")]
+    [SerializeField, Header("ダッシュの倍率")]
     float _dashSpeed = 10f;
-    [SerializeField, Tooltip("プレイヤーの振り向き速度")]
+    [SerializeField, Header("プレイヤーの振り向き速度")]
     float _turnSpeed = 25f;
     [Tooltip("横移動のベクトル")]
     float _h;
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
+    [Tooltip("ダッシュ判定")]
     bool _dashChack = false;
     [Tooltip("プレイヤーカメラ")]
     Camera _playerCamera = null;
+    [Tooltip("Playerの向き")]
+    PlayerVec _playerVec;
 
     [Header("Jump")]
-    [SerializeField, Tooltip("プレイヤーのジャンプ力")]
+    [SerializeField, Header("プレイヤーのジャンプ力")]
     float _jumpPower = 5f;
-    [SerializeField, Tooltip("接地判定のRayの射程")]
+    [SerializeField, Header("接地判定のRayの射程")]
     float _graundDistance = 1f;
-    [SerializeField, Tooltip("接地判定のRayの射出点")]
+    [SerializeField, Header("接地判定のRayの射出点")]
     Transform _footPos;
-    [SerializeField, Tooltip("接地判定のSphierCastの半径")]
+    [SerializeField, Header("接地判定のSphierCastの半径")]
     float _isGroundRengeRadios = 1f;
-    [SerializeField, Tooltip("接地判定のLayerMask")]
+    [SerializeField, Header("接地判定のLayerMask")]
     LayerMask _groundMask = ~0;
     [Tooltip("ジャンプの入力判定")]
     bool _isJump = false;
 
     [Header("WallJump")]
-    [SerializeField, Tooltip("プレイヤーの壁キックの力")]
+    [SerializeField, Header("プレイヤーの壁キックの力")]
     float _wallJump = 7f;
     [SerializeField]
     float _wallJump2 = 7f;
-    [SerializeField, Tooltip("壁をずり落ちる速度")]
+    [SerializeField, Header("壁をずり落ちる速度")]
     float _wallSlideSpeed = 0.8f;
-    [SerializeField, Tooltip("壁の接触判定のRayの射程")]
+    [SerializeField, Header("壁の接触判定のRayの射程")]
     float _walldistance = 0.1f;
-    [SerializeField, Tooltip("壁の接触判定")]
+    [SerializeField, Header("壁の接触判定")]
     LayerMask _wallMask = ~0;
-    [SerializeField, Tooltip("接地判定のRayの射出点")]
+    [SerializeField, Header("接地判定のRayの射出点")]
     Transform _gripPos = null;
     [Tooltip("壁のずり落ち判定")]
     bool _slideWall = false;
 
     [Header("Animation")]
-    [SerializeField,Tooltip("Animationを取得する為の変数")]
+    [SerializeField, Header("Animationを取得する為の変数")]
     Animator _animator = null;
 
     [Header("Audio")]
-    [SerializeField, Tooltip("ジャンプのサウンド")]
+    [SerializeField, Header("ジャンプのサウンド")]
     AudioClip m_jumpSound;
     [Tooltip("オーディオを取得する為の変数")]
     AudioSource _audio;
@@ -73,10 +73,16 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("プレイヤーのステータス")]
     PlayerStatus _playerStatus = null;
 
-    public Animator PlayerAnimator => _animator;
-    public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-    public RaycastHit HitInfo => _hitInfo;
 
+    public Animator PlayerAnimator => _animator;
+    public Rigidbody Rb => _rb;
+    public PlayerVec Vec => _playerVec;
+    //public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
+    public enum PlayerVec
+    {
+        RIGHT,
+        LEFT,
+    }
 
     void Start()
     {
@@ -115,30 +121,33 @@ public class PlayerContoller : MonoBehaviour
     //    Gizmos.DrawRay(ray);
     //}
     //Playerの動きを処理が書かれた関数-------------------------------------//
-    /// <summary>プレイヤーの移動</summary>
+    /// <summary>
+    /// プレイヤーの移動
+    /// </summary>
     void MoveMethod(float h, bool dash)
     {
         //if (h != 0)
         //プレイヤーの方向転換
-        {
-            if (h > 0) h = _playerCamera.transform.right.x;
-            else if ((h < 0)) h = _playerCamera.transform.right.x * -1;
+        if (h > 0) h = _playerCamera.transform.right.x;
+        else if ((h < 0)) h = _playerCamera.transform.right.x * -1;
 
-            if (h == -1)
-            {
-                Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
-            }
-            else if (h == 1)
-            {
-                Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
-            }
+        if (h == -1)
+        {
+            Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
+            _playerVec = PlayerVec.LEFT;
         }
+        else if (h == 1)
+        {
+            Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
+            _playerVec = PlayerVec.RIGHT;
+        }
+
 
         float moveSpeed = 0f;
         //プレイヤーの移動
-        if (h != 0 && _animState.AbleMove)
+        if ( _animState.AbleMove)
         {
             if (IsGrounded())
             {
@@ -152,7 +161,7 @@ public class PlayerContoller : MonoBehaviour
                     moveSpeed = _speed;
                     _dashChack = false;
                 }
-                _beforeSpeed = moveSpeed;
+                //_beforeSpeed = moveSpeed;
             }
             else
             {
@@ -165,22 +174,26 @@ public class PlayerContoller : MonoBehaviour
                     moveSpeed = _speed;
                 }
             }
+
+            Vector3 normalVector = _hitInfo.normal;
+            Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
+            _velo.x = onPlane.x * moveSpeed;
+            _velo.y = onPlane.y * moveSpeed;
+            if (Mathf.Abs(_velo.y) <= 0.01f)
+            {
+                _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
+            }
+            else if (Mathf.Abs(_velo.y) > 0.01f)
+            {
+                _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
+            }
+            _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
         }
-        Vector3 normalVector = _hitInfo.normal;
-        Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
-        _velo.x = onPlane.x * moveSpeed;
-        _velo.y = onPlane.y * moveSpeed;
-        if (Mathf.Abs(_velo.y) <= 0.01f)
-        {
-            _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
-        }
-        else if (Mathf.Abs(_velo.y) > 0.01f)
-        {
-            _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
-        }
-        _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
+
     }
-    /// <summary>プレイヤーのジャンプ</summary>
+    /// <summary>
+    /// プレイヤーのジャンプ
+    /// </summary>
     void JumpMethod(bool jump)
     {
         //ジャンプの処理
@@ -192,7 +205,9 @@ public class PlayerContoller : MonoBehaviour
         _animator.SetBool("Jump", !IsGrounded());
 
     }
-    /// <summary>プレイヤーの壁ジャンプ</summary>
+    /// <summary>
+    /// プレイヤーの壁ジャンプ
+    /// </summary>
     void WallJumpMethod(bool jump, bool isDash)
     {
         _animator.SetBool("WallGrip", IsWalled());
@@ -223,7 +238,9 @@ public class PlayerContoller : MonoBehaviour
             _rb.velocity = new Vector3(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, -_wallSlideSpeed, float.MaxValue));
         }
     }
-    /// <summary>接壁判定</summary>
+    /// <summary>
+    /// 接壁判定
+    /// </summary>
     public bool IsWalled()
     {
         if (IsGrounded()) return false;
@@ -232,12 +249,14 @@ public class PlayerContoller : MonoBehaviour
         Ray rayRight = new Ray(isWallCenter, Vector3.right);
         Ray rayLeft = new Ray(isWallCenter, Vector3.left);
 
-        bool hitflg = Physics.Raycast(rayRight, out _hitInfo, _walldistance, _wallMask)
-        || Physics.Raycast(rayLeft, out _hitInfo, _walldistance, _wallMask);
+        bool hitflg = Physics.Raycast(rayRight, out _, _walldistance, _wallMask)
+        || Physics.Raycast(rayLeft, out _, _walldistance, _wallMask);
 
         return hitflg;
     }
-    /// <summary>接地判定</summary>
+    /// <summary>
+    /// 接地判定
+    /// </summary>
     bool IsGrounded()
     {
         Vector3 isGroundCenter = _footPos.transform.position;
@@ -258,11 +277,11 @@ public class PlayerContoller : MonoBehaviour
     {
         _audio.PlayOneShot(footSound);
     }
-    Vector3 NomarizedMoveVecter()
-    {
-        Vector3 refVecter = Vector3.zero;
-        return refVecter;
-    }
+    //Vector3 NomarizedMoveVecter()
+    //{
+    //    Vector3 refVecter = Vector3.zero;
+    //    return refVecter;
+    //}
 
     private void OnDrawGizmos()
     {

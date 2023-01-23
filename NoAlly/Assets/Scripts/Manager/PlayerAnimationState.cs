@@ -19,7 +19,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
     Animator _animator = default;
-    [Tooltip("WeaponEquipmentƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
+    [Tooltip("WeaponProcessingƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
     WeaponProcessing _weaponProcessing;
     [Tooltip("PlayerController‚ğŠi”[‚·‚é•Ï”")]
     PlayerContoller _playerContoller = null;
@@ -142,7 +142,22 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     {
         _onHit = !_onHit;
         StartCoroutine(_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit));
-        //_weaponEquipment.EquipeCombatWeapon.LoopJud(_onHit);
+        //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
+    }
+
+    void FinishAttackMove()
+    {
+        Vector3 vec = Vector3.zero;
+        switch (_playerContoller.Vec)
+        {
+            case PlayerContoller.PlayerVec.RIGHT:
+                vec = Vector3.right;
+                break;
+            case PlayerContoller.PlayerVec.LEFT:
+                vec = Vector3.left;
+                break;
+        }
+        _playerContoller.Rb.velocity = vec * 10;
     }
     void BulletFIre()
     {

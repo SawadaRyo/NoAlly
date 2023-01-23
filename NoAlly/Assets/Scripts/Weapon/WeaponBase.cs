@@ -12,16 +12,18 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     protected float _firePower = 0;
     [SerializeField, Header("武器の氷結攻撃力")]
     protected float _frozenPower = 0;
-    [SerializeField, Header("溜め攻撃第1段階")] 
+    [SerializeField, Header("溜め攻撃第1段階")]
     protected float _chargeLevel1 = 1f;
-    [SerializeField, Header("溜め攻撃第2段階")] 
+    [SerializeField, Header("溜め攻撃第2段階")]
     protected float _chargeLevel2 = 3f;
     [SerializeField, Header("武器の攻撃判定レイヤー")]
     protected LayerMask _enemyLayer = ~0;
-    [SerializeField,Header("武器のオーナー")]
+    [SerializeField, Header("武器のオーナー")]
     protected WeaponOwner _owner = WeaponOwner.Player;
     [SerializeField, Header("武器の攻撃判定の中心点")]
     Transform _center = default;
+    [SerializeField,Header("武器の斬撃エフェクト")]
+    protected ParticleSystem _myParticleSystem = default;
 
     [Tooltip("武器の攻撃判定箇所の大きさ")]
     protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
@@ -29,8 +31,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.None;
-    [Tooltip("武器の斬撃エフェクト")]
-    protected ParticleSystem _myParticleSystem = default;
     [Tooltip("")]
     bool _attack = false;
     [Tooltip("武器の属性")]
@@ -49,11 +49,14 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
         _firePower = weaponData.FirePower[(int)_isDeformated];
         _elekePower = weaponData.ElekePower[(int)_isDeformated];
         _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
-        _myParticleSystem = GetComponentInChildren<ParticleSystem>();
+        if (_myParticleSystem != null)
+        {
+            _myParticleSystem.Stop();
+        }
     }
     public virtual void WeaponAttackMovement() { }
     public virtual void WeaponAttackMovement(Collider target) { }
-    public virtual void WeaponMode(ElementType type) 
+    public virtual void WeaponMode(ElementType type)
     {
         _rigitPower = _weaponData.RigitPower[(int)_isDeformated];
         _firePower = _weaponData.FirePower[(int)_isDeformated];
@@ -74,9 +77,9 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
                 {
                     if (obj.TryGetComponent<IHitBehavorOfAttack>(out IHitBehavorOfAttack enemyHp))
                     {
-                        enemyHp.BehaviorOfHit(this,_type,_owner);
+                        enemyHp.BehaviorOfHit(this, _type, _owner);
                     }
-                    else if(obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
+                    else if (obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
                     {
                         hitObj.BehaviorOfHit(_type);
                     }

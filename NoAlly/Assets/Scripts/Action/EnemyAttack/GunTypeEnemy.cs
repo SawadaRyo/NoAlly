@@ -1,7 +1,6 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class GunTypeEnemy : EnemyBase, IObjectGenerator
 {
     #region フィールド / プロパティ 群
@@ -21,14 +20,15 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
 
     public override void Start()
     {
+
         base.Start();
         _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)WeaponOwner.Enemy);
         _bulletPool.SetCapacity(this, _bulletSize);
     }
 
-    void EnemeyRotate(PlayerContoller player)
+    void EnemeyRotate(Transform player)
     {
-        Vector3 _distance = (player.transform.position - this.transform.position).normalized;
+        Vector3 _distance = (player.position - this.transform.position).normalized;
         if (_distance.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
@@ -41,16 +41,16 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         }
     }
 
-    public override void EnemyAttack()
-    {
-        PlayerContoller player = InSight();
-        if (player)
-        {
-            EnemeyRotate(player);
-        }
-        _enemyAnimator.SetBool("Aiming", InSight());
-        StartCoroutine(RapidFire(InSight()));
-    }
+    //public override void EnemyAttack()
+    //{
+    //    PlayerContoller player = InSight();
+    //    if (player)
+    //    {
+    //        EnemeyRotate(player);
+    //    }
+    //    _enemyAnimator.SetBool("Aiming", InSight());
+    //    StartCoroutine(RapidFire(InSight()));
+    //}
     public override void Disactive()
     {
         base.Disactive();
@@ -70,4 +70,47 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
             yield return wait;
         }
     }
+    public override void EnemyAttack()
+    {
+
+        PlayerStatus player = InSight();
+        if (player)
+        {
+            EnemeyRotate(player.transform);
+        }
+        _enemyAnimator.SetBool("Aiming", InSight());
+        StartCoroutine(RapidFire(InSight()));
+    }
 }
+
+//class GunAttack : State
+//{
+//    PlayerContoller player = null;
+
+//    void EnemeyRotate(PlayerContoller player)
+//    {
+//        Vector3 _distance = (player.transform.position - Owner.transform.position).normalized;
+//        if (_distance.x == 1)
+//        {
+//            Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
+//            Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
+//        }
+//        else if (_distance.x == -1)
+//        {
+//            Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
+//            Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
+//        }
+//    }
+//    public override void EnemyAttack()
+//    {
+
+//        PlayerContoller player = InSight();
+//        if (player)
+//        {
+//            EnemeyRotate(player);
+//        }
+//        _enemyAnimator.SetBool("Aiming", InSight());
+//        StartCoroutine(RapidFire(InSight()));
+//    }
+
+//}

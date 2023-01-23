@@ -5,15 +5,16 @@ using UniRx;
 
 public class PlayerStatus : StatusBase
 {
-    
-
+    [Tooltip("オブジェクトの現在の必殺技ゲージ")]
+    protected FloatReactiveProperty _sap = null;
     public float MaxHP => _maxHP;
     public float MaxSAP => _maxSAP;
-    public FloatReactiveProperty SAP => _sap;
+    public IReadOnlyReactiveProperty<float> SAP => _sap;
 
     public override void Initialize()
     {
         base.Initialize();
+        _sap = new FloatReactiveProperty(0);
         _animator = gameObject.GetComponent<Animator>();
     }
 

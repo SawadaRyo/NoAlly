@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class WeaponAction : MonoBehaviour, IWeaponAction
 {
-    [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")] 
+    [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")]
     protected float _chargeLevel1 = 1f;
-    [SerializeField, Header("—­‚ßUŒ‚‘æ2’iŠK")] 
+    [SerializeField, Header("—­‚ßUŒ‚‘æ2’iŠK")]
     protected float _chargeLevel2 = 3f;
 
     [Tooltip("—­‚ßUŒ‚‚Ì—­‚ßŽžŠÔ")]
@@ -25,7 +25,7 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
 
     public virtual void WeaponChargeAttackMethod() { }
 
-    public virtual void Initialize(PlayerContoller player,WeaponBase weaponBase)
+    public virtual void Initialize(PlayerContoller player, WeaponBase weaponBase)
     {
         _weaponName = this.gameObject.name;
         _state = PlayerAnimationState.Instance;
@@ -33,22 +33,27 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
         _weaponBase = weaponBase;
     }
 
-    public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType)
+    public void WeaponAttack(WeaponActionType actionType, WeaponType weaponType)
     {
         if (_state.AbleInput)
         {
-            switch(actionType)
+            switch (actionType)
             {
                 case WeaponActionType.Attack:
                     _animator.SetTrigger("AttackTrigger");
-                    _animator.SetInteger("WeaponType",(int)weaponType);
+                    _animator.SetInteger("WeaponType", (int)weaponType);
                     break;
                 case WeaponActionType.Charging:
                     _chrageCount += Time.deltaTime;
                     _animator.SetBool("Charge", true);
                     break;
                 case WeaponActionType.ChargeAttack:
+                    if (_chrageCount >= _chargeLevel1)
+                    {
+                        _animator.SetTrigger("ChargeAttackTrigger");
+                    }
                     _animator.SetBool("Charge", false);
+                    ResetValue();
                     break;
                 default:
                     break;

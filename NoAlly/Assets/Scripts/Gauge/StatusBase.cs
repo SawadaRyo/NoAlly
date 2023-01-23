@@ -22,8 +22,6 @@ public class StatusBase : MonoBehaviour
     protected bool _living = true;
     [Tooltip("オブジェクトの現在のHP")]
     protected FloatReactiveProperty _hp;
-    [Tooltip("オブジェクトの現在の必殺技ゲージ")]
-    protected FloatReactiveProperty _sap = null;
     [Tooltip("無敵時間")]
     protected Interval _invincibleTime = null;
     [Tooltip("AudioSourceを格納する変数")]
@@ -32,15 +30,14 @@ public class StatusBase : MonoBehaviour
     protected Animator _animator;
 
     public bool Living => _living;
-    public bool IsInvincible => _invincibleTime.IsCountUp();
     public IReadOnlyReactiveProperty<float> HP => _hp;
+    bool Hitable => _invincibleTime.IsCountUp();
 
     
     public virtual void Initialize()
     {
         _living = true;
         _hp = new FloatReactiveProperty(_maxHP);
-        _sap = new FloatReactiveProperty(0);
         _invincibleTime = new Interval(_invincibleTimeValue);
         _animator = GetComponentInParent<Animator>();
         if (!GetComponentInChildren<DifanseParameter>())
@@ -52,7 +49,7 @@ public class StatusBase : MonoBehaviour
 
     public virtual void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type,WeaponOwner owner)
     {
-        if (_owner == owner) return;
+        if (_owner == owner || !Hitable) return;
 
         float baseDamage = weaponStatus.RigitPower * difanse.RigitDefensePercentage;
         float elemantDamage = 0;

@@ -17,7 +17,7 @@ public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
         base.DamageCalculation(weaponStatus, difanse, type, owner);
         if (_hp.Value <= 0)
         {
-            _enemyBase.Disactive();
+            _enemyBase.EnemyStateMachine.Dispatch((int)EnemyState.Death);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using State = StateMachine<EnemyBase>.State;
 
@@ -17,16 +18,14 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     [Tooltip("このオブジェクトの生死判定")]
     bool _isActive = true;
     [Tooltip("ステートマシン")]
-    StateMachine<EnemyBase> _stateMachine = null;
+    protected StateMachine<EnemyBase> _stateMachine = null;
+
 
     /// <summary>
     /// このオブジェクトの生死判定のプロパティ(読み取り専用)
     /// </summary>
     public bool IsActive => _isActive;
-    public float Radius => _radius;
-    public Transform Center => _center;
-    public Animator EnemyAnimator => _enemyAnimator;
-    protected int EnemyCurrentState<TState>(TState state) where int => 
+    public StateMachine<EnemyBase> EnemyStateMachine => _stateMachine;
 
     public abstract void EnemyAttack();
     public virtual void Start()
@@ -37,25 +36,23 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
     {
         if (_isActive)
         {
-            EnemyAttack();
+            _stateMachine.Update();
         }
     }
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerExit(Collider other) { }
 
-    protected PlayerContoller InSight()
+    public PlayerStatus InSight()
     {
-        //_center = transform.position;
         Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
-            if (s.gameObject.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+            if (s.gameObject.TryGetComponent<PlayerStatus>(out PlayerStatus player))
             {
                 return player;
             }
         }
         return null;
-
     }
 
     /// <summary>
@@ -103,15 +100,27 @@ public abstract class EnemyBase : MonoBehaviour, IObjectPool
         Attack,
         Death
     }
-}
-
-class Death : State
-{
-    protected override void OnEnter(State prevState)
+    class SearchEnemy : State
     {
-        base.OnEnter(prevState);
-        Owner.Disactive();
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+            if (Owner.InSight())
+            {
+                Owner.EnemyStateMachine.Dispatch((int)EnemyState.Attack);
+            }
+        }
+    }
+    class Death : State
+    {
+        protected override void OnEnter(State prevState)
+        {
+            base.OnEnter(prevState);
+            Owner.Disactive();
+        }
     }
 }
+
+
 
 
