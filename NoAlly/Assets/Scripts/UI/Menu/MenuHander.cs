@@ -57,21 +57,24 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             {
                 if ((CommandType)y != CommandType.ElEMENT)
                 {
-                    _allButtons[y, x] = new MenuCommandButton(false, buttonArray[length], (WeaponType)x, (CommandType)y);
-                    _selectedButtons[y] = new MenuCommandButton(false, null, (WeaponType)x, (CommandType)y);
+                    _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (WeaponType)x, (CommandType)y);
+                    _selectedButtons[y] = new MenuCommandButton(MenuCommandButton.ButtonState.None, null, (WeaponType)x, (CommandType)y);
                 }
                 else
                 {
-                    _allButtons[y, x] = new MenuCommandButton(false, buttonArray[length], (ElementType)x, (CommandType)y);
-                    _selectedButtons[y] = new MenuCommandButton(false, null, (ElementType)x, (CommandType)y);
+                    _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (ElementType)x, (CommandType)y);
+                    _selectedButtons[y] = new MenuCommandButton(MenuCommandButton.ButtonState.None, null, (ElementType)x, (CommandType)y);
                 }
                 _allButtons[y, x].Command.enabled = false;
                 length++;
             }
         }
         _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.MainWeapon.Value.Type];
+        _selectedButtons[(int)CommandType.MAIN].Disaide(true);
         _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.SubWeapon.Value.Type];
+        _selectedButtons[(int)CommandType.SUB].Disaide(true);
         _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
+        _selectedButtons[(int)CommandType.ElEMENT].Disaide(true);
 
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
@@ -106,8 +109,10 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 MenuCommandButton b = SelectButton(h, v);
                 if (b.Command)
                 {
+                    _targetButton.Selected(false);
                     _targetButton = b;
-                    _targetButton.Command.Select();
+                    _targetButton.Selected(true);
+                    //_targetButton.Command.Select();
                 }
             }
 
@@ -118,7 +123,9 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         }
     }
 
-    /// <summary>メニュー画面の展開</summary>
+    /// <summary>
+    /// メニュー画面の展開
+    /// </summary>
     /// <param name="isOpen"></param>
     void IsManuExpand(bool isOpen)
     {
@@ -179,7 +186,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         return _allButtons[_crossV, _crossH];
     }
     /// <summary>
-    /// 選択されたボタンの色を変える関数
+    /// 選択されたボタンに登録された関数を実行する関数
     /// </summary>
     /// <param name="targetButton"></param>
     void DisideCommand(MenuCommandButton targetButton)
@@ -194,28 +201,27 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             case CommandType.MAIN:
                 if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.SUB].TypeOfWeapon)
                 {
-                    var beforeWeapon = _selectedButtons[(int)CommandType.MAIN];
-                    _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.white;
-                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeWeapon.TypeOfWeapon];
+                    var beforeMainWeapon = _selectedButtons[(int)CommandType.MAIN];
+                    _selectedButtons[(int)CommandType.SUB].Disaide(false);
+                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeMainWeapon.TypeOfWeapon];
+                    _selectedButtons[(int)CommandType.SUB].Disaide(true);
                 }
                 break;
             case CommandType.SUB:
                 if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.MAIN].TypeOfWeapon)
                 {
-                    var beforeWeapon = _selectedButtons[(int)CommandType.SUB];
-                    _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.white;
-                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeWeapon.TypeOfWeapon];
+                    var beforeSubWeapon = _selectedButtons[(int)CommandType.SUB];
+                    _selectedButtons[(int)CommandType.MAIN].Disaide(false);
+                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeSubWeapon.TypeOfWeapon];
+                    _selectedButtons[(int)CommandType.MAIN].Disaide(true);
                 }
                 break;
             default:
                 break;
         }
 
-        targetButton.Command.onClick.Invoke();
+        targetButton.Disaide(true);
         _selectedButtons[(int)targetButton.TypeOfCommand] = targetButton;
-        _selectedButtons[(int)CommandType.MAIN].Command.image.color = Color.yellow;
-        _selectedButtons[(int)CommandType.SUB].Command.image.color = Color.yellow;
-        _selectedButtons[(int)CommandType.ElEMENT].Command.image.color = Color.yellow;
     }
     /// <summary>
     /// メニュー画面展開時に呼ぶ関数

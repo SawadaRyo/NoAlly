@@ -1,37 +1,108 @@
+using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuCommandButton
 {
-    bool _isSelected;
+    ButtonState _state;
+    Animator _animator;
     Button _commund;
     WeaponType _weaponName;
+    Color[] _buttonColors = new Color[]
+    #region
+    {
+        Color.white,
+        Color.red,
+        Color.yellow
+    };
+    #endregion
     ElementType _elementType;
     CommandType _type;
 
-    public bool IsSelected => _isSelected;
+    public ButtonState State => _state;
     public Button Command => _commund;
     public WeaponType TypeOfWeapon => _weaponName;
     public ElementType TypeOfElement => _elementType;
     public CommandType TypeOfCommand => _type;
 
-    public MenuCommandButton(bool isSelected,Button button)
+    public MenuCommandButton(ButtonState state, Button button)
     {
-        _isSelected = isSelected;
+        _state = state;
         _commund = button;
+        _animator = _commund.GetComponent<Animator>();
     }
-    public MenuCommandButton(bool isSelected, Button button, WeaponType name, CommandType type)
+    public MenuCommandButton(ButtonState state, Button button, WeaponType name, CommandType type)
     {
-        _isSelected = isSelected;
+        _state = state;
         _commund = button;
+        if (_commund != null)
+        {
+            _animator = _commund.GetComponent<Animator>();
+        }
         _weaponName = name;
         _type = type;
     }
-    public MenuCommandButton(bool isSelected, Button button, ElementType element, CommandType type)
+    public MenuCommandButton(ButtonState state, Button button, ElementType element, CommandType type)
     {
-        _isSelected = isSelected;
+        _state = state;
         _commund = button;
+        if (_commund != null)
+        {
+            _animator = _commund.GetComponent<Animator>();
+        }
         _elementType = element;
         _type = type;
+    }
+
+    public void Selected(bool isSelect)
+    {
+        _commund.Select();
+        if (isSelect)
+        {
+            if(_state != ButtonState.Disided)
+            {
+                _state = ButtonState.Selected;
+            }
+            _commund.image.color = _buttonColors[1];
+            _animator.enabled = isSelect;
+            _animator.SetBool("IsSelect", isSelect);
+        }
+        else
+        {
+            switch (_state)
+            {
+                case ButtonState.Selected:
+                    _commund.image.color = _buttonColors[0];
+                    break;
+                case ButtonState.Disided:
+                    _commund.image.color = _buttonColors[2];
+                    break;
+                default:
+                    break;
+            }
+            _state = ButtonState.None;
+            _animator.SetBool("IsSelect", isSelect);
+        }
+    }
+    public void Disaide(bool isDisaide)
+    {
+
+        //_animator.SetBool("IsDisaide", isDisaide);
+        if (isDisaide)
+        {
+            _commund.onClick.Invoke();
+            _commund.image.color = _buttonColors[2];
+        }
+        else
+        {
+            _commund.image.color = _buttonColors[0];
+        }
+        _state = ButtonState.Disided;
+    }
+    public enum ButtonState:int
+    {
+        None,
+        Selected,
+        Disided
     }
 }
 
