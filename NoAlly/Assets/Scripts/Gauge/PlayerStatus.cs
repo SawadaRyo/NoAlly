@@ -15,10 +15,9 @@ public class PlayerStatus : StatusBase
     {
         base.Initialize();
         _sap = new FloatReactiveProperty(0);
-        _animator = gameObject.GetComponent<Animator>();
     }
 
-    public override void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type, WeaponOwner owner)
+    public override void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type, HitOwner owner)
     {
         base.DamageCalculation(weaponStatus, difanse, type, owner);
         if (_hp.Value <= 0)
@@ -33,7 +32,7 @@ public class PlayerStatus : StatusBase
     /// プレイヤーのHP回復
     /// </summary>
     /// <param name="hpPuls"></param>
-    public void HPPuls(int hpPuls)
+    public void HPPuls(float hpPuls)
     {
         _hp.Value += hpPuls;
         if (_hp.Value > _maxHP)
@@ -45,7 +44,7 @@ public class PlayerStatus : StatusBase
     /// プレイヤーのSAP回復
     /// </summary>
     /// <param name="sapPuls"></param>
-    public void SAPPuls(int sapPuls)
+    public void SAPPuls(float sapPuls)
     {
         _sap.Value += sapPuls;
         if (_sap.Value > _maxSAP)

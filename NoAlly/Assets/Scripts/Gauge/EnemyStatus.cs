@@ -12,7 +12,7 @@ public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
         _enemyBase = GetComponentInParent<EnemyBase>();
     }
 
-    public override void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type, WeaponOwner owner)
+    public override void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type, HitOwner owner)
     {
         base.DamageCalculation(weaponStatus, difanse, type, owner);
         if (_hp.Value <= 0)
