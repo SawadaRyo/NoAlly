@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 4090961174200254233}
   - component: {fileID: 5659052011077418252}
   - component: {fileID: 4524717755166957369}
+  - component: {fileID: 7855262841521817100}
   m_Layer: 0
   m_Name: Crate
   m_TagString: Untagged
@@ -144,5 +145,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _getSound: {fileID: 0}
-  _renderer: []
+  _weaponVisual: {fileID: 7855262841521817100}
   _SAPPlusParameter: 4
+--- !u!114 &7855262841521817100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077454577738951429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84aef1101f0eb5c418159124bbdf3022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponCollider:
+  - {fileID: 5659052011077418252}
+  _weaponRenderer:
+  - {fileID: 4090961174200254233}
+  _weaponAnimator: {fileID: 0}

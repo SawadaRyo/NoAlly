@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8492243000590066596}
   m_Layer: 0
   m_Name: 'CameraCollider '
-  m_TagString: Untagged
+  m_TagString: CameraCol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -614,6 +614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraCollider: {fileID: 8492243000590066596}
+  _stage: 0
 --- !u!65 &1504373933021318436
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -625,8 +626,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 10, z: 5}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Size: {x: 4, y: 5, z: 5}
+  m_Center: {x: 0, y: 7.5, z: 0}
 --- !u!1 &6633330497415423861
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,9 +884,49 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5677320821175164840}
     m_Modifications:
+    - target: {fileID: 1918181078103680845, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1918181078103680845, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1918181078103680845, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3987023448057744526, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987023448057744526, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_PlaneDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5463574069049647565, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: _rotObj
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928285126835197559, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928285126835197559, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928285126835197559, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928285126835197559, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -285.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928285126835197559, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -230.3599
       objectReference: {fileID: 0}
     - target: {fileID: 9061166435851570434, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
       propertyPath: m_RootOrder
@@ -934,6 +975,14 @@ PrefabInstance:
     - target: {fileID: 9061166435851570435, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
       propertyPath: m_Name
       value: Elevator
+      objectReference: {fileID: 0}
+    - target: {fileID: 9061166437696196498, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9061166437696196498, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66e881bb020ede44cb7287be3351fc02, type: 3}
