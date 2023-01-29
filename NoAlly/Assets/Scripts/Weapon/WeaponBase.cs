@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public abstract class WeaponBase : MonoBehaviour, IWeapon
+public abstract class WeaponBase : ObjectVisual, IWeapon
 {
     [SerializeField, Header("武器の物理攻撃力")]
     protected float _rigitPower = 5;
@@ -19,7 +19,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     [SerializeField, Header("武器の攻撃判定レイヤー")]
     protected LayerMask _enemyLayer = ~0;
     [SerializeField, Header("武器のオーナー")]
-    protected WeaponOwner _owner = WeaponOwner.Player;
+    protected HitOwner _owner = HitOwner.Player;
     [SerializeField, Header("武器の攻撃判定の中心点")]
     Transform _center = default;
     [SerializeField,Header("武器の斬撃エフェクト")]
@@ -49,10 +49,6 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
         _firePower = weaponData.FirePower[(int)_isDeformated];
         _elekePower = weaponData.ElekePower[(int)_isDeformated];
         _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
-        if (_myParticleSystem != null)
-        {
-            _myParticleSystem.Stop();
-        }
     }
     public virtual void WeaponAttackMovement() { }
     public virtual void WeaponAttackMovement(Collider target) { }

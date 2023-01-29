@@ -5,29 +5,29 @@ using UniRx;
 
 public class StatusBase : MonoBehaviour
 {
-    [SerializeField, Tooltip("ダメージサウンド")]
-    protected AudioClip _damageSound;
     [SerializeField, Tooltip("無敵時間の値")]
     float _invincibleTimeValue = 1f;
     [SerializeField, Tooltip("HPの上限")]
     protected float _maxHP = 5; 
     [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
     protected float _maxSAP = 20;
+    [SerializeField, Tooltip("ダメージサウンド")]
+    protected AudioClip _damageSound;
     [SerializeField,Header("このクラスのオーナー")]
-    WeaponOwner _owner = WeaponOwner.NONE;
+    HitOwner _owner = HitOwner.NONE;
 
 
 
     [Tooltip("オブジェクトの生死判定")]
     protected bool _living = true;
+    [Tooltip("Animatorの格納変数")]
+    protected Animator _animator;
     [Tooltip("オブジェクトの現在のHP")]
     protected FloatReactiveProperty _hp;
     [Tooltip("無敵時間")]
     protected Interval _invincibleTime = null;
     [Tooltip("AudioSourceを格納する変数")]
     protected AudioSource _audioSource = null;
-    [Tooltip("Animatorの格納変数")]
-    protected Animator _animator;
 
     public bool Living => _living;
     public IReadOnlyReactiveProperty<float> HP => _hp;
@@ -39,15 +39,13 @@ public class StatusBase : MonoBehaviour
         _living = true;
         _hp = new FloatReactiveProperty(_maxHP);
         _invincibleTime = new Interval(_invincibleTimeValue);
-        _animator = GetComponentInParent<Animator>();
-        if (!GetComponentInChildren<DifanseParameter>())
+        if (!GetComponentInChildren<HItParameter>())
         {
-            Debug.LogError("HitAttckがありません");
+            Debug.LogError("当たり判定がありません");
         }
-        StartCoroutine(_invincibleTime.StartCountDown());
     }
 
-    public virtual void DamageCalculation(WeaponBase weaponStatus, DifanseParameter difanse, ElementType type,WeaponOwner owner)
+    public virtual void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type,HitOwner owner)
     {
         if (_owner == owner || !Hitable) return;
 

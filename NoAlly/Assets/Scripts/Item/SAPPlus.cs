@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SAPPlus : ItemBase
 {
-    [SerializeField] int _SAPPlusParameter = 4;
-    public override void Activate(Collider other,PlayerStatus gauge)
+    public override void Activate(HItParameter gauge)
     {
-        gauge.SAPPuls(_SAPPlusParameter);
+        base.Activate(gauge);
+        gauge.BehaviorOfHit(this);
     }
 }

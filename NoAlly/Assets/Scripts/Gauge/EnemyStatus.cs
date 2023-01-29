@@ -9,7 +9,8 @@ public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
     public override void Initialize()
     {
         base.Initialize();
-        _enemyBase = GetComponentInParent<EnemyBase>();
+        _enemyBase = GetComponent<EnemyBase>();
+        _animator = _enemyBase.EnemyAnimator;
     }
 
     public override void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type, HitOwner owner)

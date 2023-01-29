@@ -147,7 +147,7 @@ public class PlayerContoller : MonoBehaviour
 
         float moveSpeed = 0f;
         //ÉvÉåÉCÉÑÅ[ÇÃà⁄ìÆ
-        if ( _animState.AbleMove)
+        if (_animState.AbleMove)
         {
             if (IsGrounded())
             {
@@ -200,7 +200,7 @@ public class PlayerContoller : MonoBehaviour
         if (jump && IsGrounded() && _animState.AbleMove)
         {
             //m_audio.PlayOneShot(m_jumpSound);
-            _rb.AddForce(0f, _jumpPower, 0f, ForceMode.Impulse);
+            _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
         }
         _animator.SetBool("Jump", !IsGrounded());
 

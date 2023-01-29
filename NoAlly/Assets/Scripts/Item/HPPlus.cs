@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class HPPlus : ItemBase
 {
-    [SerializeField] int _HPPlusParameter = 4;
-    public override void Activate(Collider other,PlayerStatus gauge)
+    public override void Activate(HItParameter gauge)
     {
-        gauge.HPPuls(_HPPlusParameter);
-
+        base.Activate(gauge);
+        gauge.BehaviorOfHit(this);
     }
 }

@@ -138,14 +138,15 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
         }).AddTo(this);
     }
+
+    //AnimationEvent�ŌĂԊ֐�
     void AttackToCombatWeapon()
     {
         _onHit = !_onHit;
         StartCoroutine(_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit));
         //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
     }
-
-    void FinishAttackMove()
+    void FinishAttackMove(int moveSpeed)
     {
         Vector3 vec = Vector3.zero;
         switch (_playerContoller.Vec)
@@ -157,11 +158,11 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                 vec = Vector3.left;
                 break;
         }
-        _playerContoller.Rb.velocity = vec * 10;
+        _playerContoller.Rb.velocity = vec * moveSpeed;
     }
-    void BulletFIre()
+    void BulletFire()
     {
-        //_weaponEquipment.EquipeWeapon.WeaponChargeAttackMethod();
-        //_weaponEquipment.EquipeWeapon.ResetValue();
+        _weaponProcessing.TargetWeapon.Action.WeaponChargeAttackMethod();
+        _weaponProcessing.TargetWeapon.Action.ResetValue();
     }
 }

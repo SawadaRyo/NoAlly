@@ -20,7 +20,10 @@ public class CombatWeapon : WeaponBase
     {
         base.Initialize(weaponData);
         _weaponAnimator = GetComponent<Animator>();
-        _myParticleSystem.Stop();
+        if (_myParticleSystem != null)
+        {
+            _myParticleSystem.Stop();
+        }
     }
     //protected void BladeState()
     //{

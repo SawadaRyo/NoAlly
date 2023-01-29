@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 public class GunTypeEnemy : EnemyBase, IObjectGenerator
 {
-    #region フィールド / プロパティ 群
     [SerializeField] int _bulletSize = 10;
     [SerializeField] Transform _muzzleTrans;
     [SerializeField] Transform _poolTrans;
@@ -16,17 +15,14 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
     public Transform GenerateTrance => _muzzleTrans;
     public Vector3 Distance => _distance;
 
-    #endregion
-
     public override void Start()
     {
-
         base.Start();
-        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)WeaponOwner.Enemy);
+        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)HitOwner.Enemy);
         _bulletPool.SetCapacity(this, _bulletSize);
     }
 
-    void EnemeyRotate(Transform player)
+    public void EnemeyRotate(Transform player)
     {
         Vector3 _distance = (player.position - this.transform.position).normalized;
         if (_distance.x == 1)
@@ -51,24 +47,10 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
     //    _enemyAnimator.SetBool("Aiming", InSight());
     //    StartCoroutine(RapidFire(InSight()));
     //}
-    public override void Disactive()
+    
+    public override void DisactiveForInstantiate<T>(T Owner)
     {
-        base.Disactive();
-        _enemyAnimator.SetBool("Death", true);
-    }
-    public void InsBullet()
-    {
-        var bullet = _bulletPool.Instantiate((int)WeaponOwner.Enemy);
-        bullet.transform.position = _muzzleTrans.position;
-    }
-    IEnumerator RapidFire(bool sightIn)
-    {
-        var wait = new WaitForSeconds(_interval);
-        while (sightIn)
-        {
-            _enemyAnimator.SetTrigger("Fire");
-            yield return wait;
-        }
+        base.DisactiveForInstantiate(Owner);
     }
     public override void EnemyAttack()
     {
@@ -78,10 +60,54 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         {
             EnemeyRotate(player.transform);
         }
-        _enemyAnimator.SetBool("Aiming", InSight());
+        EnemyAnimator.SetBool("Aiming", InSight());
         StartCoroutine(RapidFire(InSight()));
     }
+    public void InsBullet()
+    {
+        var bullet = _bulletPool.Instantiate((int)HitOwner.Enemy);
+        bullet.transform.position = _muzzleTrans.position;
+    }
+    public IEnumerator RapidFire(PlayerStatus player)
+    {
+        var wait = new WaitForSeconds(_interval);
+        while (player)
+        {
+            EnemyAnimator.SetTrigger("Fire");
+            yield return wait;
+        }
+    }
 }
+
+class GunAttack : Attack
+{
+    GunTypeEnemy _enemy;
+    public override void Initalize<TEnemy>(TEnemy enemy)
+    {
+        base.Initalize(enemy);
+        _enemy = enemy as GunTypeEnemy;
+    }
+
+    protected override void OnEnter(StateMachine<EnemyBase>.State prevState)
+    {
+        base.OnEnter(prevState);
+        Owner.EnemyAnimator.SetBool("Aiming", true);
+        _enemy.StartCoroutine(_enemy.RapidFire(Owner.Player));
+    }
+    protected override void OnExit(StateMachine<EnemyBase>.State nextState)
+    {
+        base.OnExit(nextState);
+        Owner.EnemyAnimator.SetBool("Aiming", false);
+    }
+    public override void AttackBehaviour()
+    {
+        if (Owner.Player)
+        {
+            _enemy.EnemeyRotate(Owner.Player.transform);
+        }
+    }
+}
+
 
 //class GunAttack : State
 //{

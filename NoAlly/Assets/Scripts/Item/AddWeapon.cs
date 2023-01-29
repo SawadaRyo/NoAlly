@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AddWeapon : ItemBase
 {
-    public override void Activate(Collider other)
+    public override void Activate()
     {
         throw new System.NotImplementedException();
     }

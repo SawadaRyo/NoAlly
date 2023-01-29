@@ -13,8 +13,6 @@ public class BulletBase : WeaponBase, IObjectPool
     float __intervalTime = 0f;
     [SerializeField, Header("íeÇÃRigitbody")]
     Rigidbody _rb = default;
-    [SerializeField, Header("íeÇÃObjectVisual")]
-    ObjectVisual _thisObject = null;
 
     [Tooltip("égópíÜÇ©îªíËÇ∑ÇÈïœêî")]
     bool _isActive = false;
@@ -60,7 +58,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.forward;
         this.transform.position = _muzzleForwardPos;
-        _thisObject.ActiveWeapon(_isActive);
+        ActiveObject(_isActive);
     }
 
     public void Disactive()
@@ -68,7 +66,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _isActive = false;
         _rb.isKinematic = true;
         __intervalTime = 0f;
-        _thisObject.ActiveWeapon(_isActive);
+        ActiveObject(_isActive);
     }
 
     public void DisactiveForInstantiate<T>(T owner) where T : IObjectGenerator
@@ -77,7 +75,7 @@ public class BulletBase : WeaponBase, IObjectPool
         _rb = GetComponent<Rigidbody>();
         _muzzlePos = owner.GenerateTrance;
         _velo = _rb.velocity;
-        _thisObject.ActiveWeapon(_isActive);
+        ActiveObject(_isActive);
     }
 }
 

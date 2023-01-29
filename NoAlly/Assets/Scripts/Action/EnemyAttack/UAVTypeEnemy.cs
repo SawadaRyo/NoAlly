@@ -59,7 +59,7 @@ public class UAVTypeEnemy : EnemyBase
                     _hit = true;
                 }
             }
-            _enemyAnimator.SetBool("InSight",InSight());
+            _objectAnimator.SetBool("InSight",InSight());
         }
         else
         {

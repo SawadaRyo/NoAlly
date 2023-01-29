@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHitBehavorOfAttack
 {
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type, WeaponOwner owner);
+    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type, HitOwner owner);
 }

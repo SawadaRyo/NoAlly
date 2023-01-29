@@ -46,3 +46,4 @@ public enum StageSetPos
     Flont,
     Back
 }
+
