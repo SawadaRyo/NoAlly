@@ -5,22 +5,26 @@ using UniRx;
 
 public class PlayerStatus : StatusBase
 {
+    [Tooltip("オブジェクトの現在のHP")]
+    protected FloatReactiveProperty _hpReactiveProperty;
     [Tooltip("オブジェクトの現在の必殺技ゲージ")]
-    protected FloatReactiveProperty _sap = null;
+    protected FloatReactiveProperty _sapReactiveProperty = null;
     public float MaxHP => _maxHP;
     public float MaxSAP => _maxSAP;
-    public IReadOnlyReactiveProperty<float> SAP => _sap;
+    public IReadOnlyReactiveProperty<float> SAP => _sapReactiveProperty;
+    public IReadOnlyReactiveProperty<float> HP => _hpReactiveProperty;
 
     public override void Initialize()
     {
         base.Initialize();
-        _sap = new FloatReactiveProperty(0);
+        _hpReactiveProperty = new FloatReactiveProperty(_maxHP);
+        _sapReactiveProperty = new FloatReactiveProperty(0);
     }
 
-    public override void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type, HitOwner owner)
+    public override void Damage(WeaponBase weaponStatus, HitParameter difanse, ElementType type)
     {
-        base.DamageCalculation(weaponStatus, difanse, type, owner);
-        if (_hp.Value <= 0)
+        _hpReactiveProperty.Value -= base.DamageCalculation(weaponStatus, difanse, type);
+        if (_hpReactiveProperty.Value <= 0)
         {
             CharacterDead(false);
         }
@@ -34,10 +38,10 @@ public class PlayerStatus : StatusBase
     /// <param name="hpPuls"></param>
     public void HPPuls(float hpPuls)
     {
-        _hp.Value += hpPuls;
-        if (_hp.Value > _maxHP)
+        _hpReactiveProperty.Value += hpPuls;
+        if (_hpReactiveProperty.Value > _maxHP)
         {
-            _hp.Value = _maxHP;
+            _hpReactiveProperty.Value = _maxHP;
         }
     }
     /// <summary>
@@ -46,10 +50,10 @@ public class PlayerStatus : StatusBase
     /// <param name="sapPuls"></param>
     public void SAPPuls(float sapPuls)
     {
-        _sap.Value += sapPuls;
-        if (_sap.Value > _maxSAP)
+        _sapReactiveProperty.Value += sapPuls;
+        if (_sapReactiveProperty.Value > _maxSAP)
         {
-            _sap.Value = _maxSAP;
+            _sapReactiveProperty.Value = _maxSAP;
         }
     }
 
@@ -59,13 +63,12 @@ public class PlayerStatus : StatusBase
     /// <param name="useSAP"></param>
     public void UseSAP(float useSAP)
     {
-        _sap.Value -= useSAP;
+        _sapReactiveProperty.Value -= useSAP;
     }
 
     void CharacterDead(bool living)
     {
         _living = living;
-        gameObject.GetComponent<CapsuleCollider>().enabled = living;
         _animator.SetBool("Death", !living);
     }
 
@@ -74,8 +77,8 @@ public class PlayerStatus : StatusBase
     /// </summary>
     void OnDisable()
     {
-        _hp.Dispose();
-        _sap.Dispose();
+        _hpReactiveProperty.Dispose();
+        _sapReactiveProperty.Dispose();
     }
 }
 

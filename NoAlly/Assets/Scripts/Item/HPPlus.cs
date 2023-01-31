@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HPPlus : ItemBase
 {
-    public override void Activate(HItParameter gauge)
+    public override void Activate(HitParameter gauge)
     {
         base.Activate(gauge);
         gauge.BehaviorOfHit(this);

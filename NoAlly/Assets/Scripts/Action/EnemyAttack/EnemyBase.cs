@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using State = StateMachine<EnemyBase>.State;
 
-public abstract class EnemyBase : ObjectVisual, IObjectPool
+public abstract class EnemyBase : ObjectVisual
 {
     [SerializeField, Header("索敵範囲")]
     protected float _radius = 5f;
@@ -11,16 +11,9 @@ public abstract class EnemyBase : ObjectVisual, IObjectPool
     [SerializeField, Header("索敵範囲の中心")]
     protected Transform _center = default;
 
-    [Tooltip("このオブジェクトの生死判定")]
-    bool _isActive = true;
     [Tooltip("ステートマシン")]
     protected StateMachine<EnemyBase> _stateMachine = null;
 
-
-    /// <summary>
-    /// このオブジェクトの生死判定のプロパティ(読み取り専用)
-    /// </summary>
-    public bool IsActive => _isActive;
     public Animator EnemyAnimator => _objectAnimator;
     public PlayerStatus Player => InSight();
     /// <summary>
@@ -48,7 +41,7 @@ public abstract class EnemyBase : ObjectVisual, IObjectPool
         Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
-            if (s.gameObject.TryGetComponent<PlayerStatus>(out PlayerStatus player))
+            if (s.gameObject.TryGetComponent(out PlayerStatus player))
             {
                 return player;
             }
@@ -58,55 +51,41 @@ public abstract class EnemyBase : ObjectVisual, IObjectPool
     /// <summary>
     /// オブジェクト有効時に呼ぶ関数
     /// </summary>
-    public virtual void Create()
+    public override void Create()
     {
-        _isActive = true;
-        ActiveObject(_isActive);
+        base.Create();
         _objectAnimator.SetBool("Death", !_isActive);
     }
     /// <summary>
     /// オブジェクト非有効時に呼ぶ関数
     /// </summary>
-    public virtual void Disactive()
+    public override void Disactive()
     {
-        _isActive = false;
-        ActiveObject(_isActive);
+        base.Disactive();
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
     /// <summary>
     /// オブジェクト生成時に呼ぶ関数
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TOwner"></typeparam>
     /// <param name="Owner"></param>
-    public virtual void DisactiveForInstantiate<T>(T Owner) where T : IObjectGenerator
+    public override void DisactiveForInstantiate<TOwner>(TOwner Owner)
     {
-        _isActive = false;
-        ActiveObject(_isActive);
+        base.DisactiveForInstantiate(Owner);
         _stateMachine = new StateMachine<EnemyBase>(this);
         {
-            //プレイヤーを見つけた時プレイヤーを攻撃
-            _stateMachine.AddTransition<Search, Attack>((int)EnemyState.Attack);
-            //プレイヤーを見失ったとき攻撃を中止
-            _stateMachine.AddTransition<Attack,Search>((int)EnemyState.Saerching);
             //HPが0になったとき死亡
-            _stateMachine.AddAnyTransition<Death>((int)EnemyState.Death);
+            _stateMachine.AddAnyTransition<Death>((int)StateOfEnemy.Death);
             _stateMachine.Start<Search>();
         }
-
-
     }
+
+
     public virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_center.position, _radius);
-    }
-    protected enum EnemyState : int
-    {
-        None,
-        Saerching,
-        Attack,
-        Death
     }
 }
 public class Search : State
@@ -114,22 +93,15 @@ public class Search : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (Owner.InSight())
+        if (Owner.Player)
         {
-            Owner.EnemyStateMachine.Dispatch((int)EnemyState.Attack);
+            Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Attack);
         }
     }
 }
 public class Attack : State
 {
     public virtual void AttackBehaviour() { }
-    public virtual void Initalize<TEnemy>(TEnemy enemy) where TEnemy : EnemyBase { }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-        AttackBehaviour();
-    }
 }
 public class Death : State
 {

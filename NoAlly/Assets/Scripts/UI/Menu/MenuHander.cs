@@ -96,7 +96,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         if (Input.GetButtonDown("MenuSwitch"))
         {
             _menuIsOpen = !_menuIsOpen;
-            IsManuExpand(_menuIsOpen);
+            IsManuExtend(_menuIsOpen);
         }
 
         if (_menuIsOpen)
@@ -127,7 +127,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     /// メニュー画面の展開
     /// </summary>
     /// <param name="isOpen"></param>
-    void IsManuExpand(bool isOpen)
+    void IsManuExtend(bool isOpen)
     {
         //ToDo メニューの開閉にアニメーションを加える
         foreach (Image gpi in _gamePanelsImages)

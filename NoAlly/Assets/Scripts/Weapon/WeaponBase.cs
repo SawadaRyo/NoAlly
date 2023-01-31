@@ -22,11 +22,9 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     protected HitOwner _owner = HitOwner.Player;
     [SerializeField, Header("武器の攻撃判定の中心点")]
     Transform _center = default;
-    [SerializeField,Header("武器の斬撃エフェクト")]
+    [SerializeField, Header("武器の斬撃エフェクト")]
     protected ParticleSystem _myParticleSystem = default;
 
-    [Tooltip("武器の攻撃判定箇所の大きさ")]
-    protected Vector3 _harfExtents = new Vector3(0.25f, 1.2f, 0.1f);
     [Tooltip("この武器のデータ")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
@@ -50,8 +48,17 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         _elekePower = weaponData.ElekePower[(int)_isDeformated];
         _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
     }
-    public virtual void WeaponAttackMovement() { }
-    public virtual void WeaponAttackMovement(Collider target) { }
+    public virtual void WeaponAttackMovement(Collider target)
+    {
+        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp))
+        {
+            characterHp.BehaviorOfHit(this, _type, _owner);
+        }
+        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj))
+        {
+            hitObj.BehaviorOfHit(_type);
+        }
+    }
     public virtual void WeaponMode(ElementType type)
     {
         _rigitPower = _weaponData.RigitPower[(int)_isDeformated];
@@ -61,37 +68,15 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         _type = type;
 
     }
-    public void AttackOfRenge(bool isAttack)
+    void OnTriggerEnter(Collider other)
     {
-        if (isAttack)
-        {
-            //ToDoここの処理を3Dではなく2Dにする
-            Collider[] objectsInRenge = Physics.OverlapBox(_center.position, _harfExtents, Quaternion.identity, _enemyLayer);
-            if (objectsInRenge.Length > 0)
-            {
-                foreach (Collider obj in objectsInRenge)
-                {
-                    if (obj.TryGetComponent<IHitBehavorOfAttack>(out IHitBehavorOfAttack enemyHp))
-                    {
-                        enemyHp.BehaviorOfHit(this, _type, _owner);
-                    }
-                    else if (obj.TryGetComponent<IHitBehavorOfGimic>(out IHitBehavorOfGimic hitObj))
-                    {
-                        hitObj.BehaviorOfHit(_type);
-                    }
-                }
-            }
-        }
+        WeaponAttackMovement(other);
     }
     public IEnumerator LoopJud(bool isAttack)
     {
         _attack = isAttack;
         _myParticleSystem.Play();
-        while (_attack)
-        {
-            AttackOfRenge(_attack);
-            yield return null;
-        }
+        yield return !_attack;
         _myParticleSystem.Stop();
     }
     public float ChargePower(ElementType top, float magnification)

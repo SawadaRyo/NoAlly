@@ -3,15 +3,22 @@ using System.Collections;
 using UnityEngine;
 public class GunTypeEnemy : EnemyBase, IObjectGenerator
 {
-    [SerializeField] int _bulletSize = 10;
-    [SerializeField] Transform _muzzleTrans;
-    [SerializeField] Transform _poolTrans;
-    [SerializeField] EnemyBullet _bulletPrefab;
-    Vector3 _distance = Vector3.zero;
-    const float _turnSpeed = 10f;
+    [SerializeField,Header("生成する弾")] 
+    EnemyBullet _bulletPrefab;
+    [SerializeField,Header("生成する弾の数")]
+    int _bulletSize = 10;
+    [SerializeField,Header("弾の連射速度")] 
     float _interval = 1f;
-    ObjectPool<EnemyBullet> _bulletPool = new ObjectPool<EnemyBullet>();
+    [SerializeField,Header("弾のマズル")] 
+    Transform _muzzleTrans;
+    [SerializeField,Header("弾の貯蓄地点")] 
+    Transform _poolTrans;
 
+    const float _turnSpeed = 10f;
+    ObjectPool<EnemyBullet> _bulletPool = new ObjectPool<EnemyBullet>();
+    Vector3 _distance = Vector3.zero;
+
+    public float Interval => _interval;
     public Transform GenerateTrance => _muzzleTrans;
     public Vector3 Distance => _distance;
 
@@ -21,7 +28,10 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)HitOwner.Enemy);
         _bulletPool.SetCapacity(this, _bulletSize);
     }
-
+    /// <summary>
+    /// オブジェクトの回転制御
+    /// </summary>
+    /// <param name="player">向く方向</param>
     public void EnemeyRotate(Transform player)
     {
         Vector3 _distance = (player.position - this.transform.position).normalized;
@@ -37,73 +47,55 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         }
     }
 
-    //public override void EnemyAttack()
-    //{
-    //    PlayerContoller player = InSight();
-    //    if (player)
-    //    {
-    //        EnemeyRotate(player);
-    //    }
-    //    _enemyAnimator.SetBool("Aiming", InSight());
-    //    StartCoroutine(RapidFire(InSight()));
-    //}
-    
     public override void DisactiveForInstantiate<T>(T Owner)
     {
         base.DisactiveForInstantiate(Owner);
-    }
-    public override void EnemyAttack()
-    {
-
-        PlayerStatus player = InSight();
-        if (player)
-        {
-            EnemeyRotate(player.transform);
-        }
-        EnemyAnimator.SetBool("Aiming", InSight());
-        StartCoroutine(RapidFire(InSight()));
+        //プレイヤーを見つけた時プレイヤーを攻撃
+        _stateMachine.AddTransition<Search, GunAttack>((int)StateOfEnemy.Attack);
+        //プレイヤーを見失ったとき攻撃を中止
+        _stateMachine.AddTransition<GunAttack, Search>((int)StateOfEnemy.Saerching);
     }
     public void InsBullet()
     {
         var bullet = _bulletPool.Instantiate((int)HitOwner.Enemy);
         bullet.transform.position = _muzzleTrans.position;
     }
-    public IEnumerator RapidFire(PlayerStatus player)
+
+    public override void EnemyAttack()
     {
-        var wait = new WaitForSeconds(_interval);
-        while (player)
-        {
-            EnemyAnimator.SetTrigger("Fire");
-            yield return wait;
-        }
+        throw new NotImplementedException();
     }
 }
 
 class GunAttack : Attack
 {
-    GunTypeEnemy _enemy;
-    public override void Initalize<TEnemy>(TEnemy enemy)
-    {
-        base.Initalize(enemy);
-        _enemy = enemy as GunTypeEnemy;
-    }
-
     protected override void OnEnter(StateMachine<EnemyBase>.State prevState)
     {
         base.OnEnter(prevState);
         Owner.EnemyAnimator.SetBool("Aiming", true);
-        _enemy.StartCoroutine(_enemy.RapidFire(Owner.Player));
+        Owner.StartCoroutine(RapidFire((GunTypeEnemy)Owner));
+    }
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+        if (!Owner.Player)
+        {
+            Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Saerching);
+        }
     }
     protected override void OnExit(StateMachine<EnemyBase>.State nextState)
     {
         base.OnExit(nextState);
         Owner.EnemyAnimator.SetBool("Aiming", false);
     }
-    public override void AttackBehaviour()
+    public IEnumerator RapidFire<T>(T enemy) where T : GunTypeEnemy
     {
-        if (Owner.Player)
+        var wait = new WaitForSeconds(enemy.Interval);
+        while (Owner.Player)
         {
-            _enemy.EnemeyRotate(Owner.Player.transform);
+            enemy.EnemeyRotate(Owner.Player.transform);
+            Owner.EnemyAnimator.SetTrigger("Fire");
+            yield return wait;
         }
     }
 }

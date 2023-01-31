@@ -1,8 +1,10 @@
 using UnityEngine;
 using UniRx;
 
-public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
+public class EnemyStatus: StatusBase //敵の体力を管理するスクリプト
 {
+    [Tooltip("敵のHP")]
+    float _hp = 0;
     [Tooltip("このオブジェクトにアタッチされているEnemyBaseを取得する変数")]
     EnemyBase _enemyBase = null;
 
@@ -11,14 +13,15 @@ public class EnemyStatus : StatusBase //敵の体力を管理するスクリプト
         base.Initialize();
         _enemyBase = GetComponent<EnemyBase>();
         _animator = _enemyBase.EnemyAnimator;
+        _hp = _maxHP;
     }
 
-    public override void DamageCalculation(WeaponBase weaponStatus, HItParameter difanse, ElementType type, HitOwner owner)
+    public override void Damage(WeaponBase weaponStatus, HitParameter difanse, ElementType type)
     {
-        base.DamageCalculation(weaponStatus, difanse, type, owner);
-        if (_hp.Value <= 0)
+        _hp -= base.DamageCalculation(weaponStatus, difanse, type);
+        if (_hp <= 0)
         {
-            _enemyBase.EnemyStateMachine.Dispatch((int)EnemyState.Death);
+            _enemyBase.EnemyStateMachine.Dispatch((int)StateOfEnemy.Death);
         }
     }
 }

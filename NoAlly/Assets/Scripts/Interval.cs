@@ -24,16 +24,14 @@ public class Interval
     {
         _time = 0;
     }
-    public IEnumerator StartCountDown()
+
+    public bool IsCountUpColltin()
     {
-        while (true)
+        if (_time < _interval)
         {
-            if (IsCountUp())
-            {
-                ResetTimer();
-                break;
-            }
-            yield return null;
+            return false;
         }
+        return true;
     }
+    
 }

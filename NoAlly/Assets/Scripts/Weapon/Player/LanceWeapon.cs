@@ -14,9 +14,6 @@ public class LanceWeapon : CombatWeapon, IWeapon
         base.Initialize(weapon);
         _normalRigit = _rigitPower;
         _normalFrozen = _frozenPower;
-        _normalHarfExtents = new Vector3(0.1f, 0.8f, 1f);
-        _pawerUpHarfExtents = new Vector3(0.45f, 1.1f, 1f);
-        _harfExtents = _normalHarfExtents;
     }
     public override void WeaponMode(ElementType type)
     {
@@ -24,12 +21,11 @@ public class LanceWeapon : CombatWeapon, IWeapon
         {
             case ElementType.FROZEN:
                 _isDeformated = WeaponDeformation.Deformation;
-                _harfExtents = _pawerUpHarfExtents;
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
                 _isDeformated = WeaponDeformation.None;
-                _harfExtents = _normalHarfExtents;
+                _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
         base.WeaponMode(type);

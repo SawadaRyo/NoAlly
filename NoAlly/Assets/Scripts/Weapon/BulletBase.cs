@@ -5,17 +5,14 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using System.Linq;
 
-public class BulletBase : WeaponBase, IObjectPool
+public class BulletBase : WeaponBase
 {
-    [SerializeField,Header("’e‚Ì‘¬“x")]
+    [SerializeField, Header("’e‚Ì‘¬“x")]
     float _bulletSpeed = 0;
     [SerializeField, Header("’e‚ÌŽc—¯ŽžŠÔ")]
     float __intervalTime = 0f;
     [SerializeField, Header("’e‚ÌRigitbody")]
     Rigidbody _rb = default;
-
-    [Tooltip("Žg—p’†‚©”»’è‚·‚é•Ï”")]
-    bool _isActive = false;
     [Tooltip("”­ŽË‚³‚ê‚é’¼‘O‚Ì‰ŠúˆÊ’u")]
     Transform _muzzlePos = null;
     [Tooltip("”­ŽË‚³‚ê‚é•ûŒü")]
@@ -24,8 +21,6 @@ public class BulletBase : WeaponBase, IObjectPool
     Vector3 _velo = Vector3.zero;
     [Tooltip("’e‚Ì‘®«")]
     ElementType _weaponEquipment;
-
-    public bool IsActive => _isActive;
 
     public void FixedUpdate()
     {
@@ -39,43 +34,35 @@ public class BulletBase : WeaponBase, IObjectPool
             Disactive();
         }
     }
-    void OnTriggerEnter(Collider other)
+    public override void WeaponAttackMovement(Collider target)
     {
-        if (other.gameObject.TryGetComponent(out IHitBehavorOfAttack enemyHP))
+        base.WeaponAttackMovement(target);
         {
-            enemyHP.BehaviorOfHit(this, _weaponEquipment, _owner);
+            Disactive();
         }
-        else if (other.gameObject.TryGetComponent(out IHitBehavorOfGimic hitObj))
-        {
-            hitObj.BehaviorOfHit(_weaponEquipment);
-        }
-        Disactive();
     }
 
-    public void Create()
+    public override void Create()
     {
-        _isActive = true;
+        base.Create();
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.forward;
         this.transform.position = _muzzleForwardPos;
-        ActiveObject(_isActive);
     }
 
-    public void Disactive()
+    public override void Disactive()
     {
-        _isActive = false;
+        base.Disactive();
         _rb.isKinematic = true;
         __intervalTime = 0f;
-        ActiveObject(_isActive);
     }
-
-    public void DisactiveForInstantiate<T>(T owner) where T : IObjectGenerator
+    public override void DisactiveForInstantiate<TOwner>(TOwner Owner)
     {
-        _isActive = false;
+        base.DisactiveForInstantiate(Owner);
+
         _rb = GetComponent<Rigidbody>();
-        _muzzlePos = owner.GenerateTrance;
         _velo = _rb.velocity;
-        ActiveObject(_isActive);
+        _muzzlePos = Owner.GenerateTrance;
     }
 }
 
