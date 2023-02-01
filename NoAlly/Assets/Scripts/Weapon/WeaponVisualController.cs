@@ -1,0 +1,55 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UniRx;
+
+public class WeaponVisualController : MonoBehaviour
+{
+    [SerializeField,Tooltip("武器のプレハブ")]
+    ObjectVisual[] _weaponPrefabs = new ObjectVisual[Enum.GetNames(typeof(WeaponType)).Length - 1];
+
+    [Tooltip("メイン武器")]
+    WeaponDatas _mainWeapon;
+    [Tooltip("サブ配置")]
+    WeaponDatas _subWeapon;
+
+
+    public void Initialize(WeaponDatas[] weapons, WeaponDatas firstMainWeapon, WeaponDatas firstSubWeapon)
+    {
+        //武器のプレハブを生成
+        for (int index = 0; index < weapons.Length; index++)
+        {
+            _weaponPrefabs[index].Disactive();
+        }
+        _mainWeapon = firstMainWeapon;
+        _subWeapon = firstSubWeapon;
+    }
+    /// <summary>
+    /// メイン武器・サブ武器の装備をボタンで切り替える関数
+    /// </summary>
+    public (bool, bool) SwichWeapon(bool weaponSwitch)
+    {
+        _mainWeapon.WeaponEnabled = !weaponSwitch;
+        _subWeapon.WeaponEnabled = weaponSwitch;
+        _weaponPrefabs[(int)_mainWeapon.Type].ActiveObject(_mainWeapon.WeaponEnabled);
+        _weaponPrefabs[(int)_subWeapon.Type].ActiveObject(_subWeapon.WeaponEnabled);
+
+        return (_mainWeapon.WeaponEnabled, _subWeapon.WeaponEnabled);
+    }
+
+    public void SetEquipment(WeaponDatas weapon, CommandType type)
+    {
+        _weaponPrefabs[(int)_mainWeapon.Type] .Disactive();
+        _weaponPrefabs[(int)_subWeapon.Type].Disactive();
+        switch (type)
+        {
+            case CommandType.MAIN:
+                _mainWeapon = weapon;
+                break;
+            case CommandType.SUB:
+                _subWeapon = weapon;
+                break;
+        }
+    }
+}

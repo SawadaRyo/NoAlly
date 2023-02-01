@@ -72,12 +72,17 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     {
         WeaponAttackMovement(other);
     }
-    public IEnumerator LoopJud(bool isAttack)
+    public void LoopJud(bool isAttack)
     {
-        _attack = isAttack;
-        _myParticleSystem.Play();
-        yield return !_attack;
-        _myParticleSystem.Stop();
+        if(isAttack)
+        {
+            _myParticleSystem.Play();
+        }
+        else
+        {
+            _myParticleSystem.Stop();
+        }
+        Array.ForEach(_objectCollider, x => x.enabled = isAttack);
     }
     public float ChargePower(ElementType top, float magnification)
     {

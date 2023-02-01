@@ -14,7 +14,7 @@ public abstract class StatusBase : ObjectVisual
     [SerializeField, Tooltip("ダメージサウンド")]
     protected AudioClip _damageSound;
     [SerializeField, Header("このクラスのオーナー")]
-    HitOwner _owner = HitOwner.NONE;
+    protected HitOwner _owner = HitOwner.NONE;
 
 
 

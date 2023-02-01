@@ -22,10 +22,7 @@ public abstract class EnemyBase : ObjectVisual
     public StateMachine<EnemyBase> EnemyStateMachine => _stateMachine;
 
     public abstract void EnemyAttack();
-    public virtual void Start()
-    {
-
-    }
+    public virtual void Start() { }
     public void FixedUpdate()
     {
         if (_isActive)

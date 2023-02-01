@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
 {
-    [SerializeField,Tooltip("")] 
+    [SerializeField,Tooltip("UŒ‚—Í")] 
     float _power = 3;
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("‘¬“x")] 
     float _speed = 2;
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("‰Á‘¬“x")] 
     float _moveMagnification = 2f;
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("UŒ‚”ÍˆÍ")] 
     float _attackRadius = 1.6f;
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("UŒ‚”ÍˆÍ‚Ì’†S")] 
     Transform _attackPos = default;
     [SerializeField, Tooltip("")] 
     LayerMask _fieldLayer = ~0;

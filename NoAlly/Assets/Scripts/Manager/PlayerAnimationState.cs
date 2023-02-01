@@ -143,7 +143,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     void AttackToCombatWeapon()
     {
         _onHit = !_onHit;
-        StartCoroutine(_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit));
+        _weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
         //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
     }
     void FinishAttackMove(int moveSpeed)
