@@ -28,7 +28,7 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     [Tooltip("この武器のデータ")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
-    protected WeaponDeformation _isDeformated = WeaponDeformation.None;
+    protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
     [Tooltip("")]
     bool _attack = false;
     [Tooltip("武器の属性")]

@@ -24,7 +24,7 @@ public class BrastarWeapon : CombatWeapon, IWeapon
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
-                _isDeformated = WeaponDeformation.None;
+                _isDeformated = WeaponDeformation.NONE;
                 _rigitPower = _normalRigit;
                 _elekePower = _normalEleke;
                 break;

@@ -34,7 +34,15 @@ public enum HitOwner
 
 public enum WeaponDeformation
 {
-    None = 0,
+    NONE = 0,
     Deformation = 1
 }
+
+public enum PlayerClimbWall
+{
+    NONE,
+    RIGHT,
+    LEFT,
+}
+
 

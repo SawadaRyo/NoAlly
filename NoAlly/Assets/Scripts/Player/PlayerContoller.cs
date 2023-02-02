@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -58,20 +60,24 @@ public class PlayerContoller : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField, Header("ジャンプのサウンド")]
-    AudioClip m_jumpSound;
+    AudioClip _jumpSound;
     [Tooltip("オーディオを取得する為の変数")]
     AudioSource _audio;
 
+    [Tooltip("壁キックのインターバル")]
+    bool _wallKicking = false;
     [Tooltip("PlayerAnimationStateを格納する変数")]
     PlayerAnimationState _animState;
     [Tooltip("Rigidbodyコンポーネントの取得")]
     Rigidbody _rb;
-    [Tooltip("プレイヤーの移動ベクトルを取得")]
-    Vector3 _velo = Vector3.zero;
-    [Tooltip("接触しているオブジェクトの情報")]
-    RaycastHit _hitInfo;
     [Tooltip("プレイヤーのステータス")]
     PlayerStatus _playerStatus = null;
+    [Tooltip("プレイヤーの移動ベクトルを取得")]
+    Vector3 _velo = Vector3.zero;
+    [Tooltip("プレイヤーの移動ベクトルを取得")]
+    Vector3 _wallVec = Vector3.zero;
+    [Tooltip("接触しているオブジェクトの情報")]
+    RaycastHit _hitInfo;
 
 
     public Animator PlayerAnimator => _animator;
@@ -144,12 +150,11 @@ public class PlayerContoller : MonoBehaviour
             _playerVec = PlayerVec.RIGHT;
         }
 
-
         float moveSpeed = 0f;
         //プレイヤーの移動
         if (_animState.AbleMove)
         {
-            if (IsGrounded())
+            if (IsGrounded() && IsWalled() == PlayerClimbWall.NONE)
             {
                 if (dash)
                 {
@@ -163,19 +168,23 @@ public class PlayerContoller : MonoBehaviour
                 }
                 //_beforeSpeed = moveSpeed;
             }
-            else
+            else if (!IsGrounded() && IsWalled() == PlayerClimbWall.NONE)
             {
                 if (_dashChack)
                 {
                     moveSpeed = _dashSpeed;
                 }
-                else if (!_dashChack || IsWalled())
+                else if (!_dashChack || IsWalled() != PlayerClimbWall.NONE)
                 {
                     moveSpeed = _speed;
                 }
             }
 
             Vector3 normalVector = _hitInfo.normal;
+            if (_wallKicking)
+            {
+                h = 0;
+            }
             Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
             _velo.x = onPlane.x * moveSpeed;
             _velo.y = onPlane.y * moveSpeed;
@@ -210,20 +219,24 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     void WallJumpMethod(bool jump, bool isDash)
     {
-        _animator.SetBool("WallGrip", IsWalled());
+        _animator.SetBool("WallGrip", IsWalled() != PlayerClimbWall.NONE);
         if (IsGrounded())
         {
             _slideWall = false;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
-        else if (IsWalled())
+        else if (IsWalled() != PlayerClimbWall.NONE)
         {
             _slideWall = true;
             if (_dashChack) _dashChack = false;
-            _h = 0;
             if (jump)
             {
+                StartCoroutine(WallKick());
+                _audio.PlayOneShot(_jumpSound);
+                Vector3 vec = transform.up + _wallVec * 2f;
+                if (_isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
+                else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
                 _animator.SetTrigger("WallJump");
             }
         }
@@ -241,17 +254,27 @@ public class PlayerContoller : MonoBehaviour
     /// <summary>
     /// 接壁判定
     /// </summary>
-    public bool IsWalled()
+    public PlayerClimbWall IsWalled()
     {
-        if (IsGrounded()) return false;
+        Debug.Log(_h);
+        if (IsGrounded()) return PlayerClimbWall.NONE;
+        else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
 
         Vector3 isWallCenter = _gripPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left);
+        Ray rayRight = new Ray(isWallCenter, Vector3.right + Vector3.up);
+        Ray rayLeft = new Ray(isWallCenter, Vector3.left + Vector3.up);
 
-        bool hitflg = Physics.Raycast(rayRight, out _, _walldistance, _wallMask)
-        || Physics.Raycast(rayLeft, out _, _walldistance, _wallMask);
-
+        PlayerClimbWall hitflg = PlayerClimbWall.NONE;
+        if (Physics.Raycast(rayRight, out _, _walldistance, _wallMask))
+        {
+            _wallVec = Vector3.left;
+            hitflg = PlayerClimbWall.RIGHT;
+        }
+        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask))
+        {
+            _wallVec = Vector3.right;
+            hitflg |= PlayerClimbWall.LEFT;
+        }
         return hitflg;
     }
     /// <summary>
@@ -261,16 +284,20 @@ public class PlayerContoller : MonoBehaviour
     {
         Vector3 isGroundCenter = _footPos.transform.position;
         Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _, _graundDistance, _groundMask);
         return hitFlg;
+    }
+
+    IEnumerator WallKick()
+    {
+        _wallKicking = true;
+        yield return new WaitForSeconds(0.5f);
+        _wallKicking = false;
     }
     //AnimatorEventで呼ぶ関数----------------------------------------------//
     void WallJump()
     {
-        _audio.PlayOneShot(m_jumpSound);
-        Vector3 vec = transform.up + _hitInfo.normal;
-        if (_isDash) _rb.AddForce(vec * _wallJump2, ForceMode.Impulse);
-        else _rb.AddForce(vec * _wallJump, ForceMode.Impulse);
+
     }
     //TODO:効果音やBGMはSoundManagerで管理する
     void FootSound(AudioClip footSound)
@@ -287,5 +314,7 @@ public class PlayerContoller : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
+        Gizmos.DrawRay(_gripPos.position, (Vector3.right + Vector3.up) * _walldistance);
+        Gizmos.DrawRay(_gripPos.position, (Vector3.left + Vector3.up) * _walldistance);
     }
 }

@@ -24,7 +24,7 @@ public class LanceWeapon : CombatWeapon, IWeapon
                 _weaponAnimator.SetBool("IsOpen", true);
                 break;
             default:
-                _isDeformated = WeaponDeformation.None;
+                _isDeformated = WeaponDeformation.NONE;
                 _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
