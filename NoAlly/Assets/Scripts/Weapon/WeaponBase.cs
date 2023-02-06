@@ -68,6 +68,11 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         _type = type;
 
     }
+    public override void ActiveObject(bool stats)
+    {
+        base.ActiveObject(stats);
+        Array.ForEach(_objectCollider, x => x.enabled = false);
+    }
     void OnTriggerEnter(Collider other)
     {
         WeaponAttackMovement(other);
@@ -82,32 +87,10 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         {
             _myParticleSystem.Stop();
         }
-        Array.ForEach(_objectCollider, x => x.enabled = isAttack);
+        Debug.Log(_objectCollider[0]);
+        Array.ForEach(this._objectCollider, x => x.enabled = isAttack);
     }
-    public float ChargePower(ElementType top, float magnification)
-    {
-        float refPower = 0;
-        switch (top)
-        {
-            case ElementType.RIGIT:
-                refPower = _rigitPower;
-                break;
-            case ElementType.ELEKE:
-                refPower = _enemyLayer;
-                break;
-            case ElementType.FIRE:
-                refPower = _firePower;
-                break;
-            case ElementType.FROZEN:
-                refPower = _frozenPower;
-                break;
-        }
-        if (magnification < 1)
-        {
-            magnification = 1;
-        }
-        return refPower * magnification;
-    }
+   
 }
 
 

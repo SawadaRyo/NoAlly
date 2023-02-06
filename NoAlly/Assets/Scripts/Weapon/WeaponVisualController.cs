@@ -7,7 +7,7 @@ using UniRx;
 public class WeaponVisualController : MonoBehaviour
 {
     [SerializeField,Tooltip("武器のプレハブ")]
-    ObjectVisual[] _weaponPrefabs = new ObjectVisual[Enum.GetNames(typeof(WeaponType)).Length - 1];
+    WeaponBase[] _weaponPrefabs = new WeaponBase[Enum.GetNames(typeof(WeaponType)).Length - 1];
 
     [Tooltip("メイン武器")]
     WeaponDatas _mainWeapon;

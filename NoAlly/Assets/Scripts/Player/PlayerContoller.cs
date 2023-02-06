@@ -15,6 +15,8 @@ public class PlayerContoller : MonoBehaviour
     float _turnSpeed = 25f;
     [Tooltip("横移動のベクトル")]
     float _h;
+    [Tooltip("縦移動のベクトル")]
+    float _v;
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
     [Tooltip("ダッシュ判定")]
@@ -88,6 +90,7 @@ public class PlayerContoller : MonoBehaviour
     {
         RIGHT,
         LEFT,
+        UP
     }
 
     void Start()
@@ -105,6 +108,7 @@ public class PlayerContoller : MonoBehaviour
         if (GameManager.Instance.IsGame == GameState.InGame && _playerStatus.Living)
         {
             _h = Input.GetAxisRaw("Horizontal");
+            _v = Input.GetAxisRaw("Vertical");
             _isDash = Input.GetButton("Dash");
             _isJump = Input.GetButtonDown("Jump");
 
@@ -115,6 +119,7 @@ public class PlayerContoller : MonoBehaviour
     {
         if (GameManager.Instance.IsGame == GameState.InGame)
         {
+            RotateMethod(_h, _v);
             MoveMethod(_h, _isDash);
             WallJumpMethod(_isJump, _isDash);
         }
@@ -126,11 +131,8 @@ public class PlayerContoller : MonoBehaviour
     //    Ray ray = new Ray(isGroundCenter, Vector3.right);
     //    Gizmos.DrawRay(ray);
     //}
-    //Playerの動きを処理が書かれた関数-------------------------------------//
-    /// <summary>
-    /// プレイヤーの移動
-    /// </summary>
-    void MoveMethod(float h, bool dash)
+
+    void RotateMethod(float h, float v)
     {
         //if (h != 0)
         //プレイヤーの方向転換
@@ -150,6 +152,21 @@ public class PlayerContoller : MonoBehaviour
             _playerVec = PlayerVec.RIGHT;
         }
 
+        if(v == 1)
+        {
+            Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
+            _playerVec = PlayerVec.UP;
+        }
+    }
+
+    //Playerの動きを処理が書かれた関数-------------------------------------//
+    /// <summary>
+    /// プレイヤーの移動
+    /// </summary>
+    void MoveMethod(float h, bool dash)
+    {
+        
         float moveSpeed = 0f;
         //プレイヤーの移動
         if (_animState.AbleMove)
@@ -284,14 +301,14 @@ public class PlayerContoller : MonoBehaviour
     {
         Vector3 isGroundCenter = _footPos.transform.position;
         Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _, _graundDistance, _groundMask);
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);
         return hitFlg;
     }
 
     IEnumerator WallKick()
     {
         _wallKicking = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         _wallKicking = false;
     }
     //AnimatorEventで呼ぶ関数----------------------------------------------//

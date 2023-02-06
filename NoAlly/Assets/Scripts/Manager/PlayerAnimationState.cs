@@ -157,6 +157,8 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             case PlayerContoller.PlayerVec.LEFT:
                 vec = Vector3.left;
                 break;
+            default:
+                break;
         }
         _playerContoller.Rb.velocity = vec * moveSpeed;
     }

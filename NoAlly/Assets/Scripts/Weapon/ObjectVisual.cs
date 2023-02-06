@@ -22,7 +22,7 @@ public class ObjectVisual: MonoBehaviour,IObjectPool
 
     public bool IsActive => _isActive;
 
-    public void ActiveObject(bool stats)
+    public virtual void ActiveObject(bool stats)
     {
         if (_objectAnimator != null)
         {
