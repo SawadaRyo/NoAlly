@@ -1,23 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public abstract class DoorSwitchBase : MonoBehaviour
 {
-    Door _parentDoor = null;
 
-    public abstract void ObjectAction();
+    protected BoolReactiveProperty _isLock = null;
 
-    public virtual void SetUp(Door door)
+    public IReadOnlyReactiveProperty<bool> IsLock => _isLock;
+
+    public void Initalizer()
     {
-        _parentDoor = door;
+        _isLock = new BoolReactiveProperty(false);
     }
-    void FixedUpdate()
+    public virtual void ObjectAction() { }
+    protected virtual void DoorLock()
     {
-        ObjectAction();
+        _isLock.Value = true;
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.TryGetComponent(out WeaponBase playerWeapon))
+        {
+            if (playerWeapon.Owner == HitOwner.Player)
+            {
+                DoorLock();
+            }
+        }
     }
 }

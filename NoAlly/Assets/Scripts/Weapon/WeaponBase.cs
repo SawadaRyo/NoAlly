@@ -35,6 +35,7 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     ElementType _type;
 
     public WeaponDeformation Deformated => _isDeformated;
+    public HitOwner Owner => _owner;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -87,7 +88,6 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         {
             _myParticleSystem.Stop();
         }
-        Debug.Log(_objectCollider[0]);
         Array.ForEach(this._objectCollider, x => x.enabled = isAttack);
     }
    

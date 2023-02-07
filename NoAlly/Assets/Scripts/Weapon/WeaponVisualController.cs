@@ -14,6 +14,8 @@ public class WeaponVisualController : MonoBehaviour
     [Tooltip("サブ配置")]
     WeaponDatas _subWeapon;
 
+    public WeaponBase[] WeaponPrefabs => _weaponPrefabs;
+
 
     public void Initialize(WeaponDatas[] weapons, WeaponDatas firstMainWeapon, WeaponDatas firstSubWeapon)
     {

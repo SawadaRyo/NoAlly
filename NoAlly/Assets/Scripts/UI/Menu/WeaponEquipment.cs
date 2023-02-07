@@ -38,7 +38,7 @@ public class WeaponEquipment : MonoBehaviour
 
     public void Initialize()
     {
-        _weaponData.Initialize(_weaponScriptableObjects, _playerContoller);
+        _weaponData.Initialize(_weaponScriptableObjects, _playerContoller.GetComponent<WeaponVisualController>(), _playerContoller);
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length - 1;
         for (int index = 0; index < weaponIndexNumber; index++)
         {

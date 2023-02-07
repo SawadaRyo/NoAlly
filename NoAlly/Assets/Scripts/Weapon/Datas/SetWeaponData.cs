@@ -8,26 +8,25 @@ namespace DataOfWeapon
     public class SetWeaponData
     {
         [Tooltip("武器のスクリプタブルオブジェクト")]
-        WeaponScriptableObjects _weaponObjects = null;
+        WeaponScriptableObjects weaponObjects = null;
         WeaponDatas[] _weaponDatas = null;
 
-        public WeaponScriptableObjects Datas => _weaponObjects;
         public WeaponDatas[] GetAllWeapons => _weaponDatas;
         public WeaponDatas GetWeapon(WeaponType type) => _weaponDatas[(int)type];
 
 
-        public void Initialize(WeaponScriptableObjects weapon, PlayerContoller player)
+        public void Initialize(WeaponScriptableObjects weapon, WeaponVisualController visualController,PlayerContoller player)
         {
-            if (_weaponObjects != null) return;
+            if (weaponObjects != null) return;
 
-            _weaponObjects = weapon;
-            _weaponDatas = new WeaponDatas[_weaponObjects.WeaponDatas.Entitys.Length];
-            for (int i = 0; i < _weaponObjects.WeaponDatas.Entitys.Length; i++)
+            weaponObjects = weapon;
+            _weaponDatas = new WeaponDatas[weaponObjects.WeaponDatas.Entitys.Length];
+            for (int i = 0; i < weaponObjects.WeaponDatas.Entitys.Length; i++)
             {
-                _weaponDatas[i] = new WeaponDatas(_weaponObjects.WeaponDatas.Entitys[i].Base
-                                                , _weaponObjects.WeaponDatas.Entitys[i].Action
-                                                , _weaponObjects.WeaponDatas.Entitys[i].Type);
-                _weaponDatas[i].Base.Initialize(_weaponObjects.WeaponDatas.Entitys[i]);
+                _weaponDatas[i] = new WeaponDatas(visualController.WeaponPrefabs[i]
+                                                , weaponObjects.WeaponDatas.Entitys[i].Action
+                                                , weaponObjects.WeaponDatas.Entitys[i].Type);
+                _weaponDatas[i].Base.Initialize(weaponObjects.WeaponDatas.Entitys[i]);
                 _weaponDatas[i].Action.Initialize(player, _weaponDatas[i].Base);
             }
         }
