@@ -11,7 +11,6 @@ public class MenuCommandButton
     #region
     {
         Color.white,
-        Color.red,
         Color.yellow
     };
     #endregion
@@ -55,16 +54,13 @@ public class MenuCommandButton
 
     public void Selected(bool isSelect)
     {
-        _commund.Select();
         if (isSelect)
         {
             if(_state != ButtonState.Disided)
             {
                 _state = ButtonState.Selected;
             }
-            _commund.image.color = _buttonColors[1];
             _animator.enabled = isSelect;
-            _animator.SetBool("IsSelect", isSelect);
         }
         else
         {
@@ -72,31 +68,32 @@ public class MenuCommandButton
             {
                 case ButtonState.Selected:
                     _commund.image.color = _buttonColors[0];
+                    _state = ButtonState.None;
                     break;
                 case ButtonState.Disided:
-                    _commund.image.color = _buttonColors[2];
+                    _commund.image.color = _buttonColors[1];
                     break;
                 default:
                     break;
             }
-            _state = ButtonState.None;
-            _animator.SetBool("IsSelect", isSelect);
         }
+        _animator.SetBool("IsSelect", isSelect);
     }
     public void Disaide(bool isDisaide)
     {
-
         //_animator.SetBool("IsDisaide", isDisaide);
         if (isDisaide)
         {
             _commund.onClick.Invoke();
-            _commund.image.color = _buttonColors[2];
+            _commund.image.color = _buttonColors[1];
+            _state = ButtonState.Disided;
         }
         else
         {
             _commund.image.color = _buttonColors[0];
+            _state = ButtonState.None;
         }
-        _state = ButtonState.Disided;
+        
     }
     public enum ButtonState:int
     {

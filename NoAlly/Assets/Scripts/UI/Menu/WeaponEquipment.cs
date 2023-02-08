@@ -79,6 +79,7 @@ public class WeaponEquipment : MonoBehaviour
     public void DisideElement(ElementType element)
     {
         _elementType = element;
+        Debug.Log(element);
         _weaponMethods.ForEach(x => x.WeaponMode(element));
     }
 

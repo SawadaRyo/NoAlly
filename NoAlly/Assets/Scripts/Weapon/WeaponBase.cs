@@ -57,7 +57,7 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         }
         else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj))
         {
-            hitObj.BehaviorOfHit(_type);
+            hitObj.BehaviorOfHit(this,_type);
         }
     }
     public virtual void WeaponMode(ElementType type)

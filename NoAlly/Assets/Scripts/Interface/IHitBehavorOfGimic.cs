@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHitBehavorOfGimic
 {
-    public void BehaviorOfHit(ElementType type);
+    public void BehaviorOfHit(WeaponBase weaponBase,ElementType type);
 }

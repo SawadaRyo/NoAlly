@@ -10,7 +10,7 @@ using UnityEngine;
 public class GameManager
 {
     [Tooltip("GameManagerのインスタンス")]
-    static GameManager _instance = new GameManager();
+    static GameManager _instance = null;
     
     [Tooltip("ゲーム中かどうか判定する変数")]
     GameState _state = GameState.GameStart;
@@ -25,6 +25,7 @@ public class GameManager
             }
             return _instance;
         }
+        set => _instance = value;
     }
     public GameState IsGame => _state;
 

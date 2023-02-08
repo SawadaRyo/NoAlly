@@ -112,7 +112,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                     _targetButton.Selected(false);
                     _targetButton = b;
                     _targetButton.Selected(true);
-                    //_targetButton.Command.Select();
                 }
             }
 
@@ -191,11 +190,6 @@ public class MenuHander : SingletonBehaviour<MenuHander>
     /// <param name="targetButton"></param>
     void DisideCommand(MenuCommandButton targetButton)
     {
-        if (_selectedButtons[(int)targetButton.TypeOfCommand].Command != null)
-        {
-            _selectedButtons[(int)targetButton.TypeOfCommand].Command.image.color = Color.white;
-        }
-
         switch (targetButton.TypeOfCommand)
         {
             case CommandType.MAIN:
@@ -219,9 +213,9 @@ public class MenuHander : SingletonBehaviour<MenuHander>
             default:
                 break;
         }
-
-        targetButton.Disaide(true);
+        _selectedButtons[(int)targetButton.TypeOfCommand].Disaide(false);
         _selectedButtons[(int)targetButton.TypeOfCommand] = targetButton;
+        _selectedButtons[(int)targetButton.TypeOfCommand].Disaide(true);
     }
     /// <summary>
     /// ƒƒjƒ…[‰æ–Ê“WŠJ‚ÉŒÄ‚ÔŠÖ”
