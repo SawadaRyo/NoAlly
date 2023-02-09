@@ -26494,7 +26494,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.2
-    functionName: BulletFIre
+    functionName: BulletFire
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
