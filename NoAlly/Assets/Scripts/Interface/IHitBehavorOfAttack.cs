@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IHitBehavorOfAttack
 {
-    public HitOwner StatusOwner { get; }
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type, HitOwner owner);
+    ObjectOwner Owner { get; }
+    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type);
 }

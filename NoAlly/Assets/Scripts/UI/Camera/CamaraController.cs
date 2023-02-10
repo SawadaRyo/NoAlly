@@ -21,6 +21,6 @@ public class CamaraController : MonoBehaviour
     }
     public void ConfinerColliderChanger(FloorDetection floor)
     {
-        _confiner.m_BoundingVolume = floor.CameraCollider;
+        _confiner.m_BoundingShape2D = floor.CameraCollider;
     }
 }

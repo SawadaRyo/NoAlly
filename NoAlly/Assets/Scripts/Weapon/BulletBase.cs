@@ -10,7 +10,7 @@ public class BulletBase : WeaponBase
     [SerializeField, Header("’e‚Ì‘¬“x")]
     float _bulletSpeed = 0;
     [SerializeField, Header("’e‚ÌŽc—¯ŽžŠÔ")]
-    float _intervalTime = 0f;
+    float _intervalTime = 3f;
     [SerializeField, Header("’e‚ÌRigitbody")]
     Rigidbody _rb = default;
     [Tooltip("”­ŽË‚³‚ê‚é’¼‘O‚Ì‰ŠúˆÊ’u")]
@@ -20,17 +20,19 @@ public class BulletBase : WeaponBase
     [Tooltip("’e‚Ì‰Á‘¬“x")]
     Vector3 _velo = Vector3.zero;
     [Tooltip("’e‚Ì‘®«")]
-    ElementType _weaponEquipment;
+    ElementType BulletElement { set => _type = value; }
+
+    float _time = 0f;
 
     public void FixedUpdate()
     {
         if (!_isActive) return;
 
-        _intervalTime += Time.deltaTime;
+        _time += Time.deltaTime;
         _velo.x = _bulletSpeed * _muzzleForwardPos.x;
         _velo.y = _muzzleForwardPos.y;
         _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
-        if (_intervalTime > 3f)
+        if (_time > _intervalTime)
         {
             Disactive();
         }

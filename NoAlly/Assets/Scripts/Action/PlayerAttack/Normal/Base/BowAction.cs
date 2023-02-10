@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BowAction : WeaponAction,IObjectGenerator
+public class BowAction : WeaponAction, IObjectGenerator
 {
-    [SerializeField] float _bulletSpeed = 5;
     [SerializeField] string _filePath = "PlayerBullet";
     [SerializeField] string _findMuzzlePath = "PlayerB/Muzzle";
-    [SerializeField] Transform _poolPos = default;
+    [SerializeField] Transform _poolPos = null;
     [SerializeField] PersonType _personType = PersonType.Player;
 
     Transform _muzzleForward = default;
-    ObjectPool<BulletBase> _bPool = new ObjectPool<BulletBase>();
+    ObjectPool<BulletBase, BowAction, BulletType> _bPool = new ObjectPool<BulletBase, BowAction, BulletType>();
+    ObjectPool<BulletBase, BowAction, BulletType>.ObjectKey[] _keys = null;
     BulletBase[] _bulletPrefab = new BulletBase[3];
     BulletType _bulletType = BulletType.NORMAL;
-    
+
     public Transform GenerateTrance => _muzzleForward;
 
 
@@ -26,8 +26,8 @@ public class BowAction : WeaponAction,IObjectGenerator
         _bulletPrefab = Resources.LoadAll<BulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
-            _bPool.SetBaseObj(_bulletPrefab[i], _poolPos, i);
-            _bPool.SetCapacity(this, 10);
+            _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _poolPos, (BulletType)i);
+            _bPool.SetCapacity(_keys[i], 10);
         }
 
     }
@@ -53,8 +53,8 @@ public class BowAction : WeaponAction,IObjectGenerator
                 _bulletType = BulletType.CANNON;
             }
 
-            var bullletObj = _bPool.Instantiate((int)_bulletType);
-            
+            var bullletObj = _bPool.Instantiate(_keys[(int)_bulletType]);
+
         }
     }
 
@@ -64,14 +64,14 @@ public class BowAction : WeaponAction,IObjectGenerator
         _bulletType = 0;
     }
 }
-public enum BulletType
+public enum BulletType : int
 {
-    NORMAL = 0,
-    STRENGTHEN = 1,
-    CANNON = 2
+    NORMAL,
+    STRENGTHEN,
+    CANNON
 }
 enum PersonType
 {
-    Player, 
+    Player,
     Enemy
 }

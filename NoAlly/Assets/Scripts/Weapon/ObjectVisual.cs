@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// オブジェクトの表示を切り替えるクラス
 /// </summary>
-public class ObjectVisual: MonoBehaviour,IObjectPool
+public class ObjectBase: MonoBehaviour,IObjectPool
 {
     [SerializeField, Header("オブジェクトのCollider")]
     protected Collider[] _objectCollider = null;

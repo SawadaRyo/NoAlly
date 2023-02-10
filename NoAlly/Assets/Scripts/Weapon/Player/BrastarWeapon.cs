@@ -7,9 +7,9 @@ public class BrastarWeapon : CombatWeapon, IWeapon
     float _powerUpRigit = 3.5f;
     float _powerUpEleke = 5f;
 
-    public override void Initialize(WeaponDataEntity weapon)
+    public override void SetData(WeaponDataEntity weapon)
     {
-        base.Initialize(weapon);
+        base.SetData(weapon);
         _normalRigit = _rigitPower;
         _normalEleke = _elekePower;
     }

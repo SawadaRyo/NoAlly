@@ -17,7 +17,8 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
 
     const float _turnSpeed = 0.5f;
     float _shootIntervalTime = 0;
-    ObjectPool<EnemyBullet> _bulletPool = new ObjectPool<EnemyBullet>();
+    ObjectPool<EnemyBullet,GunTypeEnemy,EnemyBulletType> _bulletPool = new ObjectPool<EnemyBullet,GunTypeEnemy,EnemyBulletType>();
+    ObjectPool<EnemyBullet, GunTypeEnemy, EnemyBulletType>.ObjectKey _key = null;
     Vector3 _distance = Vector3.zero;
 
     public float Interval => _interval;
@@ -27,8 +28,8 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
     public override void Start()
     {
         base.Start();
-        _bulletPool.SetBaseObj(_bulletPrefab, _poolTrans, (int)HitOwner.Enemy);
-        _bulletPool.SetCapacity(this, _bulletSize);
+        _key = _bulletPool.SetBaseObj(_bulletPrefab, this, _poolTrans,EnemyBulletType.BULLET);
+        _bulletPool.SetCapacity(_key, _bulletSize);
     }
     /// <summary>
     /// オブジェクトの回転制御
@@ -49,7 +50,7 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
 
     public void InsBullet()
     {
-        var bullet = _bulletPool.Instantiate((int)HitOwner.Enemy);
+        var bullet = _bulletPool.Instantiate(_key);
         //bullet.transform.position = _muzzleTrans.position;
     }
 
@@ -63,3 +64,8 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         }
     }
 }
+enum EnemyBulletType
+{
+    BULLET
+}
+

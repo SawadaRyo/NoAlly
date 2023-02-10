@@ -26,7 +26,7 @@ namespace DataOfWeapon
                 _weaponDatas[i] = new WeaponDatas(visualController.WeaponPrefabs[i]
                                                 , weaponObjects.WeaponDatas.Entitys[i].Action
                                                 , weaponObjects.WeaponDatas.Entitys[i].Type);
-                _weaponDatas[i].Base.Initialize(weaponObjects.WeaponDatas.Entitys[i]);
+                _weaponDatas[i].Base.SetData(weaponObjects.WeaponDatas.Entitys[i]);
                 _weaponDatas[i].Action.Initialize(player, _weaponDatas[i].Base);
             }
         }

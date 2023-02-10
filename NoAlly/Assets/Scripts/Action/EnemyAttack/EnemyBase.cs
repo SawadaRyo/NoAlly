@@ -3,7 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using State = StateMachine<EnemyBase>.State;
 
-public abstract class EnemyBase : ObjectVisual
+public abstract class EnemyBase : ObjectBase
 {
     [SerializeField, Header("õ“G”ÍˆÍ")]
     protected float _radius = 5f;
@@ -156,7 +156,7 @@ public class Death : State
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
-        Owner.Disactive();
+        Owner.ObjectAnimator.SetBool("Death", true);
     }
 }
 

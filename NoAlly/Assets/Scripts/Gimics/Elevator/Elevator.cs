@@ -13,8 +13,7 @@ public class Elevator : MonoBehaviour
     [SerializeField] Transform _movePos2;
     [SerializeField] Text _rideText;
 
-    [Tooltip("プレイヤーの搭乗判定")]
-    bool _riding = false;
+    
     [Tooltip("エレベーターの起動判定")]
     bool _moving = false;
     [Tooltip("エレベーターのAnimator")]

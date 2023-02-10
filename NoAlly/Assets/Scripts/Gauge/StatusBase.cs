@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public abstract class StatusBase : ObjectVisual
+public abstract class StatusBase : ObjectBase
 {
     [SerializeField, Tooltip("無敵時間の値")]
     float _invincibleTimeValue = 1f;
@@ -13,8 +13,6 @@ public abstract class StatusBase : ObjectVisual
     protected float _maxSAP = 20;
     [SerializeField, Tooltip("ダメージサウンド")]
     protected AudioClip _damageSound;
-    [SerializeField, Header("このクラスのオーナー")]
-    protected HitOwner _owner = HitOwner.NONE;
 
 
 

@@ -2,28 +2,48 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
+public class ObjectPool<TObj,TOwner,TKey> 
+    where TObj : UnityEngine.Object, IObjectPool
+    where TOwner: UnityEngine.Object, IObjectGenerator
+    where TKey :Enum
 {
-    T _baseObj = null;
-    int _key = 0;
+    ObjectKey _objectKey = null;
+    TObj _baseObj = null;
+    
     Transform _parent = null;
-    List<T> _pool = new List<T>();
-    Dictionary<int, List<T>> _poolList = new Dictionary<int, List<T>>();
+    List<TObj> _pool = new List<TObj>();
+    Dictionary<ObjectKey, List<TObj>> _poolList = new Dictionary<ObjectKey, List<TObj>>();
     int _index = 0;
 
-    public void SetBaseObj(T obj, Transform parent, int key)
+    public class ObjectKey
+    {
+        TOwner _owner = null;
+        TKey _key;
+
+        public TOwner Owner => _owner;
+        public TKey Key => _key;
+
+        public ObjectKey(TOwner owner,TKey key)
+        {
+            _owner = owner;
+            _key = key;
+        }
+    }
+
+    public ObjectKey SetBaseObj(TObj obj, TOwner owner,Transform parent, TKey key)
     {
         _baseObj = obj;
         _parent = parent;
-        _key = key;
+        _objectKey = new(owner, key);
+        return _objectKey;
     }
 
-    public void SetCapacity(IObjectGenerator owner,int size)
+    public void SetCapacity(ObjectKey key,int size)
     {
-        List<T> objList = new List<T>();
+        List<TObj> objList = new List<TObj>();
         for (int i = _pool.Count - 1; i < size; ++i)
         {
-            T obj = default(T);
+            TObj obj = default(TObj);
             if (_parent)
             {
                 obj = GameObject.Instantiate(_baseObj, _parent);
@@ -32,20 +52,20 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
             {
                 obj = GameObject.Instantiate(_baseObj);
             }
-            obj.DisactiveForInstantiate(owner);
+            obj.DisactiveForInstantiate(key.Owner);
             objList.Add(obj);
         }
-        Dictionalize(_key, objList);
+        Dictionalize(key, objList);
     }
 
-    public void Dictionalize(int key, List<T> value)
+    void Dictionalize(ObjectKey key, List<TObj> value)
     {
         _poolList.Add(key, value);
     }
 
-    public T Instantiate()
+    public TObj Instantiate()
     {
-        T ret = null;
+        TObj ret = null;
         for (int i = 0; i < _pool.Count; ++i)
         {
             int newSIze = 0;
@@ -65,10 +85,10 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
         return ret;
     }
 
-    public T Instantiate(int key)
+    public TObj Instantiate(ObjectKey key)
     {
-        T ret = null;
-        List<T> valueList = _poolList[key];
+        TObj ret = null;
+        List<TObj> valueList = _poolList.GetValueOrDefault(key);
         for (int i = 0; i < valueList.Count; ++i)
         {
             int newSIze = 0;
@@ -88,3 +108,6 @@ public class ObjectPool<T> where T : UnityEngine.Object, IObjectPool
         return ret;
     }
 }
+
+
+

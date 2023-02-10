@@ -16,9 +16,9 @@ public class CombatWeapon : WeaponBase
     protected Animator _weaponAnimator = default;
 
 
-    public override void Initialize(WeaponDataEntity weaponData)
+    public override void SetData(WeaponDataEntity weaponData)
     {
-        base.Initialize(weaponData);
+        base.SetData(weaponData);
         _weaponAnimator = GetComponent<Animator>();
         if (_myParticleSystem != null)
         {

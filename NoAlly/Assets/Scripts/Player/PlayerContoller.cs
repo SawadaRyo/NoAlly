@@ -273,7 +273,6 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     public PlayerClimbWall IsWalled()
     {
-        Debug.Log(_h);
         if (IsGrounded()) return PlayerClimbWall.NONE;
         else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
 

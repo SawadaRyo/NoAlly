@@ -36,10 +36,10 @@ public class MenuHander : SingletonBehaviour<MenuHander>
 
     void Start()
     {
-        Initializer();
+        Initialize();
     }
 
-    public void Initializer()
+    public void Initialize()
     {
         _canMove = new Interval(_interval);
 
@@ -58,13 +58,12 @@ public class MenuHander : SingletonBehaviour<MenuHander>
                 if ((CommandType)y != CommandType.ElEMENT)
                 {
                     _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (WeaponType)x, (CommandType)y);
-                    _selectedButtons[y] = new MenuCommandButton(MenuCommandButton.ButtonState.None, null, (WeaponType)x, (CommandType)y);
                 }
                 else
                 {
                     _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (ElementType)x, (CommandType)y);
-                    _selectedButtons[y] = new MenuCommandButton(MenuCommandButton.ButtonState.None, null, (ElementType)x, (CommandType)y);
                 }
+                _selectedButtons[y] = _allButtons[y, x];
                 _allButtons[y, x].Command.enabled = false;
                 length++;
             }

@@ -37,7 +37,7 @@ public class SectionDetectionManager : MonoBehaviour
     }
     public void ConfinerColliderChanger(FloorDetection floor,StageSetPos stageSetPos)
     {
-        _confiner.m_BoundingVolume = floor.CameraCollider;
+        _confiner.m_BoundingShape2D = floor.CameraCollider;
         switch(stageSetPos)
         {
             case StageSetPos.Flont:

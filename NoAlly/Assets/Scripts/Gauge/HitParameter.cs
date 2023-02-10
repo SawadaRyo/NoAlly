@@ -9,8 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
 {
-    [SerializeField]
-    HitOwner _owner = HitOwner.NONE;
+    [SerializeField, Tooltip("このクラスのオーナー")]
+    ObjectOwner _owner;
     [Header("攻撃された時の倍率。値が高いほど受けるダメージが上がる")]
     [Range(0f, 2f), SerializeField, Header("物理攻撃の倍率")]
     float _rigitDefensePercentage = 1f;
@@ -24,12 +24,25 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
     [Tooltip("オブジェクトのStatusBase")]
     StatusBase _status = null;
 
+    /// <summary>
+    /// 物理攻撃の倍率のプロパティ(読み取り専用)
+    /// </summary>
     public float RigitDefensePercentage => _rigitDefensePercentage;
+    /// <summary>
+    /// 炎攻撃の倍率のプロパティ(読み取り専用)
+    /// </summary>
     public float FireDifansePercentage => _fireDifansePercentage;
+    /// <summary>
+    /// 電気攻撃の倍率のプロパティ(読み取り専用)
+    /// </summary>
     public float ElekeDifansePercentage => _elekeDifansePercentage;
+    /// <summary>
+    /// 氷攻撃の倍率のプロパティ(読み取り専用)
+    /// </summary>
     public float FrozenDifansePercentage => _frozenDifansePercentage;
-
-    public HitOwner StatusOwner => _owner;
+    /// <summary>
+    /// オブジェクトのStatusBaseのプロパティ(読み取り専用)
+    /// </summary>
     StatusBase Status
     {
         get
@@ -41,9 +54,10 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
             return _status;
         }
     }
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type, HitOwner owner)
+    public ObjectOwner Owner => _owner;
+
+    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type)
     {
-        if(_owner == owner) return;
         Status.Damage(weaponStatus, this, type);
     }
     public void BehaviorOfHit<TPlus>(TPlus pulsItem) where TPlus : ItemBase

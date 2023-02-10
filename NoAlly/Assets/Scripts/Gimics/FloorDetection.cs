@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FloorDetection : MonoBehaviour
 {
-    [SerializeField] Collider _cameraCollider = null;
+    [SerializeField] Collider2D _cameraCollider = null;
     [SerializeField] StageSetPos _stage = StageSetPos.Flont;
 
     bool _active;
@@ -14,7 +14,7 @@ public class FloorDetection : MonoBehaviour
 
     public bool Active => _active;
     public int FloorNumber => _floorNumber;
-    public Collider CameraCollider => _cameraCollider;
+    public Collider2D CameraCollider => _cameraCollider;
 
     public void Init(int number,SectionDetectionManager sectionDetection)
     {

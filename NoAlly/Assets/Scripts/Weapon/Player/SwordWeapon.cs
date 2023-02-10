@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class SwordWeapon : CombatWeapon
 {
-    public override void Initialize(WeaponDataEntity weapon)
-    {
-        base.Initialize(weapon);
-    }
     public override void WeaponMode(ElementType type)
     {
         switch (type)

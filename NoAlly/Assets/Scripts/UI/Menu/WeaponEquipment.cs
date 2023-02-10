@@ -43,10 +43,12 @@ public class WeaponEquipment : MonoBehaviour
         for (int index = 0; index < weaponIndexNumber; index++)
         {
             WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)index);
+            _weaponMethods.Add(weapon.Base);
             _mainWeapons[index].onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
             _subWeapons[index].onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
             _elements[index].onClick.AddListener(() => DisideElement((ElementType)index));
-            _weaponMethods.Add(weapon.Base);
+            Debug.Log((ElementType)index);
+            Debug.Log(_elements[index]);
         }
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
@@ -79,7 +81,6 @@ public class WeaponEquipment : MonoBehaviour
     public void DisideElement(ElementType element)
     {
         _elementType = element;
-        Debug.Log(element);
         _weaponMethods.ForEach(x => x.WeaponMode(element));
     }
 

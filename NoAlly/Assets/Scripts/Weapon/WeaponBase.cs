@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public abstract class WeaponBase : ObjectVisual, IWeapon
+public abstract class WeaponBase : ObjectBase, IWeapon
 {
     [SerializeField, Header("武器の物理攻撃力")]
     protected float _rigitPower = 5;
@@ -12,36 +12,26 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     protected float _firePower = 0;
     [SerializeField, Header("武器の氷結攻撃力")]
     protected float _frozenPower = 0;
-    [SerializeField, Header("溜め攻撃第1段階")]
-    protected float _chargeLevel1 = 1f;
-    [SerializeField, Header("溜め攻撃第2段階")]
-    protected float _chargeLevel2 = 3f;
-    [SerializeField, Header("武器の攻撃判定レイヤー")]
-    protected LayerMask _enemyLayer = ~0;
-    [SerializeField, Header("武器のオーナー")]
-    protected HitOwner _owner = HitOwner.Player;
-    [SerializeField, Header("武器の攻撃判定の中心点")]
-    Transform _center = default;
+
     [SerializeField, Header("武器の斬撃エフェクト")]
     protected ParticleSystem _myParticleSystem = default;
+    [SerializeField,Tooltip("武器のオーナー")]
+    protected ObjectOwner _owner;
 
     [Tooltip("この武器のデータ")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
-    [Tooltip("")]
-    bool _attack = false;
     [Tooltip("武器の属性")]
-    ElementType _type;
+    protected ElementType _type;
 
     public WeaponDeformation Deformated => _isDeformated;
-    public HitOwner Owner => _owner;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
     public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void Initialize(WeaponDataEntity weaponData)
+    public virtual void SetData(WeaponDataEntity weaponData)
     {
         _weaponData = weaponData;
         _rigitPower = weaponData.RigitPower[(int)_isDeformated];
@@ -51,13 +41,13 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     }
     public virtual void WeaponAttackMovement(Collider target)
     {
-        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp))
+        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp) && _owner != characterHp.Owner)
         {
-            characterHp.BehaviorOfHit(this, _type, _owner);
+            characterHp.BehaviorOfHit(this, _type);
         }
-        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj))
+        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj) && _owner == ObjectOwner.PLAYER)
         {
-            hitObj.BehaviorOfHit(this,_type);
+            hitObj.BehaviorOfHit(this, _type);
         }
     }
     public virtual void WeaponMode(ElementType type)
@@ -80,7 +70,7 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
     }
     public void LoopJud(bool isAttack)
     {
-        if(isAttack)
+        if (isAttack)
         {
             _myParticleSystem.Play();
         }
@@ -90,7 +80,7 @@ public abstract class WeaponBase : ObjectVisual, IWeapon
         }
         Array.ForEach(this._objectCollider, x => x.enabled = isAttack);
     }
-   
+
 }
 
 

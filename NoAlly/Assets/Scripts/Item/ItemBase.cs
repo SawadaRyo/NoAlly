@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //[RequireComponent(typeof(Collider))]
-public class ItemBase : ObjectVisual
+public class ItemBase : ObjectBase
 {
     [SerializeField] protected float _plusParameter = 4;
     [SerializeField] AudioClip _getSound = null;
 
     bool _isActive = true;
     AudioSource _audio = null;
-    HitOwner _hitOwner = HitOwner.Item;
 
     public float PlusParameter => _plusParameter;
 
