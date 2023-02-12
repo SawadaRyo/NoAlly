@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<TObj,TOwner,TKey> 
+public class ObjectPool<TObj, TOwner, TKey>
     where TObj : UnityEngine.Object, IObjectPool
-    where TOwner: UnityEngine.Object, IObjectGenerator
-    where TKey :Enum
+    where TOwner : UnityEngine.Object, IObjectGenerator
+    where TKey : Enum
 {
     ObjectKey _objectKey = null;
     TObj _baseObj = null;
-    
+
     Transform _parent = null;
-    List<TObj> _pool = new List<TObj>();
-    Dictionary<ObjectKey, List<TObj>> _poolList = new Dictionary<ObjectKey, List<TObj>>();
-    int _index = 0;
+    readonly List<TObj> _pool = new List<TObj>();
+    readonly Dictionary<ObjectKey, List<TObj>> _poolList = new();
+    //readonly int _index = 0;
 
     public class ObjectKey
     {
@@ -23,14 +23,14 @@ public class ObjectPool<TObj,TOwner,TKey>
         public TOwner Owner => _owner;
         public TKey Key => _key;
 
-        public ObjectKey(TOwner owner,TKey key)
+        public ObjectKey(TOwner owner, TKey key)
         {
             _owner = owner;
             _key = key;
         }
     }
 
-    public ObjectKey SetBaseObj(TObj obj, TOwner owner,Transform parent, TKey key)
+    public ObjectKey SetBaseObj(TObj obj, TOwner owner, Transform parent, TKey key)
     {
         _baseObj = obj;
         _parent = parent;
@@ -38,12 +38,13 @@ public class ObjectPool<TObj,TOwner,TKey>
         return _objectKey;
     }
 
-    public void SetCapacity(ObjectKey key,int size)
+    public void SetCapacity(ObjectKey key, int size)
     {
-        List<TObj> objList = new List<TObj>();
-        for (int i = _pool.Count - 1; i < size; ++i)
+        List<TObj> objList = new();
+        int currentCount = _pool.Count;
+        for (int i = _pool.Count; i < currentCount + size; ++i)
         {
-            TObj obj = default(TObj);
+            TObj obj;
             if (_parent)
             {
                 obj = GameObject.Instantiate(_baseObj, _parent);
@@ -55,7 +56,15 @@ public class ObjectPool<TObj,TOwner,TKey>
             obj.DisactiveForInstantiate(key.Owner);
             objList.Add(obj);
         }
-        Dictionalize(key, objList);
+
+        if (!_poolList.ContainsKey(key))
+        {
+            Dictionalize(key, objList);
+        }
+        else
+        {
+            _poolList[key].AddRange(objList);
+        }
     }
 
     void Dictionalize(ObjectKey key, List<TObj> value)
@@ -63,27 +72,27 @@ public class ObjectPool<TObj,TOwner,TKey>
         _poolList.Add(key, value);
     }
 
-    public TObj Instantiate()
-    {
-        TObj ret = null;
-        for (int i = 0; i < _pool.Count; ++i)
-        {
-            int newSIze = 0;
-            int index = (_index + i) % _pool.Count;
-            if (_pool[index] == null)
-            {
-                newSIze++;
-                continue;
-            }
-            else if (_pool[index] != null && _pool[index].IsActive) continue;
+    //public TObj Instantiate()
+    //{
+    //    TObj ret = null;
+    //    for (int i = 0; i < _pool.Count; ++i)
+    //    {
+    //        int newSIze = 0;
+    //        int index = (_index + i) % _pool.Count;
+    //        if (_pool[index] == null)
+    //        {
+    //            newSIze++;
+    //            continue;
+    //        }
+    //        else if (_pool[index] != null && _pool[index].IsActive) continue;
 
-            _pool[index].Create();
-            ret = _pool[index];
-            break;
-        }
+    //        _pool[index].Create();
+    //        ret = _pool[index];
+    //        break;
+    //    }
 
-        return ret;
-    }
+    //    return ret;
+    //}
 
     public TObj Instantiate(ObjectKey key)
     {
@@ -91,11 +100,12 @@ public class ObjectPool<TObj,TOwner,TKey>
         List<TObj> valueList = _poolList.GetValueOrDefault(key);
         for (int i = 0; i < valueList.Count; ++i)
         {
-            int newSIze = 0;
-            int index = (_index + i) % valueList.Count;
+            int newSize = 0;
+            int index = i % valueList.Count;
             if (valueList[index] == null)
             {
-                newSIze++;
+                newSize = (index - valueList.Count) - 1;
+                SetCapacity(key, newSize);
                 continue;
             }
             else if (valueList[index] != null && valueList[index].IsActive) continue;

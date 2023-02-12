@@ -21,7 +21,7 @@ public class WeaponProcessing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!MenuHander.Instance.MenuIsOpen && !Input.GetButton("Attack"))
+        if (!WeaponMenuHander.Instance.MenuIsOpen && !Input.GetButton("Attack"))
         {
             _isSwichWeapon.Value = Input.GetButton("SubWeaponSwitch");
         }

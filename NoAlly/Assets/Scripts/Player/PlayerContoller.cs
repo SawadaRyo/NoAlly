@@ -136,8 +136,14 @@ public class PlayerContoller : MonoBehaviour
     {
         //if (h != 0)
         //プレイヤーの方向転換
-        if (h > 0) h = _playerCamera.transform.right.x;
-        else if ((h < 0)) h = _playerCamera.transform.right.x * -1;
+        if (h > 0)
+        {
+            h = _playerCamera.transform.right.x;
+        }
+        else if ((h < 0))
+        {
+            h = _playerCamera.transform.right.x * -1;
+        }
 
         if (h == -1)
         {
@@ -152,7 +158,7 @@ public class PlayerContoller : MonoBehaviour
             _playerVec = PlayerVec.RIGHT;
         }
 
-        if(v == 1)
+        if (v == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
@@ -166,7 +172,7 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     void MoveMethod(float h, bool dash)
     {
-        
+
         float moveSpeed = 0f;
         //プレイヤーの移動
         if (_animState.AbleMove)
@@ -203,7 +209,7 @@ public class PlayerContoller : MonoBehaviour
                 h = 0;
             }
             Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
-            _velo.x = onPlane.x * moveSpeed;
+            _velo.x = h * moveSpeed;
             _velo.y = onPlane.y * moveSpeed;
             if (Mathf.Abs(_velo.y) <= 0.01f)
             {
@@ -277,16 +283,16 @@ public class PlayerContoller : MonoBehaviour
         else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
 
         Vector3 isWallCenter = _gripPos.transform.position;
-        Ray rayRight = new Ray(isWallCenter, Vector3.right + Vector3.up);
-        Ray rayLeft = new Ray(isWallCenter, Vector3.left + Vector3.up);
+        Ray rayRight = new(isWallCenter, Vector3.right + Vector3.up);
+        Ray rayLeft = new(isWallCenter, Vector3.left + Vector3.up);
 
         PlayerClimbWall hitflg = PlayerClimbWall.NONE;
-        if (Physics.Raycast(rayRight, out _, _walldistance, _wallMask))
+        if (Physics.Raycast(rayRight, out _, _walldistance, _wallMask) && _h > 0f)
         {
             _wallVec = Vector3.left;
             hitflg = PlayerClimbWall.RIGHT;
         }
-        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask))
+        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask) && _h < 0)
         {
             _wallVec = Vector3.right;
             hitflg |= PlayerClimbWall.LEFT;
@@ -332,5 +338,6 @@ public class PlayerContoller : MonoBehaviour
         Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
         Gizmos.DrawRay(_gripPos.position, (Vector3.right + Vector3.up) * _walldistance);
         Gizmos.DrawRay(_gripPos.position, (Vector3.left + Vector3.up) * _walldistance);
+        Gizmos.DrawRay(_footPos.position, new Vector3(_velo.x, _velo.y, 0));
     }
 }

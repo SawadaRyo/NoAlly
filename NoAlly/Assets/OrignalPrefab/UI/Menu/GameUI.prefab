@@ -770,7 +770,7 @@ GameObject:
   - component: {fileID: 8927997928746886710}
   - component: {fileID: 42408000487350825}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -846,7 +846,7 @@ GameObject:
   - component: {fileID: 7905584812068561691}
   - component: {fileID: 5234254534435708997}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1509,7 +1509,7 @@ GameObject:
   - component: {fileID: 3955460179356662466}
   - component: {fileID: 189374800122818013}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1813,7 +1813,7 @@ GameObject:
   - component: {fileID: 6046623307474198530}
   - component: {fileID: 1277028040301302401}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2239,7 +2239,7 @@ GameObject:
   - component: {fileID: 8772546185468654078}
   - component: {fileID: 532916644602903500}
   - component: {fileID: 569628998675715493}
-  - component: {fileID: 970353090160427274}
+  - component: {fileID: 1921753772}
   m_Layer: 5
   m_Name: MenuPanel1
   m_TagString: Untagged
@@ -2308,7 +2308,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.5
---- !u!114 &970353090160427274
+--- !u!114 &1921753772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2317,9 +2317,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3257178719702449448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 297c3b9b07a7e77458907a0226937822, type: 3}
+  m_Script: {fileID: 11500000, guid: 82667b0d7d8c970479a3b2c3fbb602ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
   _mainWeapons:
   - {fileID: 5541201252018784564}
   - {fileID: 2450647650710961513}
@@ -2335,7 +2336,7 @@ MonoBehaviour:
   - {fileID: 649179653382503211}
   - {fileID: 4913110125544376873}
   - {fileID: 8886512863996020606}
-  _weaponsData: {fileID: 0}
+  _playerContoller: {fileID: 0}
 --- !u!1 &3415032503143888904
 GameObject:
   m_ObjectHideFlags: 0
@@ -2625,7 +2626,7 @@ GameObject:
   - component: {fileID: 5472873156714329635}
   - component: {fileID: 7995979706647622513}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3426,6 +3427,7 @@ GameObject:
   - component: {fileID: 7320442693262849913}
   - component: {fileID: 4918832251196737811}
   - component: {fileID: 5541201252018784564}
+  - component: {fileID: 1379148283}
   m_Layer: 5
   m_Name: MainWeaponButton
   m_TagString: Untagged
@@ -3537,6 +3539,26 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &1379148283
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556923643374343606}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cc4015b5455f71246a6dedc5d6a33c99, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5562704955104844076
 GameObject:
   m_ObjectHideFlags: 0
@@ -3656,7 +3678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interval: 0.3
-  _mainManu: {fileID: 970353090160427274}
+  _mainManu: {fileID: 1921753772}
 --- !u!1 &5748211916962831075
 GameObject:
   m_ObjectHideFlags: 0
@@ -3945,7 +3967,7 @@ GameObject:
   - component: {fileID: 7881461913512423080}
   - component: {fileID: 4894666624581817679}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4145,7 +4167,7 @@ GameObject:
   - component: {fileID: 2962980312513588600}
   - component: {fileID: 6146284621014594962}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4221,7 +4243,7 @@ GameObject:
   - component: {fileID: 7935298269054892616}
   - component: {fileID: 2935451727013064314}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4297,7 +4319,7 @@ GameObject:
   - component: {fileID: 3972851255792923169}
   - component: {fileID: 540145179703784998}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4496,7 +4518,7 @@ GameObject:
   - component: {fileID: 6971360800320453248}
   - component: {fileID: 3832210295615779521}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4648,7 +4670,7 @@ GameObject:
   - component: {fileID: 7641421229411460096}
   - component: {fileID: 5684307312119410985}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4800,7 +4822,7 @@ GameObject:
   - component: {fileID: 2202573143916066592}
   - component: {fileID: 834305836592907020}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Flame
   m_TagString: ChackFrame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5206,13 +5228,17 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8776795640691557701, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8776795640836183210, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8776795641452128657, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8776795641452128657, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
       propertyPath: m_Enabled
@@ -5328,6 +5354,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
+--- !u!1 &5562704955070074614 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8776795641452128663, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
+  m_PrefabInstance: {fileID: 3818986020728383329}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1679715180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562704955070074614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe4b11b03b9a38429fd3b8de6d82583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5562704955070074615 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8776795641452128662, guid: 320a6893b94817c41aea2ee2a11e3d8a, type: 3}
@@ -5366,6 +5409,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 481263160796968296, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}
       propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 481263160796968296, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}
+      propertyPath: m_WholeNumbers
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 481263160796968297, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}
@@ -5470,6 +5517,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}
+--- !u!1 &5562704956024388245 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 481263160796968298, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}
+  m_PrefabInstance: {fileID: 5449206995341774847}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &733354570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562704956024388245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe4b11b03b9a38429fd3b8de6d82583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5562704956024388246 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 481263160796968297, guid: 0c8c7088a0cfaab4988e3ec8f05c28f9, type: 3}

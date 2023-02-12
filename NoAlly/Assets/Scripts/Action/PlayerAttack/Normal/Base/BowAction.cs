@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 
 public class BowAction : WeaponAction, IObjectGenerator
@@ -22,11 +20,13 @@ public class BowAction : WeaponAction, IObjectGenerator
     public override void Initialize(PlayerContoller player, WeaponBase weaponBase)
     {
         base.Initialize(player, weaponBase);
+        _keys = new ObjectPool<BulletBase, BowAction, BulletType>.ObjectKey[Enum.GetNames(typeof(BulletType)).Length];
         _muzzleForward = GameObject.Find(_findMuzzlePath).transform;
         _bulletPrefab = Resources.LoadAll<BulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _poolPos, (BulletType)i);
+            Debug.Log(_keys[i]);
             _bPool.SetCapacity(_keys[i], 10);
         }
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5866378721867284491}
   - component: {fileID: 7662433142142601420}
   - component: {fileID: 7917774525933969236}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreeblePanel_01_snaps002  (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1059021669098369041}
   - component: {fileID: 8663076683702072174}
   - component: {fileID: 6313160543925003466}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 'GreeblePanel_01_snaps002 '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 8207632681161064323}
   - component: {fileID: 5721826622196974211}
   - component: {fileID: 1815868058893952802}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,8 +262,7 @@ GameObject:
   - component: {fileID: 2020891483665017805}
   - component: {fileID: 2715473356051015709}
   - component: {fileID: 1229270961979283394}
-  - component: {fileID: 1364538498561959752}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Blade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1129,7 +1128,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5644
+  m_VersionIndex: 6202
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1211,20 +1210,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175368114099012755}
   m_Mesh: {fileID: 0}
---- !u!64 &1364538498561959752
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175368114099012755}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &1467939658034051164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,7 +1219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2348698256327925894}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flont
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1275,7 +1260,7 @@ GameObject:
   - component: {fileID: 3081978917559336480}
   - component: {fileID: 851485614559994593}
   - component: {fileID: 3669150992641963488}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1356,7 +1341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3981730672759946808}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1389,7 +1374,7 @@ GameObject:
   - component: {fileID: 5576629621701502164}
   - component: {fileID: 3072511815939861987}
   - component: {fileID: 5879992171350816154}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1472,7 +1457,7 @@ GameObject:
   - component: {fileID: 595819148842530674}
   - component: {fileID: 5890805063981680756}
   - component: {fileID: 102234549639727999}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1555,7 +1540,7 @@ GameObject:
   - component: {fileID: 6612067921447751292}
   - component: {fileID: 1577709258262749237}
   - component: {fileID: 6111978984340143496}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1638,7 +1623,7 @@ GameObject:
   - component: {fileID: 8477489916674766930}
   - component: {fileID: 6761827100099481582}
   - component: {fileID: 4262700300625362953}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1721,7 +1706,7 @@ GameObject:
   - component: {fileID: 2629939493080762251}
   - component: {fileID: 4322754058057646591}
   - component: {fileID: 7937494181717447543}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1804,7 +1789,7 @@ GameObject:
   - component: {fileID: 4543192641129480698}
   - component: {fileID: 4574210930229193728}
   - component: {fileID: 4562211882351388450}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CapShock_M_04_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1886,7 +1871,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2481541043112930658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeBorn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1924,7 +1909,7 @@ GameObject:
   - component: {fileID: 4993069759853083758}
   - component: {fileID: 4984830092851334242}
   - component: {fileID: 4974487182170526306}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreeblePanel_01_snaps002 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2007,7 +1992,7 @@ GameObject:
   - component: {fileID: 3931561654915614606}
   - component: {fileID: 7165460393741244511}
   - component: {fileID: 5072376740046301744}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2088,7 +2073,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2656123105061093652}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2129,7 +2114,7 @@ GameObject:
   - component: {fileID: 2049730575216498007}
   - component: {fileID: 5968709799965667732}
   - component: {fileID: 1044509749941540704}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2212,7 +2197,7 @@ GameObject:
   - component: {fileID: 1923933330198604012}
   - component: {fileID: 1577355425638652865}
   - component: {fileID: 500926683776433360}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreeblePanel_01_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2295,7 +2280,7 @@ GameObject:
   - component: {fileID: 2905010748676035417}
   - component: {fileID: 1268392330384586111}
   - component: {fileID: 2145287005305607120}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreeblePanel_01_snaps002 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2378,7 +2363,7 @@ GameObject:
   - component: {fileID: 7582409850210200794}
   - component: {fileID: 7584834335877645536}
   - component: {fileID: 7595152486124618312}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbar_02_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2461,7 +2446,7 @@ GameObject:
   - component: {fileID: 8762028279946568756}
   - component: {fileID: 8334091675692559733}
   - component: {fileID: 2433419642434349965}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CapShock_M_03_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2544,7 +2529,7 @@ GameObject:
   - component: {fileID: 6747926122847961873}
   - component: {fileID: 7500508215433181695}
   - component: {fileID: 8142533464562918449}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreeblePanel_01_snaps002 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2627,7 +2612,7 @@ GameObject:
   - component: {fileID: 8810305545005130185}
   - component: {fileID: 8800948191011535609}
   - component: {fileID: 8793131453558647583}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CapShock_M_03_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2711,7 +2696,8 @@ GameObject:
   - component: {fileID: 5785630500104816687}
   - component: {fileID: 181822740134755367}
   - component: {fileID: -46491826598969884}
-  m_Layer: 0
+  - component: {fileID: 4009065848111511044}
+  m_Layer: 7
   m_Name: Brastar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2783,16 +2769,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 644edca998eaa234ea6a39a4edb64d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigitPower: 5
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _chargeLevel1: 1
-  _chargeLevel2: 3
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _weaponRenderer:
+  _objectCollider:
+  - {fileID: 4009065848111511044}
+  _objectRenderer:
+  - {fileID: 2715473356051015709}
   - {fileID: 4562211882351388450}
   - {fileID: 7595152486124618312}
   - {fileID: 102234549639727999}
@@ -2812,7 +2792,27 @@ MonoBehaviour:
   - {fileID: 8142533464562918449}
   - {fileID: 8793131453558647583}
   - {fileID: 2433419642434349965}
-  _center: {fileID: 3981730672759946808}
+  _objectAnimator: {fileID: 5785630500104816687}
+  _rigitPower: 6.25
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _myParticleSystem: {fileID: 2763430253654797412}
+  _owner: 1
+--- !u!136 &4009065848111511044
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153705405047431978}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1001 &2755886906027241184
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2908,9 +2908,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 2594350258395383581, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_Name
       value: BrastarEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713452603300891332, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_IsActive
@@ -2918,6 +2926,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+--- !u!198 &2763430253654797412 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 29077300315030148, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+  m_PrefabInstance: {fileID: 2755886906027241184}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3380785882989612414 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636157993568117662, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}

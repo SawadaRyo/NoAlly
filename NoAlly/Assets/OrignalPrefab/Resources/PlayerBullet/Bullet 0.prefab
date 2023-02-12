@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3651227221244171509}
   - component: {fileID: 3360530210699052615}
   - component: {fileID: 1546546536074565830}
-  - component: {fileID: 6432034305531909582}
   - component: {fileID: 8823801555886408867}
   - component: {fileID: -5450982704595342441}
+  - component: {fileID: 8173534643544809521}
   m_Layer: 0
   m_Name: Bullet 0
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8581802472266534934}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
@@ -473,20 +473,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8581802472266534934}
   m_Mesh: {fileID: 0}
---- !u!64 &6432034305531909582
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8581802472266534934}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: -1
-  m_Mesh: {fileID: 0}
 --- !u!114 &8823801555886408867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,18 +485,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2741c76b01563b24aba998880ab4a3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _objectCollider:
+  - {fileID: 8173534643544809521}
+  _objectRenderer:
+  - {fileID: 3360530210699052615}
+  _objectAnimator: {fileID: 0}
   _rigitPower: 3
   _elekePower: 0
   _firePower: 0
   _frozenPower: 0
-  _center: {fileID: 0}
+  _chargeLevel1: 1
+  _chargeLevel2: 3
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 256
-  _weaponRenderer:
-  - {fileID: 3360530210699052615}
-  _bulletSpeed: 10
   _owner: 0
+  _center: {fileID: 8388075109511834250}
+  _myParticleSystem: {fileID: 0}
+  _bulletSpeed: 10
+  __intervalTime: 5
+  _rb: {fileID: -5450982704595342441}
 --- !u!54 &-5450982704595342441
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -527,3 +521,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!136 &8173534643544809521
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8581802472266534934}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5000001
+  m_Height: 1.5943997
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.29719985, z: 0.0013721138}

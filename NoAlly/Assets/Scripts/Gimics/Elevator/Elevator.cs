@@ -13,7 +13,7 @@ public class Elevator : MonoBehaviour
     [SerializeField] Transform _movePos2;
     [SerializeField] Text _rideText;
 
-    
+
     [Tooltip("エレベーターの起動判定")]
     bool _moving = false;
     [Tooltip("エレベーターのAnimator")]
@@ -94,6 +94,7 @@ public class Elevator : MonoBehaviour
                                       | RigidbodyConstraints.FreezeRotation;
                 (_movePos1, _movePos2) = (_movePos2, _movePos1);
             }
+            _playerRb.isKinematic = _moving;
         }).AddTo(this);
     }
     public void SetPosition(Transform pos1, Transform pos2)

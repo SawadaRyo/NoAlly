@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuHander : SingletonBehaviour<MenuHander>
+public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
@@ -70,6 +70,7 @@ public class MenuHander : SingletonBehaviour<MenuHander>
         }
         _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.MainWeapon.Value.Type];
         _selectedButtons[(int)CommandType.MAIN].Disaide(true);
+        _selectedButtons[(int)CommandType.MAIN].Selected(true);
         _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.SubWeapon.Value.Type];
         _selectedButtons[(int)CommandType.SUB].Disaide(true);
         _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];

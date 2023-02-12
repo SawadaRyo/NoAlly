@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9107533399227991948}
   - component: {fileID: 4286268214338972853}
   - component: {fileID: 7650394832094266046}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gale_Wall_Support_01_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3109583066097232824}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeLeftJointRotCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 268119345051466848}
   - component: {fileID: 278908864372544672}
   - component: {fileID: 286765755938552492}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gale_Wall_Support_01_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3996556317179371864}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 1392342666946661363}
   - component: {fileID: 1385584285206003003}
   - component: {fileID: 1375830254204113059}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gen_Part_04_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 3114417027712245663}
   - component: {fileID: 5800796072647719574}
   - component: {fileID: 2485191094777107541}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RightBlade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1187,7 +1187,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6642
+  m_VersionIndex: 7200
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1280,7 +1280,7 @@ GameObject:
   - component: {fileID: 8719014025993726370}
   - component: {fileID: 7972177928135558562}
   - component: {fileID: 3209613442029495905}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gen_Part_04_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1365,7 +1365,7 @@ GameObject:
   - component: {fileID: 999738196032745488}
   - component: {fileID: 3277585259843042905}
   - component: {fileID: 6766870088201453731}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeftBlade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4603
+  m_VersionIndex: 5170
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2230,7 +2230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7005363822888299535}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeRightJointRotCneter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2297,7 +2297,7 @@ GameObject:
   - component: {fileID: 4889577743309208630}
   - component: {fileID: 8943970090799820956}
   - component: {fileID: 1602629761667013115}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gen_Part_04_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2413,7 +2413,7 @@ GameObject:
   - component: {fileID: 3029679984571399441}
   - component: {fileID: 7721707182763926150}
   - component: {fileID: 1075230907285691817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gale_Wall_Support_01_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2496,7 +2496,7 @@ GameObject:
   - component: {fileID: 7885665719913412410}
   - component: {fileID: 2255850046732758144}
   - component: {fileID: 5758584929650865307}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gen_Part_04_snaps002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2577,7 +2577,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7532813902852754505}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeRightJointRotCenter (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2612,7 +2612,7 @@ GameObject:
   - component: {fileID: 7754969739145093388}
   - component: {fileID: 7775453973131319824}
   - component: {fileID: 7765572504526034340}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: bottem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2695,7 +2695,7 @@ GameObject:
   - component: {fileID: 1593274285435163017}
   - component: {fileID: 6875398247337214417}
   - component: {fileID: 4079446192919967985}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gale_Wall_Support_01_snaps002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2776,7 +2776,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4371385394319053158}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BladeLeftJointRotCenter (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2809,9 +2809,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6218827042935275423}
+  - component: {fileID: 3150411674259586267}
   - component: {fileID: 1435858823420586239}
   - component: {fileID: 822924908656088924}
-  - component: {fileID: 3150411674259586267}
+  - component: {fileID: 4977833977990741374}
   m_Layer: 7
   m_Name: Lance
   m_TagString: Untagged
@@ -2840,54 +2841,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1435858823420586239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8745504583168015379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af5cebe478a599e4a812e6b075c91969, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigitPower: 5
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _chargeLevel1: 1
-  _chargeLevel2: 3
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _weaponRenderer:
-  - {fileID: 318613260463566330}
-  - {fileID: 7765572504526034340}
-  - {fileID: 10376335919383839}
-  - {fileID: 7650394832094266046}
-  - {fileID: 3209613442029495905}
-  - {fileID: 4079446192919967985}
-  - {fileID: 5758584929650865307}
-  - {fileID: 286765755938552492}
-  - {fileID: 1602629761667013115}
-  - {fileID: 1075230907285691817}
-  - {fileID: 1375830254204113059}
-  _center: {fileID: 4319521829823698510}
---- !u!114 &822924908656088924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8745504583168015379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ca29c3ea7c258141bc626f3bbb166b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chargeLevel1: 1
-  _chargeLevel2: 3
 --- !u!95 &3150411674259586267
 Animator:
   serializedVersion: 4
@@ -2908,6 +2861,69 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1435858823420586239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8745504583168015379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af5cebe478a599e4a812e6b075c91969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectCollider:
+  - {fileID: 4977833977990741374}
+  _objectRenderer:
+  - {fileID: 5800796072647719574}
+  - {fileID: 3277585259843042905}
+  - {fileID: 10376335919383839}
+  - {fileID: 7650394832094266046}
+  - {fileID: 3209613442029495905}
+  - {fileID: 4079446192919967985}
+  - {fileID: 5758584929650865307}
+  - {fileID: 286765755938552492}
+  - {fileID: 1602629761667013115}
+  - {fileID: 1075230907285691817}
+  - {fileID: 1375830254204113059}
+  - {fileID: 318613260463566330}
+  - {fileID: 7765572504526034340}
+  _objectAnimator: {fileID: 3150411674259586267}
+  _rigitPower: 3.75
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _myParticleSystem: {fileID: 6859715716928830155}
+  _owner: 1
+--- !u!114 &822924908656088924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8745504583168015379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca29c3ea7c258141bc626f3bbb166b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chargeLevel1: 1
+  _chargeLevel2: 3
+--- !u!136 &4977833977990741374
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8745504583168015379}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &9004432886736776135
 GameObject:
   m_ObjectHideFlags: 0
@@ -3473,7 +3489,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 822
+  m_VersionIndex: 1386
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3643,12 +3659,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2594350258395383581, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594350258395383581, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 8713452603300891332, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
       propertyPath: m_Name
       value: LanceEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713452603300891332, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
       propertyPath: m_IsActive
@@ -3659,5 +3683,10 @@ PrefabInstance:
 --- !u!4 &6305533073951677393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636157993568117662, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
+  m_PrefabInstance: {fileID: 6869632923188525135}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6859715716928830155 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 29077300315030148, guid: d301345f488a8754692ee090f9b9b8b2, type: 3}
   m_PrefabInstance: {fileID: 6869632923188525135}
   m_PrefabAsset: {fileID: 0}

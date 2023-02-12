@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2437252078442642560}
   - component: {fileID: 2901029706107219884}
   - component: {fileID: 926473859757818358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1453706110838324865}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Thrusters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 7459147426999089525}
   - component: {fileID: 8844297147587375441}
   - component: {fileID: 5694990607037232205}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 5491748613549763046}
   - component: {fileID: 6726869608582957662}
   - component: {fileID: 5033112436740819932}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -298,7 +298,7 @@ GameObject:
   - component: {fileID: 4875335545465353847}
   - component: {fileID: 2517371884986065495}
   - component: {fileID: 5356748536947709658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Blade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2896
+  m_VersionIndex: 3424
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1163,7 +1163,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7806396877165033756}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1178,7 +1178,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829678449261826162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1194,7 +1194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5754131421692531226}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThrusterBorn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1313,7 +1313,7 @@ GameObject:
   - component: {fileID: 3005286004842381875}
   - component: {fileID: 2780755634758349691}
   - component: {fileID: 5046398484160822919}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1396,7 +1396,7 @@ GameObject:
   - component: {fileID: 2394016085545634052}
   - component: {fileID: 568193618918412631}
   - component: {fileID: 7499477568440260594}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1477,7 +1477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8160746031311723640}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThrusterBorn (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1510,7 +1510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4208038529607421316}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThrusterBorn (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1545,7 +1545,7 @@ GameObject:
   - component: {fileID: 2390901132406788187}
   - component: {fileID: 6571052748817902141}
   - component: {fileID: 3288756957626233760}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1626,7 +1626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5986456854987763220}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThrusterBorn (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1662,7 +1662,8 @@ GameObject:
   - component: {fileID: 2866314188640582097}
   - component: {fileID: 6332376535094752302}
   - component: {fileID: 4350358834367136211}
-  m_Layer: 0
+  - component: {fileID: 2516548322842244691}
+  m_Layer: 7
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1735,16 +1736,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18cf4fb952993e418bb592c81157062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigitPower: 5
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _chargeLevel1: 1
-  _chargeLevel2: 3
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _weaponRenderer:
+  _objectCollider:
+  - {fileID: 2516548322842244691}
+  _objectRenderer:
+  - {fileID: 2517371884986065495}
   - {fileID: 3237947595179531005}
   - {fileID: 5694990607037232205}
   - {fileID: 7499477568440260594}
@@ -1756,7 +1751,26 @@ MonoBehaviour:
   - {fileID: 3250760677562047060}
   - {fileID: 5344831945096215612}
   - {fileID: 926473859757818358}
-  _center: {fileID: 7806396877165033756}
+  _objectAnimator: {fileID: 6332376535094752302}
+  _rigitPower: 5
+  _elekePower: 0
+  _firePower: 0
+  _frozenPower: 0
+  _myParticleSystem: {fileID: 5568882972862981479}
+  _owner: 1
+--- !u!65 &2516548322842244691
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6692011100126657708}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 1.5, z: 1}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1 &7556900175095580419
 GameObject:
   m_ObjectHideFlags: 0
@@ -1766,7 +1780,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 594837274467203342}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThrusterBorn (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1801,7 +1815,7 @@ GameObject:
   - component: {fileID: 6925868422300613286}
   - component: {fileID: 351100407125711008}
   - component: {fileID: 5344831945096215612}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1884,7 +1898,7 @@ GameObject:
   - component: {fileID: 9181836753979544974}
   - component: {fileID: 796714836503459640}
   - component: {fileID: 3250760677562047060}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1967,7 +1981,7 @@ GameObject:
   - component: {fileID: 7332296159890080224}
   - component: {fileID: 2215448475441809643}
   - component: {fileID: 7867754915662612397}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2050,7 +2064,7 @@ GameObject:
   - component: {fileID: 2149898787597681629}
   - component: {fileID: 1351986725918594922}
   - component: {fileID: 2972468114190432670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordBornRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2130,8 +2144,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 7663699034045295028}
     m_Modifications:
     - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: ShapeModule.radius.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 636157993568117662, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: m_RootOrder
@@ -2139,7 +2165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 636157993568117662, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 636157993568117662, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2177,9 +2203,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 2594350258395383581, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: m_Name
       value: SwordEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713452603300891332, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: m_IsActive
@@ -2190,5 +2224,10 @@ PrefabInstance:
 --- !u!4 &5042904010241148029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636157993568117662, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+  m_PrefabInstance: {fileID: 5561919329990485987}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5568882972862981479 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
   m_PrefabInstance: {fileID: 5561919329990485987}
   m_PrefabAsset: {fileID: 0}
