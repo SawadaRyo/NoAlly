@@ -160,7 +160,8 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             default:
                 break;
         }
-        _playerContoller.Rb.velocity = vec * moveSpeed;
+        Vector3 onPlane = Vector3.ProjectOnPlane(vec, _playerContoller.HitInfo.normal);
+        _playerContoller.Rb.velocity = onPlane * moveSpeed;
     }
     void BulletFire()
     {

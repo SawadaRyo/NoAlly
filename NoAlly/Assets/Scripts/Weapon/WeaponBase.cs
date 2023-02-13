@@ -59,11 +59,7 @@ public abstract class WeaponBase : ObjectBase, IWeapon
         _type = type;
 
     }
-    public override void ActiveObject(bool stats)
-    {
-        base.ActiveObject(stats);
-        Array.ForEach(_objectCollider, x => x.enabled = false);
-    }
+    
     void OnTriggerEnter(Collider other)
     {
         WeaponAttackMovement(other);

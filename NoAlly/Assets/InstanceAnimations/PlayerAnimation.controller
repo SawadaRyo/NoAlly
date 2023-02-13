@@ -22,7 +22,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 0a9d42e2ed8b5414d980178839f7cc1b, type: 2}
+  m_Motion: {fileID: 7400000, guid: 0e2391e4e9fc5fe49aab8077eaebc7dd, type: 2}
   m_Tag: GroundAttack
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -975,7 +975,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 018f01d07820849408ba51b44b01a5d3, type: 2}
+  m_Motion: {fileID: 7400000, guid: 3780a23dc577a584887a07f2a575642e, type: 2}
   m_Tag: GroundAttackFinish
   m_SpeedParameter: 
   m_MirrorParameter: 

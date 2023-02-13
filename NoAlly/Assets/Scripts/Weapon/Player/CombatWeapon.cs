@@ -25,4 +25,9 @@ public class CombatWeapon : WeaponBase
             _myParticleSystem.Stop();
         }
     }
+    public override void ActiveObject(bool stats)
+    {
+        base.ActiveObject(stats);
+        Array.ForEach(_objectCollider, x => x.enabled = false);
+    }
 }

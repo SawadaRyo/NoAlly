@@ -2333,6 +2333,10 @@ PrefabInstance:
       value: Field2
       objectReference: {fileID: 0}
     - target: {fileID: 5175590050751068680, guid: 7b02a8e0840ec784fac1908f62c170ac, type: 3}
+      propertyPath: _stage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175590050751068680, guid: 7b02a8e0840ec784fac1908f62c170ac, type: 3}
       propertyPath: _cameraCollider
       value: 
       objectReference: {fileID: 1645784334}
@@ -2604,7 +2608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &705507994
 Light:
   m_ObjectHideFlags: 0

@@ -85,6 +85,7 @@ public class PlayerContoller : MonoBehaviour
     public Animator PlayerAnimator => _animator;
     public Rigidbody Rb => _rb;
     public PlayerVec Vec => _playerVec;
+    public RaycastHit HitInfo => _hitInfo;
     //public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
     public enum PlayerVec
     {
@@ -157,8 +158,7 @@ public class PlayerContoller : MonoBehaviour
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
             _playerVec = PlayerVec.RIGHT;
         }
-
-        if (v == 1)
+        else if (v == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
@@ -260,7 +260,7 @@ public class PlayerContoller : MonoBehaviour
                 Vector3 vec = transform.up + _wallVec * 2f;
                 if (_isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
                 else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
-                _animator.SetTrigger("WallJump");
+                //_animator.SetTrigger("WallJump");
             }
         }
         else
@@ -304,10 +304,10 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     bool IsGrounded()
     {
-        Vector3 isGroundCenter = _footPos.transform.position;
-        Ray ray = new Ray(isGroundCenter, Vector3.down);
-        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);
-        return hitFlg;
+        Vector3 isGroundCenter = _footPos.transform.position; //Rayの原点
+        Ray ray = new Ray(isGroundCenter, Vector3.down);　//Ray射出
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);　//Ray末端にSphereCast
+        return hitFlg; //接地判定をboolで返す
     }
 
     IEnumerator WallKick()

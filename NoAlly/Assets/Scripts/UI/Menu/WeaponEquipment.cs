@@ -38,12 +38,13 @@ public class WeaponEquipment : MonoBehaviour
 
     public void Initialize()
     {
-        _weaponData.Initialize(_weaponScriptableObjects, _playerContoller.GetComponent<WeaponVisualController>(), _playerContoller);
+        WeaponVisualController weaponVisualController = _playerContoller.GetComponent<WeaponVisualController>();
+        _weaponData.Initialize(_weaponScriptableObjects, weaponVisualController, _playerContoller);
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length - 1;
         for (int index = 0; index < weaponIndexNumber; index++)
         {
             WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)index);
-            _weaponMethods.Add(weapon.Base);
+            _weaponMethods.Add(weaponVisualController.WeaponPrefabs[index]);
             _mainWeapons[index].onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
             _subWeapons[index].onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
             _elements[index].onClick.AddListener(() => DisideElement((ElementType)index));

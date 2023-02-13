@@ -14,28 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponDatas:
     Entitys:
-    - Prefab: {fileID: -2170319894541615491, guid: d3890513f6ef9fc4c896ef0758264821, type: 3}
-      Base: {fileID: 4350358834367136211, guid: d3890513f6ef9fc4c896ef0758264821, type: 3}
+    - Base: {fileID: 4350358834367136211, guid: d3890513f6ef9fc4c896ef0758264821, type: 3}
       Action: {fileID: 2866314188640582097, guid: d3890513f6ef9fc4c896ef0758264821, type: 3}
       Type: 0
-      RigitPower:
-      - 5
-      - 3.75
-      ElekePower:
-      - 0
-      - 0
-      FirePower:
-      - 0
-      - 5
-      FrozenPower:
-      - 0
-      - 0
-      _chargeLevel1: 1
-      _chargeLevel2: 3
-    - Prefab: {fileID: 4268190121380155487, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
-      Base: {fileID: 1435858823420586239, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
-      Action: {fileID: 822924908656088924, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
-      Type: 1
       RigitPower:
       - 3.75
       - 2.5
@@ -50,8 +31,24 @@ MonoBehaviour:
       - 3.75
       _chargeLevel1: 1
       _chargeLevel2: 3
-    - Prefab: {fileID: -662780922585951675, guid: 8c50b16ac4bcb024b87df316a1427bb1, type: 3}
-      Base: {fileID: 3955134002871198386, guid: 8c50b16ac4bcb024b87df316a1427bb1, type: 3}
+    - Base: {fileID: 1435858823420586239, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
+      Action: {fileID: 822924908656088924, guid: c2f04f394f4627d4996145d8334d1dc4, type: 3}
+      Type: 1
+      RigitPower:
+      - 5
+      - 3.75
+      ElekePower:
+      - 0
+      - 0
+      FirePower:
+      - 0
+      - 5
+      FrozenPower:
+      - 0
+      - 0
+      _chargeLevel1: 1
+      _chargeLevel2: 3
+    - Base: {fileID: 3955134002871198386, guid: 8c50b16ac4bcb024b87df316a1427bb1, type: 3}
       Action: {fileID: 9061578903353013763, guid: 8c50b16ac4bcb024b87df316a1427bb1, type: 3}
       Type: 2
       RigitPower:
@@ -68,8 +65,7 @@ MonoBehaviour:
       - 0
       _chargeLevel1: 1
       _chargeLevel2: 3
-    - Prefab: {fileID: 2199586031287050640, guid: e658864baa1236542b182ae43f9cc4f7, type: 3}
-      Base: {fileID: -46491826598969884, guid: e658864baa1236542b182ae43f9cc4f7, type: 3}
+    - Base: {fileID: -46491826598969884, guid: e658864baa1236542b182ae43f9cc4f7, type: 3}
       Action: {fileID: 181822740134755367, guid: e658864baa1236542b182ae43f9cc4f7, type: 3}
       Type: 3
       RigitPower:

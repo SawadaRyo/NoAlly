@@ -40,7 +40,7 @@ public class BulletBase : WeaponBase
     public override void WeaponAttackMovement(Collider target)
     {
         base.WeaponAttackMovement(target);
-        if(target.TryGetComponent<EnemyStatus>(out _))
+        if(target.TryGetComponent<IHitBehavorOfAttack>(out _))
         {
             Disactive();
         }
@@ -52,13 +52,15 @@ public class BulletBase : WeaponBase
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
+        ActiveObject(true);
     }
 
     public override void Disactive()
     {
         base.Disactive();
         _rb.isKinematic = true;
-        _intervalTime = 0f;
+        _time = 0f;
+        ActiveObject(false);
     }
     public override void DisactiveForInstantiate<TOwner>(TOwner Owner)
     {
