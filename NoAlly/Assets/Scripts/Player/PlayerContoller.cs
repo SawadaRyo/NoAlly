@@ -96,7 +96,7 @@ public class PlayerContoller : MonoBehaviour
 
     void Start()
     {
-        _playerCamera = GameObject.FindObjectOfType<Camera>();
+        _playerCamera = FindObjectOfType<Camera>();
         _rb = GetComponent<Rigidbody>();
         _velo = _rb.velocity;
         _animator = GetComponent<Animator>();
@@ -120,8 +120,8 @@ public class PlayerContoller : MonoBehaviour
     {
         if (GameManager.Instance.IsGame == GameState.InGame)
         {
-            RotateMethod(_h, _v);
-            MoveMethod(_h, _isDash);
+            MoveMethod(CurrentNormal(new Vector2(_h, _v)).x, _isDash);
+            RotateMethod(CurrentNormal(new Vector2(_h, _v)));
             WallJumpMethod(_isJump, _isDash);
         }
     }
@@ -132,33 +132,44 @@ public class PlayerContoller : MonoBehaviour
     //    Ray ray = new Ray(isGroundCenter, Vector3.right);
     //    Gizmos.DrawRay(ray);
     //}
-
-    void RotateMethod(float h, float v)
+    Vector2 CurrentNormal(Vector2 inputVector)
     {
-        //if (h != 0)
-        //プレイヤーの方向転換
-        if (h > 0)
+        float h = 0;
+        float v = 0;
+        if (inputVector.x > 0)
         {
             h = _playerCamera.transform.right.x;
         }
-        else if ((h < 0))
+        else if ((inputVector.x < 0))
         {
             h = _playerCamera.transform.right.x * -1;
         }
+        if (inputVector.y > 0)
+        {
+            v = _playerCamera.transform.up.y;
+        }
 
-        if (h == -1)
+        return new Vector2(h, v);
+    }
+
+    void RotateMethod(Vector2 rotVector)
+    {
+        //if (h != 0)
+        //プレイヤーの方向転換
+
+        if (rotVector.x == -1)
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
             _playerVec = PlayerVec.LEFT;
         }
-        else if (h == 1)
+        else if (rotVector.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
             _playerVec = PlayerVec.RIGHT;
         }
-        else if (v == 1)
+        else if (rotVector.y == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
@@ -172,12 +183,11 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     void MoveMethod(float h, bool dash)
     {
-
         float moveSpeed = 0f;
         //プレイヤーの移動
         if (_animState.AbleMove)
         {
-            if (IsGrounded() && IsWalled() == PlayerClimbWall.NONE)
+            if (IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerClimbWall.NONE)
             {
                 if (dash)
                 {
@@ -191,13 +201,13 @@ public class PlayerContoller : MonoBehaviour
                 }
                 //_beforeSpeed = moveSpeed;
             }
-            else if (!IsGrounded() && IsWalled() == PlayerClimbWall.NONE)
+            else if (!IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerClimbWall.NONE)
             {
                 if (_dashChack)
                 {
                     moveSpeed = _dashSpeed;
                 }
-                else if (!_dashChack || IsWalled() != PlayerClimbWall.NONE)
+                else if (!_dashChack || IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
                 {
                     moveSpeed = _speed;
                 }
@@ -209,7 +219,7 @@ public class PlayerContoller : MonoBehaviour
                 h = 0;
             }
             Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
-            _velo.x = h * moveSpeed;
+            _velo.x = onPlane.x * moveSpeed;
             _velo.y = onPlane.y * moveSpeed;
             if (Mathf.Abs(_velo.y) <= 0.01f)
             {
@@ -242,14 +252,14 @@ public class PlayerContoller : MonoBehaviour
     /// </summary>
     void WallJumpMethod(bool jump, bool isDash)
     {
-        _animator.SetBool("WallGrip", IsWalled() != PlayerClimbWall.NONE);
+        _animator.SetBool("WallGrip", IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE);
         if (IsGrounded())
         {
             _slideWall = false;
             return;
         }
         //ToDo移動コマンドで壁キックの力が変わる様にする
-        else if (IsWalled() != PlayerClimbWall.NONE)
+        else if (IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
         {
             _slideWall = true;
             if (_dashChack) _dashChack = false;
@@ -258,7 +268,7 @@ public class PlayerContoller : MonoBehaviour
                 StartCoroutine(WallKick());
                 _audio.PlayOneShot(_jumpSound);
                 Vector3 vec = transform.up + _wallVec * 2f;
-                if (_isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
+                if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
                 else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
                 //_animator.SetTrigger("WallJump");
             }
@@ -277,7 +287,7 @@ public class PlayerContoller : MonoBehaviour
     /// <summary>
     /// 接壁判定
     /// </summary>
-    public PlayerClimbWall IsWalled()
+    public PlayerClimbWall IsWalled(Vector2 currentNormal)
     {
         if (IsGrounded()) return PlayerClimbWall.NONE;
         else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
@@ -287,13 +297,19 @@ public class PlayerContoller : MonoBehaviour
         Ray rayLeft = new(isWallCenter, Vector3.left + Vector3.up);
 
         PlayerClimbWall hitflg = PlayerClimbWall.NONE;
-        if (Physics.Raycast(rayRight, out _, _walldistance, _wallMask) && _h > 0f)
+        if (Physics.Raycast(rayRight, out _hitInfo, _walldistance, _wallMask) &&
+            currentNormal.normalized == (Vector2)_hitInfo.normal.normalized * -1)
         {
+            Debug.Log(currentNormal.normalized);
+            Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
             _wallVec = Vector3.left;
             hitflg = PlayerClimbWall.RIGHT;
         }
-        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask) && _h < 0)
+        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask) &&
+            currentNormal.normalized == (Vector2)_hitInfo.normal.normalized * -1)
         {
+            Debug.Log(currentNormal.normalized);
+            Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
             _wallVec = Vector3.right;
             hitflg |= PlayerClimbWall.LEFT;
         }

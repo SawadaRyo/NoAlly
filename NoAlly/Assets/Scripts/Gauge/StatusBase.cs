@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public abstract class StatusBase : ObjectBase
+public abstract class StatusBase : MonoBehaviour
 {
     [SerializeField, Tooltip("–³“GŽžŠÔ‚Ì’l")]
     float _invincibleTimeValue = 1f;
@@ -34,6 +34,7 @@ public abstract class StatusBase : ObjectBase
     {
         _living = true;
         _invincibleTime = new Interval(_invincibleTimeValue);
+        _animator = GetComponent<Animator>();
         if (!GetComponentInChildren<HitParameter>())
         {
             Debug.LogError("“–‚½‚è”»’è‚ª‚ ‚è‚Ü‚¹‚ñ");

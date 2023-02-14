@@ -12,7 +12,6 @@ public class EnemyStatus: StatusBase //敵の体力を管理するスクリプト
     {
         base.Initialize();
         _enemyBase = enemyBase;
-        _animator = _enemyBase.EnemyAnimator;
         _hp = _maxHP;
     }
 
