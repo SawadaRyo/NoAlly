@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponAction))]
 public abstract class WeaponBase : ObjectBase, IWeapon
 {
     [SerializeField, Header("•Ší‚Ì•¨—UŒ‚—Í")]

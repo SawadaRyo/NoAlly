@@ -1128,7 +1128,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6202
+  m_VersionIndex: 6676
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2793,7 +2793,7 @@ MonoBehaviour:
   - {fileID: 8793131453558647583}
   - {fileID: 2433419642434349965}
   _objectAnimator: {fileID: 5785630500104816687}
-  _rigitPower: 6.25
+  _rigitPower: 7.5
   _elekePower: 0
   _firePower: 0
   _frozenPower: 0
@@ -2808,7 +2808,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 9153705405047431978}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.1
   m_Height: 1.8
   m_Direction: 1
@@ -2910,7 +2910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2594350258395383581, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8713452603300891332, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_Name

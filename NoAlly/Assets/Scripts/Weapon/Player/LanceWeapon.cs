@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LanceWeapon : CombatWeapon, IWeapon
+public class LanceWeapon : CombatWeapon
 {
     public override void WeaponMode(ElementType type)
     {

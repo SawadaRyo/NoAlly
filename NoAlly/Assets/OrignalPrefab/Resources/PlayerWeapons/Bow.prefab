@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6836723613005015974
 Transform:
   m_ObjectHideFlags: 0
@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3562530485492391208
 Transform:
   m_ObjectHideFlags: 0
@@ -182,7 +182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1186362001698230578
 Transform:
   m_ObjectHideFlags: 0
@@ -215,7 +215,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5798952732430351264
 Transform:
   m_ObjectHideFlags: 0
@@ -335,7 +335,7 @@ MonoBehaviour:
   _chargeLevel2: 2
   _filePath: PlayerBullet
   _findMuzzlePath: PlayerB/Muzzle
-  _poolPos: {fileID: 6836723613005015974}
+  _poolPos: {fileID: 0}
   _personType: 0
 --- !u!114 &3955134002871198386
 MonoBehaviour:
@@ -354,7 +354,7 @@ MonoBehaviour:
   - {fileID: 3562530485494454078}
   - {fileID: 5781149409506975090}
   _objectAnimator: {fileID: 2722877322065192550}
-  _rigitPower: 0
+  _rigitPower: 5
   _elekePower: 0
   _firePower: 0
   _frozenPower: 0

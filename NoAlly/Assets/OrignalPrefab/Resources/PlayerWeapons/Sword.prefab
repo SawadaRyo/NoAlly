@@ -1072,7 +1072,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3424
+  m_VersionIndex: 3892
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1767,7 +1767,7 @@ BoxCollider:
   m_GameObject: {fileID: 6692011100126657708}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.2, y: 1.5, z: 1}
   m_Center: {x: 0, y: 0.6, z: 0}
@@ -2144,6 +2144,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 7663699034045295028}
     m_Modifications:
     - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
+      propertyPath: lengthInSec
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: ShapeModule.radius.mode
       value: 0
       objectReference: {fileID: 0}
@@ -2153,7 +2157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
       propertyPath: InitialModule.startLifetime.minScalar

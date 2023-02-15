@@ -11,19 +11,16 @@ using UniRx;
 
 public class WeaponEquipment : MonoBehaviour
 {
-    [SerializeField, Header("武器のスクリプタブルオブジェクト")]
-    WeaponScriptableObjects _weaponScriptableObjects;
     [SerializeField, Header("メイン装備を選択するボタン")]
     Button[] _mainWeapons = null;
     [SerializeField, Header("サブ装備を選択するボタン")]
     Button[] _subWeapons = null;
     [SerializeField, Header("武器の属性を選択するボタン")]
     Button[] _elements = null;
-    [SerializeField, Header("プレイヤーを格納する変数")]
-    PlayerContoller _playerContoller = null;
 
     [Tooltip("武器のデータ")]
-    SetWeaponData _weaponData = new SetWeaponData();
+    SetWeaponData _weaponData = null;
+    [Tooltip("武器の機能")]
     List<IWeapon> _weaponMethods = new();
     [Tooltip("装備中の武器")]
     ReactiveProperty<WeaponDatas> _mainWeapon = new ReactiveProperty<WeaponDatas>();
@@ -36,20 +33,23 @@ public class WeaponEquipment : MonoBehaviour
     public IReadOnlyReactiveProperty<WeaponDatas> SubWeapon => _subWeapon;
 
 
-    public void Initialize()
+    public void Initialize(SetWeaponData weaponData)
     {
-        WeaponVisualController weaponVisualController = _playerContoller.GetComponent<WeaponVisualController>();
-        _weaponData.Initialize(_weaponScriptableObjects, weaponVisualController, _playerContoller);
+        _weaponData = weaponData;
         int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length - 1;
+
         for (int index = 0; index < weaponIndexNumber; index++)
         {
             WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)index);
-            _weaponMethods.Add(weaponVisualController.WeaponPrefabs[index]);
+            _weaponMethods.Add(weapon.Base);
             _mainWeapons[index].onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
             _subWeapons[index].onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
-            _elements[index].onClick.AddListener(() => DisideElement((ElementType)index));
-            Debug.Log((ElementType)index);
-            Debug.Log(_elements[index]);
+            Debug.Log(index);
+            _elements[index].onClick.AddListener(() =>
+            {
+                Debug.Log(index);
+                DisideElement(index);
+            });
         }
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
@@ -79,10 +79,16 @@ public class WeaponEquipment : MonoBehaviour
             }
         }
     }
-    public void DisideElement(ElementType element)
+    void DisideElement(int element)
     {
-        _elementType = element;
-        _weaponMethods.ForEach(x => x.WeaponMode(element));
+        Debug.Log(element);
+        _elementType = (ElementType)element;
+        Debug.Log(_elementType);
+        _weaponMethods.ForEach(x =>
+        {
+            x.WeaponMode(_elementType);
+            Debug.Log(_elementType);
+        });
     }
 
     /// <summary>
@@ -90,14 +96,14 @@ public class WeaponEquipment : MonoBehaviour
     /// </summary>
     /// <param name="weaponEnabled">現在の武器の使用状況</param>
     /// <returns></returns>
-    public WeaponDatas CheckWeaponActive((bool,bool) weaponEnabled)
+    public WeaponDatas CheckWeaponActive((bool, bool) weaponEnabled)
     {
         if (weaponEnabled.Item1)
         {
             return _mainWeapon.Value;
         }
         return _subWeapon.Value;
-        
+
     }
 
     private void OnDisable()

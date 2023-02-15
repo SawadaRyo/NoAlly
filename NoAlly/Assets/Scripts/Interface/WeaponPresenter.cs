@@ -2,23 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DataOfWeapon;
 
 public class WeaponPresenter : MonoBehaviour
 {
-    [Header("Model")]
-    [SerializeField, Tooltip("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
-    WeaponEquipment _weaponEquipment = null;
-    
+    [SerializeField,Header("WeaponScriptableObjects")]
+    WeaponScriptableObjects _weaponScriptableObjects;
+    [SerializeField,Header("WeaponScriptableObjects")]
+    PlayerContoller _playerContoller;
 
+    [Space(15)]
+    [Header("Model")]
+    [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
+    WeaponEquipment _weaponEquipment = null;
+
+    [Space(15)]
     [Header("View")]
-    [SerializeField, Tooltip("WeaponVisualController‚ğŠi”[‚·‚éŠÖ”")]
+    [SerializeField, Header("WeaponVisualController‚ğŠi”[‚·‚éŠÖ”")]
     WeaponVisualController _weaponVisual = null;
-    [SerializeField, Tooltip("WeaponProcessing‚ğŠi”[‚·‚éŠÖ”")]
+    [SerializeField, Header("WeaponProcessing‚ğŠi”[‚·‚éŠÖ”")]
     WeaponProcessing _weaponProcessing = null;
+
+    SetWeaponData _weaponData = null;
     void Awake()
     {
-        _weaponEquipment.Initialize();
-        _weaponVisual.Initialize(_weaponEquipment.Data.GetAllWeapons,_weaponEquipment.MainWeapon.Value,_weaponEquipment.SubWeapon.Value);
+        _weaponData = new SetWeaponData(_weaponScriptableObjects,_playerContoller);
+        _weaponVisual.Initialize(_weaponData.GetAllWeapons);
+        _weaponEquipment.Initialize(_weaponData);
         WeaponEquipmentState();
         WeaponProcessingState();
     }
