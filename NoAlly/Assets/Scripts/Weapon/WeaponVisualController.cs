@@ -11,8 +11,6 @@ public class WeaponVisualController : MonoBehaviour
 
     [Tooltip("武器のプレハブ")]
     WeaponBase[] _weaponPrefabs = new WeaponBase[Enum.GetNames(typeof(WeaponType)).Length - 1];
-    [Tooltip("武器の挙動")]
-    WeaponAction[] _weaponActions;
     [Tooltip("メイン武器")]
     WeaponDatas _mainWeapon;
     [Tooltip("サブ配置")]
@@ -27,10 +25,12 @@ public class WeaponVisualController : MonoBehaviour
         for (int index = 0; index < weapons.Length; index++)
         {
             _weaponPrefabs[index] = Instantiate(weapons[index].Base, _weaponTransform[index]);
-            _weaponPrefabs[index].Disactive();
+            _weaponPrefabs[index].DisactiveForInstantiate();
         }
-        //_mainWeapon = firstMainWeapon;
-        //_subWeapon = firstSubWeapon;
+    }
+    public void FirstSetWeapon((WeaponDatas, WeaponDatas) weapons)
+    {
+        
     }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数

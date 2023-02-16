@@ -51,6 +51,10 @@ public class WeaponEquipment : MonoBehaviour
                 DisideElement(index);
             });
         }
+    }
+
+    public void FirstSetWeapon()
+    {
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
     }
@@ -103,7 +107,6 @@ public class WeaponEquipment : MonoBehaviour
             return _mainWeapon.Value;
         }
         return _subWeapon.Value;
-
     }
 
     private void OnDisable()

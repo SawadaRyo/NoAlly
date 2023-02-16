@@ -29,6 +29,7 @@ public class WeaponPresenter : MonoBehaviour
         _weaponData = new SetWeaponData(_weaponScriptableObjects,_playerContoller);
         _weaponVisual.Initialize(_weaponData.GetAllWeapons);
         _weaponEquipment.Initialize(_weaponData);
+        _weaponEquipment.FirstSetWeapon();
         WeaponEquipmentState();
         WeaponProcessingState();
     }
@@ -38,6 +39,8 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment.MainWeapon
             .Subscribe(mainWeapon =>
             {
+                if (mainWeapon == null) return;
+
                 _weaponVisual.SetEquipment(mainWeapon, CommandType.MAIN);
                 _weaponProcessing.TargetWeapon = _weaponEquipment
                                                  .CheckWeaponActive(_weaponVisual
@@ -46,6 +49,8 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment.SubWeapon
             .Subscribe(subWeapon =>
             {
+                if (subWeapon == null) return;
+
                 _weaponVisual.SetEquipment(subWeapon, CommandType.SUB);
                 _weaponProcessing.TargetWeapon = _weaponEquipment
                                                  .CheckWeaponActive(_weaponVisual

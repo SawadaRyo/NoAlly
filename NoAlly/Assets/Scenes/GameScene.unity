@@ -4978,6 +4978,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f10706c16b1304c438d147cea48f8fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
+  _playerContoller: {fileID: 2136159443}
   _weaponEquipment: {fileID: 1921753772}
   _weaponVisual: {fileID: 2136159438}
   _weaponProcessing: {fileID: 2136159437}
