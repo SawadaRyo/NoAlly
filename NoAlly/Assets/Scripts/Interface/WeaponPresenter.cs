@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UniRx;
 using DataOfWeapon;
 
 public class WeaponPresenter : MonoBehaviour
 {
-    [SerializeField,Header("WeaponScriptableObjects")]
+    [SerializeField,Header("WeaponScriptableObjects–{‘Ì")]
     WeaponScriptableObjects _weaponScriptableObjects;
-    [SerializeField,Header("WeaponScriptableObjects")]
+    [SerializeField,Header("ƒvƒŒƒCƒ„[")]
     PlayerContoller _playerContoller;
+    [SerializeField, Header("Canvas“à‚Ì‘Sƒ{ƒ^ƒ“")]
+    WeaponCommandButton[,] _allButtons = null;
 
     [Space(15)]
     [Header("Model")]
@@ -18,6 +21,8 @@ public class WeaponPresenter : MonoBehaviour
 
     [Space(15)]
     [Header("View")]
+    [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
+    WeaponMenuHander _weaponMenuHander = null;
     [SerializeField, Header("WeaponVisualController‚ğŠi”[‚·‚éŠÖ”")]
     WeaponVisualController _weaponVisual = null;
     [SerializeField, Header("WeaponProcessing‚ğŠi”[‚·‚éŠÖ”")]
@@ -29,7 +34,8 @@ public class WeaponPresenter : MonoBehaviour
         _weaponData = new SetWeaponData(_weaponScriptableObjects,_playerContoller);
         _weaponVisual.Initialize(_weaponData.GetAllWeapons);
         _weaponEquipment.Initialize(_weaponData);
-        _weaponEquipment.FirstSetWeapon();
+        _weaponMenuHander.Initialize(_allButtons);
+        _weaponVisual.FirstSetWeapon(_weaponEquipment.FirstSetWeapon());
         WeaponEquipmentState();
         WeaponProcessingState();
     }

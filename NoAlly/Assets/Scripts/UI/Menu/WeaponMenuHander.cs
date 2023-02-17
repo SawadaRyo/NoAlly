@@ -24,50 +24,50 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     [Tooltip("")] 
     GameObject _canvas = default;
     [Tooltip("選択中のボタン")]
-    MenuCommandButton _targetButton = default;
-    [Tooltip("")] 
-    MenuCommandButton[] _selectedButtons = null;
+    IWeaponCommand _targetButton = default;
     [Tooltip("")]
-    MenuCommandButton[,] _allButtons = default;
+    IWeaponCommand[] _selectedButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length];
+    [Tooltip("")]
+    IWeaponCommand[,] _allButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length, 
+                                                             Enum.GetNames(typeof(ElementType)).Length];
     [Tooltip("")] 
     Interval _canMove = default;
 
     public bool MenuIsOpen => _menuIsOpen;
 
-    void Start()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
+    
+    public void Initialize(WeaponCommandButton[,] buttonArray)
     {
         _canMove = new Interval(_interval);
-
-        _allButtons = new MenuCommandButton[Enum.GetNames(typeof(CommandType)).Length, Enum.GetNames(typeof(ElementType)).Length]; 
-        _selectedButtons = new MenuCommandButton[Enum.GetNames(typeof(CommandType)).Length];
         int length = 0;
 
-        //Canvas上の全てのButtonを取得する。
-        Button[] buttonArray = GetComponentsInChildren<Button>(true);
-
-        //MenuCommandButtonをインスタンスする
         for (int y = 0; y < _allButtons.GetLength(0); y++)
         {
             for (int x = 0; x < _allButtons.GetLength(1); x++)
             {
-                if ((CommandType)y != CommandType.ElEMENT)
-                {
-                    _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (WeaponType)x, (CommandType)y);
-                }
-                else
-                {
-                    _allButtons[y, x] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[length], (ElementType)x, (CommandType)y);
-                }
-                _selectedButtons[y] = _allButtons[y, x];
+                _allButtons[y, x] = buttonArray[y,x];
                 _allButtons[y, x].Command.enabled = false;
                 length++;
             }
         }
+
+        //MenuCommandButtonをインスタンスする
+        //for (int y = 0; y < _allButtons.GetLength(0); y++)
+        //{
+        //    for (int x = 0; x < _allButtons.GetLength(1); x++)
+        //    {
+        //        if ((CommandType)y != CommandType.ElEMENT)
+        //        {
+        //            _allButtons[y, x] = new CommandButton(CommandButton.ButtonState.None, buttonArray[length], (WeaponType)x, (CommandType)y);
+        //        }
+        //        else
+        //        {
+        //            _allButtons[y, x] = new CommandButton(CommandButton.ButtonState.None, buttonArray[length], (ElementType)x, (CommandType)y);
+        //        }
+        //        _allButtons[y, x].Command.enabled = false;
+        //        length++;
+        //    }
+        //}
         _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.MainWeapon.Value.Type];
         _selectedButtons[(int)CommandType.MAIN].Disaide(true);
         _selectedButtons[(int)CommandType.MAIN].Selected(true);
@@ -106,7 +106,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
 
             if (_canMove.IsCountUp() && (h != 0 || v != 0))
             {
-                MenuCommandButton b = SelectButton(h, v);
+                IWeaponCommand b = (WeaponCommandButton)SelectButton(h, v);
                 if (b.Command)
                 {
                     _targetButton.Selected(false);
@@ -134,7 +134,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
             //if (gpi.gameObject.tag == "ChackFrame") return;
             gpi.enabled = isOpen;
         }
-        foreach (MenuCommandButton b in _allButtons)
+        foreach (CommandButton b in _allButtons)
         {
             b.Command.enabled = isOpen;
         }
@@ -159,7 +159,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    MenuCommandButton SelectButton(float h, float v)
+    IWeaponCommand SelectButton(float h, float v)
     {
         _canMove.ResetTimer();
         if (h > 0)
@@ -188,7 +188,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     /// 選択されたボタンに登録された関数を実行する関数
     /// </summary>
     /// <param name="targetButton"></param>
-    void DisideCommand(MenuCommandButton targetButton)
+    void DisideCommand(IWeaponCommand targetButton)
     {
         switch (targetButton.TypeOfCommand)
         {

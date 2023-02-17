@@ -53,10 +53,11 @@ public class WeaponEquipment : MonoBehaviour
         }
     }
 
-    public void FirstSetWeapon()
+    public (WeaponDatas,WeaponDatas) FirstSetWeapon()
     {
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
+        return (_mainWeapon.Value, _subWeapon.Value);
     }
     /// <summary> ‚±‚±‚Å‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚é</summary>
     /// <param name="weaponName"></param>

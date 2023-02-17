@@ -30,7 +30,8 @@ public class WeaponVisualController : MonoBehaviour
     }
     public void FirstSetWeapon((WeaponDatas, WeaponDatas) weapons)
     {
-        
+        _mainWeapon = weapons.Item1;
+        _subWeapon = weapons.Item2;
     }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数

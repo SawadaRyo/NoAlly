@@ -19,11 +19,11 @@ public class MenuHanderBase : MonoBehaviour
     [Tooltip("")]
     GameObject _canvas = default;
     [Tooltip("選択中のボタン")]
-    MenuCommandButton _targetButton = default;
+    ICommandButton _targetButton = default;
     [Tooltip("")]
-    MenuCommandButton _selectedButtons = null;
+    ICommandButton _selectedButtons = null;
     [Tooltip("")]
-    MenuCommandButton[] _allButtons = null;
+    ICommandButton[] _allButtons = null;
     [Tooltip("")]
     Interval _canMove = default;
 
@@ -31,18 +31,12 @@ public class MenuHanderBase : MonoBehaviour
 
     
 
-    public void Initialize()
+    public void Initialize(CommandButton[] buttonArray)
     {
         _canMove = new Interval(_interval);
 
         //Canvas上の全てのButtonを取得する。
-        Button[] buttonArray = GetComponentsInChildren<Button>(true);
-        _allButtons = new MenuCommandButton[buttonArray.Length];
-
-        for(int i = 0;i < _allButtons.Length; i++)
-        {
-            _allButtons[i] = new MenuCommandButton(MenuCommandButton.ButtonState.None, buttonArray[i]);
-        }
+        _allButtons = buttonArray;
 
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
@@ -69,7 +63,7 @@ public class MenuHanderBase : MonoBehaviour
 
             if (_canMove.IsCountUp() && (v != 0))
             {
-                MenuCommandButton b = SelectButton(v);
+                ICommandButton b = SelectButton(v);
                 if (b.Command)
                 {
                     _targetButton.Selected(false);
@@ -97,7 +91,7 @@ public class MenuHanderBase : MonoBehaviour
             //if (gpi.gameObject.tag == "ChackFrame") return;
             gpi.enabled = isOpen;
         }
-        foreach (MenuCommandButton b in _allButtons)
+        foreach (CommandButton b in _allButtons)
         {
             b.Command.enabled = isOpen;
         }
@@ -112,7 +106,7 @@ public class MenuHanderBase : MonoBehaviour
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
-    MenuCommandButton SelectButton(float v)
+    ICommandButton SelectButton(float v)
     {
         _canMove.ResetTimer();
         if (v < 0)
@@ -131,8 +125,8 @@ public class MenuHanderBase : MonoBehaviour
     /// 選択されたボタンに登録された関数を実行する関数
     /// </summary>
     /// <param name="targetButton"></param>
-    void DisideCommand(MenuCommandButton targetButton)
+    void DisideCommand(ICommandButton targetButton)
     {
-        _targetButton.Disaide(true);
+        targetButton.Disaide(true);
     }
 }
