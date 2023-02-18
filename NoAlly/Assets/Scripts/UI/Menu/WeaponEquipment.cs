@@ -1,5 +1,6 @@
 using DataOfWeapon;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ using UniRx;
 /// 武器・エンチャントを変更するためのコンポーネント
 /// </summary>
 
-public class WeaponEquipment : MonoBehaviour
+public class WeaponEquipment : MonoBehaviour,IMenu<IWeaponCommand>
 {
     [SerializeField, Header("メイン装備を選択するボタン")]
     Button[] _mainWeapons = null;
@@ -31,7 +32,8 @@ public class WeaponEquipment : MonoBehaviour
     public ElementType Element => _elementType;
     public IReadOnlyReactiveProperty<WeaponDatas> MainWeapon => _mainWeapon;
     public IReadOnlyReactiveProperty<WeaponDatas> SubWeapon => _subWeapon;
-
+    public IWeaponCommand TargetButton(Vector2 mapPos) => AllButton[(int)mapPos.y, (int)mapPos.x];
+    public IWeaponCommand[,] AllButton { get; private set; }
 
     public void Initialize(SetWeaponData weaponData)
     {
@@ -52,14 +54,13 @@ public class WeaponEquipment : MonoBehaviour
             });
         }
     }
-
     public (WeaponDatas,WeaponDatas) FirstSetWeapon()
     {
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
         return (_mainWeapon.Value, _subWeapon.Value);
     }
-    /// <summary> ここで装備武器を切り替える</summary>
+    /// <summary> 装備武器を切り替える</summary>
     /// <param name="weaponName"></param>
     /// <param name="type"></param>
     public void Equipment(CommandType type, WeaponDatas weaponName)
@@ -84,6 +85,10 @@ public class WeaponEquipment : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// 属性を切り替える
+    /// </summary>
+    /// <param name="element"></param>
     void DisideElement(int element)
     {
         Debug.Log(element);
@@ -95,7 +100,6 @@ public class WeaponEquipment : MonoBehaviour
             Debug.Log(_elementType);
         });
     }
-
     /// <summary>
     /// 使用中の武器を指定する関数
     /// </summary>
@@ -114,6 +118,20 @@ public class WeaponEquipment : MonoBehaviour
     {
         _mainWeapon.Dispose();
         _subWeapon.Dispose();
+    }
+
+
+    public void SetButtonMap(IWeaponCommand[] allButtons)
+    {
+        for (int y = 0; y < AllButton.GetLength(0); y++)
+        {
+            IWeaponCommand[] buttonArray = allButtons.Where(x => x.TypeOfCommand == (CommandType)y).ToArray();
+            for (int x = 0; x < AllButton.GetLength(1); x++)
+            {
+                AllButton[y, x] = buttonArray[x];
+                AllButton[y, x].Command.enabled = false;
+            }
+        }
     }
 }
 

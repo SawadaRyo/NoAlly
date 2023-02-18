@@ -12,7 +12,7 @@ public class WeaponPresenter : MonoBehaviour
     [SerializeField,Header("ƒvƒŒƒCƒ„[")]
     PlayerContoller _playerContoller;
     [SerializeField, Header("Canvas“à‚Ì‘Sƒ{ƒ^ƒ“")]
-    WeaponCommandButton[,] _allButtons = null;
+    ICommandButton[] _allButtons = null;
 
     [Space(15)]
     [Header("Model")]
@@ -21,12 +21,12 @@ public class WeaponPresenter : MonoBehaviour
 
     [Space(15)]
     [Header("View")]
-    [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
-    WeaponMenuHander _weaponMenuHander = null;
     [SerializeField, Header("WeaponVisualController‚ğŠi”[‚·‚éŠÖ”")]
     WeaponVisualController _weaponVisual = null;
     [SerializeField, Header("WeaponProcessing‚ğŠi”[‚·‚éŠÖ”")]
     WeaponProcessing _weaponProcessing = null;
+    [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
+    IMenuHander<ICommandButton> _weaponMenuHander = null;
 
     SetWeaponData _weaponData = null;
     void Awake()

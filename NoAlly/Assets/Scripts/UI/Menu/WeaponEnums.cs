@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum CommandType
-{
-    MAIN = 0,
-    SUB = 1,
-    ElEMENT = 2
-}
+
 public enum WeaponType
 {
     NONE = -1,

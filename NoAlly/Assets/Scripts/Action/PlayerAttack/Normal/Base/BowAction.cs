@@ -26,7 +26,7 @@ public class BowAction : WeaponAction, IObjectGenerator
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _poolPos, (BulletType)i);
-            Debug.Log(_keys[i]);
+            //Debug.Log(_keys[i]);
             _bPool.SetCapacity(_keys[i], 10);
         }
 

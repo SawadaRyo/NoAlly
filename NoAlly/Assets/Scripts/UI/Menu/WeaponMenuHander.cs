@@ -4,50 +4,52 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
+public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander<IWeaponCommand>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
     [SerializeField, Tooltip("メインメニューのプレハブ")] WeaponEquipment _mainManu = null;
 
 
-    [Tooltip("メニュー画面の開閉確認")] 
+    [Tooltip("メニュー画面の開閉確認")]
     bool _menuIsOpen = false;
-    [Tooltip("横入力")] 
+    [Tooltip("横入力")]
     int _crossH = 0;
-    [Tooltip("縦入力")] 
+    [Tooltip("縦入力")]
     int _crossV = 0;
-    [Tooltip("")] 
+    [Tooltip("")]
     Image[] _gameUIGauges = default;
-    [Tooltip("")] 
+    [Tooltip("")]
     Image[] _gamePanelsImages = default;
-    [Tooltip("")] 
+    [Tooltip("")]
     GameObject _canvas = default;
     [Tooltip("選択中のボタン")]
     IWeaponCommand _targetButton = default;
     [Tooltip("")]
     IWeaponCommand[] _selectedButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length];
     [Tooltip("")]
-    IWeaponCommand[,] _allButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length, 
+    IWeaponCommand[,] _allButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length,
                                                              Enum.GetNames(typeof(ElementType)).Length];
-    [Tooltip("")] 
+    [Tooltip("")]
     Interval _canMove = default;
 
     public bool MenuIsOpen => _menuIsOpen;
 
-    
-    public void Initialize(WeaponCommandButton[,] buttonArray)
+    /// <summary>
+    /// 起動時処理
+    /// </summary>
+    /// <param name="allbuttons"></param>
+    public void Initialize(IWeaponCommand[] allbuttons)
     {
         _canMove = new Interval(_interval);
-        int length = 0;
 
         for (int y = 0; y < _allButtons.GetLength(0); y++)
         {
+            IWeaponCommand[] buttonArray = allbuttons.Where(x => x.TypeOfCommand == (CommandType)y).ToArray();
             for (int x = 0; x < _allButtons.GetLength(1); x++)
             {
-                _allButtons[y, x] = buttonArray[y,x];
+                _allButtons[y, x] = buttonArray[x];
                 _allButtons[y, x].Command.enabled = false;
-                length++;
             }
         }
 
@@ -121,7 +123,6 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
             }
         }
     }
-
     /// <summary>
     /// メニュー画面の展開
     /// </summary>
@@ -159,7 +160,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    IWeaponCommand SelectButton(float h, float v)
+    public IWeaponCommand SelectButton(float h, float v)
     {
         _canMove.ResetTimer();
         if (h > 0)
@@ -188,7 +189,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     /// 選択されたボタンに登録された関数を実行する関数
     /// </summary>
     /// <param name="targetButton"></param>
-    void DisideCommand(IWeaponCommand targetButton)
+    public void DisideCommand(IWeaponCommand targetButton)
     {
         switch (targetButton.TypeOfCommand)
         {
@@ -222,8 +223,9 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>
     /// </summary>
     void MenuOpen()
     {
-        _allButtons[_crossV, _crossH].Command.Select();
-        _targetButton = _allButtons[_crossV, _crossH];
+        _targetButton = SelectButton(_crossV, _crossH);
+        //_allButtons[_crossV, _crossH].Command.Select();
+        //_targetButton = _allButtons[_crossV, _crossH];
     }
     /// <summary>
     /// メニュー画面縮小時に呼ぶ関数
