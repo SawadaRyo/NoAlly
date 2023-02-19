@@ -2896,6 +2896,7 @@ MonoBehaviour:
   _frozenPower: 0
   _myParticleSystem: {fileID: 6859715716928830155}
   _owner: 1
+  _weaponAnimator: {fileID: 3150411674259586267}
 --- !u!114 &822924908656088924
 MonoBehaviour:
   m_ObjectHideFlags: 0

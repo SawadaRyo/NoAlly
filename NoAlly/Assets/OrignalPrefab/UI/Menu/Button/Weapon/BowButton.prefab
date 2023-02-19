@@ -182,7 +182,7 @@ RectTransform:
   m_GameObject: {fileID: 2296804902364465842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2394095713864630280}
@@ -315,9 +315,8 @@ MonoBehaviour:
   _buttonColors:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _commandType: 0
   _weaponName: 2
-  _elementType: 0
-  _type: 0
 --- !u!1 &2323488720813108222
 GameObject:
   m_ObjectHideFlags: 0

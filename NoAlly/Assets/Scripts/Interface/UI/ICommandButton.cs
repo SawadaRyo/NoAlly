@@ -19,6 +19,6 @@ public enum CommandType
 {
     MAIN = 0,
     SUB = 1,
-    ElEMENT = 2
+    ELEMENT = 2
 }
 

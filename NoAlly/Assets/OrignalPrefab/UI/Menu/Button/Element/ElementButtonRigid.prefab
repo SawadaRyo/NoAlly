@@ -164,7 +164,8 @@ GameObject:
   - component: {fileID: 8889861418534739583}
   - component: {fileID: 4526890191748879344}
   - component: {fileID: 8387073961421225971}
-  - component: {fileID: -8244821745652775774}
+  - component: {fileID: 8478080462538791760}
+  - component: {fileID: -7253260119866612243}
   m_Layer: 5
   m_Name: ElementButtonRigid
   m_TagString: Untagged
@@ -181,7 +182,7 @@ RectTransform:
   m_GameObject: {fileID: 8230980208611917805}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1262723006131892276}
@@ -276,7 +277,27 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-8244821745652775774
+--- !u!95 &8478080462538791760
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8230980208611917805}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cc4015b5455f71246a6dedc5d6a33c99, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-7253260119866612243
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -285,6 +306,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8230980208611917805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac9238978ad7f054ab985464e6300406, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d7894d0d9cd0ab4dbc50d39d21f4ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _button: {fileID: 8387073961421225971}
+  _animator: {fileID: 8478080462538791760}
+  _buttonColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _commandType: 0
+  _elementType: 0

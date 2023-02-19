@@ -3,59 +3,57 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UniRx;
 
 /// <summary>
 /// 武器・エンチャントを変更するためのコンポーネント
 /// </summary>
 
-public class WeaponEquipment : MonoBehaviour,IMenu<IWeaponCommand>
+public class WeaponEquipment : MonoBehaviour, IMenu<ICommandButton>
 {
-    [SerializeField, Header("メイン装備を選択するボタン")]
-    Button[] _mainWeapons = null;
-    [SerializeField, Header("サブ装備を選択するボタン")]
-    Button[] _subWeapons = null;
-    [SerializeField, Header("武器の属性を選択するボタン")]
-    Button[] _elements = null;
+    [SerializeField, Header("メインメニュー内の全てのボタン")]
+    CommandButton[] _allButton = null;
 
     [Tooltip("武器のデータ")]
     SetWeaponData _weaponData = null;
     [Tooltip("武器の機能")]
     List<IWeapon> _weaponMethods = new();
-    [Tooltip("装備中の武器")]
+    [Tooltip("装備中の武器と属性")]
     ReactiveProperty<WeaponDatas> _mainWeapon = new ReactiveProperty<WeaponDatas>();
     ReactiveProperty<WeaponDatas> _subWeapon = new ReactiveProperty<WeaponDatas>();
     ElementType _elementType = default;
+    [Tooltip("")]
+    ICommandButton[] _selectedButtons = new ICommandButton[Enum.GetNames(typeof(CommandType)).Length];
 
     public SetWeaponData Data => _weaponData;
     public ElementType Element => _elementType;
     public IReadOnlyReactiveProperty<WeaponDatas> MainWeapon => _mainWeapon;
     public IReadOnlyReactiveProperty<WeaponDatas> SubWeapon => _subWeapon;
-    public IWeaponCommand TargetButton(Vector2 mapPos) => AllButton[(int)mapPos.y, (int)mapPos.x];
-    public IWeaponCommand[,] AllButton { get; private set; }
+    public ICommandButton SelectButton(int crossH, int crossV) => AllButton[crossV, crossH];
+    public ICommandButton[,] AllButton { get; private set; }
+    public ICommandButton[] SelectedButtons { get => _selectedButtons; set => _selectedButtons = value; }
 
-    public void Initialize(SetWeaponData weaponData)
+    /// <summary>
+    /// 起動時に呼ぶ関数
+    /// </summary>
+    /// <param name="weaponData"></param>
+    public void Initialize()
+    {
+        AllButton = new ICommandButton[Enum.GetNames(typeof(CommandType)).Length, Enum.GetNames(typeof(WeaponType)).Length - 1];
+        int indexX = AllButton.GetLength(1);
+        int indexY = AllButton.GetLength(0);
+        ICommandButton[] allButton = _allButton
+            .Where(x => x.TryGetComponent(out ICommandButton button))
+            .Select(x => (ICommandButton)x).ToArray();
+        SetButtonMap(allButton, indexX, indexY);
+    }
+    /// <summary>
+    /// 装備を初期隠す関数
+    /// </summary>
+    /// <returns></returns>
+    public (WeaponDatas, WeaponDatas) FirstSetWeapon(SetWeaponData weaponData)
     {
         _weaponData = weaponData;
-        int weaponIndexNumber = Enum.GetNames(typeof(WeaponType)).Length - 1;
-
-        for (int index = 0; index < weaponIndexNumber; index++)
-        {
-            WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)index);
-            _weaponMethods.Add(weapon.Base);
-            _mainWeapons[index].onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
-            _subWeapons[index].onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
-            Debug.Log(index);
-            _elements[index].onClick.AddListener(() =>
-            {
-                Debug.Log(index);
-                DisideElement(index);
-            });
-        }
-    }
-    public (WeaponDatas,WeaponDatas) FirstSetWeapon()
-    {
         _mainWeapon.Value = _weaponData.GetWeapon(WeaponType.SWORD);
         _subWeapon.Value = _weaponData.GetWeapon(WeaponType.LANCE);
         return (_mainWeapon.Value, _subWeapon.Value);
@@ -89,17 +87,7 @@ public class WeaponEquipment : MonoBehaviour,IMenu<IWeaponCommand>
     /// 属性を切り替える
     /// </summary>
     /// <param name="element"></param>
-    void DisideElement(int element)
-    {
-        Debug.Log(element);
-        _elementType = (ElementType)element;
-        Debug.Log(_elementType);
-        _weaponMethods.ForEach(x =>
-        {
-            x.WeaponMode(_elementType);
-            Debug.Log(_elementType);
-        });
-    }
+
     /// <summary>
     /// 使用中の武器を指定する関数
     /// </summary>
@@ -113,25 +101,57 @@ public class WeaponEquipment : MonoBehaviour,IMenu<IWeaponCommand>
         }
         return _subWeapon.Value;
     }
-
-    private void OnDisable()
+    /// <summary>
+    /// メニュー内のボタン配列を初期化する関数
+    /// </summary>
+    /// <param name="allButtons"></param>
+    /// <param name="indexX"></param>
+    /// <param name="indexY"></param>
+    public void SetButtonMap(ICommandButton[] allButtons, int indexX, int indexY)
     {
-        _mainWeapon.Dispose();
-        _subWeapon.Dispose();
-    }
-
-
-    public void SetButtonMap(IWeaponCommand[] allButtons)
-    {
-        for (int y = 0; y < AllButton.GetLength(0); y++)
+        for (int y = 0; y < indexY; y++)
         {
-            IWeaponCommand[] buttonArray = allButtons.Where(x => x.TypeOfCommand == (CommandType)y).ToArray();
-            for (int x = 0; x < AllButton.GetLength(1); x++)
+            ICommandButton[] buttonArray = allButtons.Where(b => b.TypeOfCommand == (CommandType)y).ToArray();
+            for (int x = 0; x < indexX; x++)
             {
+                WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)x);
+                _weaponMethods.Add(weapon.Base);
+                switch ((CommandType)y)
+                {
+                    case CommandType.MAIN:
+                        buttonArray[x].Command.onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
+                        break;
+                    case CommandType.SUB:
+                        buttonArray[x].Command.onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
+                        break;
+                    case CommandType.ELEMENT:
+                        buttonArray[x].Command.onClick.AddListener(() =>
+                        {
+                            ElementType element = (ElementType)x;
+                            Debug.Log(element);
+                            _weaponMethods.ForEach(x =>
+                            {
+                                x.WeaponMode(element);
+                            });
+                            _elementType = element;
+                        });
+                        break;
+                }
                 AllButton[y, x] = buttonArray[x];
                 AllButton[y, x].Command.enabled = false;
             }
         }
+        AllButton[(int)CommandType.MAIN, (int)WeaponType.SWORD].Disaide(true);
+        _selectedButtons[(int)CommandType.MAIN] = AllButton[(int)CommandType.MAIN, (int)WeaponType.SWORD];
+        AllButton[(int)CommandType.SUB, (int)WeaponType.LANCE].Disaide(true);
+        _selectedButtons[(int)CommandType.SUB] = AllButton[(int)CommandType.SUB, (int)WeaponType.LANCE];
+        AllButton[(int)CommandType.ELEMENT, (int)ElementType.RIGIT].Disaide(true);
+        _selectedButtons[(int)CommandType.ELEMENT] = AllButton[(int)CommandType.ELEMENT, (int)ElementType.RIGIT];
+    }
+    private void OnDisable()
+    {
+        _mainWeapon.Dispose();
+        _subWeapon.Dispose();
     }
 }
 

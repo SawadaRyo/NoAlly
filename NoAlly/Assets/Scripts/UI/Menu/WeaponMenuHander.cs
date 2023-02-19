@@ -1,22 +1,28 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
-public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander<IWeaponCommand>
+public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander<ICommandButton>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
-    [SerializeField, Tooltip("メインメニューのプレハブ")] WeaponEquipment _mainManu = null;
+    [SerializeField, Tooltip("メインメニューのプレハブ")] 
+    WeaponEquipment _mainManu = null;
 
 
     [Tooltip("メニュー画面の開閉確認")]
     bool _menuIsOpen = false;
     [Tooltip("横入力")]
-    int _crossH = 0;
+    int _crossH;
     [Tooltip("縦入力")]
-    int _crossV = 0;
+    int _crossV;
+    [Tooltip("横入力(ReactiveProperty)")]
+    IntReactiveProperty _reactiveCrossH = new(0);
+    [Tooltip("縦入力(ReactiveProperty)")]
+    IntReactiveProperty _reactiveCrossV = new(0);
+    [Tooltip("決定中のボタン")]
+    BoolReactiveProperty _isDiside = new();
     [Tooltip("")]
     Image[] _gameUIGauges = default;
     [Tooltip("")]
@@ -24,59 +30,24 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     [Tooltip("")]
     GameObject _canvas = default;
     [Tooltip("選択中のボタン")]
-    IWeaponCommand _targetButton = default;
-    [Tooltip("")]
-    IWeaponCommand[] _selectedButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length];
-    [Tooltip("")]
-    IWeaponCommand[,] _allButtons = new WeaponCommandButton[Enum.GetNames(typeof(CommandType)).Length,
-                                                             Enum.GetNames(typeof(ElementType)).Length];
+    ICommandButton _selectButton = null;
+    
     [Tooltip("")]
     Interval _canMove = default;
 
     public bool MenuIsOpen => _menuIsOpen;
+    public IReadOnlyReactiveProperty<int> CrossH => _reactiveCrossH;
+    public IReadOnlyReactiveProperty<int> CrossV => _reactiveCrossV;
+    public IReadOnlyReactiveProperty<bool> IsDiside => _isDiside;
+    public ICommandButton SelectButton { get => _selectButton; set => _selectButton = value; }
 
     /// <summary>
     /// 起動時処理
     /// </summary>
     /// <param name="allbuttons"></param>
-    public void Initialize(IWeaponCommand[] allbuttons)
+    public void Initialize(ICommandButton[] allbuttons)
     {
         _canMove = new Interval(_interval);
-
-        for (int y = 0; y < _allButtons.GetLength(0); y++)
-        {
-            IWeaponCommand[] buttonArray = allbuttons.Where(x => x.TypeOfCommand == (CommandType)y).ToArray();
-            for (int x = 0; x < _allButtons.GetLength(1); x++)
-            {
-                _allButtons[y, x] = buttonArray[x];
-                _allButtons[y, x].Command.enabled = false;
-            }
-        }
-
-        //MenuCommandButtonをインスタンスする
-        //for (int y = 0; y < _allButtons.GetLength(0); y++)
-        //{
-        //    for (int x = 0; x < _allButtons.GetLength(1); x++)
-        //    {
-        //        if ((CommandType)y != CommandType.ElEMENT)
-        //        {
-        //            _allButtons[y, x] = new CommandButton(CommandButton.ButtonState.None, buttonArray[length], (WeaponType)x, (CommandType)y);
-        //        }
-        //        else
-        //        {
-        //            _allButtons[y, x] = new CommandButton(CommandButton.ButtonState.None, buttonArray[length], (ElementType)x, (CommandType)y);
-        //        }
-        //        _allButtons[y, x].Command.enabled = false;
-        //        length++;
-        //    }
-        //}
-        _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)_mainManu.MainWeapon.Value.Type];
-        _selectedButtons[(int)CommandType.MAIN].Disaide(true);
-        _selectedButtons[(int)CommandType.MAIN].Selected(true);
-        _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)_mainManu.SubWeapon.Value.Type];
-        _selectedButtons[(int)CommandType.SUB].Disaide(true);
-        _selectedButtons[(int)CommandType.ElEMENT] = _allButtons[(int)CommandType.ElEMENT, (int)ElementType.RIGIT];
-        _selectedButtons[(int)CommandType.ElEMENT].Disaide(true);
 
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
@@ -105,21 +76,11 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
         {
             float h = Input.GetAxisRaw("CrossKeyH");
             float v = Input.GetAxisRaw("CrossKeyV");
+            _isDiside.Value = Input.GetButtonDown("Decision");
 
             if (_canMove.IsCountUp() && (h != 0 || v != 0))
             {
-                IWeaponCommand b = (WeaponCommandButton)SelectButton(h, v);
-                if (b.Command)
-                {
-                    _targetButton.Selected(false);
-                    _targetButton = b;
-                    _targetButton.Selected(true);
-                }
-            }
-
-            if (Input.GetButtonDown("Decision"))
-            {
-                DisideCommand(_targetButton);
+                SelectCommand(h, v);
             }
         }
     }
@@ -130,20 +91,13 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     void IsManuExtend(bool isOpen)
     {
         //ToDo メニューの開閉にアニメーションを加える
-        foreach (Image gpi in _gamePanelsImages)
-        {
-            //if (gpi.gameObject.tag == "ChackFrame") return;
-            gpi.enabled = isOpen;
-        }
-        foreach (CommandButton b in _allButtons)
+        Array.ForEach(_gamePanelsImages, x => x.enabled = isOpen);
+        Array.ForEach(_gameUIGauges, x => x.enabled = !isOpen);
+        foreach (ICommandButton b in _mainManu.AllButton)
         {
             b.Command.enabled = isOpen;
         }
 
-        foreach (Image image in _gameUIGauges)
-        {
-            image.enabled = !isOpen;
-        }
 
         if (isOpen)
         {
@@ -160,70 +114,38 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    public IWeaponCommand SelectButton(float h, float v)
+    public void  SelectCommand(float h, float v)
     {
         _canMove.ResetTimer();
         if (h > 0)
         {
             _crossH++;
-            if (_crossH > _allButtons.GetLength(1) - 1) _crossH = 0;
+            if (_crossH > _mainManu.AllButton.GetLength(1) - 1) _crossH = 0;
         }
         if (v < 0)
         {
             _crossV++;
-            if (_crossV > _allButtons.GetLength(0) - 1) _crossV = 0;
+            if (_crossV > _mainManu.AllButton.GetLength(0) - 1) _crossV = 0;
         }
         if (h < 0)
         {
             _crossH--;
-            if (_crossH < 0) _crossH = _allButtons.GetLength(1) - 1;
+            if (_crossH < 0) _crossH = _mainManu.AllButton.GetLength(1) - 1;
         }
         if (v > 0)
         {
             _crossV--;
-            if (_crossV < 0) _crossV = _allButtons.GetLength(0) - 1;
+            if (_crossV < 0) _crossV = _mainManu.AllButton.GetLength(0) - 1;
         }
-        return _allButtons[_crossV, _crossH];
-    }
-    /// <summary>
-    /// 選択されたボタンに登録された関数を実行する関数
-    /// </summary>
-    /// <param name="targetButton"></param>
-    public void DisideCommand(IWeaponCommand targetButton)
-    {
-        switch (targetButton.TypeOfCommand)
-        {
-            case CommandType.MAIN:
-                if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.SUB].TypeOfWeapon)
-                {
-                    var beforeMainWeapon = _selectedButtons[(int)CommandType.MAIN];
-                    _selectedButtons[(int)CommandType.SUB].Disaide(false);
-                    _selectedButtons[(int)CommandType.SUB] = _allButtons[(int)CommandType.SUB, (int)beforeMainWeapon.TypeOfWeapon];
-                    _selectedButtons[(int)CommandType.SUB].Disaide(true);
-                }
-                break;
-            case CommandType.SUB:
-                if (targetButton.TypeOfWeapon == _selectedButtons[(int)CommandType.MAIN].TypeOfWeapon)
-                {
-                    var beforeSubWeapon = _selectedButtons[(int)CommandType.SUB];
-                    _selectedButtons[(int)CommandType.MAIN].Disaide(false);
-                    _selectedButtons[(int)CommandType.MAIN] = _allButtons[(int)CommandType.MAIN, (int)beforeSubWeapon.TypeOfWeapon];
-                    _selectedButtons[(int)CommandType.MAIN].Disaide(true);
-                }
-                break;
-            default:
-                break;
-        }
-        _selectedButtons[(int)targetButton.TypeOfCommand].Disaide(false);
-        _selectedButtons[(int)targetButton.TypeOfCommand] = targetButton;
-        _selectedButtons[(int)targetButton.TypeOfCommand].Disaide(true);
+        _reactiveCrossH.Value = _crossH;
+        _reactiveCrossV.Value = _crossV;
     }
     /// <summary>
     /// メニュー画面展開時に呼ぶ関数
     /// </summary>
     void MenuOpen()
     {
-        _targetButton = SelectButton(_crossV, _crossH);
+        _selectButton = _mainManu.SelectButton(_reactiveCrossV.Value, _reactiveCrossH.Value);
         //_allButtons[_crossV, _crossH].Command.Select();
         //_targetButton = _allButtons[_crossV, _crossH];
     }
@@ -233,5 +155,12 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     void MenuClose()
     {
 
+    }
+
+    void OnDisable()
+    {
+        _isDiside.Dispose();
+        _reactiveCrossH.Dispose();
+        _reactiveCrossV.Dispose();
     }
 }

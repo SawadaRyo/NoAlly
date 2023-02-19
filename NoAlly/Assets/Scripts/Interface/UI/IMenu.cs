@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IMenu<T> where T : ICommandButton
 {
     T[,] AllButton { get; }
-    void SetButtonMap(T[] allButtons);
-    T TargetButton(Vector2 mapPos);
+    T[] SelectedButtons { get; set; }
+    void SetButtonMap(T[] allButtons, int indexX, int indexY);
+    T SelectButton(int crossH, int crossV);
 }

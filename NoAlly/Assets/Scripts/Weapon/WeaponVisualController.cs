@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DataOfWeapon;
 
 public class WeaponVisualController : MonoBehaviour
 {
-    [SerializeField,Tooltip("武器の設置座標")]
+    [SerializeField, Tooltip("武器の設置座標")]
     Transform[] _weaponTransform = new Transform[Enum.GetNames(typeof(WeaponType)).Length - 1];
 
     [Tooltip("武器のプレハブ")]
@@ -19,13 +20,17 @@ public class WeaponVisualController : MonoBehaviour
     public WeaponBase[] WeaponPrefabs => _weaponPrefabs;
 
 
-    public void Initialize(WeaponDatas[] weapons)
+    public void Initialize(SetWeaponData setWeapons, WeaponScriptableObjects weaponData,PlayerContoller player)
     {
-        //武器のプレハブを生成
-        for (int index = 0; index < weapons.Length; index++)
+        //武器のプレハブを生成&初期化
+        for (int index = 0; index < Enum.GetNames(typeof(WeaponType)).Length - 1; index++)
         {
-            _weaponPrefabs[index] = Instantiate(weapons[index].Base, _weaponTransform[index]);
+            _weaponPrefabs[index] = Instantiate(weaponData.WeaponDatas[index].Prefab, _weaponTransform[index]);
+            _weaponPrefabs[index].SetData(weaponData.WeaponDatas[index]);
+            WeaponAction action = _weaponPrefabs[index].GetComponent<WeaponAction>();
+            action.Initialize(player, _weaponPrefabs[index]);
             _weaponPrefabs[index].DisactiveForInstantiate();
+            setWeapons.SetAllWeapon[index] = new WeaponDatas(_weaponPrefabs[index], action, weaponData.WeaponDatas[index].Type);
         }
     }
     public void FirstSetWeapon((WeaponDatas, WeaponDatas) weapons)
@@ -48,7 +53,7 @@ public class WeaponVisualController : MonoBehaviour
 
     public void SetEquipment(WeaponDatas weapon, CommandType type)
     {
-        _weaponPrefabs[(int)_mainWeapon.Type] .Disactive();
+        _weaponPrefabs[(int)_mainWeapon.Type].Disactive();
         _weaponPrefabs[(int)_subWeapon.Type].Disactive();
         switch (type)
         {

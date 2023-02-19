@@ -58,7 +58,6 @@ public abstract class WeaponBase : ObjectBase, IWeapon
         _elekePower = _weaponData.ElekePower[(int)_isDeformated];
         _frozenPower = _weaponData.FrozenPower[(int)_isDeformated];
         _type = type;
-
     }
     
     void OnTriggerEnter(Collider other)

@@ -164,7 +164,8 @@ GameObject:
   - component: {fileID: 8889861418534739583}
   - component: {fileID: 4526890191748879344}
   - component: {fileID: 8387073961421225971}
-  - component: {fileID: 1330597074912651507}
+  - component: {fileID: -8537478026854811759}
+  - component: {fileID: -7083131314869024168}
   m_Layer: 5
   m_Name: ElementButtonFrozon
   m_TagString: Untagged
@@ -276,7 +277,27 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1330597074912651507
+--- !u!95 &-8537478026854811759
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8230980208611917805}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cc4015b5455f71246a6dedc5d6a33c99, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-7083131314869024168
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -285,6 +306,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8230980208611917805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac9238978ad7f054ab985464e6300406, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d7894d0d9cd0ab4dbc50d39d21f4ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _button: {fileID: 8387073961421225971}
+  _animator: {fileID: -8537478026854811759}
+  _buttonColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _elementType: 3

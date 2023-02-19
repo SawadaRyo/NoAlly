@@ -11,22 +11,17 @@ namespace DataOfWeapon
         WeaponScriptableObjects weaponObjects = null;
         WeaponDatas[] _weaponDatas = null;
 
+        public WeaponDatas[] SetAllWeapon { get => _weaponDatas; set => _weaponDatas = value; }
         public WeaponDatas[] GetAllWeapons => _weaponDatas;
         public WeaponDatas GetWeapon(WeaponType type) => _weaponDatas[(int)type];
 
 
-        public SetWeaponData(WeaponScriptableObjects weapon,PlayerContoller player)
+        public SetWeaponData(WeaponScriptableObjects weapon)
         {
             if (weaponObjects != null) return;
 
             weaponObjects = weapon;
             _weaponDatas = new WeaponDatas[weaponObjects.WeaponDatas.Length];
-            for (int i = 0; i < weaponObjects.WeaponDatas.Length; i++)
-            {
-                _weaponDatas[i] = new WeaponDatas(weaponObjects.WeaponDatas[i]);
-                _weaponDatas[i].Base.SetData(weaponObjects.WeaponDatas[i]);
-                _weaponDatas[i].Action.Initialize(player, _weaponDatas[i].Base);
-            }
         }
     }
 }
@@ -54,6 +49,12 @@ public class WeaponDatas
         _base = weapon.Prefab;
         _action = weapon.Action;
         _type = weapon.Type;
+    }
+    public WeaponDatas(WeaponBase @base, WeaponAction action, WeaponType type)
+    {
+        _base = @base;
+        _action = action;
+        _type = type;
     }
 }
 
