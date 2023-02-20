@@ -11,8 +11,8 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     bool _ableInput = true;
     [Tooltip("「_able…」の変数の値を初期化するか判定する変数")]
     float _shootTiming = 0.35f;
-    [Tooltip("近接攻撃の判定許可")]
-    bool _onHit = false;
+    //.[Tooltip("近接攻撃の判定許可")]
+    //bool _onHit = false;
     [Tooltip("攻撃アニメーションに遷移しているか確認する変数")]
     bool _isAttack = false;
     [Tooltip("Animationの遷移状況")]
@@ -30,7 +30,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
 
     private void Start()
     {
-        _onHit = false;
+        //_onHit = false;
         _animator = GetComponent<Animator>();
         _playerContoller = GetComponent<PlayerContoller>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //AnimatorにアタッチしているObservableStateMachineTriggerを取ってくる
@@ -140,10 +140,9 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     }
 
     //AnimationEventで呼ぶ関数
-    void AttackToCombatWeapon()
+    void AttackToCombatWeapon(BoolAttack isAttack)
     {
-        _onHit = !_onHit;
-        _weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
+        _weaponProcessing.TargetWeapon.Base.LoopJud(isAttack);
         //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
     }
     void FinishAttackMove(int moveSpeed)
@@ -168,4 +167,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         _weaponProcessing.TargetWeapon.Action.WeaponChargeAttackMethod();
         _weaponProcessing.TargetWeapon.Action.ResetValue();
     }
+}
+
+public enum BoolAttack
+{
+    NONE,
+    ATTACKING
 }

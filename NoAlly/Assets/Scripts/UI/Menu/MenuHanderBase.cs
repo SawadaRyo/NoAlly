@@ -1,8 +1,9 @@
 using System;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuHanderBase : MonoBehaviour
+public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
@@ -12,6 +13,8 @@ public class MenuHanderBase : MonoBehaviour
     bool _menuIsOpen = true;
     [Tooltip("縦入力")]
     int _crossV = 0;
+    [Tooltip("縦入力(ReactiveProperty)")]
+    IntReactiveProperty _reactiveCrossV = new(0);
     [Tooltip("")]
     Image[] _gameUIGauges = default;
     [Tooltip("")]
@@ -29,7 +32,13 @@ public class MenuHanderBase : MonoBehaviour
 
     public bool MenuIsOpen => _menuIsOpen;
 
-    
+    public IReadOnlyReactiveProperty<int> CrossH => throw new NotImplementedException();
+
+    public IReadOnlyReactiveProperty<int> CrossV => _reactiveCrossV;
+
+    public IReadOnlyReactiveProperty<bool> IsDiside => throw new NotImplementedException();
+
+    ICommandButton IMenuHander<ICommandButton>.SelectButton { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public void Initialize(CommandButton[] buttonArray)
     {
@@ -128,5 +137,15 @@ public class MenuHanderBase : MonoBehaviour
     void DisideCommand(ICommandButton targetButton)
     {
         targetButton.Disaide(true);
+    }
+
+    public void Initialize()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SelectCommand(float h, float v)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -61,7 +61,7 @@ public class WeaponEquipment : MonoBehaviour, IMenu<ICommandButton>
     /// <summary> ‘•”õ•Ší‚ğØ‚è‘Ö‚¦‚é</summary>
     /// <param name="weaponName"></param>
     /// <param name="type"></param>
-    public void Equipment(CommandType type, WeaponDatas weaponName)
+    public void EquipmentWeapon(CommandType type, WeaponDatas weaponName)
     {
         WeaponDatas beforeWeapons = default;
         if (type == CommandType.MAIN)
@@ -87,6 +87,16 @@ public class WeaponEquipment : MonoBehaviour, IMenu<ICommandButton>
     /// ‘®«‚ğØ‚è‘Ö‚¦‚é
     /// </summary>
     /// <param name="element"></param>
+    public void EquipmentElement(int element)
+    {
+        ElementType e = (ElementType)element;
+        Debug.Log(element);
+        _weaponMethods.ForEach(x =>
+        {
+            x.WeaponMode(e);
+        });
+        _elementType = e;
+    }
 
     /// <summary>
     /// g—p’†‚Ì•Ší‚ğw’è‚·‚éŠÖ”
@@ -115,26 +125,28 @@ public class WeaponEquipment : MonoBehaviour, IMenu<ICommandButton>
             for (int x = 0; x < indexX; x++)
             {
                 WeaponDatas weapon = _weaponData.GetWeapon((WeaponType)x);
-                _weaponMethods.Add(weapon.Base);
+
                 switch ((CommandType)y)
                 {
                     case CommandType.MAIN:
-                        buttonArray[x].Command.onClick.AddListener(() => Equipment(CommandType.MAIN, weapon));
+                        _weaponMethods.Add(weapon.Base);
+                        buttonArray[x].Command.onClick.AddListener(() => EquipmentWeapon(CommandType.MAIN, weapon));
                         break;
                     case CommandType.SUB:
-                        buttonArray[x].Command.onClick.AddListener(() => Equipment(CommandType.SUB, weapon));
+                        _weaponMethods.Add(weapon.Base);
+                        buttonArray[x].Command.onClick.AddListener(() => EquipmentWeapon(CommandType.SUB, weapon));
                         break;
                     case CommandType.ELEMENT:
-                        buttonArray[x].Command.onClick.AddListener(() =>
-                        {
-                            ElementType element = (ElementType)x;
-                            Debug.Log(element);
-                            _weaponMethods.ForEach(x =>
-                            {
-                                x.WeaponMode(element);
-                            });
-                            _elementType = element;
-                        });
+                        //buttonArray[x].Command.onClick.AddListener(() =>
+                        //{
+                        //    ElementType element = (ElementType)x;
+                        //    Debug.Log(element);
+                        //    _weaponMethods.ForEach(x =>
+                        //    {
+                        //        x.WeaponMode(element);
+                        //    });
+                        //    _elementType = element;
+                        //});
                         break;
                 }
                 AllButton[y, x] = buttonArray[x];

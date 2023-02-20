@@ -11,7 +11,9 @@ public class GameManager
 {
     [Tooltip("GameManagerのインスタンス")]
     static GameManager _instance = null;
-    
+    [Tooltip("SoundManagerのインスタンス")]
+    static SoundManager _instanceSound = null;
+
     [Tooltip("ゲーム中かどうか判定する変数")]
     GameState _state = GameState.GameStart;
 
@@ -26,6 +28,18 @@ public class GameManager
             return _instance;
         }
         set => _instance = value;
+    }
+    public static SoundManager InstanceSM
+    {
+        get
+        {
+            if (_instanceSound == null)
+            {
+                Debug.LogError($"GameManagerのインスタンスがありません");
+            }
+            return _instanceSound;
+        }
+        set => _instanceSound = value;
     }
     public GameState IsGame => _state;
 

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using System.Linq;
 
-public class BulletBase : WeaponBase
+public class BulletBase : WeaponBase, IObjectPool<IObjectGenerator>
 {
     [SerializeField, Header("’e‚Ì‘¬“x")]
     float _bulletSpeed = 0;
@@ -20,7 +20,9 @@ public class BulletBase : WeaponBase
     [Tooltip("’e‚Ì‰Á‘¬“x")]
     Vector3 _velo = Vector3.zero;
     [Tooltip("’e‚Ì‘®«")]
-    ElementType BulletElement { set => _type = value; }
+
+
+    public IObjectGenerator Generator { get; private set; }
 
     float _time = 0f;
 
@@ -62,7 +64,7 @@ public class BulletBase : WeaponBase
         _time = 0f;
         ActiveObject(false);
     }
-    public override void DisactiveForInstantiate<TOwner>(TOwner Owner)
+    public override void DisactiveForInstantiate(IObjectGenerator Owner) 
     {
         base.DisactiveForInstantiate(Owner);
 

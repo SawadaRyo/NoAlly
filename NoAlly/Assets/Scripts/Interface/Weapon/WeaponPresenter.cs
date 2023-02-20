@@ -11,8 +11,6 @@ public class WeaponPresenter : MonoBehaviour
     WeaponScriptableObjects _weaponScriptableObjects;
     [SerializeField, Header("プレイヤー")]
     PlayerContoller _playerContoller;
-    [SerializeField, Header("Canvas内の全ボタン")]
-    ICommandButton[] _allButtons = null;
 
     [Space(15)]
     [Header("Model")]
@@ -35,7 +33,7 @@ public class WeaponPresenter : MonoBehaviour
         _weaponVisual.Initialize(_weaponData,_weaponScriptableObjects,_playerContoller);
         _weaponVisual.FirstSetWeapon(_weaponEquipment.FirstSetWeapon(_weaponData));
         _weaponEquipment.Initialize();
-        _weaponMenuHander.Initialize((IWeaponCommand[])_allButtons);
+        _weaponMenuHander.Initialize();
         WeaponEquipmentState();
         WeaponProcessingState();
         MenuHanderState();

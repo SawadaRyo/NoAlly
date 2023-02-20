@@ -45,7 +45,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     /// ‹N“®ˆ—
     /// </summary>
     /// <param name="allbuttons"></param>
-    public void Initialize(ICommandButton[] allbuttons)
+    public void Initialize()
     {
         _canMove = new Interval(_interval);
 

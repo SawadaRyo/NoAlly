@@ -16,7 +16,7 @@ public abstract class WeaponBase : ObjectBase, IWeapon
 
     [SerializeField, Header("武器の斬撃エフェクト")]
     protected ParticleSystem _myParticleSystem = default;
-    [SerializeField,Tooltip("武器のオーナー")]
+    [SerializeField, Tooltip("武器のオーナー")]
     protected ObjectOwner _owner;
 
     [Tooltip("この武器のデータ")]
@@ -27,6 +27,7 @@ public abstract class WeaponBase : ObjectBase, IWeapon
     protected ElementType _type;
 
     public WeaponDeformation Deformated => _isDeformated;
+    public ObjectOwner Owner => _owner;
     public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
     public float ElekePower { get => _elekePower; set => _elekePower = value; }
     public float FirePower { get => _firePower; set => _firePower = value; }
@@ -59,22 +60,25 @@ public abstract class WeaponBase : ObjectBase, IWeapon
         _frozenPower = _weaponData.FrozenPower[(int)_isDeformated];
         _type = type;
     }
-    
+
     void OnTriggerEnter(Collider other)
     {
         WeaponAttackMovement(other);
     }
-    public void LoopJud(bool isAttack)
+    public void LoopJud(BoolAttack isAttack)
     {
-        if (isAttack)
+        switch (isAttack)
         {
-            _myParticleSystem.Play();
+            case BoolAttack.ATTACKING:
+                _myParticleSystem.Play();
+                Array.ForEach(this._objectCollider, x => x.enabled = true);
+                break;
+            default:
+                _myParticleSystem.Stop();
+                Array.ForEach(this._objectCollider, x => x.enabled = false);
+                break;
         }
-        else
-        {
-            _myParticleSystem.Stop();
-        }
-        Array.ForEach(this._objectCollider, x => x.enabled = isAttack);
+        
     }
 
 }

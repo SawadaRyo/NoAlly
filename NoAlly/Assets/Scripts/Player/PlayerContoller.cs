@@ -298,7 +298,7 @@ public class PlayerContoller : MonoBehaviour
 
         PlayerClimbWall hitflg = PlayerClimbWall.NONE;
         if (Physics.Raycast(rayRight, out _hitInfo, _walldistance, _wallMask) &&
-            currentNormal.normalized == (Vector2)_hitInfo.normal.normalized * -1)
+            currentNormal.x == _hitInfo.normal.x * -1)
         {
             Debug.Log(currentNormal.normalized);
             Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
@@ -306,7 +306,7 @@ public class PlayerContoller : MonoBehaviour
             hitflg = PlayerClimbWall.RIGHT;
         }
         else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask) &&
-            currentNormal.normalized == (Vector2)_hitInfo.normal.normalized * -1)
+            currentNormal.x == _hitInfo.normal.x * -1)
         {
             Debug.Log(currentNormal.normalized);
             Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
@@ -333,10 +333,6 @@ public class PlayerContoller : MonoBehaviour
         _wallKicking = false;
     }
     //AnimatorEventÇ≈åƒÇ‘ä÷êî----------------------------------------------//
-    void WallJump()
-    {
-
-    }
     //TODO:å¯â âπÇ‚BGMÇÕSoundManagerÇ≈ä«óùÇ∑ÇÈ
     void FootSound(AudioClip footSound)
     {
