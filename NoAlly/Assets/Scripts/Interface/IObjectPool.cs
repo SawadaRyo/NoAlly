@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IObjectPool 
+public interface IObjectPool<TOwner> where TOwner : IObjectGenerator
 {
     /// <summary>
     /// オブジェクトが起動中かどうか
     /// </summary>
-    public bool IsActive { get;}
+    public bool IsActive { get; }
+    public TOwner Generator { get; }
 
     /// <summary>
     /// オブジェクトが有効になった時に呼ばれる関数
@@ -24,5 +25,5 @@ public interface IObjectPool
     /// </summary>
     /// <typeparam name="TOwner">このオブジェクトを使用するオーナーのジェネリッククラス</typeparam>
     /// <param name="Owner">このオブジェクトを使用するオーナー</param>
-    public void DisactiveForInstantiate<TOwner>(TOwner Owner) where TOwner : IObjectGenerator;
+    public void DisactiveForInstantiate(TOwner Owner);
 }

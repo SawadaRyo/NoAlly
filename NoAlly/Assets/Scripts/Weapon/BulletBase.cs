@@ -48,18 +48,16 @@ public class BulletBase : WeaponBase, IObjectPool<IObjectGenerator>
         }
     }
 
-    public override void Create()
+    public void Create()
     {
-        base.Create();
         _rb.isKinematic = false;
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
         ActiveObject(true);
     }
 
-    public override void Disactive()
+    public void Disactive()
     {
-        base.Disactive();
         _rb.isKinematic = true;
         _time = 0f;
         ActiveObject(false);

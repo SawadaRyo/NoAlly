@@ -3,7 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using State = StateMachine<EnemyBase>.State;
 
-public abstract class EnemyBase : ObjectBase
+public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
 {
     [SerializeField, Header("索敵範囲")]
     protected float _radius = 5f;
@@ -21,6 +21,8 @@ public abstract class EnemyBase : ObjectBase
     /// ステートマシーンのオーナー(自分)を返すプロパティ(読み取り専用)
     /// </summary>
     public StateMachine<EnemyBase> EnemyStateMachine => _stateMachine;
+
+    public IObjectGenerator Generator => throw new NotImplementedException();
 
     public virtual void EnemyAttack() { }
     public virtual void EnemyRotate(Transform playerPos) { }
@@ -50,17 +52,15 @@ public abstract class EnemyBase : ObjectBase
     /// <summary>
     /// オブジェクト有効時に呼ぶ関数
     /// </summary>
-    public override void Create()
+    public void Create()
     {
-        base.Create();
         _objectAnimator.SetBool("Death", !_isActive);
     }
     /// <summary>
     /// オブジェクト非有効時に呼ぶ関数
     /// </summary>
-    public override void Disactive()
+    public void Disactive()
     {
-        base.Disactive();
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
@@ -69,9 +69,8 @@ public abstract class EnemyBase : ObjectBase
     /// </summary>
     /// <typeparam name="TOwner"></typeparam>
     /// <param name="Owner"></param>
-    public override void DisactiveForInstantiate<TOwner>(TOwner Owner)
+    public void DisactiveForInstantiate(IObjectGenerator Owner)
     {
-        base.DisactiveForInstantiate(Owner);
         _stateMachine = new StateMachine<EnemyBase>(this);
         {
             //プレイヤーを見つけた時プレイヤーを攻撃

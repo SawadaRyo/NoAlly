@@ -9,6 +9,10 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     float _interval = 0.3f;
     [SerializeField, Tooltip("メインメニューのプレハブ")] 
     WeaponEquipment _mainManu = null;
+    [SerializeField,Tooltip("")]
+    Image[] _playerStatusImages = default;
+    [SerializeField,Tooltip("")]
+    Image[] _menuPanelsImages = default;
 
 
     [Tooltip("メニュー画面の開閉確認")]
@@ -23,10 +27,6 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     IntReactiveProperty _reactiveCrossV = new(0);
     [Tooltip("決定中のボタン")]
     BoolReactiveProperty _isDiside = new();
-    [Tooltip("")]
-    Image[] _gameUIGauges = default;
-    [Tooltip("")]
-    Image[] _gamePanelsImages = default;
     [Tooltip("")]
     GameObject _canvas = default;
     [Tooltip("選択中のボタン")]
@@ -51,14 +51,12 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
 
         //UIのゲーム起動時の初期設定
         _canvas = GameObject.FindGameObjectWithTag("Canvas");
-        _gamePanelsImages = _canvas.GetComponentsInChildren<Image>(true);
-        foreach (Image gpi in _gamePanelsImages)
+        foreach (Image gpi in _menuPanelsImages)
         {
             gpi.enabled = false;
         }
 
-        _gameUIGauges = _canvas.transform.GetChild(2).GetComponentsInChildren<Image>();
-        foreach (Image image in _gameUIGauges)
+        foreach (Image image in _playerStatusImages)
         {
             image.enabled = true;
         }
@@ -91,8 +89,8 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     void IsManuExtend(bool isOpen)
     {
         //ToDo メニューの開閉にアニメーションを加える
-        Array.ForEach(_gamePanelsImages, x => x.enabled = isOpen);
-        Array.ForEach(_gameUIGauges, x => x.enabled = !isOpen);
+        Array.ForEach(_menuPanelsImages, x => x.enabled = isOpen);
+        Array.ForEach(_playerStatusImages, x => x.enabled = !isOpen);
         foreach (ICommandButton b in _mainManu.AllButton)
         {
             b.Command.enabled = isOpen;

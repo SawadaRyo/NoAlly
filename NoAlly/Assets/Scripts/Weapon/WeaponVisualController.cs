@@ -53,8 +53,8 @@ public class WeaponVisualController : MonoBehaviour
 
     public void SetEquipment(WeaponDatas weapon, CommandType type)
     {
-        _weaponPrefabs[(int)_mainWeapon.Type].Disactive();
-        _weaponPrefabs[(int)_subWeapon.Type].Disactive();
+        _weaponPrefabs[(int)_mainWeapon.Type].ActiveObject(false);
+        _weaponPrefabs[(int)_subWeapon.Type].ActiveObject(false);
         switch (type)
         {
             case CommandType.MAIN:

@@ -63,8 +63,6 @@ public class PlayerContoller : MonoBehaviour
     [Header("Audio")]
     [SerializeField, Header("ジャンプのサウンド")]
     AudioClip _jumpSound;
-    [Tooltip("オーディオを取得する為の変数")]
-    AudioSource _audio;
 
     [Tooltip("壁キックのインターバル")]
     bool _wallKicking = false;
@@ -101,7 +99,6 @@ public class PlayerContoller : MonoBehaviour
         _velo = _rb.velocity;
         _animator = GetComponent<Animator>();
         _playerStatus = GetComponentInChildren<PlayerStatus>();
-        _audio = gameObject.AddComponent<AudioSource>();
         _animState = PlayerAnimationState.Instance;
     }
     void Update()
@@ -266,7 +263,6 @@ public class PlayerContoller : MonoBehaviour
             if (jump)
             {
                 StartCoroutine(WallKick());
-                _audio.PlayOneShot(_jumpSound);
                 Vector3 vec = transform.up + _wallVec * 2f;
                 if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
                 else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
@@ -334,9 +330,9 @@ public class PlayerContoller : MonoBehaviour
     }
     //AnimatorEventで呼ぶ関数----------------------------------------------//
     //TODO:効果音やBGMはSoundManagerで管理する
-    void FootSound(AudioClip footSound)
+    void PlaySound(int soundNum)
     {
-        _audio.PlayOneShot(footSound);
+        GameManager.InstanceSM.CallSound(SoundType.SE,soundNum);
     }
     //Vector3 NomarizedMoveVecter()
     //{

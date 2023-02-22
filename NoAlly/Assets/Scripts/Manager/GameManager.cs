@@ -10,9 +10,9 @@ using UnityEngine;
 public class GameManager
 {
     [Tooltip("GameManagerのインスタンス")]
-    static GameManager _instance = null;
+    static GameManager _instance = new();
     [Tooltip("SoundManagerのインスタンス")]
-    static SoundManager _instanceSound = null;
+    static SoundManager _instanceSound = new();
 
     [Tooltip("ゲーム中かどうか判定する変数")]
     GameState _state = GameState.GameStart;
@@ -27,7 +27,6 @@ public class GameManager
             }
             return _instance;
         }
-        set => _instance = value;
     }
     public static SoundManager InstanceSM
     {
@@ -35,7 +34,7 @@ public class GameManager
         {
             if (_instanceSound == null)
             {
-                Debug.LogError($"GameManagerのインスタンスがありません");
+                Debug.LogError($"SoundManagerのインスタンスがありません");
             }
             return _instanceSound;
         }

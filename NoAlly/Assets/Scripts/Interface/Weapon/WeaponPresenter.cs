@@ -75,6 +75,7 @@ public class WeaponPresenter : MonoBehaviour
     }
     void MenuHanderState()
     {
+        //メニューボタンの選択
         _weaponMenuHander.CrossH
             .Subscribe(crossH =>
             {
@@ -116,6 +117,7 @@ public class WeaponPresenter : MonoBehaviour
                 {
                     ICommandButton nextButton = _weaponMenuHander.SelectButton; //次に装備する武器
                     ICommandButton beforeWeapon = _weaponEquipment.SelectedButtons[(int)nextButton.TypeOfCommand]; //直前まで装備していた武器
+
                     switch (nextButton.TypeOfCommand)
                     {
                         case CommandType.MAIN:
@@ -123,7 +125,7 @@ public class WeaponPresenter : MonoBehaviour
                             IWeaponCommand nextMainweapon = (IWeaponCommand)nextButton;
                             IWeaponCommand beforeMainweapon = (IWeaponCommand)beforeWeapon;
                             if (nextMainweapon.TypeOfWeapon == selectedSubButton.TypeOfWeapon) //次に装備するメイン武器と現在装備しているサブ武器が重複している場合、
-                                                                                               //それぞれの武器を入れ替える
+                                                                                               //サブ武器を入れ替える
                             {
                                 _weaponEquipment.AllButton[(int)CommandType.SUB, (int)_weaponEquipment.SubWeapon.Value.Type].Disaide(false);
                                 _weaponEquipment.AllButton[(int)CommandType.SUB, (int)beforeMainweapon.TypeOfWeapon].Disaide(true);
@@ -134,8 +136,8 @@ public class WeaponPresenter : MonoBehaviour
                             IWeaponCommand selectedMainButton = (IWeaponCommand)_weaponEquipment.SelectedButtons[(int)CommandType.MAIN];
                             IWeaponCommand nextSubweapon = (IWeaponCommand)nextButton;
                             IWeaponCommand beforeSubweapon = (IWeaponCommand)beforeWeapon;
-                            if (nextSubweapon.TypeOfWeapon == selectedMainButton.TypeOfWeapon) //次に装備するメイン武器と現在装備しているサブ武器が重複している場合、
-                                                                                               //それぞれの武器を入れ替える
+                            if (nextSubweapon.TypeOfWeapon == selectedMainButton.TypeOfWeapon) //次に装備するサブ武器と現在装備しているメイン武器が重複している場合、
+                                                                                               //メイン武器を入れ替える
                             {
                                 _weaponEquipment.AllButton[(int)CommandType.MAIN, (int)_weaponEquipment.MainWeapon.Value.Type].Disaide(false);
                                 _weaponEquipment.AllButton[(int)CommandType.MAIN, (int)beforeSubweapon.TypeOfWeapon].Disaide(true);

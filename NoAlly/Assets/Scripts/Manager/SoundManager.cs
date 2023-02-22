@@ -2,67 +2,72 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+//TODO 後でオブジェクトプール形式で再生するようにする
+
+public class SoundManager : Object,IObjectGenerator
 {
-    [Tooltip("ScriptableObject")]
-    SoundScriptable _soundDataBase = null;
-    [Tooltip("BGM")]
-    GameObject _loopingBGM = null;
-    /// <summary>
-    /// _soundDataBase??v???p?e?B
-    /// </summary>
-    public SoundScriptable SoundDataBase { get => _soundDataBase; set => _soundDataBase = value; }
+    ObjectPool<SoundObject,SoundManager,SoundUsage> _pool =new();
+    [Tooltip("サウンドのScriptableObject")]
+    SoundScriptable[] _soundDataBase = null;
+    [Tooltip("現在ループさせているサウンド")]
+    AudioSource _looping = null;
+
+    public Transform GenerateTrance => throw new System.NotImplementedException();
+
+    public void SetSoundData()
+    {
+
+    }
 
     /// <summary>
-    /// 
+    /// サウンドの指定
     /// </summary>
-    /// <param name="type">?T?E???h????</param>
-    /// <param name="soundNumber">SoundScriptable????????????T?E???h??v?f???
-    /// ???T?E???h??SoundScriptable??????????</param>
+    /// <param name="type">サウンドの種類</param>
+    /// <param name="soundNumber">サウンドが登録されている要素番号</param>
     public void CallSound(SoundType type, int soundNumber)
     {
         switch (type)
         {
             case SoundType.BGM:
-                if (_loopingBGM)
+                if (_looping)
                 {
-                    Destroy(_loopingBGM);
+                    
                 }
-                SoundPlay(_soundDataBase.Sounds.BGM, soundNumber);
+                //SoundPlay(_soundDataBase.Sounds.BGM, soundNumber);
                 break;
             case SoundType.SE:
-                SoundPlay(_soundDataBase.Sounds.SE, soundNumber);
+                //SoundPlay(_soundDataBase.Sounds.SE, soundNumber);
                 break;
         }
     }
 
     /// <summary>
-    /// ?T?E???h?????I?u?W?F?N?g??????????
+    /// サウンドオブジェクトの生成とサウンドの再生
     /// </summary>
-    /// <param name="sounds">?T?E???h??v?f???w?????\????</param>
-    /// <param name="soundNumber">?T?E???h??v?f???</param>
+    /// <param name="sounds">サウンドデータ</param>
+    /// <param name="soundNumber">サウンドデータにあてられた番号</param>
     void SoundPlay(SoundElements[] sounds, int soundNumber)
     {
         if (soundNumber >= sounds.Length)
         {
-            Debug.LogError("?T?E???h??????????");
+            Debug.LogError("指定した番号にデータがありません");
             return;
         }
-        //?I?u?W?F?N?g????????????
+        //サウンドオブジェクトを生成
         SoundElements sound = sounds[soundNumber];
-        GameObject soundPlayer = Instantiate(_soundDataBase.SoundPlayer);
-        AudioSource audioSource = soundPlayer.GetComponent<AudioSource>();
+        AudioSource audioSource = Instantiate(_soundDataBase[1].SoundPlayer);
 
         audioSource.clip = sound.Clip;
         audioSource.volume = sound.Volume;
         audioSource.loop = sound.IsLoop;
         audioSource.Play();
-        _loopingBGM = soundPlayer;
+        _looping = audioSource;
 
-        //???[?v????????A?w?????b??????
+        //ループさせない場合オブジェクトを破棄する
         if (!sound.IsLoop)
         {
-            Destroy(audioSource, _soundDataBase.WaitDestorySecond);
+            //Destroy(audioSource, _soundDataBase.WaitDestorySecond);
+            Destroy(audioSource, audioSource.clip.length + 1f);
         }
     }
 }

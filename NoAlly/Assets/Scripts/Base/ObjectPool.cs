@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPool<TObj, TOwner, TKey>
-    where TObj : UnityEngine.Object, IObjectPool
+    where TObj : UnityEngine.Object, IObjectPool<IObjectGenerator>
     where TOwner : UnityEngine.Object, IObjectGenerator
-    where TKey : Enum
 {
     ObjectKey _objectKey = null;
     TObj _baseObj = null;

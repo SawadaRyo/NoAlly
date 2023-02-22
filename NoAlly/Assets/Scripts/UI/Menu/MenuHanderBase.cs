@@ -48,7 +48,7 @@ public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
         _allButtons = buttonArray;
 
         //UI‚ÌƒQ[ƒ€‹N“®‚Ì‰Šúİ’è
-        _canvas = GameObject.FindGameObjectWithTag("Canvas");
+        _canvas = this.gameObject;
         _gamePanelsImages = _canvas.GetComponentsInChildren<Image>(true);
         foreach (Image gpi in _gamePanelsImages)
         {
