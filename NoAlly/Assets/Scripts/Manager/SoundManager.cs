@@ -11,10 +11,9 @@ public class SoundManager : Object,IObjectGenerator
     SoundScriptable[] _soundDataBase = null;
     [Tooltip("現在ループさせているサウンド")]
     AudioSource _looping = null;
-
     public Transform GenerateTrance => throw new System.NotImplementedException();
 
-    public void SetSoundData()
+    public void SetSoundData(SoundScriptable[] datas)
     {
 
     }
@@ -24,7 +23,7 @@ public class SoundManager : Object,IObjectGenerator
     /// </summary>
     /// <param name="type">サウンドの種類</param>
     /// <param name="soundNumber">サウンドが登録されている要素番号</param>
-    public void CallSound(SoundType type, int soundNumber)
+    public void CallSound(SoundUsage usage,SoundType type, int soundNumber)
     {
         switch (type)
         {

@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 //[RequireComponent(typeof(Collider))]
-public class ItemBase : ObjectBase
+public class ItemBase : ObjectBase,IObjectPool<IObjectGenerator>
 {
     [SerializeField] protected float _plusParameter = 4;
     [SerializeField] AudioClip _getSound = null;
@@ -11,6 +11,8 @@ public class ItemBase : ObjectBase
     AudioSource _audio = null;
 
     public float PlusParameter => _plusParameter;
+
+    public IObjectGenerator Generator => throw new System.NotImplementedException();
 
     private void OnEnable()
     {
@@ -27,5 +29,28 @@ public class ItemBase : ObjectBase
             Activate(playerGauge);
             Disactive();
         }
+    }
+
+    public virtual void Create()
+    {
+        _isActive = true;
+        ActiveObject(_isActive);
+    }
+
+    public virtual void Disactive()
+    {
+        _isActive = false;
+        ActiveObject(_isActive);
+    }
+    public virtual async void Disactive(float interval)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(interval));
+        _isActive = false;
+        ActiveObject(_isActive);
+    }
+
+    public void DisactiveForInstantiate(IObjectGenerator Owner)
+    {
+        throw new System.NotImplementedException();
     }
 }

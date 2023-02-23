@@ -62,13 +62,16 @@ public class BulletBase : WeaponBase, IObjectPool<IObjectGenerator>
         _time = 0f;
         ActiveObject(false);
     }
-    public override void DisactiveForInstantiate(IObjectGenerator Owner) 
+    public void DisactiveForInstantiate(IObjectGenerator Owner) 
     {
-        base.DisactiveForInstantiate(Owner);
-
         _rb = GetComponent<Rigidbody>();
         _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
+    }
+
+    public void Disactive(float interval)
+    {
+        
     }
 }
 

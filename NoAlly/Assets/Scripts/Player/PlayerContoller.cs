@@ -330,9 +330,9 @@ public class PlayerContoller : MonoBehaviour
     }
     //AnimatorEvent‚ÅŒÄ‚ÔŠÖ”----------------------------------------------//
     //TODO:Œø‰Ê‰¹‚âBGM‚ÍSoundManager‚ÅŠÇ—‚·‚é
-    void PlaySound(int soundNum)
+    void PlaySound(SoundUsage usage,int soundNum)
     {
-        GameManager.InstanceSM.CallSound(SoundType.SE,soundNum);
+        GameManager.InstanceSM.CallSound(usage,SoundType.SE,soundNum);
     }
     //Vector3 NomarizedMoveVecter()
     //{

@@ -64,6 +64,10 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
+    public void Disactive(float interval)
+    {
+        throw new NotImplementedException();
+    }
     /// <summary>
     /// オブジェクト生成時に呼ぶ関数
     /// </summary>
@@ -89,6 +93,7 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_center.position, _radius);
     }
+
 #endif
 }
 public class Search : State
