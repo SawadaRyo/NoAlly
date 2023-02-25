@@ -12,6 +12,7 @@ public class BrastarWeapon : CombatWeapon
                 break;
             default:
                 _isDeformated = WeaponDeformation.NONE;
+                _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
         base.WeaponMode(type);
