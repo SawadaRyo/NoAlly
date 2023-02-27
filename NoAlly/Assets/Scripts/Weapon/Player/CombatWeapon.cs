@@ -16,18 +16,10 @@ public class CombatWeapon : WeaponBase
     [Tooltip("•ÏŒ`Œã‚Ì•Ší‚Ì“–‚½‚è”»’è")]
     protected Vector3 _pawerUpHarfExtents = Vector3.zero;
 
-
+    
     public override void ActiveObject(bool stats)
     {
         base.ActiveObject(stats);
         Array.ForEach(_objectCollider, x => x.enabled = false);
-    }
-    public override void DisactiveForInstantiate()
-    {
-        base.DisactiveForInstantiate();
-        if (_myParticleSystem != null)
-        {
-            _myParticleSystem.Stop();
-        }
     }
 }

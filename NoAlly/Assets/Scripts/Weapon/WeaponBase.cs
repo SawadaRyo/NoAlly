@@ -35,11 +35,17 @@ public abstract class WeaponBase : ObjectBase, IWeapon
 
     public virtual void SetData(WeaponDataEntity weaponData)
     {
+        ActiveObject(_isActive);
+        if (_myParticleSystem != null)
+        {
+            _myParticleSystem.Stop();
+        }
         _weaponData = weaponData;
         _rigitPower = weaponData.RigitPower[(int)_isDeformated];
         _firePower = weaponData.FirePower[(int)_isDeformated];
         _elekePower = weaponData.ElekePower[(int)_isDeformated];
         _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
+
     }
     public virtual void WeaponAttackMovement(Collider target)
     {
@@ -78,7 +84,7 @@ public abstract class WeaponBase : ObjectBase, IWeapon
                 Array.ForEach(this._objectCollider, x => x.enabled = false);
                 break;
         }
-        
+
     }
 
 }

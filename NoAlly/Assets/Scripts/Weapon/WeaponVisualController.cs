@@ -26,10 +26,9 @@ public class WeaponVisualController : MonoBehaviour
         for (int index = 0; index < Enum.GetNames(typeof(WeaponType)).Length - 1; index++)
         {
             _weaponPrefabs[index] = Instantiate(weaponData.WeaponDatas[index].Prefab, _weaponTransform[index]);
-            _weaponPrefabs[index].SetData(weaponData.WeaponDatas[index]);
             WeaponAction action = _weaponPrefabs[index].GetComponent<WeaponAction>();
             action.Initialize(player, _weaponPrefabs[index]);
-            _weaponPrefabs[index].DisactiveForInstantiate();
+            _weaponPrefabs[index].SetData(weaponData.WeaponDatas[index]);
             setWeapons.SetAllWeapon[index] = new WeaponDatas(_weaponPrefabs[index], action, weaponData.WeaponDatas[index].Type);
         }
     }
