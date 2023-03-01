@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IHitBehavorOfAttack
 {
     ObjectOwner Owner { get; }
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type);
+    public void BehaviorOfHIt(float[] damageValue, ElementType type);
 }

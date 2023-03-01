@@ -6,7 +6,7 @@ public interface IObjectPool<TOwner> where TOwner : IObjectGenerator
     /// オブジェクトが起動中かどうか
     /// </summary>
     public bool IsActive { get; }
-    public TOwner Generator { get; }
+    public TOwner Owner { get; }
     /// <summary>
     /// オブジェクトが有効になった時に呼ばれる関数
     /// </summary>
@@ -23,6 +23,6 @@ public interface IObjectPool<TOwner> where TOwner : IObjectGenerator
     /// オブジェクトが生成された時に呼ばれる関数
     /// </summary>
     /// <typeparam name="TOwner">このオブジェクトを使用するオーナーのジェネリッククラス</typeparam>
-    /// <param name="Owner">このオブジェクトを使用するオーナー</param>
-    public void DisactiveForInstantiate(TOwner Owner);
+    /// <param name="owner">このオブジェクトを使用するオーナー</param>
+    public void DisactiveForInstantiate(TOwner owner);
 }

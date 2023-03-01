@@ -2,17 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(WeaponAction))]
+
 public abstract class WeaponBase : ObjectBase, IWeapon
 {
-    [SerializeField, Header("•Ší‚Ì•¨—UŒ‚—Í")]
-    protected float _rigitPower = 5;
-    [SerializeField, Header("•Ší‚Ì—‹UŒ‚—Í")]
-    protected float _elekePower = 0;
-    [SerializeField, Header("•Ší‚Ì‰ŠUŒ‚—Í")]
-    protected float _firePower = 0;
-    [SerializeField, Header("•Ší‚Ì•XŒ‹UŒ‚—Í")]
-    protected float _frozenPower = 0;
+    [Tooltip("•Ší‚ÌUŒ‚—Í —v‘f1:•Ší‚Ì•¨—UŒ‚—Í,—v‘f2:•Ší‚Ì‰ŠUŒ‚—Í,—v‘f3:•Ší‚Ì—‹UŒ‚—Í,—v‘f4:•Ší‚Ì•XŒ‹UŒ‚—Í")]
+    protected float[] _weaponPower = new float[Enum.GetValues(typeof(ElementType)).Length];
 
     [SerializeField, Header("•Ší‚ÌŽaŒ‚ƒGƒtƒFƒNƒg")]
     protected ParticleSystem _myParticleSystem = default;
@@ -28,12 +22,9 @@ public abstract class WeaponBase : ObjectBase, IWeapon
 
     public WeaponDeformation Deformated => _isDeformated;
     public ObjectOwner Owner => _owner;
-    public float RigitPower { get => _rigitPower; set => _rigitPower = value; }
-    public float ElekePower { get => _elekePower; set => _elekePower = value; }
-    public float FirePower { get => _firePower; set => _firePower = value; }
-    public float FrozenPower { get => _frozenPower; set => _frozenPower = value; }
 
-    public virtual void SetData(WeaponDataEntity weaponData)
+
+    public virtual void Initializer(WeaponDataEntity weaponData)
     {
         ActiveObject(_isActive);
         if (_myParticleSystem != null)
@@ -41,17 +32,17 @@ public abstract class WeaponBase : ObjectBase, IWeapon
             _myParticleSystem.Stop();
         }
         _weaponData = weaponData;
-        _rigitPower = weaponData.RigitPower[(int)_isDeformated];
-        _firePower = weaponData.FirePower[(int)_isDeformated];
-        _elekePower = weaponData.ElekePower[(int)_isDeformated];
-        _frozenPower = weaponData.FrozenPower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.RIGIT] = weaponData.RigitPower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.FIRE] = weaponData.FirePower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.ELEKE] = weaponData.ElekePower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.FROZEN] = weaponData.FrozenPower[(int)_isDeformated];
 
     }
     public virtual void WeaponAttackMovement(Collider target)
     {
         if (target.TryGetComponent(out IHitBehavorOfAttack characterHp) && _owner != characterHp.Owner)
         {
-            characterHp.BehaviorOfHit(this, _type);
+            characterHp.BehaviorOfHIt(_weaponPower, _type);
         }
         else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj) && _owner == ObjectOwner.PLAYER)
         {
@@ -60,10 +51,10 @@ public abstract class WeaponBase : ObjectBase, IWeapon
     }
     public virtual void WeaponMode(ElementType type)
     {
-        _rigitPower = _weaponData.RigitPower[(int)_isDeformated];
-        _firePower = _weaponData.FirePower[(int)_isDeformated];
-        _elekePower = _weaponData.ElekePower[(int)_isDeformated];
-        _frozenPower = _weaponData.FrozenPower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
+        _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
         _type = type;
     }
 

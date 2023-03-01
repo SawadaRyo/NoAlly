@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponBase))]
 public class BowAction : WeaponAction, IObjectGenerator
 {
     [SerializeField] string _filePath = "PlayerBullet";
@@ -9,9 +10,9 @@ public class BowAction : WeaponAction, IObjectGenerator
     [SerializeField] PersonType _personType = PersonType.Player;
 
     Transform _muzzleForward = default;
-    ObjectPool<BulletBase, BowAction, BulletType> _bPool = new ObjectPool<BulletBase, BowAction, BulletType>();
-    ObjectPool<BulletBase, BowAction, BulletType>.ObjectKey[] _keys = null;
-    BulletBase[] _bulletPrefab = new BulletBase[3];
+    ObjectPool<PlayerBulletBase, BowAction, BulletType> _bPool = new ObjectPool<PlayerBulletBase, BowAction, BulletType>();
+    ObjectPool<PlayerBulletBase, BowAction, BulletType>.ObjectKey[] _keys = null;
+    PlayerBulletBase[] _bulletPrefab = new PlayerBulletBase[3];
     BulletType _bulletType = BulletType.NORMAL;
 
     public Transform GenerateTrance => _muzzleForward;
@@ -20,9 +21,9 @@ public class BowAction : WeaponAction, IObjectGenerator
     public override void Initialize(PlayerContoller player, WeaponBase weaponBase)
     {
         base.Initialize(player, weaponBase);
-        _keys = new ObjectPool<BulletBase, BowAction, BulletType>.ObjectKey[Enum.GetNames(typeof(BulletType)).Length];
+        _keys = new ObjectPool<PlayerBulletBase, BowAction, BulletType>.ObjectKey[Enum.GetNames(typeof(BulletType)).Length];
         _muzzleForward = GameObject.Find(_findMuzzlePath).transform;
-        _bulletPrefab = Resources.LoadAll<BulletBase>(_filePath);
+        _bulletPrefab = Resources.LoadAll<PlayerBulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _poolPos, (BulletType)i);

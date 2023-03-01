@@ -56,10 +56,11 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
     }
     public ObjectOwner Owner => _owner;
 
-    public void BehaviorOfHit(WeaponBase weaponStatus, ElementType type)
+    public void BehaviorOfHIt(float[] damageValue, ElementType type)
     {
-        Status.Damage(weaponStatus, this, type);
+        Status.Damage(damageValue, this, type);
     }
+
     public void BehaviorOfHit<TPlus>(TPlus pulsItem) where TPlus : ItemBase
     {
 
@@ -76,4 +77,5 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
             }
         }
     }
+
 }

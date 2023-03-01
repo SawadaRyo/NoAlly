@@ -15,7 +15,7 @@ public class EnemyStatus: StatusBase //敵の体力を管理するスクリプト
         _hp = _maxHP;
     }
 
-    public override void Damage(WeaponBase weaponStatus, HitParameter difanse, ElementType type)
+    public override void Damage(float[] weaponStatus, HitParameter difanse, ElementType type)
     {
         _hp -= base.DamageCalculation(weaponStatus, difanse, type);
         if (_hp <= 0)

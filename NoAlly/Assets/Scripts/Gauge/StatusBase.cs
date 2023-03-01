@@ -20,15 +20,15 @@ public abstract class StatusBase : MonoBehaviour
     protected bool _living = true;
     [Tooltip("Animator‚ÌŠi”[•Ï”")]
     protected Animator _animator;
-    [Tooltip("–³“GŽžŠÔ")]
-    protected Interval _invincibleTime = null;
     [Tooltip("AudioSource‚ðŠi”[‚·‚é•Ï”")]
     protected AudioSource _audioSource = null;
+    [Tooltip("–³“GŽžŠÔ")]
+    protected Interval _invincibleTime = null;
     bool _hitable = true;
 
     public bool Living => _living;
 
-    public abstract void Damage(WeaponBase weaponStatus, HitParameter difanse, ElementType type);
+    public abstract void Damage(float[] damageValue, HitParameter difanse, ElementType type);
 
     public virtual void Initialize()
     {
@@ -41,32 +41,34 @@ public abstract class StatusBase : MonoBehaviour
         }
     }
 
-    protected float DamageCalculation(WeaponBase weaponStatus, HitParameter difanse, ElementType type)
+    protected float DamageCalculation(float[] damageValue, HitParameter difanse, ElementType type)
     {
-        float baseDamage = weaponStatus.RigitPower * difanse.RigitDefensePercentage;
+        if (!_hitable) return 0;
+
+        float baseDamage = damageValue[(int)ElementType.RIGIT] * difanse.RigitDefensePercentage;
         float elemantDamage = 0;
         switch (type)
         {
             case ElementType.FIRE:
-                elemantDamage = weaponStatus.FirePower * difanse.FireDifansePercentage;
+                elemantDamage = damageValue[(int)ElementType.FIRE] * difanse.FireDifansePercentage;
                 break;
             case ElementType.ELEKE:
-                elemantDamage = weaponStatus.ElekePower * difanse.ElekeDifansePercentage;
+                elemantDamage = damageValue[(int)ElementType.ELEKE] * difanse.ElekeDifansePercentage;
                 break;
             case ElementType.FROZEN:
-                elemantDamage = weaponStatus.FrozenPower * difanse.FrozenDifansePercentage;
+                elemantDamage = damageValue[(int)ElementType.FROZEN] * difanse.FrozenDifansePercentage;
                 break;
             default:
                 break;
         }
         StartCoroutine(StartCountDown());
-        return(baseDamage + elemantDamage);
+        return (baseDamage + elemantDamage);
     }
     public IEnumerator StartCountDown()
     {
+        _hitable = false;
         while (true)
         {
-            _hitable = false;
             if (_invincibleTime.IsCountUp())
             {
                 _hitable = true;

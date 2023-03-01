@@ -81,7 +81,7 @@ public class UAVTypeEnemy : EnemyBase
         return null;
     }
 
-    public void Disactive()
+    public override void Disactive()
     {
         _rb.velocity = Vector3.zero;
     }

@@ -7,12 +7,11 @@ public class ItemBase : ObjectBase,IObjectPool<IObjectGenerator>
     [SerializeField] protected float _plusParameter = 4;
     [SerializeField] AudioClip _getSound = null;
 
-    bool _isActive = true;
     AudioSource _audio = null;
 
     public float PlusParameter => _plusParameter;
 
-    public IObjectGenerator Generator => throw new System.NotImplementedException();
+    public IObjectGenerator Owner => throw new System.NotImplementedException();
 
     private void OnEnable()
     {

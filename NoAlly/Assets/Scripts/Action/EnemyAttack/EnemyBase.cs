@@ -22,7 +22,7 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     /// </summary>
     public StateMachine<EnemyBase> EnemyStateMachine => _stateMachine;
 
-    public IObjectGenerator Generator => throw new NotImplementedException();
+    public IObjectGenerator Owner => throw new NotImplementedException();
 
     public virtual void EnemyAttack() { }
     public virtual void EnemyRotate(Transform playerPos) { }
@@ -52,19 +52,19 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     /// <summary>
     /// オブジェクト有効時に呼ぶ関数
     /// </summary>
-    public void Create()
+    public virtual void Create()
     {
         _objectAnimator.SetBool("Death", !_isActive);
     }
     /// <summary>
     /// オブジェクト非有効時に呼ぶ関数
     /// </summary>
-    public void Disactive()
+    public virtual void Disactive()
     {
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
-    public void Disactive(float interval)
+    public virtual void Disactive(float interval)
     {
         throw new NotImplementedException();
     }

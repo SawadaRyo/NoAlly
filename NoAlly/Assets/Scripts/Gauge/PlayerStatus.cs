@@ -21,9 +21,9 @@ public class PlayerStatus : StatusBase
         _sapReactiveProperty = new FloatReactiveProperty(0);
     }
 
-    public override void Damage(WeaponBase weaponStatus, HitParameter difanse, ElementType type)
+    public override void Damage(float[] damageValue, HitParameter difanse, ElementType type)
     {
-        _hpReactiveProperty.Value -= base.DamageCalculation(weaponStatus, difanse, type);
+        _hpReactiveProperty.Value -= base.DamageCalculation(damageValue, difanse, type);
         if (_hpReactiveProperty.Value <= 0)
         {
             CharacterDead(false);
