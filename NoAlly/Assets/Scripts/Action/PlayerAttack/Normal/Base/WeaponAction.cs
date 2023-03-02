@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponBase))]
 public class WeaponAction : MonoBehaviour, IWeaponAction
 {
     [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")]
@@ -21,7 +22,6 @@ public class WeaponAction : MonoBehaviour, IWeaponAction
 
     public float ChargeLevel1 => _chargeLevel1;
     public float ChargeLevel2 => _chargeLevel2;
-    public WeaponBase Base => _weaponBase;
 
     public virtual void WeaponChargeAttackMethod() { }
 

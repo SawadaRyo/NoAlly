@@ -5,22 +5,30 @@ using UnityEngine;
 
 public class SoundManager : Object, IObjectGenerator
 {
-    ObjectPool<SoundObject, SoundManager> _pool = new();
-    ObjectPool<SoundObject, SoundManager>.ObjectKey _keys;
+    [Tooltip("")]
+    SoundObjectPool<SoundObject, SoundManager> _pool = new();
+    [Tooltip("")]
+    SoundObjectPool<SoundObject, SoundManager>.ObjectKey[] _keys;
     [Tooltip("サウンドのScriptableObject")]
-    SoundScriptable _soundDataBase = null;
+    SoundScriptable[] _soundDataBase = null;
     [Tooltip("現在ループさせているサウンド")]
-    SoundObject _loopingBGMObj = null;
+    SoundObject _loopingSoundObj = null;
 
-    SoundScriptable SoundDataBase => _soundDataBase;
+    SoundUsage _usage;
+
     public Transform GenerateTrance => throw new System.NotImplementedException();
+    public SoundScriptable[] SoundDataBase => _soundDataBase;
+    public SoundUsage Usage => _usage;
 
-    public void SetSoundData(SoundScriptable datas)
+    public void SetSoundData(SoundScriptable[] datas)
     {
         _soundDataBase = datas;
-        _keys = _pool.SetBaseObj(_soundDataBase.SoundPlayer, this);
-        _pool.SetCapacity(_keys, 1);
-
+        for (int i = 0; i < _soundDataBase.Length; i++)
+        {
+            _usage = (SoundUsage)i;
+            _keys[i] = _pool.SetBaseObj(_soundDataBase[i].SoundPlayer, this);
+            _pool.SetCapacity(_keys[i], 1);
+        }
     }
 
     /// <summary>
@@ -30,17 +38,18 @@ public class SoundManager : Object, IObjectGenerator
     /// <param name="soundNumber">サウンドが登録されている要素番号</param>
     public void CallSound(SoundUsage usage, SoundType type, int soundNumber)
     {
+        _usage = usage;
         switch (type)
         {
             case SoundType.BGM:
-                if (_loopingBGMObj)
+                if (_loopingSoundObj)
                 {
-                    _loopingBGMObj.Disactive();
+                    _loopingSoundObj.Disactive();
                 }
-                SoundPlay(_soundDataBase.Sounds.BGM, soundNumber);
+                SoundPlay(_soundDataBase[(int)_usage].Sounds.BGM, soundNumber);
                 break;
             case SoundType.SE:
-                //SoundPlay(_soundDataBase.Sounds.SE, soundNumber);
+                SoundPlay(_soundDataBase[(int)_usage].Sounds.SE, soundNumber);
                 break;
         }
     }
@@ -59,21 +68,13 @@ public class SoundManager : Object, IObjectGenerator
         }
         //サウンドオブジェクトを生成
         SoundElements sound = sounds[soundNumber];
-        SoundObject audioSource = _pool.Instantiate(_keys);
-        //AudioSource audioSource = Instantiate(_soundDataBase[1].SoundPlayer);
-
-        //audioSource.clip = sound.Clip;
-        //audioSource.volume = sound.Volume;
-        //audioSource.loop = sound.IsLoop;
-        //audioSource.Play();
-        _loopingBGMObj = audioSource;
+        SoundObject audioSource = _pool.Instantiate(_keys[(int)_usage], soundNumber);
+        _loopingSoundObj = audioSource;
 
         //ループさせない場合オブジェクトを破棄する
         if (!sound.IsLoop)
         {
-            //Destroy(audioSource, _soundDataBase.WaitDestorySecond);
-            //Destroy(audioSource, audioSource.clip.length + 1f);
-            _loopingBGMObj.Disactive();
+            _loopingSoundObj.Disactive(sounds[soundNumber].Clip.length);
         }
     }
 }

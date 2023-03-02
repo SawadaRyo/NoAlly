@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System;
 using UnityEngine;
 
-//ToDo ‘•”õ’†‚Ì‘®«‚É‚æ‚Á‚ÄBullet‚ÌUŒ‚—Í‚ğ•ÏX‚Å‚«‚é‚æ‚¤‚É‚·‚é
-public class SnipWeapon : WeaponBase
+//ToDo è£…å‚™ä¸­ã®å±æ€§ã«ã‚ˆã£ã¦Bulletã®æ”»æ’ƒåŠ›ã‚’å¤‰æ›´ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
+public class SnipWeapon : WeaponBase, IObjectGenerator
 {
     [SerializeField] string _filePath = "PlayerBullet";
     [SerializeField] string _findMuzzlePath = "PlayerB/Muzzle";
@@ -11,26 +10,33 @@ public class SnipWeapon : WeaponBase
     [SerializeField] PersonType _personType = PersonType.Player;
 
     Transform _muzzleForward = default;
-    ObjectPool<PlayerBulletBase, BowAction, BulletType> _bPool = new ObjectPool<PlayerBulletBase, BowAction, BulletType>();
-    ObjectPool<PlayerBulletBase, BowAction, BulletType>.ObjectKey[] _keys = null;
+    ObjectPool<PlayerBulletBase, SnipWeapon, BulletType> _bPool = new ObjectPool<PlayerBulletBase, SnipWeapon, BulletType>();
+    ObjectPool<PlayerBulletBase, SnipWeapon, BulletType>.ObjectKey[] _keys = new ObjectPool<PlayerBulletBase, SnipWeapon, BulletType>
+                                                                                .ObjectKey[Enum.GetNames(typeof(BulletType)).Length];
     PlayerBulletBase[] _bulletPrefab = new PlayerBulletBase[3];
     BulletType _bulletType = BulletType.NORMAL;
 
     public Transform GenerateTrance => _muzzleForward;
+    public ObjectPool<PlayerBulletBase, SnipWeapon, BulletType> BPool => _bPool;
+    public ObjectPool<PlayerBulletBase, SnipWeapon, BulletType>.ObjectKey[] BPoolKeys => _keys;
 
 
-    public override void Initialize(PlayerContoller player, WeaponBase weaponBase)
+    public override void Initialize(WeaponDataEntity weaponData)
     {
-        base.Initialize(player, weaponBase);
-        _keys = new ObjectPool<PlayerBulletBase, BowAction, BulletType>.ObjectKey[Enum.GetNames(typeof(BulletType)).Length];
+        base.Initialize(weaponData);
         _muzzleForward = GameObject.Find(_findMuzzlePath).transform;
         _bulletPrefab = Resources.LoadAll<PlayerBulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
             _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _poolPos, (BulletType)i);
-            //Debug.Log(_keys[i]);
             _bPool.SetCapacity(_keys[i], 10);
         }
-
     }
+}
+
+public enum BulletType : int
+{
+    NORMAL,
+    STRENGTHEN,
+    CANNON
 }

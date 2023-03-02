@@ -20,11 +20,12 @@ public abstract class WeaponBase : ObjectBase, IWeapon
     [Tooltip("•Ší‚Ì‘®«")]
     protected ElementType _type;
 
+    public float[] WeaponPower => _weaponPower;
+    public ElementType Type => _type;
     public WeaponDeformation Deformated => _isDeformated;
     public ObjectOwner Owner => _owner;
 
-
-    public virtual void Initializer(WeaponDataEntity weaponData)
+    public virtual void Initialize(WeaponDataEntity weaponData)
     {
         ActiveObject(_isActive);
         if (_myParticleSystem != null)

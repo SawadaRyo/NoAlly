@@ -1,10 +1,11 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<TObj, TOwner, TKey>
-    where TObj : UnityEngine.Object, IObjectPool<TOwner>
-    where TOwner : UnityEngine.Object, IObjectGenerator
+
+public class SoundObjectPool<TObj, TOwner>
+    where TObj : Object, ISoundObjectPool<TOwner>
+    where TOwner : Object, IObjectGenerator
 {
     ObjectKey _objectKey = null;
     TObj _baseObj = null;
@@ -17,30 +18,27 @@ public class ObjectPool<TObj, TOwner, TKey>
     public class ObjectKey
     {
         TOwner _owner = null;
-        TKey _key;
 
         public TOwner Owner => _owner;
-        public TKey Key => _key;
 
-        public ObjectKey(TOwner owner, TKey key)
+        public ObjectKey(TOwner owner)
         {
             _owner = owner;
-            _key = key;
         }
     }
 
-    public ObjectKey SetBaseObj(TObj obj, TOwner owner, TKey key)
+    public ObjectKey SetBaseObj(TObj obj, TOwner owner)
     {
         _baseObj = obj;
-        _objectKey = new(owner, key);
+        _objectKey = new(owner);
         return _objectKey;
     }
 
-    public ObjectKey SetBaseObj(TObj obj, TOwner owner, Transform parent, TKey key)
+    public ObjectKey SetBaseObj(TObj obj, TOwner owner, Transform parent)
     {
         _baseObj = obj;
         _parent = parent;
-        _objectKey = new(owner, key);
+        _objectKey = new(owner);
         return _objectKey;
     }
 
@@ -78,29 +76,7 @@ public class ObjectPool<TObj, TOwner, TKey>
         _poolList.Add(key, value);
     }
 
-    //public TObj Instantiate()
-    //{
-    //    TObj ret = null;
-    //    for (int i = 0; i < _pool.Count; ++i)
-    //    {
-    //        int newSIze = 0;
-    //        int index = (_index + i) % _pool.Count;
-    //        if (_pool[index] == null)
-    //        {
-    //            newSIze++;
-    //            continue;
-    //        }
-    //        else if (_pool[index] != null && _pool[index].IsActive) continue;
-
-    //        _pool[index].Create();
-    //        ret = _pool[index];
-    //        break;
-    //    }
-
-    //    return ret;
-    //}
-
-    public TObj Instantiate(ObjectKey key)
+    public TObj Instantiate(ObjectKey key,int soundNumber)
     {
         TObj ret = null;
         List<TObj> valueList = _poolList.GetValueOrDefault(key);
@@ -116,7 +92,7 @@ public class ObjectPool<TObj, TOwner, TKey>
             }
             else if (valueList[index] != null && valueList[index].IsActive) continue;
 
-            valueList[index].Create();
+            valueList[index].Create(soundNumber);
             ret = valueList[index];
             break;
         }
@@ -124,8 +100,3 @@ public class ObjectPool<TObj, TOwner, TKey>
         return ret;
     }
 }
-
-
-
-
-

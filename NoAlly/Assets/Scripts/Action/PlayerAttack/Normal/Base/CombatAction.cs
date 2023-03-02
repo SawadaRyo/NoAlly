@@ -29,16 +29,16 @@ public class CombatAction : WeaponAction
         switch (top)
         {
             case ElementType.RIGIT:
-                refPower = _weaponBase.RigitPower;
-                break;
-            case ElementType.ELEKE:
-                refPower = _weaponBase.ElekePower;
+                refPower = _weaponBase.WeaponPower[(int)ElementType.RIGIT];
                 break;
             case ElementType.FIRE:
-                refPower = _weaponBase.FirePower;
+                refPower = _weaponBase.WeaponPower[(int)ElementType.FIRE];
+                break;
+            case ElementType.ELEKE:
+                refPower = _weaponBase.WeaponPower[(int)ElementType.ELEKE];
                 break;
             case ElementType.FROZEN:
-                refPower = _weaponBase.FrozenPower;
+                refPower = _weaponBase.WeaponPower[(int)ElementType.FROZEN];
                 break;
         }
         if (magnification < 1)
