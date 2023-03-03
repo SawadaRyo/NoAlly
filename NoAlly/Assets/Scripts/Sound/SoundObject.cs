@@ -49,6 +49,6 @@ public class SoundObject : ObjectBase, ISoundObjectPool<SoundManager>
     public void DisactiveForInstantiate(SoundManager owner)
     {
         Owner = owner;
-        _soundScriptable = Owner.SoundDataBase[(int)Owner.Usage];
+        _soundScriptable = Owner.SoundDataBase[Owner.Usage];
     }
 }

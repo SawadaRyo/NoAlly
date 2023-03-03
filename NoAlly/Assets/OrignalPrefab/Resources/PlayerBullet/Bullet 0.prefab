@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 8823801555886408867}
   - component: {fileID: -5450982704595342441}
   - component: {fileID: 8173534643544809521}
-  - component: {fileID: 3608987134518265626}
   m_Layer: 0
   m_Name: Bullet 0
   m_TagString: Untagged
@@ -491,12 +490,6 @@ MonoBehaviour:
   _objectRenderer:
   - {fileID: 3360530210699052615}
   _objectAnimator: {fileID: 0}
-  _rigitPower: 3
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _myParticleSystem: {fileID: 0}
-  _owner: 1
   _bulletSpeed: 10
   _intervalTime: 3
   _rb: {fileID: -5450982704595342441}
@@ -530,17 +523,3 @@ CapsuleCollider:
   m_Height: 1.5943997
   m_Direction: 1
   m_Center: {x: 0, y: -0.29719985, z: 0.0013721138}
---- !u!114 &3608987134518265626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8581802472266534934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9366447fa7742d44e9242e56f971bfda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chargeLevel1: 1
-  _chargeLevel2: 3

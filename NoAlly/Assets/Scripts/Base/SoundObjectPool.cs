@@ -34,14 +34,6 @@ public class SoundObjectPool<TObj, TOwner>
         return _objectKey;
     }
 
-    public ObjectKey SetBaseObj(TObj obj, TOwner owner, Transform parent)
-    {
-        _baseObj = obj;
-        _parent = parent;
-        _objectKey = new(owner);
-        return _objectKey;
-    }
-
     public void SetCapacity(ObjectKey key, int size)
     {
         List<TObj> objList = new();
@@ -76,7 +68,7 @@ public class SoundObjectPool<TObj, TOwner>
         _poolList.Add(key, value);
     }
 
-    public TObj Instantiate(ObjectKey key,int soundNumber)
+    public TObj Instantiate(ObjectKey key, SoundType type, int soundNumber)
     {
         TObj ret = null;
         List<TObj> valueList = _poolList.GetValueOrDefault(key);
@@ -92,7 +84,7 @@ public class SoundObjectPool<TObj, TOwner>
             }
             else if (valueList[index] != null && valueList[index].IsActive) continue;
 
-            valueList[index].Create(soundNumber);
+            valueList[index].Create(type, soundNumber);
             ret = valueList[index];
             break;
         }

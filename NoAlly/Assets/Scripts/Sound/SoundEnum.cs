@@ -11,6 +11,5 @@ public enum SoundUsage:int //サウンドの使用用途
     PLAYERMOVE,
     ATTACK,
     GIMIC,
-
     GAMEBGM
 }

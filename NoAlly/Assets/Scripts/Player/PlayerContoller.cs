@@ -111,6 +111,7 @@ public class PlayerContoller : MonoBehaviour
             _isJump = Input.GetButtonDown("Jump");
 
             JumpMethod(_isJump);
+            WallJumpMethod(_isJump, _isDash);
         }
     }
     void FixedUpdate()
@@ -119,7 +120,6 @@ public class PlayerContoller : MonoBehaviour
         {
             MoveMethod(CurrentNormal(new Vector2(_h, _v)).x, _isDash);
             RotateMethod(CurrentNormal(new Vector2(_h, _v)));
-            WallJumpMethod(_isJump, _isDash);
         }
     }
     //void OnDrawGizmos()
@@ -258,7 +258,9 @@ public class PlayerContoller : MonoBehaviour
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
         {
+            _rb.isKinematic = true;
             _slideWall = true;
+            _rb.isKinematic = false;
             if (_dashChack) _dashChack = false;
             if (jump)
             {
@@ -289,25 +291,15 @@ public class PlayerContoller : MonoBehaviour
         else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
 
         Vector3 isWallCenter = _gripPos.transform.position;
-        Ray rayRight = new(isWallCenter, Vector3.right + Vector3.up);
-        Ray rayLeft = new(isWallCenter, Vector3.left + Vector3.up);
+        Ray isWallOnRay = new(isWallCenter, new Vector3(currentNormal.normalized.x, 1f, 0f));
 
         PlayerClimbWall hitflg = PlayerClimbWall.NONE;
-        if (Physics.Raycast(rayRight, out _hitInfo, _walldistance, _wallMask) &&
-            currentNormal.x == _hitInfo.normal.x * -1)
+        if (Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask))
         {
             Debug.Log(currentNormal.normalized);
             Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
-            _wallVec = Vector3.left;
-            hitflg = PlayerClimbWall.RIGHT;
-        }
-        else if (Physics.Raycast(rayLeft, out _, _walldistance, _wallMask) &&
-            currentNormal.x == _hitInfo.normal.x * -1)
-        {
-            Debug.Log(currentNormal.normalized);
-            Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
-            _wallVec = Vector3.right;
-            hitflg |= PlayerClimbWall.LEFT;
+            _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
+            hitflg = PlayerClimbWall.GRIPING;
         }
         return hitflg;
     }
@@ -330,9 +322,9 @@ public class PlayerContoller : MonoBehaviour
     }
     //AnimatorEventで呼ぶ関数----------------------------------------------//
     //TODO:効果音やBGMはSoundManagerで管理する
-    void PlaySound(SoundUsage usage,int soundNum)
+    void PlaySound(SoundUsage usage, int soundNum)
     {
-        GameManager.InstanceSM.CallSound(usage,SoundType.SE,soundNum);
+        GameManager.InstanceSM.CallSound(usage, SoundType.SE, soundNum);
     }
     //Vector3 NomarizedMoveVecter()
     //{

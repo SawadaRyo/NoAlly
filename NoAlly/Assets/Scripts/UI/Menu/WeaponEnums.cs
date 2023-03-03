@@ -37,8 +37,7 @@ public enum WeaponDeformation
 public enum PlayerClimbWall
 {
     NONE,
-    RIGHT,
-    LEFT,
+    GRIPING
 }
 
 

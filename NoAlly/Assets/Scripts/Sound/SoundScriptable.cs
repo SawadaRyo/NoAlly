@@ -10,6 +10,7 @@ public class SoundScriptable : ScriptableObject
     [SerializeField, Tooltip("サウンドの配列")]
     SoundArray _soundAllay;
 
+    public SoundUsage Usage => _soundUsage;
     public SoundObject SoundPlayer => _soundPlayer;
     public SoundArray Sounds => _soundAllay;
 }
