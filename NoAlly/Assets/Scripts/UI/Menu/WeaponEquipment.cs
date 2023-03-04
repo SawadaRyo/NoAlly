@@ -17,7 +17,7 @@ public class WeaponEquipment : MonoBehaviour, IMenu<ICommandButton>
     [Tooltip("武器のデータ")]
     SetWeaponData _weaponData = null;
     [Tooltip("武器の機能")]
-    List<IWeapon> _weaponMethods = new();
+    List<IWeaponBase> _weaponMethods = new();
     [Tooltip("装備中の武器と属性")]
     ReactiveProperty<WeaponDatas> _mainWeapon = new ReactiveProperty<WeaponDatas>();
     ReactiveProperty<WeaponDatas> _subWeapon = new ReactiveProperty<WeaponDatas>();

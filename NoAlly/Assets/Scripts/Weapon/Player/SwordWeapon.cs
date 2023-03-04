@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SwordWeapon : CombatWeapon
 {
-    public override void WeaponMode(ElementType type)
+    public override void WeaponMode(WeaponType weaponType,ElementType elementType)
     {
-        switch (type)
+        switch (elementType)
         {
             case ElementType.FIRE:
                 _isDeformated = WeaponDeformation.Deformation;
@@ -17,6 +17,6 @@ public class SwordWeapon : CombatWeapon
                 _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
-        base.WeaponMode(type);
+        base.WeaponMode(weaponType,elementType);
     }
 }

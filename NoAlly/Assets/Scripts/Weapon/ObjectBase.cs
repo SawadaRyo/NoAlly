@@ -29,4 +29,8 @@ public class ObjectBase : MonoBehaviour
         Array.ForEach(_objectRenderer, x => x.enabled = stats);
         Array.ForEach(_objectCollider, x => x.enabled = stats);
     }
+    public virtual void ActiveCollider(bool stats)
+    {
+        Array.ForEach(_objectCollider, x => x.enabled = stats);
+    }
 }

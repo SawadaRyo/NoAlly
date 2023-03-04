@@ -7,15 +7,18 @@ using UniRx;
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
+    [SerializeField, Header("プレイヤーのアニメーター")]
+    Animator _playerAnimator = null;
+
     [Tooltip("装備している武器")]
-    WeaponDatas _targetweapon;
+    WeaponDatas _targetWeapon;
     [Tooltip("プレイヤーの入力")]
     WeaponActionType _actionType;
     float time = 0;
 
     BoolReactiveProperty _isSwichWeapon = new BoolReactiveProperty();
 
-    public WeaponDatas TargetWeapon { get => _targetweapon; set => _targetweapon = value; }
+    public WeaponDatas TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
     public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon;
 
     // Update is called once per frame
@@ -41,21 +44,26 @@ public class WeaponProcessing : MonoBehaviour
         else if (Input.GetButton("Attack"))
         {
             time += Time.deltaTime;
-            if (time > _targetweapon.Action.ChargeLevel1 / 20)
+            if (time > _targetWeapon.Action.ChargeLevel1 / 20)
             {
                 _actionType = WeaponActionType.Charging;
             }
         }
         else if (Input.GetButtonUp("Attack"))
         {
-            if(time > _targetweapon.Action.ChargeLevel1/20)
+            if(time > _targetWeapon.Action.ChargeLevel1/20)
             {
                 _actionType = WeaponActionType.ChargeAttack;
             }
             time = 0;
         }
-        _targetweapon.Action.WeaponAttack(_actionType, _targetweapon.Type);
+        _targetWeapon.Action.WeaponAttack(_playerAnimator,_actionType, _targetWeapon.Type);
         _actionType = WeaponActionType.None;
+    }
+
+    public void WeaponMode(WeaponType weaponType,ElementType elementType)
+    {
+
     }
 }
 

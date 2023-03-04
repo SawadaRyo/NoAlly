@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IWeaponAction
 {
+    public void WeaponAttackMovement(Collider target);
+    public void WeaponAttack(Animator playerAnimator, WeaponActionType actionType, WeaponType weaponType);
     public void WeaponChargeAttackMethod();
-    public void WeaponAttack(WeaponActionType actionType,WeaponType weaponType);
 }

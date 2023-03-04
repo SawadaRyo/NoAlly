@@ -10,9 +10,9 @@ public class BowAction : WeaponAction
     SnipWeapon _snipWeapon = null;
     BulletType _bulletType = BulletType.NORMAL;
 
-    public override void Initialize(PlayerContoller player, WeaponBase weaponBase)
+    public override void Initialize(WeaponBase weaponBase)
     {
-        base.Initialize(player, weaponBase);
+        base.Initialize(weaponBase);
         _snipWeapon = weaponBase as SnipWeapon;
     }
 

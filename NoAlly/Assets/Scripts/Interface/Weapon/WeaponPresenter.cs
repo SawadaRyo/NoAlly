@@ -20,7 +20,7 @@ public class WeaponPresenter : MonoBehaviour
     [Space(15)]
     [Header("View")]
     [SerializeField, Header("WeaponVisualController‚ğŠi”[‚·‚éŠÖ”")]
-    WeaponVisualController _weaponVisual = null;
+    WeaponTransController _weaponVisual = null;
     [SerializeField, Header("WeaponProcessing‚ğŠi”[‚·‚éŠÖ”")]
     WeaponProcessing _weaponProcessing = null;
     [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
@@ -30,8 +30,7 @@ public class WeaponPresenter : MonoBehaviour
     void Awake()
     {
         _weaponData = new SetWeaponData(_weaponScriptableObjects);
-        _weaponVisual.Initialize(_weaponData,_weaponScriptableObjects,_playerContoller);
-        _weaponVisual.FirstSetWeapon(_weaponEquipment.FirstSetWeapon(_weaponData));
+        _weaponEquipment.FirstSetWeapon(_weaponData);
         _weaponEquipment.Initialize();
         _weaponMenuHander.Initialize();
         WeaponEquipmentState();

@@ -20,7 +20,6 @@ public class CombatAction : WeaponAction
             {
                 ChargePower(ElementType.RIGIT, _chargeLevel2);
             }
-            //_animator.Play(_weaponName + "Chrage");
         }
     }
     public float ChargePower(ElementType top, float magnification)

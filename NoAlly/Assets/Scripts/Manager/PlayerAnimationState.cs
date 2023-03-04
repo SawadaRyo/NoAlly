@@ -142,7 +142,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     //AnimationEvent�ŌĂԊ֐�
     void AttackToCombatWeapon(BoolAttack isAttack)
     {
-        _weaponProcessing.TargetWeapon.Base.LoopJud(isAttack);
+        _weaponProcessing.TargetWeapon.Action.LoopJud(isAttack);
         //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
     }
     void FinishAttackMove(int moveSpeed)

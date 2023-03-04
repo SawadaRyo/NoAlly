@@ -22,6 +22,11 @@ namespace DataOfWeapon
 
             weaponObjects = weapon;
             _weaponDatas = new WeaponDatas[weaponObjects.WeaponDatas.Length];
+            for (int i = 0; i < weaponObjects.WeaponDatas.Length; i++)
+            {
+                _weaponDatas[i].Base.Initialize(weaponObjects.WeaponDatas[i]);
+                _weaponDatas[i].Action.Initialize(_weaponDatas[i].Base);
+            }
         }
     }
 }
