@@ -902,7 +902,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8911742248216788152}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &621457371513084595
 MonoBehaviour:
@@ -1416,7 +1416,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8911742248216788152}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7729702678583033734
 MonoBehaviour:
@@ -2372,10 +2372,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6211781101930956441}
   - {fileID: 7635366402182347066}
   - {fileID: 2228516813256258399}
   - {fileID: 1314389353216416350}
+  - {fileID: 6211781101930956441}
   m_Father: {fileID: 835445112549933972}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2608,7 +2608,7 @@ Transform:
   - {fileID: 6618780575364763061}
   - {fileID: 8955126130538645973}
   m_Father: {fileID: 8911742248216788152}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3373106028812496146
 GameObject:
@@ -4350,7 +4350,7 @@ Transform:
   - {fileID: 2904600044169526483}
   - {fileID: 7253298162174036616}
   m_Father: {fileID: 8911742248216788152}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7545063320441617760
 GameObject:
@@ -5315,7 +5315,6 @@ GameObject:
   - component: {fileID: 181822740134755367}
   - component: {fileID: -46491826598969884}
   - component: {fileID: 4009065848111511044}
-  - component: {fileID: 2546329304323397187}
   - component: {fileID: 5833670385557566491}
   - component: {fileID: 7213771205097826021}
   m_Layer: 7
@@ -5382,7 +5381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chargeLevel1: 1.2
   _chargeLevel2: 3
-  _myParticleSystem: {fileID: 0}
+  _myParticleSystem: {fileID: 2763430253654797412}
 --- !u!114 &-46491826598969884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5411,18 +5410,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
---- !u!114 &2546329304323397187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9153705405047431978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d2cecf277f1f844e8a7703f926fa0c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5833670385557566491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5742,6 +5729,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+--- !u!198 &2763430253654797412 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 29077300315030148, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
+  m_PrefabInstance: {fileID: 2755886906027241184}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3380785882989612414 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636157993568117662, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}

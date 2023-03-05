@@ -32,7 +32,7 @@ public abstract class WeaponBase : MonoBehaviour, IWeaponBase
         _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
     }
-    public virtual void WeaponMode(WeaponType weaponType,ElementType elementType)
+    public virtual void WeaponMode(ElementType elementType)
     {
         _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];

@@ -12,6 +12,10 @@ public class WeaponProcessing : MonoBehaviour
 
     [Tooltip("装備している武器")]
     WeaponDatas _targetWeapon;
+    [Tooltip("メイン武器")]
+    WeaponDatas _mainWeapon;
+    [Tooltip("サブ武器")]
+    WeaponDatas _subWeapon;
     [Tooltip("プレイヤーの入力")]
     WeaponActionType _actionType;
     float time = 0;
@@ -20,6 +24,11 @@ public class WeaponProcessing : MonoBehaviour
 
     public WeaponDatas TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
     public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon;
+
+    void Start()
+    {
+        
+    }
 
     // Update is called once per frame
     void Update()
@@ -60,10 +69,33 @@ public class WeaponProcessing : MonoBehaviour
         _targetWeapon.Action.WeaponAttack(_playerAnimator,_actionType, _targetWeapon.Type);
         _actionType = WeaponActionType.None;
     }
-
-    public void WeaponMode(WeaponType weaponType,ElementType elementType)
+    /// <summary>
+    /// メイン武器・サブ武器の装備をボタンで切り替える関数
+    /// </summary>
+    public (bool, bool) SwichWeapon(bool weaponSwitch)
     {
+        _mainWeapon.WeaponEnabled = !weaponSwitch;
+        _subWeapon.WeaponEnabled = weaponSwitch;
 
+        return (_mainWeapon.WeaponEnabled, _subWeapon.WeaponEnabled);
+    }
+
+    public void SetEquipment(WeaponDatas weapon, CommandType type)
+    {
+        switch (type)
+        {
+            case CommandType.MAIN:
+                _mainWeapon = weapon;
+                break;
+            case CommandType.SUB:
+                _subWeapon = weapon;
+                break;
+        }
+    }
+
+    public void WeaponModeChange(WeaponType weaponType)
+    {
+        _playerAnimator.SetInteger("WeaponType", (int)weaponType);
     }
 }
 

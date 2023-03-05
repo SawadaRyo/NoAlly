@@ -45,20 +45,22 @@ public class WeaponPresenter : MonoBehaviour
             {
                 if (mainWeapon == null) return;
 
-                _weaponVisual.SetEquipment(mainWeapon, CommandType.MAIN);
+                _weaponProcessing.SetEquipment(mainWeapon, CommandType.MAIN);
                 _weaponProcessing.TargetWeapon = _weaponEquipment
-                                                 .CheckWeaponActive(_weaponVisual
+                                                 .CheckWeaponActive(_weaponProcessing
                                                  .SwichWeapon(_weaponProcessing.IsSwichWeapon.Value));
+                _weaponProcessing.WeaponModeChange(_weaponProcessing.TargetWeapon.Type);
             }).AddTo(this);
         _weaponEquipment.SubWeapon
             .Subscribe(subWeapon =>
             {
                 if (subWeapon == null) return;
 
-                _weaponVisual.SetEquipment(subWeapon, CommandType.SUB);
+                _weaponProcessing.SetEquipment(subWeapon, CommandType.SUB);
                 _weaponProcessing.TargetWeapon = _weaponEquipment
-                                                 .CheckWeaponActive(_weaponVisual
+                                                 .CheckWeaponActive(_weaponProcessing
                                                  .SwichWeapon(_weaponProcessing.IsSwichWeapon.Value));
+                _weaponProcessing.WeaponModeChange(_weaponProcessing.TargetWeapon.Type);
             }).AddTo(this);
     }
     void WeaponProcessingState()

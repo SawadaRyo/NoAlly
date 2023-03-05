@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwordWeapon : CombatWeapon
 {
-    public override void WeaponMode(WeaponType weaponType,ElementType elementType)
+    public override void WeaponMode(ElementType elementType)
     {
         switch (elementType)
         {
@@ -17,6 +17,6 @@ public class SwordWeapon : CombatWeapon
                 _weaponAnimator.SetBool("IsOpen", false);
                 break;
         }
-        base.WeaponMode(weaponType,elementType);
+        base.WeaponMode(elementType);
     }
 }
