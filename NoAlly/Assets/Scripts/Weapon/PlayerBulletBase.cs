@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class PlayerBulletBase : ObjectBase, IObjectPool<SnipWeapon>, IBullet
+public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponSnip>, IBullet
 {
     [SerializeField, Header("íeÇÃë¨ìx")]
     float _bulletSpeed = 0;
@@ -23,7 +23,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<SnipWeapon>, IBullet
     Vector3 _velo = Vector3.zero;
     [Tooltip("íeÇÃëÆê´")]
 
-    public SnipWeapon Owner { get; set; }
+    public WeaponSnip Owner { get; set; }
 
     public void FixedUpdate()
     {
@@ -37,7 +37,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<SnipWeapon>, IBullet
     {
         if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
         {
-            hitObj.BehaviorOfHIt(bulletPowers,Owner.Type);
+            hitObj.BehaviorOfHIt(bulletPowers,Owner.ElementType);
             Disactive();
         }
     }
@@ -63,7 +63,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<SnipWeapon>, IBullet
         _isActive = false;
         ActiveObject(_isActive);
     }
-    public void DisactiveForInstantiate(SnipWeapon owner)
+    public void DisactiveForInstantiate(WeaponSnip owner)
     {
         Owner = owner;
         _rb = GetComponent<Rigidbody>();

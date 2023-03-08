@@ -4,46 +4,20 @@ using UnityEngine;
 
 public class CombatAction : WeaponAction
 {
-    public override void WeaponChargeAttackMethod()
+    public override void WeaponChargeAttackMethod(float chrageCount, float[] weaponPower, ElementType elementType)
     {
-        if (_chrageCount < _chargeLevel1)
+        if (chrageCount < _chargeLevel1)
         {
-            ChargePower(ElementType.RIGIT, 1);
+            ChargePower(weaponPower, elementType, 1);
         }
-        else
+        else if (chrageCount >= _chargeLevel1 && chrageCount < _chargeLevel2)
         {
-            if (_chrageCount >= _chargeLevel1 && _chrageCount < _chargeLevel2)
-            {
-                ChargePower(ElementType.RIGIT, _chargeLevel1);
-            }
-            else if (_chrageCount >= _chargeLevel2)
-            {
-                ChargePower(ElementType.RIGIT, _chargeLevel2);
-            }
+            ChargePower(weaponPower, elementType, _chargeLevel1);
         }
-    }
-    public float ChargePower(ElementType top, float magnification)
-    {
-        float refPower = 0;
-        switch (top)
+        else if (chrageCount >= _chargeLevel2)
         {
-            case ElementType.RIGIT:
-                refPower = _weaponBase.WeaponPower[(int)ElementType.RIGIT];
-                break;
-            case ElementType.FIRE:
-                refPower = _weaponBase.WeaponPower[(int)ElementType.FIRE];
-                break;
-            case ElementType.ELEKE:
-                refPower = _weaponBase.WeaponPower[(int)ElementType.ELEKE];
-                break;
-            case ElementType.FROZEN:
-                refPower = _weaponBase.WeaponPower[(int)ElementType.FROZEN];
-                break;
+            ChargePower(weaponPower, elementType, _chargeLevel2);
         }
-        if (magnification < 1)
-        {
-            magnification = 1;
-        }
-        return refPower * magnification;
+
     }
 }

@@ -17,7 +17,7 @@ public abstract class DoorSwitchBase : MonoBehaviour, IHitBehavorOfGimic
 
     public virtual void ObjectAction() { }
 
-    public void BehaviorOfHit(WeaponBase weaponBase, ElementType type)
+    public void BehaviorOfHit(IWeaponBase weaponBase, ElementType type)
     {
         if(weaponBase.Owner == ObjectOwner.PLAYER)
         {

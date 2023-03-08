@@ -1659,9 +1659,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7663699034045295028}
-  - component: {fileID: 2866314188640582097}
   - component: {fileID: 6332376535094752302}
-  - component: {fileID: 4350358834367136211}
   - component: {fileID: 2516548322842244691}
   m_Layer: 7
   m_Name: Sword
@@ -1690,23 +1688,9 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2866314188640582097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6692011100126657708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ca29c3ea7c258141bc626f3bbb166b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chargeLevel1: 1.2
-  _chargeLevel2: 3
 --- !u!95 &6332376535094752302
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1723,42 +1707,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4350358834367136211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6692011100126657708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f18cf4fb952993e418bb592c81157062, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _objectCollider:
-  - {fileID: 2516548322842244691}
-  _objectRenderer:
-  - {fileID: 2517371884986065495}
-  - {fileID: 3237947595179531005}
-  - {fileID: 5694990607037232205}
-  - {fileID: 7499477568440260594}
-  - {fileID: 5033112436740819932}
-  - {fileID: 5046398484160822919}
-  - {fileID: 2972468114190432670}
-  - {fileID: 3288756957626233760}
-  - {fileID: 7867754915662612397}
-  - {fileID: 3250760677562047060}
-  - {fileID: 5344831945096215612}
-  - {fileID: 926473859757818358}
-  _objectAnimator: {fileID: 6332376535094752302}
-  _rigitPower: 5
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _myParticleSystem: {fileID: 5568882972862981479}
-  _owner: 1
-  _weaponAnimator: {fileID: 6332376535094752302}
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!65 &2516548322842244691
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2229,10 +2178,5 @@ PrefabInstance:
 --- !u!4 &5042904010241148029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636157993568117662, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
-  m_PrefabInstance: {fileID: 5561919329990485987}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &5568882972862981479 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 29077300315030148, guid: 485bbe8f9a760a84dbda5dc2d17b1aab, type: 3}
   m_PrefabInstance: {fileID: 5561919329990485987}
   m_PrefabAsset: {fileID: 0}

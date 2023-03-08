@@ -10,7 +10,7 @@ public enum WeaponType
     SWORD = 0,
     LANCE = 1,
     BOW = 2,
-    BRASTER = 3,
+    SHIELD = 3,
 }
 public enum ElementType
 {

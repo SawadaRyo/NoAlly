@@ -7,30 +7,23 @@ using DataOfWeapon;
 
 public class WeaponPresenter : MonoBehaviour
 {
-    [SerializeField, Header("WeaponScriptableObjects–{‘Ì")]
-    WeaponScriptableObjects _weaponScriptableObjects;
     [SerializeField, Header("ƒvƒŒƒCƒ„[")]
     PlayerContoller _playerContoller;
 
     [Space(15)]
     [Header("Model")]
     [SerializeField, Header("WeaponEquipment‚ðŠi”[‚·‚éŠÖ”")]
-    WeaponEquipment _weaponEquipment = null;
+    WeaponMenu _weaponEquipment = null;
 
     [Space(15)]
     [Header("View")]
-    [SerializeField, Header("WeaponVisualController‚ðŠi”[‚·‚éŠÖ”")]
-    WeaponTransController _weaponVisual = null;
     [SerializeField, Header("WeaponProcessing‚ðŠi”[‚·‚éŠÖ”")]
     WeaponProcessing _weaponProcessing = null;
     [SerializeField, Header("WeaponEquipment‚ðŠi”[‚·‚éŠÖ”")]
     WeaponMenuHander _weaponMenuHander = null;
-
-    SetWeaponData _weaponData = null;
     void Awake()
     {
-        _weaponData = new SetWeaponData(_weaponScriptableObjects);
-        _weaponEquipment.FirstSetWeapon(_weaponData);
+        //_weaponEquipment.FirstSetWeapon();
         _weaponEquipment.Initialize();
         _weaponMenuHander.Initialize();
         WeaponEquipmentState();
@@ -43,24 +36,19 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment.MainWeapon
             .Subscribe(mainWeapon =>
             {
-                if (mainWeapon == null) return;
-
                 _weaponProcessing.SetEquipment(mainWeapon, CommandType.MAIN);
-                _weaponProcessing.TargetWeapon = _weaponEquipment
-                                                 .CheckWeaponActive(_weaponProcessing
-                                                 .SwichWeapon(_weaponProcessing.IsSwichWeapon.Value));
-                _weaponProcessing.WeaponModeChange(_weaponProcessing.TargetWeapon.Type);
+                _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
             }).AddTo(this);
         _weaponEquipment.SubWeapon
             .Subscribe(subWeapon =>
             {
-                if (subWeapon == null) return;
-
                 _weaponProcessing.SetEquipment(subWeapon, CommandType.SUB);
-                _weaponProcessing.TargetWeapon = _weaponEquipment
-                                                 .CheckWeaponActive(_weaponProcessing
-                                                 .SwichWeapon(_weaponProcessing.IsSwichWeapon.Value));
-                _weaponProcessing.WeaponModeChange(_weaponProcessing.TargetWeapon.Type);
+                _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
+            }).AddTo(this);
+        _weaponEquipment.Element
+            .Subscribe(element =>
+            {
+                _weaponProcessing.SetElement(element);
             }).AddTo(this);
     }
     void WeaponProcessingState()
@@ -70,7 +58,7 @@ public class WeaponPresenter : MonoBehaviour
            {
                if (!PlayerAnimationState.Instance.IsAttack)
                {
-                   _weaponProcessing.TargetWeapon = _weaponEquipment.CheckWeaponActive(_weaponVisual.SwichWeapon(isSwich));
+                   //_weaponProcessing.TargetWeapon = _weaponEquipment.CheckWeaponActive(_weaponVisual.SwichWeapon(isSwich));
                }
            }).AddTo(this);
     }

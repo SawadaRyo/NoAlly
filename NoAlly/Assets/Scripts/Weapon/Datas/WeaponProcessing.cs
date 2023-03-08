@@ -5,32 +5,24 @@ using UniRx;
 /// <summary>
 /// 武器のモーションや可視化などの武器にまつわる処理を行うクラス
 /// </summary>
-public class WeaponProcessing : MonoBehaviour
+public class WeaponProcessing : ObjectBase
 {
     [SerializeField, Header("プレイヤーのアニメーター")]
     Animator _playerAnimator = null;
+    [SerializeField, Header("武器の斬撃エフェクト")]
+    ParticleSystem _myParticleSystem = default;
 
+    [Tooltip("メイン武器とサブ武器")]
+    WeaponData[] _mainAndSub = new WeaponData[2];
     [Tooltip("装備している武器")]
-    WeaponDatas _targetWeapon;
-    [Tooltip("メイン武器")]
-    WeaponDatas _mainWeapon;
-    [Tooltip("サブ武器")]
-    WeaponDatas _subWeapon;
-    [Tooltip("プレイヤーの入力")]
-    WeaponActionType _actionType;
+    WeaponData _targetWeapon;
     float time = 0;
 
     BoolReactiveProperty _isSwichWeapon = new BoolReactiveProperty();
 
-    public WeaponDatas TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
+    public WeaponData TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
     public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon;
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (!WeaponMenuHander.Instance.MenuIsOpen && !Input.GetButton("Attack"))
@@ -39,15 +31,20 @@ public class WeaponProcessing : MonoBehaviour
         }
         WeaponAttack();
     }
-
-
-
+    private void OnTriggerEnter(Collider other)
+    {
+        _targetWeapon.Action.HitMovement(other,_targetWeapon.Base);
+    }
+    /// <summary>
+    /// 武器の入力判定
+    /// </summary>
     void WeaponAttack()
     {
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack"))
         {
-            _actionType = WeaponActionType.Attack;
+            _playerAnimator.SetTrigger("AttackTrigger");
+            _playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
         }
         //溜め攻撃の処理(弓矢のアニメーションもこの処理）
         else if (Input.GetButton("Attack"))
@@ -55,47 +52,69 @@ public class WeaponProcessing : MonoBehaviour
             time += Time.deltaTime;
             if (time > _targetWeapon.Action.ChargeLevel1 / 20)
             {
-                _actionType = WeaponActionType.Charging;
+                _playerAnimator.SetBool("Charge", true);
             }
         }
         else if (Input.GetButtonUp("Attack"))
         {
-            if(time > _targetWeapon.Action.ChargeLevel1/20)
+            if (time > _targetWeapon.Action.ChargeLevel1 / 20)
             {
-                _actionType = WeaponActionType.ChargeAttack;
+                _playerAnimator.SetTrigger("ChargeAttackTrigger");
             }
+            _playerAnimator.SetBool("Charge", false);
             time = 0;
         }
-        _targetWeapon.Action.WeaponAttack(_playerAnimator,_actionType, _targetWeapon.Type);
-        _actionType = WeaponActionType.None;
+    }
+    public void HitJud(BoolAttack isAttack)
+    {
+        switch (isAttack)
+        {
+            case BoolAttack.ATTACKING:
+                _myParticleSystem.Play();
+                ActiveCollider(true);
+                break;
+            default:
+                _myParticleSystem.Stop();
+                ActiveCollider(false);
+                break;
+        }
     }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数
     /// </summary>
-    public (bool, bool) SwichWeapon(bool weaponSwitch)
+    public void SwichWeapon(bool weaponSwitch)
     {
-        _mainWeapon.WeaponEnabled = !weaponSwitch;
-        _subWeapon.WeaponEnabled = weaponSwitch;
-
-        return (_mainWeapon.WeaponEnabled, _subWeapon.WeaponEnabled);
-    }
-
-    public void SetEquipment(WeaponDatas weapon, CommandType type)
-    {
-        switch (type)
+        if (!weaponSwitch)
         {
-            case CommandType.MAIN:
-                _mainWeapon = weapon;
-                break;
-            case CommandType.SUB:
-                _subWeapon = weapon;
-                break;
+            _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
+        }
+        else
+        {
+            _targetWeapon = _mainAndSub[(int)CommandType.SUB];
         }
     }
-
-    public void WeaponModeChange(WeaponType weaponType)
+    /// <summary>
+    /// 武器の装備
+    /// </summary>
+    /// <param name="weapon"></param>
+    /// <param name="type"></param>
+    public void SetEquipment(WeaponData weaponType, CommandType type)
     {
-        _playerAnimator.SetInteger("WeaponType", (int)weaponType);
+        _mainAndSub[(int)type] = weaponType;
+        _objectAnimator.SetInteger("WeaponType", (int)weaponType.Type);
+    }
+    public void SetElement(ElementType elementType)
+    {
+        switch (elementType)
+        {
+            case ElementType.RIGIT:
+                _objectAnimator.SetBool("IsOpen", false);
+                break;
+            default:
+                _objectAnimator.SetBool("IsOpen", true);
+                break;
+        }
+        _targetWeapon.Base.WeaponModeToElement(elementType);
     }
 }
 

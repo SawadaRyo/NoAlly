@@ -11,8 +11,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     bool _ableInput = true;
     [Tooltip("「_able…」の変数の値を初期化するか判定する変数")]
     float _shootTiming = 0.35f;
-    //.[Tooltip("近接攻撃の判定許可")]
-    //bool _onHit = false;
     [Tooltip("攻撃アニメーションに遷移しているか確認する変数")]
     bool _isAttack = false;
     [Tooltip("Animationの遷移状況")]
@@ -82,10 +80,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             }
             else if (info.IsTag("GroundAttackFinish"))
             {
-                if (info.IsName("SwordAttackFinish"))
-                {
-
-                }
                 _ableInput = false;
                 _ableMove = false;
                 _isAttack = true;
@@ -126,24 +120,12 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             }
         }).AddTo(this);
     }
-    void PlayerAnimationEnter()
-    {
-        IDisposable bowAnimationUpdate = _trigger
-        .OnStateUpdateAsObservable()
-        .Where(x => x.StateInfo.IsTag("Shoot"))
-        .Where(x => x.StateInfo.normalizedTime >= _shootTiming)
-        .Take(1)
-        .Subscribe(x =>
-        {
-            //_eWeapon.WeaponChargeAttackMethod(_eWeapon.ChrageCount);
-        }).AddTo(this);
-    }
+    
 
     //AnimationEventで呼ぶ関数
     void AttackToCombatWeapon(BoolAttack isAttack)
     {
-        _weaponProcessing.TargetWeapon.Action.LoopJud(isAttack);
-        //_weaponProcessing.TargetWeapon.Base.LoopJud(_onHit);
+        _weaponProcessing.HitJud(isAttack);
     }
     void FinishAttackMove(int moveSpeed)
     {
@@ -161,11 +143,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         }
         Vector3 onPlane = Vector3.ProjectOnPlane(vec, _playerContoller.HitInfo.normal);
         _playerContoller.Rb.velocity = onPlane * moveSpeed;
-    }
-    void BulletFire()
-    {
-        _weaponProcessing.TargetWeapon.Action.WeaponChargeAttackMethod();
-        _weaponProcessing.TargetWeapon.Action.ResetValue();
     }
 }
 

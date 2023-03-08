@@ -14,10 +14,6 @@ public class WeaponScriptableObjects : ScriptableObject
 [System.Serializable]
 public class WeaponDataEntity
 {
-    [SerializeField, Header("武器の機能")]
-    WeaponBase _base;
-    [SerializeField, Header("武器の攻撃モーション")]
-    WeaponAction _action;
     [SerializeField, Header("武器のタイプ")]
     public WeaponType Type = WeaponType.NONE;
     [SerializeField, Header("武器の物理攻撃力")]
@@ -31,8 +27,6 @@ public class WeaponDataEntity
     [SerializeField, Header("溜め攻撃のため時間")]
     public float[] _chargeLevels = new float[2] { 1f, 3f };
 
-    public WeaponBase Prefab => _base;
-    public WeaponAction Action => _action;
     public float[] RigitPower => _rigitPower;
     public float[] FirePower => _firePower;
     public float[] ElekePower => _elekePower;

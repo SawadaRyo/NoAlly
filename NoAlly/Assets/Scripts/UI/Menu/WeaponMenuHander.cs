@@ -8,7 +8,7 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
     [SerializeField, Tooltip("メインメニューのプレハブ")] 
-    WeaponEquipment _mainManu = null;
+    WeaponMenu _mainManu = null;
     [SerializeField,Tooltip("")]
     Image[] _playerStatusImages = default;
     [SerializeField,Tooltip("")]
