@@ -5,6 +5,9 @@ using UniRx.Triggers;
 
 public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
 {
+    [SerializeField,Tooltip("WeaponProcessingƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
+    WeaponProcessing _weaponProcessing;
+
     [Tooltip("ˆÚ“®‰Â”\‚©”»’è‚·‚é•Ï”")]
     bool _ableMove = true;
     [Tooltip("“ü—Í‰Â”\‚©”»’è‚·‚é•Ï”")]
@@ -17,8 +20,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
     Animator _animator = default;
-    [Tooltip("WeaponProcessingƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
-    WeaponProcessing _weaponProcessing;
     [Tooltip("PlayerController‚ğŠi”[‚·‚é•Ï”")]
     PlayerContoller _playerContoller = null;
 
@@ -28,11 +29,9 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
 
     private void Start()
     {
-        //_onHit = false;
         _animator = GetComponent<Animator>();
         _playerContoller = GetComponent<PlayerContoller>();
         _trigger = _animator.GetBehaviour<ObservableStateMachineTrigger>();  //Animator‚ÉƒAƒ^ƒbƒ`‚µ‚Ä‚¢‚éObservableStateMachineTrigger‚ğæ‚Á‚Ä‚­‚é
-        _weaponProcessing = _playerContoller.GetComponent<WeaponProcessing>();
 
         DetectionStateEnterToNormalAction();
         DetectionStateEnterToAttack();
@@ -58,6 +57,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
                 {
                     _ableInput = true;
                 }
+            }
+            else if(info.IsTag("DisableMove"))
+            {
+                _ableMove = false;
             }
         }).AddTo(this);
     }
@@ -110,9 +113,9 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         .Subscribe(onStateInfo =>
         {
             AnimatorStateInfo info = onStateInfo.StateInfo;
-            if (info.IsTag("GroundAttack") || info.IsName("JumpEnd"))
+            if (info.IsTag("DisableMove"))
             {
-                Debug.Log("Exit");
+                _ableMove = true;
             }
             else if (info.IsTag("AirAttack") || info.IsTag("AirAttack"))
             {

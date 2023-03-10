@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class CommandButton : MonoBehaviour,ICommandButton
+public class CommandButton : MonoBehaviour, ICommandButton
 {
     [SerializeField, Header("ボタン本体")]
     Button _button;
-    [SerializeField, Header("ボタンのAnimator")] 
+    [SerializeField, Header("ボタンのAnimator")]
     Animator _animator;
     [SerializeField, Header("ボタンの色")]
     Color[] _buttonColors = new Color[]
@@ -16,9 +16,9 @@ public class CommandButton : MonoBehaviour,ICommandButton
         Color.yellow
     };
     #endregion
-    [SerializeField,Tooltip("")]
+    [SerializeField, Tooltip("")]
     CommandType _commandType;
-   
+
 
     [Tooltip("")]
     ButtonState _state;
@@ -35,7 +35,6 @@ public class CommandButton : MonoBehaviour,ICommandButton
             {
                 _state = ButtonState.Selected;
             }
-            _animator.enabled = isSelect;
         }
         else
         {
@@ -59,6 +58,7 @@ public class CommandButton : MonoBehaviour,ICommandButton
             }
         }
         _animator.SetBool("IsSelect", isSelect);
+
     }
     public void Disaide(bool isDisaide)
     {

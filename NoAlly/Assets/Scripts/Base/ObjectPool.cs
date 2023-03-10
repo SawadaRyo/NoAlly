@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectPool<TObj, TOwner, TKey>
     where TObj : UnityEngine.Object, IObjectPool<TOwner>
-    where TOwner : UnityEngine.Object, IObjectGenerator
+    where TOwner : class,IObjectGenerator
 {
     ObjectKey _objectKey = null;
     TObj _baseObj = null;

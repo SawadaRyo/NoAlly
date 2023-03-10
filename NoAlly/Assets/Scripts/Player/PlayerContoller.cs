@@ -60,10 +60,6 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Header("Animationを取得する為の変数")]
     Animator _animator = null;
 
-    [Header("Audio")]
-    [SerializeField, Header("ジャンプのサウンド")]
-    AudioClip _jumpSound;
-
     [Tooltip("壁キックのインターバル")]
     bool _wallKicking = false;
     [Tooltip("PlayerAnimationStateを格納する変数")]
@@ -336,8 +332,7 @@ public class PlayerContoller : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
-        Gizmos.DrawRay(_gripPos.position, (Vector3.right + Vector3.up) * _walldistance);
-        Gizmos.DrawRay(_gripPos.position, (Vector3.left + Vector3.up) * _walldistance);
+        Gizmos.DrawRay(_gripPos.position, (new Vector3(_h,0f,0f) + Vector3.up) * _walldistance);
         Gizmos.DrawRay(_footPos.position, new Vector3(_velo.x, _velo.y, 0));
     }
 }

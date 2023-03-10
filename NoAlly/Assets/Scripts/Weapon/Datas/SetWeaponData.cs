@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +10,10 @@ namespace DataOfWeapon
     {
         [Tooltip("武器のスクリプタブルオブジェクト")]
         WeaponScriptableObjects _weaponScriptableObjects = null;
-        WeaponData[] _weaponDatas = null;
+        WeaponData[] _weaponDatas = new WeaponData[Enum.GetValues(typeof(WeaponType)).Length - 1];
+        List<IWeaponBase> _weaponBases = null;
+        List<IWeaponAction> _weaponAction = null;
 
-        public WeaponData[] SetAllWeapon { get => _weaponDatas; set => _weaponDatas = value; }
         public WeaponData[] GetAllWeapons => _weaponDatas;
         public WeaponData GetWeapon(WeaponType type) => _weaponDatas[(int)type];
 
@@ -20,19 +22,17 @@ namespace DataOfWeapon
         {
             if (_weaponScriptableObjects != null) return;
             _weaponScriptableObjects = weapon;
-            IWeaponBase[] _weaponBases = new IWeaponBase[]
-            {
+            _weaponBases = new List<IWeaponBase>(){
                 new WeaponSword(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SWORD]),
                 new WeaponLance(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.LANCE]),
-                new WeaponSnip(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.BOW]),
+                new WeaponArrow(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.ARROW]),
                 new WeaponShield(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SHIELD])
             };
-            IWeaponAction[] _weaponAction = new IWeaponAction[]
-            {
+            _weaponAction = new List<IWeaponAction>(){
                 new CombatAction(),
                 new CombatAction(),
                 new CombatAction(),
-                new ArrowAction(_weaponBases[(int)WeaponType.SHIELD])
+                new ArrowAction(_weaponBases[(int)WeaponType.ARROW])
             };
 
             for (int i = 0; i < _weaponDatas.Length; i++)

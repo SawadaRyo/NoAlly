@@ -9,7 +9,7 @@ public enum WeaponType
     NONE = -1,
     SWORD = 0,
     LANCE = 1,
-    BOW = 2,
+    ARROW = 2,
     SHIELD = 3,
 }
 public enum ElementType

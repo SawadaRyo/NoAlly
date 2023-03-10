@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class WeaponAction : UnityEngine.Object, IWeaponAction
+public class WeaponAction : IWeaponAction
 {
     [SerializeField, Header("ó≠ÇﬂçUåÇëÊ1íiäK")]
     protected float _chargeLevel1 = 1f;
@@ -17,6 +17,8 @@ public class WeaponAction : UnityEngine.Object, IWeaponAction
 
     public virtual void WeaponChargeAttackMethod(float chrageCount, float[] weaponPower, ElementType elementType) { }
 
+
+    
     public virtual void HitMovement(Collider target, IWeaponBase weaponBase)
     {
         //float damage = ChargePower(weaponBase.WeaponPower);

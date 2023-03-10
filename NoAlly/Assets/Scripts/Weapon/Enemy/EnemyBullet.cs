@@ -1,33 +1,70 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class EnemyBullet : ObjectBase, IObjectPool<GunTypeEnemy>,IBullet
 {
+    [SerializeField, Header("íeÇÃë¨ìx")]
+    float _bulletSpeed = 0;
+    [SerializeField, Header("íeÇÃécóØéûä‘")]
+    float _intervalTime = 3f;
+    [SerializeField, Header("íeÇÃRigitbody")]
+    Rigidbody _rb = default;
+
+    [Tooltip("íeÇÃçUåÇóÕ")]
+    float[] bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
+    [Tooltip("íeÇÃëÆê´")]
+    ElementType elementType;
+    [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
+    Transform _muzzlePos = null;
+    [Tooltip("î≠éÀÇ≥ÇÍÇÈï˚å¸")]
+    Vector3 _muzzleForwardPos;
+    [Tooltip("íeÇÃâ¡ë¨ìx")]
+    Vector3 _velo = Vector3.zero;
     public GunTypeEnemy Owner { get; set; }
+
+    void OnTriggerEnter(Collider other)
+    {
+        HitMovement(other);
+        Disactive();
+    }
 
     public void Create()
     {
-        throw new System.NotImplementedException();
+        _rb.isKinematic = false;
+        ActiveObject(true);
+        _velo = _rb.velocity;
+        _muzzleForwardPos = _muzzlePos.position;
+        this.transform.position = _muzzleForwardPos;
     }
 
     public void Disactive()
     {
-        throw new System.NotImplementedException();
+        _rb.isKinematic = true;
+        ActiveObject(false);
     }
 
-    public void Disactive(float interval)
+    public async void Disactive(float interval)
     {
-        throw new System.NotImplementedException();
+        await UniTask.Delay(TimeSpan.FromSeconds(interval));
+        _isActive = false;
+        ActiveObject(_isActive);
     }
-
     public void DisactiveForInstantiate(GunTypeEnemy owner)
     {
-        throw new System.NotImplementedException();
+        Owner = owner;
+        _isActive = false;
+        ActiveObject(_isActive);
+        _rb = GetComponent<Rigidbody>();
+        _muzzlePos = Owner.GenerateTrance;
     }
 
     public void HitMovement(Collider target)
     {
-        throw new System.NotImplementedException();
+        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
+        {
+            hitObj.BehaviorOfHIt(bulletPowers, ElementType.ELEKE);
+            Disactive();
+        }
     }
 }

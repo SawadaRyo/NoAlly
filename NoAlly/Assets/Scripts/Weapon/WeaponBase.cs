@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 
-public abstract class WeaponBase : UnityEngine.Object,IWeaponBase
+public abstract class WeaponBase : IWeaponBase
 {
-    [SerializeField, Tooltip("•Ší‚ÌƒI[ƒi[")]
+    [Tooltip("•Ší‚ÌƒI[ƒi[")]
     protected ObjectOwner _owner = ObjectOwner.PLAYER;
 
     [Tooltip("•Ší‚ÌUŒ‚—Í —v‘f1:•Ší‚Ì•¨—UŒ‚—Í,—v‘f2:•Ší‚Ì‰ŠUŒ‚—Í,—v‘f3:•Ší‚Ì—‹UŒ‚—Í,—v‘f4:•Ší‚Ì•XŒ‹UŒ‚—Í")]
@@ -26,6 +26,7 @@ public abstract class WeaponBase : UnityEngine.Object,IWeaponBase
 
     public WeaponBase(WeaponDataEntity weaponData)
     {
+        Debug.Log(weaponData.Type);
         _weaponData = weaponData;
         _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];

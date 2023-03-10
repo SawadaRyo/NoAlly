@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponSnip>, IBullet
+public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
 {
     [SerializeField, Header("íeÇÃë¨ìx")]
     float _bulletSpeed = 0;
@@ -12,18 +12,17 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponSnip>, IBullet
     Rigidbody _rb = default;
 
     [Tooltip("íeÇÃçUåÇóÕ")]
-    float[] bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
+    float[] _bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
     [Tooltip("íeÇÃëÆê´")]
-    ElementType elementType;
+    ElementType _elementType;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
     Transform _muzzlePos = null;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈï˚å¸")]
     Vector3 _muzzleForwardPos;
     [Tooltip("íeÇÃâ¡ë¨ìx")]
     Vector3 _velo = Vector3.zero;
-    [Tooltip("íeÇÃëÆê´")]
 
-    public WeaponSnip Owner { get; set; }
+    public WeaponArrow Owner { get; set; }
 
     public void FixedUpdate()
     {
@@ -33,22 +32,16 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponSnip>, IBullet
         _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
         Disactive(_intervalTime);
     }
-    public void WeaponAttackMovement(Collider target)
-    {
-        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
-        {
-            hitObj.BehaviorOfHIt(bulletPowers,Owner.ElementType);
-            Disactive();
-        }
-    }
 
     public void Create()
     {
         _rb.isKinematic = false;
         ActiveObject(true);
-
+        _velo = _rb.velocity;
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
+        _bulletPowers = Owner.WeaponPower;
+        _elementType = Owner.ElementType;
     }
 
     public void Disactive()
@@ -63,17 +56,23 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponSnip>, IBullet
         _isActive = false;
         ActiveObject(_isActive);
     }
-    public void DisactiveForInstantiate(WeaponSnip owner)
+    public void DisactiveForInstantiate(WeaponArrow owner)
     {
         Owner = owner;
+        _isActive = false;
         _rb = GetComponent<Rigidbody>();
-        _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
+        _bulletPowers = Owner.WeaponPower;
+        ActiveObject(_isActive);
     }
 
     public void HitMovement(Collider target)
     {
-        throw new NotImplementedException();
+        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
+        {
+            hitObj.BehaviorOfHIt(_bulletPowers, _elementType);
+            Disactive();
+        }
     }
 
 }

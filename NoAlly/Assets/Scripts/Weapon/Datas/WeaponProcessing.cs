@@ -23,47 +23,54 @@ public class WeaponProcessing : ObjectBase
     public WeaponData TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
     public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon;
 
+    private void Start()
+    {
+        _myParticleSystem.Stop();
+    }
     void Update()
     {
-        if (!WeaponMenuHander.Instance.MenuIsOpen && !Input.GetButton("Attack"))
+        if (!WeaponMenuHander.Instance.MenuIsOpen && !PlayerAnimationState.Instance.IsAttack)
         {
-            _isSwichWeapon.Value = Input.GetButton("SubWeaponSwitch");
+            SwichWeapon(Input.GetButton("SubWeaponSwitch"));
         }
         WeaponAttack();
     }
     private void OnTriggerEnter(Collider other)
     {
-        _targetWeapon.Action.HitMovement(other,_targetWeapon.Base);
+        _targetWeapon.Action.HitMovement(other, _targetWeapon.Base);
     }
     /// <summary>
     /// 武器の入力判定
     /// </summary>
     void WeaponAttack()
     {
+        if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack"))
         {
             _playerAnimator.SetTrigger("AttackTrigger");
             _playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
         }
-        //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-        else if (Input.GetButton("Attack"))
+        else
         {
-            time += Time.deltaTime;
-            if (time > _targetWeapon.Action.ChargeLevel1 / 20)
+            //溜め攻撃の処理(弓矢のアニメーションもこの処理）
+            if (Input.GetButton("Attack"))
             {
+                time += Time.deltaTime;
                 _playerAnimator.SetBool("Charge", true);
+                if (time > _targetWeapon.Action.ChargeLevel1)
+                {
+                    _playerAnimator.SetTrigger("ChargeAttackTrigger");
+                }
             }
-        }
-        else if (Input.GetButtonUp("Attack"))
-        {
-            if (time > _targetWeapon.Action.ChargeLevel1 / 20)
+            else if (Input.GetButtonUp("Attack"))
             {
-                _playerAnimator.SetTrigger("ChargeAttackTrigger");
+                _playerAnimator.SetBool("Charge", false);
+                time = 0;
             }
-            _playerAnimator.SetBool("Charge", false);
-            time = 0;
         }
+
+
     }
     public void HitJud(BoolAttack isAttack)
     {
@@ -84,6 +91,7 @@ public class WeaponProcessing : ObjectBase
     /// </summary>
     public void SwichWeapon(bool weaponSwitch)
     {
+        _targetWeapon.WeaponEnabled = false;
         if (!weaponSwitch)
         {
             _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
@@ -92,6 +100,8 @@ public class WeaponProcessing : ObjectBase
         {
             _targetWeapon = _mainAndSub[(int)CommandType.SUB];
         }
+        _targetWeapon.WeaponEnabled = true;
+        _objectAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
     }
     /// <summary>
     /// 武器の装備
@@ -102,6 +112,10 @@ public class WeaponProcessing : ObjectBase
     {
         _mainAndSub[(int)type] = weaponType;
         _objectAnimator.SetInteger("WeaponType", (int)weaponType.Type);
+        if (_targetWeapon == null)
+        {
+            _targetWeapon = _mainAndSub[(int)type];
+        }
     }
     public void SetElement(ElementType elementType)
     {

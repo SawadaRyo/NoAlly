@@ -23,11 +23,10 @@ public class WeaponPresenter : MonoBehaviour
     WeaponMenuHander _weaponMenuHander = null;
     void Awake()
     {
-        //_weaponEquipment.FirstSetWeapon();
         _weaponEquipment.Initialize();
         _weaponMenuHander.Initialize();
         WeaponEquipmentState();
-        WeaponProcessingState();
+        //WeaponProcessingState();
         MenuHanderState();
     }
     void WeaponEquipmentState()
@@ -37,13 +36,19 @@ public class WeaponPresenter : MonoBehaviour
             .Subscribe(mainWeapon =>
             {
                 _weaponProcessing.SetEquipment(mainWeapon, CommandType.MAIN);
-                _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
+                if (_weaponProcessing.TargetWeapon.Base == mainWeapon)
+                {
+                    _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
+                }
             }).AddTo(this);
         _weaponEquipment.SubWeapon
             .Subscribe(subWeapon =>
             {
                 _weaponProcessing.SetEquipment(subWeapon, CommandType.SUB);
-                _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
+                if (_weaponProcessing.TargetWeapon.Base == subWeapon)
+                {
+                    _weaponProcessing.TargetWeapon.Base.WeaponModeToElement(_weaponEquipment.Element.Value);
+                }
             }).AddTo(this);
         _weaponEquipment.Element
             .Subscribe(element =>
@@ -51,17 +56,17 @@ public class WeaponPresenter : MonoBehaviour
                 _weaponProcessing.SetElement(element);
             }).AddTo(this);
     }
-    void WeaponProcessingState()
-    {
-        _weaponProcessing.IsSwichWeapon
-           .Subscribe(isSwich =>
-           {
-               if (!PlayerAnimationState.Instance.IsAttack)
-               {
-                   //_weaponProcessing.TargetWeapon = _weaponEquipment.CheckWeaponActive(_weaponVisual.SwichWeapon(isSwich));
-               }
-           }).AddTo(this);
-    }
+    //void WeaponProcessingState()
+    //{
+    //    _weaponProcessing.IsSwichWeapon
+    //       .Subscribe(isSwich =>
+    //       {
+    //           if (!PlayerAnimationState.Instance.IsAttack)
+    //           {
+    //               _weaponProcessing.TargetWeapon = _weaponEquipment.CheckWeaponActive(_weaponVisual.SwichWeapon(isSwich));
+    //           }
+    //       }).AddTo(this);
+    //}
     void MenuHanderState()
     {
         //メニューボタンの選択

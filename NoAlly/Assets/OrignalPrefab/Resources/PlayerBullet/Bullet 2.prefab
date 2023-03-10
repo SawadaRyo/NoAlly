@@ -45,7 +45,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 632940108970841182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2741c76b01563b24aba998880ab4a3a1, type: 3}
+  m_Script: {fileID: 11500000, guid: b13d9bfcff31114479e37593da341e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _objectCollider:
@@ -54,20 +54,8 @@ MonoBehaviour:
   - {fileID: 1750113039539389287}
   - {fileID: 2705075493003218927}
   _objectAnimator: {fileID: 0}
-  _rigitPower: 7
-  _elekePower: 0
-  _firePower: 0
-  _frozenPower: 0
-  _chargeLevel1: 1
-  _chargeLevel2: 3
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _owner: 0
-  _center: {fileID: 6472055859084818588}
-  _myParticleSystem: {fileID: 0}
-  _bulletSpeed: 12
-  __intervalTime: 5
+  _bulletSpeed: 7
+  _intervalTime: 3
   _rb: {fileID: -4547307992472491330}
 --- !u!136 &7499881529718375301
 CapsuleCollider:
