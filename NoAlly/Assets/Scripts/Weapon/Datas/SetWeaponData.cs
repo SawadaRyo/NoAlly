@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DataOfWeapon
 {
-    public class SetWeaponData
+    public class SetWeaponData : MonoBehaviour
     {
         [Tooltip("武器のスクリプタブルオブジェクト")]
         WeaponScriptableObjects _weaponScriptableObjects = null;
@@ -18,7 +18,7 @@ namespace DataOfWeapon
         public WeaponData GetWeapon(WeaponType type) => _weaponDatas[(int)type];
 
 
-        public SetWeaponData(WeaponScriptableObjects weapon)
+        public void Initialize(WeaponScriptableObjects weapon)
         {
             if (_weaponScriptableObjects != null) return;
             _weaponScriptableObjects = weapon;

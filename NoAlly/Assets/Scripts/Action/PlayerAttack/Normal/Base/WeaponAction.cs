@@ -12,25 +12,12 @@ public class WeaponAction : IWeaponAction
     protected ObjectBase _weaponPrefab = null;
     [Tooltip("WeaponBaseÇäiî[Ç∑ÇÈïœêî")]
     protected IWeaponBase _weaponBase = null;
+    [Tooltip("")]
+    float _time = 0;
 
     public float ChargeLevel1 => _chargeLevel1;
 
     public virtual void WeaponChargeAttackMethod(float chrageCount, float[] weaponPower, ElementType elementType) { }
-
-
-    
-    public virtual void HitMovement(Collider target, IWeaponBase weaponBase)
-    {
-        //float damage = ChargePower(weaponBase.WeaponPower);
-        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp) && _weaponBase.Owner != characterHp.Owner)
-        {
-            characterHp.BehaviorOfHIt(weaponBase.WeaponPower, _weaponBase.ElementType);
-        }
-        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj) && _weaponBase.Owner == ObjectOwner.PLAYER)
-        {
-            hitObj.BehaviorOfHit(_weaponBase, _weaponBase.ElementType);
-        }
-    }
     protected float[] ChargePower(float[] weaponPower, ElementType top, float magnification)
     {
         if (magnification < 1)
@@ -54,5 +41,37 @@ public class WeaponAction : IWeaponAction
                 break;
         }
         return weaponPower;
+    }
+
+    /// <summary>
+    /// ïêäÌÇÃì¸óÕîªíË
+    /// </summary>
+    public void WeaponAttack(Animator playerAnimator,WeaponProcessing weaponProcessing)
+    {
+        if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
+        ////í èÌçUåÇÇÃèàóù
+        if (Input.GetButtonDown("Attack"))
+        {
+            playerAnimator.SetTrigger("AttackTrigger");
+            playerAnimator.SetInteger("WeaponType", (int)weaponProcessing.TargetWeapon.Type);
+        }
+        else
+        {
+            //ó≠ÇﬂçUåÇÇÃèàóù(ã|ñÓÇÃÉAÉjÉÅÅ[ÉVÉáÉìÇ‡Ç±ÇÃèàóùÅj
+            if (Input.GetButton("Attack"))
+            {
+                _time += Time.deltaTime;
+                playerAnimator.SetBool("Charge", true);
+                if (_time > weaponProcessing.TargetWeapon.Action.ChargeLevel1)
+                {
+                    playerAnimator.SetTrigger("ChargeAttackTrigger");
+                }
+            }
+            else if (Input.GetButtonUp("Attack"))
+            {
+                playerAnimator.SetBool("Charge", false);
+                _time = 0;
+            }
+        }
     }
 }

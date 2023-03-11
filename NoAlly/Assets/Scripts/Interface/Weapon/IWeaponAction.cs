@@ -5,6 +5,6 @@ using UnityEngine;
 public interface IWeaponAction
 {
     public float ChargeLevel1 { get; }
-    public void HitMovement(Collider target, IWeaponBase weaponPower);
+    public void WeaponAttack(Animator playerAnimator, WeaponProcessing weaponProcessing);
     public void WeaponChargeAttackMethod(float chrageCount, float[] weaponPower, ElementType elementType);
 }

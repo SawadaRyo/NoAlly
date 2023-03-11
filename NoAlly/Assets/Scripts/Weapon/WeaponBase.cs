@@ -41,6 +41,31 @@ public abstract class WeaponBase : IWeaponBase
         _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
         _elementType = elementType;
     }
+
+    public void HitMovement(Collider target)
+    {
+        //float damage = ChargePower(weaponBase.WeaponPower);
+        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp) && _owner != characterHp.Owner)
+        {
+            characterHp.BehaviorOfHIt(_weaponPower, _elementType);
+        }
+        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj) && _owner == ObjectOwner.PLAYER)
+        {
+            hitObj.BehaviorOfHit(this, _elementType);
+        }
+    }
+    public void HitJud(BoolAttack isAttack)
+    {
+        switch (isAttack)
+        {
+            case BoolAttack.ATTACKING:
+                _myParticleSystem.Play();
+                break;
+            default:
+                _myParticleSystem.Stop();
+                break;
+        }
+    }
 }
 
 

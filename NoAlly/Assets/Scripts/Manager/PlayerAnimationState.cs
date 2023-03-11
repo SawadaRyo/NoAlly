@@ -16,6 +16,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     float _shootTiming = 0.35f;
     [Tooltip("UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚É‘JˆÚ‚µ‚Ä‚¢‚é‚©Šm”F‚·‚é•Ï”")]
     bool _isAttack = false;
+    ReactiveProperty<BoolAttack> _boolAttack = new ReactiveProperty<BoolAttack>();
     [Tooltip("Animation‚Ì‘JˆÚó‹µ")]
     ObservableStateMachineTrigger _trigger = default;
     [Tooltip("Player‚ÌAnimator‚ğŠi”[‚·‚é•Ï”")]
@@ -23,9 +24,11 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     [Tooltip("PlayerController‚ğŠi”[‚·‚é•Ï”")]
     PlayerContoller _playerContoller = null;
 
+
     public bool AbleMove => _ableMove;
     public bool AbleInput => _ableInput;
     public bool IsAttack => _isAttack;
+    public IReadOnlyReactiveProperty<BoolAttack> Hit => _boolAttack;
 
     private void Start()
     {
@@ -37,8 +40,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         DetectionStateEnterToAttack();
         DetectionStateUpdateToAttack();
         DetectionStateExitToAttack();
-
-
     }
     void DetectionStateEnterToNormalAction()
     {
@@ -123,13 +124,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             }
         }).AddTo(this);
     }
-    
+
 
     //AnimationEvent‚ÅŒÄ‚ÔŠÖ”
-    void AttackToCombatWeapon(BoolAttack isAttack)
-    {
-        _weaponProcessing.HitJud(isAttack);
-    }
+    void AttackToCombatWeapon(BoolAttack isAttack) => _boolAttack.Value = isAttack;
     void FinishAttackMove(int moveSpeed)
     {
         Vector3 vec = Vector3.zero;
