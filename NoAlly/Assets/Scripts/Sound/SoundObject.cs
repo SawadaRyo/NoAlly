@@ -28,7 +28,7 @@ public class SoundObject : ObjectBase, ISoundObjectPool<SoundManager>
         _audioSource.loop = soundElements.IsLoop;
         _audioSource.Play();
 
-        if (_audioSource.loop)
+        if (!_audioSource.loop)
         {
             Disactive(soundElements.Clip.length);
         }

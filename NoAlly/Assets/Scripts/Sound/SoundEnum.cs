@@ -9,7 +9,7 @@ public enum SoundType //
 public enum SoundUsage:int //サウンドの使用用途
 {
     PLAYERMOVE,
-    ATTACK,
+    WEAPON,
     GIMIC,
     GAMEBGM
 }

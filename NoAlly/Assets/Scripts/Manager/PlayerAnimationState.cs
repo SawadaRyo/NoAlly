@@ -145,6 +145,11 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         Vector3 onPlane = Vector3.ProjectOnPlane(vec, _playerContoller.HitInfo.normal);
         _playerContoller.Rb.velocity = onPlane * moveSpeed;
     }
+
+    private void OnDisable()
+    {
+        _boolAttack.Dispose();
+    }
 }
 
 public enum BoolAttack

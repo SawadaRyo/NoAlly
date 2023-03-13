@@ -7,7 +7,7 @@ using UniRx;
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
-    [SerializeField,Tooltip("")]
+    [SerializeField,Tooltip("武器のプレハブ")]
     ObjectBase _weaponPrefab = null;
     [SerializeField, Header("プレイヤーのアニメーター")]
     Animator _playerAnimator = null;
@@ -19,10 +19,9 @@ public class WeaponProcessing : MonoBehaviour
     [Tooltip("装備している武器")]
     WeaponData _targetWeapon;
 
-    BoolReactiveProperty _isSwichWeapon = new BoolReactiveProperty();
-
+    public ObjectBase WeaponPrefab => _weaponPrefab;
+    public ParticleSystem MyParticleSystem => _myParticleSystem;
     public WeaponData TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
-    public IReadOnlyReactiveProperty<bool> IsSwichWeapon => _isSwichWeapon;
 
     private void Start()
     {
@@ -38,10 +37,9 @@ public class WeaponProcessing : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        _targetWeapon.Base.HitMovement(other);
+        TargetWeapon.Base.AttackMovement(other);
     }
-    
-    
+
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数
     /// </summary>

@@ -26,7 +26,7 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment.Initialize();
         _weaponMenuHander.Initialize();
         WeaponEquipmentState();
-        //WeaponProcessingState();
+        CombatWeaponAttackState();
         MenuHanderState();
     }
     void WeaponEquipmentState()
@@ -56,17 +56,24 @@ public class WeaponPresenter : MonoBehaviour
                 _weaponProcessing.SetElement(element);
             }).AddTo(this);
     }
-    //void WeaponProcessingState()
-    //{
-    //    _weaponProcessing.IsSwichWeapon
-    //       .Subscribe(isSwich =>
-    //       {
-    //           if (!PlayerAnimationState.Instance.IsAttack)
-    //           {
-    //               _weaponProcessing.TargetWeapon = _weaponEquipment.CheckWeaponActive(_weaponVisual.SwichWeapon(isSwich));
-    //           }
-    //       }).AddTo(this);
-    //}
+    void CombatWeaponAttackState()
+    {
+        PlayerAnimationState.Instance.Hit
+           .Subscribe(hit =>
+           {
+               if(hit == BoolAttack.ATTACKING)
+               {
+                   _weaponProcessing.WeaponPrefab.ActiveCollider(true);
+                   _weaponProcessing.MyParticleSystem.Play();
+               }
+               else
+               {
+                   _weaponProcessing.WeaponPrefab.ActiveCollider(false);
+                   _weaponProcessing.MyParticleSystem.Stop();
+               }
+               
+           }).AddTo(this);
+    }
     void MenuHanderState()
     {
         //メニューボタンの選択

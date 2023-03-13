@@ -12,6 +12,10 @@ public abstract class WeaponBase : IWeaponBase
     protected float[] _weaponPower = new float[Enum.GetValues(typeof(ElementType)).Length];
     [Tooltip("この武器のデータ")]
     protected WeaponDataEntity _weaponData;
+    [Tooltip("武器の攻撃範囲の中心点")]
+    protected Vector3 _boxCenter;
+    [Tooltip("武器の攻撃範囲")]
+    protected Vector3 _boxSize;
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
     [Tooltip("武器のタイプ")]
@@ -23,6 +27,8 @@ public abstract class WeaponBase : IWeaponBase
     public ElementType ElementType => _elementType;
     public WeaponDeformation Deformated => _isDeformated;
     public ObjectOwner Owner => _owner;
+
+    public virtual void AttackMovement(Collider target) { }
 
     public WeaponBase(WeaponDataEntity weaponData)
     {
@@ -42,30 +48,7 @@ public abstract class WeaponBase : IWeaponBase
         _elementType = elementType;
     }
 
-    public void HitMovement(Collider target)
-    {
-        //float damage = ChargePower(weaponBase.WeaponPower);
-        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp) && _owner != characterHp.Owner)
-        {
-            characterHp.BehaviorOfHIt(_weaponPower, _elementType);
-        }
-        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj) && _owner == ObjectOwner.PLAYER)
-        {
-            hitObj.BehaviorOfHit(this, _elementType);
-        }
-    }
-    public void HitJud(BoolAttack isAttack)
-    {
-        switch (isAttack)
-        {
-            case BoolAttack.ATTACKING:
-                _myParticleSystem.Play();
-                break;
-            default:
-                _myParticleSystem.Stop();
-                break;
-        }
-    }
+
 }
 
 

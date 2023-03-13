@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IHitBehavorOfAttack
 {
     ObjectOwner Owner { get; }
-    public void BehaviorOfHIt(float[] damageValue, ElementType type);
+    public void BehaviorOfHit(float[] damageValue, ElementType type);
 }

@@ -56,7 +56,7 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
     }
     public ObjectOwner Owner => _owner;
 
-    public void BehaviorOfHIt(float[] damageValue, ElementType type)
+    public void BehaviorOfHit(float[] damageValue, ElementType type)
     {
         Status.Damage(damageValue, this, type);
     }

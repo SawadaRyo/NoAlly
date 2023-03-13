@@ -70,7 +70,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
     {
         if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
         {
-            hitObj.BehaviorOfHIt(_bulletPowers, _elementType);
+            hitObj.BehaviorOfHit(_bulletPowers, _elementType);
             Disactive();
         }
     }

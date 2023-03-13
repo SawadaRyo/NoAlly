@@ -63,7 +63,7 @@ public class EnemyBullet : ObjectBase, IObjectPool<GunTypeEnemy>,IBullet
     {
         if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
         {
-            hitObj.BehaviorOfHIt(bulletPowers, ElementType.ELEKE);
+            hitObj.BehaviorOfHit(bulletPowers, ElementType.ELEKE);
             Disactive();
         }
     }
