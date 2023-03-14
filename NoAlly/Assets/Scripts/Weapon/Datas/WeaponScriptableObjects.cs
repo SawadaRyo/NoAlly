@@ -25,7 +25,7 @@ public class WeaponDataEntity
     [SerializeField, Header("•Ší‚Ì•XŒ‹UŒ‚—Í")]
     float[] _frozenPower = new float[2];
     [SerializeField, Header("—­‚ßUŒ‚‚Ì‚½‚ßŽžŠÔ")]
-    public float[] _chargeLevels = new float[2] { 1f, 3f };
+    float[] _chargeLevels = new float[2] { 1f, 3f };
 
 
     public WeaponType Type => _type;

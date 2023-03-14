@@ -38,7 +38,6 @@ public class GameManager
             }
             return _instanceSound;
         }
-        set => _instanceSound = value;
     }
     public GameState IsGame => _state;
 

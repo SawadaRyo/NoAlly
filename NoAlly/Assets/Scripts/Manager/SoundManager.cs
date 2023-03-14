@@ -17,7 +17,6 @@ public class SoundManager : Object, IObjectGenerator
 
     SoundUsage _usage;
 
-    public Transform GenerateTrance => throw new System.NotImplementedException();
     public Dictionary<SoundUsage, SoundScriptable> SoundDataBase { get; private set; }
     public SoundUsage Usage => _usage;
 

@@ -322,11 +322,6 @@ public class PlayerContoller : MonoBehaviour
     {
         GameManager.InstanceSM.CallSound(usage, SoundType.SE, soundNum);
     }
-    //Vector3 NomarizedMoveVecter()
-    //{
-    //    Vector3 refVecter = Vector3.zero;
-    //    return refVecter;
-    //}
 
     private void OnDrawGizmos()
     {

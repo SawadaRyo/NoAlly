@@ -65,6 +65,7 @@ public class WeaponPresenter : MonoBehaviour
                {
                    _weaponProcessing.WeaponPrefab.ActiveCollider(true);
                    _weaponProcessing.MyParticleSystem.Play();
+                   GameManager.InstanceSM.CallSound(SoundUsage.WEAPONATTACK,SoundType.SE,(int)_weaponProcessing.TargetWeapon.Type);
                }
                else
                {

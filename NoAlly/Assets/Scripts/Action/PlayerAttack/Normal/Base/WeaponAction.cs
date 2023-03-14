@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class WeaponAction : IWeaponAction
 {
-    [SerializeField, Header("—­‚ßUŒ‚‘æ1’iŠK")]
-    protected float _chargeLevel1 = 1f;
-    [SerializeField, Header("—­‚ßUŒ‚‘æ2’iŠK")]
-    protected float _chargeLevel2 = 3f;
-
     [Tooltip("•Ší‚ÌƒvƒŒƒnƒu")]
     protected ObjectBase _weaponPrefab = null;
     [Tooltip("WeaponBase‚ðŠi”[‚·‚é•Ï”")]
@@ -15,9 +10,7 @@ public class WeaponAction : IWeaponAction
     [Tooltip("")]
     float _time = 0;
 
-    public float ChargeLevel1 => _chargeLevel1;
-
-    public virtual void WeaponChargeAttackMethod(float chrageCount, float[] weaponPower, ElementType elementType) { }
+    public virtual void WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, float[] weaponPower, ElementType elementType) { }
     protected float[] ChargePower(float[] weaponPower, ElementType top, float magnification)
     {
         if (magnification < 1)
@@ -62,7 +55,7 @@ public class WeaponAction : IWeaponAction
             {
                 _time += Time.deltaTime;
                 playerAnimator.SetBool("Charge", true);
-                if (_time > weaponProcessing.TargetWeapon.Action.ChargeLevel1)
+                if (_time > weaponProcessing.TargetWeapon.Base.ChargeLevels[0])
                 {
                     playerAnimator.SetTrigger("ChargeAttackTrigger");
                 }

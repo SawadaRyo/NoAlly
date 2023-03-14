@@ -137,13 +137,14 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
         }
         _reactiveCrossH.Value = _crossH;
         _reactiveCrossV.Value = _crossV;
+        Debug.Log($"{_crossH},{_crossV}");
     }
     /// <summary>
     /// ƒƒjƒ…[‰æ–Ê“WŠJ‚ÉŒÄ‚ÔŠÖ”
     /// </summary>
     void MenuOpen()
     {
-        _selectButton = _mainManu.SelectButton(_reactiveCrossV.Value, _reactiveCrossH.Value);
+        _selectButton = _mainManu.SelectButton(_reactiveCrossH.Value, _reactiveCrossV.Value);
         //_allButtons[_crossV, _crossH].Command.Select();
         //_targetButton = _allButtons[_crossV, _crossH];
     }

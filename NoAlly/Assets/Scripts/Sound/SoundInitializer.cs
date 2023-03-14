@@ -11,7 +11,6 @@ public class SoundInitializer : InitializerBase
 
     public override void Init()
     {
-        GameManager.InstanceSM = new SoundManager();
         GameManager.InstanceSM.SetSoundData(_soundScriptableObj);
         GameManager.InstanceSM.CallSound(SoundUsage.GAMEBGM,SoundType.BGM, bgmNum);
         Destroy(gameObject);

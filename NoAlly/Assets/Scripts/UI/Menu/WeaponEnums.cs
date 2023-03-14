@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public enum WeaponType
+public enum WeaponType:int
 {
     NONE = -1,
     SWORD = 0,
@@ -12,12 +12,12 @@ public enum WeaponType
     ARROW = 2,
     SHIELD = 3,
 }
-public enum ElementType
+public enum ElementType:int
 {
-    RIGIT = 0,
-    FIRE = 1,
-    ELEKE = 2,
-    FROZEN = 3
+    RIGIT,
+    FIRE,
+    ELEKE,
+    FROZEN
 }
 public enum ObjectOwner
 {
@@ -28,10 +28,10 @@ public enum ObjectOwner
     ITME
 }
 
-public enum WeaponDeformation
+public enum WeaponDeformation:int
 {
-    NONE = 0,
-    Deformation = 1
+    NONE,
+    Deformation
 }
 
 public enum PlayerClimbWall

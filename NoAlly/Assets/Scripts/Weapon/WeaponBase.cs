@@ -10,12 +10,10 @@ public abstract class WeaponBase : IWeaponBase
 
     [Tooltip("•Ší‚ÌUŒ‚—Í —v‘f1:•Ší‚Ì•¨—UŒ‚—Í,—v‘f2:•Ší‚Ì‰ŠUŒ‚—Í,—v‘f3:•Ší‚Ì—‹UŒ‚—Í,—v‘f4:•Ší‚Ì•XŒ‹UŒ‚—Í")]
     protected float[] _weaponPower = new float[Enum.GetValues(typeof(ElementType)).Length];
+    [Tooltip("—­‚ß’iŠKB—v‘f1:—­‚ßUŒ‚‘æ1’iŠK,—v‘f2:—­‚ßUŒ‚‘æ2’iŠK")]
+    protected float[] _chargeLevels = null;
     [Tooltip("‚±‚Ì•Ší‚Ìƒf[ƒ^")]
     protected WeaponDataEntity _weaponData;
-    [Tooltip("•Ší‚ÌUŒ‚”ÍˆÍ‚Ì’†S“_")]
-    protected Vector3 _boxCenter;
-    [Tooltip("•Ší‚ÌUŒ‚”ÍˆÍ")]
-    protected Vector3 _boxSize;
     [Tooltip("•Ší‚ª•ÏŒ`’†‚©‚Ç‚¤‚©")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
     [Tooltip("•Ší‚Ìƒ^ƒCƒv")]
@@ -27,17 +25,19 @@ public abstract class WeaponBase : IWeaponBase
     public ElementType ElementType => _elementType;
     public WeaponDeformation Deformated => _isDeformated;
     public ObjectOwner Owner => _owner;
+    public float[] ChargeLevels => _chargeLevels;
 
     public virtual void AttackMovement(Collider target) { }
 
     public WeaponBase(WeaponDataEntity weaponData)
     {
-        Debug.Log(weaponData.Type);
         _weaponData = weaponData;
+        _weaponType = _weaponData.Type;
         _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];
         _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
+        _chargeLevels = _weaponData.ChargeLevels;
     }
     public virtual void WeaponModeToElement(ElementType elementType)
     {
@@ -47,8 +47,6 @@ public abstract class WeaponBase : IWeaponBase
         _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
         _elementType = elementType;
     }
-
-
 }
 
 
