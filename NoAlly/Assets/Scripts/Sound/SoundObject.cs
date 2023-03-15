@@ -34,6 +34,11 @@ public class SoundObject : ObjectBase, ISoundObjectPool<SoundManager>
         }
     }
 
+    public void Create()
+    {
+        
+    }
+
     public virtual void Disactive()
     {
         _isActive = false;

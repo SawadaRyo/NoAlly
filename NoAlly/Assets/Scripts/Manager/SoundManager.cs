@@ -1,34 +1,41 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 //TODO 後でオブジェクトプール形式で再生するようにする
 
-public class SoundManager : Object, IObjectGenerator
+public class SoundManager : IObjectGenerator
 {
     [Tooltip("")]
-    SoundObjectPool<SoundObject, SoundManager> _pool = new();
+    ObjectPool<SoundObject, SoundManager,SoundUsage> _pool = new();
     [Tooltip("")]
-    SoundObjectPool<SoundObject, SoundManager>.ObjectKey[] _keys;
+    ObjectPool<SoundObject, SoundManager,SoundUsage>.ObjectKey[] _keys = null;
     [Tooltip("サウンドのScriptableObject")]
-    Dictionary<SoundUsage, SoundScriptable> _soundDataBase = new Dictionary<SoundUsage, SoundScriptable>();
+    Dictionary<SoundUsage, SoundScriptable> _soundDataBase = new();
     [Tooltip("現在ループさせているサウンド")]
     SoundObject _loopingSoundObj = null;
 
     SoundUsage _usage;
 
-    public Dictionary<SoundUsage, SoundScriptable> SoundDataBase { get; private set; }
+    public Dictionary<SoundUsage, SoundScriptable> SoundDataBase => _soundDataBase;
     public SoundUsage Usage => _usage;
 
     public void SetSoundData(SoundScriptable[] datas)
     {
-        datas.OrderBy(x => x.Usage).ToArray();
-        for (int i = 0; i < datas.Length; i++)
+        _soundDataBase = datas.OrderBy(x => x.Usage).ToDictionary(key => key.Usage, x => x);
+        _keys = new SoundObjectPool<SoundObject, SoundManager>.ObjectKey[datas.Length];
+
+        int i = 0;
+        for(int index = 0; index < _keys.Length; index++)
         {
-            _usage = (SoundUsage)i;
-            _keys[i] = _pool.SetBaseObj(datas[i].SoundPlayer, this);
-            _pool.SetCapacity(_keys[i], 10);
-            _soundDataBase.Add(_usage, datas[i]);
+            _usage = (SoundUsage)index;
+            if (_soundDataBase.TryGetValue(_usage, out SoundScriptable soundData))
+            {
+                _keys[i] = _pool.SetBaseObj(_soundDataBase[_usage].SoundPlayer, this);
+                _pool.SetCapacity(_keys[i], 10);
+                i++;
+            }
         }
     }
 

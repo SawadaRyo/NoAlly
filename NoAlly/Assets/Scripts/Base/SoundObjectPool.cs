@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SoundObjectPool<TObj, TOwner>
+public class SoundObjectPool<TObj, TOwner,TKey>
     where TObj : Object, ISoundObjectPool<TOwner>
-    where TOwner : Object, IObjectGenerator
+    where TOwner : IObjectGenerator
 {
     ObjectKey _objectKey = null;
     TObj _baseObj = null;
@@ -17,7 +17,7 @@ public class SoundObjectPool<TObj, TOwner>
 
     public class ObjectKey
     {
-        TOwner _owner = null;
+        TOwner _owner;
 
         public TOwner Owner => _owner;
 

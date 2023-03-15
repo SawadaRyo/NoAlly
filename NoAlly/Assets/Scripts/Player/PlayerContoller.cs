@@ -149,7 +149,6 @@ public class PlayerContoller : MonoBehaviour
     {
         //if (h != 0)
         //プレイヤーの方向転換
-
         if (rotVector.x == -1)
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
@@ -254,9 +253,12 @@ public class PlayerContoller : MonoBehaviour
         //ToDo移動コマンドで壁キックの力が変わる様にする
         else if (IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
         {
-            _rb.isKinematic = true;
-            _slideWall = true;
-            _rb.isKinematic = false;
+            if (!_slideWall)
+            {
+                _rb.isKinematic = true;
+                _slideWall = true;
+                _rb.isKinematic = false;
+            }
             if (_dashChack) _dashChack = false;
             if (jump)
             {
@@ -292,8 +294,6 @@ public class PlayerContoller : MonoBehaviour
         PlayerClimbWall hitflg = PlayerClimbWall.NONE;
         if (Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask))
         {
-            Debug.Log(currentNormal.normalized);
-            Debug.Log((Vector2)_hitInfo.normal.normalized * -1);
             _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
             hitflg = PlayerClimbWall.GRIPING;
         }
@@ -327,7 +327,7 @@ public class PlayerContoller : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
-        Gizmos.DrawRay(_gripPos.position, (new Vector3(_h,0f,0f) + Vector3.up) * _walldistance);
+        Gizmos.DrawRay(_gripPos.position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _walldistance);
         Gizmos.DrawRay(_footPos.position, new Vector3(_velo.x, _velo.y, 0));
     }
 }
