@@ -55,5 +55,6 @@ public class SoundObject : ObjectBase, ISoundObjectPool<SoundManager>
     {
         Owner = owner;
         _soundScriptable = Owner.SoundDataBase[Owner.Usage];
+        _audioSource = GetComponent<AudioSource>();
     }
 }

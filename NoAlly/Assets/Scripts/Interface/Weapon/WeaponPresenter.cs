@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UniRx;
-using DataOfWeapon;
 
+/// <summary>
+/// 武器データの管理と操作関係のprezenter
+/// </summary>
 public class WeaponPresenter : MonoBehaviour
 {
     [SerializeField, Header("プレイヤー")]

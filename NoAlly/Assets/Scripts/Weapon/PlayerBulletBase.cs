@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
+public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 {
     [SerializeField, Header("íeÇÃë¨ìx")]
     float _bulletSpeed = 0;
@@ -13,6 +13,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
 
     [Tooltip("íeÇÃçUåÇóÕ")]
     float[] _bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
+    float _speed = 0f;
     [Tooltip("íeÇÃëÆê´")]
     ElementType _elementType;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
@@ -26,22 +27,28 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
 
     public void FixedUpdate()
     {
-        if (!_isActive) return;
-        _velo.x = _bulletSpeed * _muzzleForwardPos.x;
-        _velo.y = _muzzleForwardPos.y;
-        _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
-        Disactive(_intervalTime);
+        if (_isActive)
+        {
+            _velo.x = _bulletSpeed * _speed;
+            _velo.y = _muzzleForwardPos.y;
+            _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        HitMovement(other);
     }
 
     public void Create()
     {
-        _rb.isKinematic = false;
+        _isActive = true;
+        _rb.isKinematic = !_isActive;
+        SetTrans();
         ActiveObject(true);
-        _velo = _rb.velocity;
-        _muzzleForwardPos = _muzzlePos.position;
-        this.transform.position = _muzzleForwardPos;
         _bulletPowers = Owner.WeaponPower;
         _elementType = Owner.ElementType;
+        Disactive(_intervalTime);
     }
 
     public void Disactive()
@@ -61,6 +68,7 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
         Owner = owner;
         _isActive = false;
         _rb = GetComponent<Rigidbody>();
+        _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
         _bulletPowers = Owner.WeaponPower;
         ActiveObject(_isActive);
@@ -73,8 +81,24 @@ public class PlayerBulletBase : ObjectBase, IObjectPool<WeaponArrow>, IBullet
             hitObj.BehaviorOfHit(_bulletPowers, _elementType);
             Disactive();
         }
+        else if (target.gameObject.tag == "TargetObject")
+        {
+            Disactive();
+        }
     }
-
+    void SetTrans()
+    {
+        _muzzleForwardPos = _muzzlePos.position;
+        this.transform.position = _muzzleForwardPos;
+        if (Owner.playerVec == PlayerVec.RIGHT)
+        {
+            _speed = 1;
+        }
+        else if (Owner.playerVec == PlayerVec.LEFT)
+        {
+            _speed = -1;
+        }
+    }
 }
 
 

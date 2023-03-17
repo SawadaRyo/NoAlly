@@ -54,6 +54,8 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     /// </summary>
     public virtual void Create()
     {
+        _isActive = true;
+        ActiveCollider(_isActive);
         _objectAnimator.SetBool("Death", !_isActive);
     }
     /// <summary>
@@ -61,6 +63,8 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     /// </summary>
     public virtual void Disactive()
     {
+        _isActive = false;
+        ActiveCollider(_isActive);
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
@@ -75,6 +79,7 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     /// <param name="Owner"></param>
     public void DisactiveForInstantiate(IObjectGenerator Owner)
     {
+        _isActive = false;
         _stateMachine = new StateMachine<EnemyBase>(this);
         {
             //プレイヤーを見つけた時プレイヤーを攻撃

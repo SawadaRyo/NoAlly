@@ -8,6 +8,13 @@ namespace DataOfWeapon
 {
     public class SetWeaponData : MonoBehaviour
     {
+        [SerializeField]
+        PlayerContoller _player;
+        [SerializeField, Header("攻撃判定の中心点")]
+        Transform _attackPos = null;
+        [SerializeField, Header("攻撃判定の中心点")]
+        Transform _poolPos = null;
+
         [Tooltip("武器のスクリプタブルオブジェクト")]
         WeaponScriptableObjects _weaponScriptableObjects = null;
         WeaponData[] _weaponDatas = new WeaponData[Enum.GetValues(typeof(WeaponType)).Length - 1];
@@ -23,16 +30,16 @@ namespace DataOfWeapon
             if (_weaponScriptableObjects != null) return;
             _weaponScriptableObjects = weapon;
             _weaponBases = new List<IWeaponBase>(){
-                new WeaponSword(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SWORD]),
-                new WeaponLance(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.LANCE]),
-                new WeaponArrow(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.ARROW]),
-                new WeaponShield(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SHIELD])
+                new WeaponSword(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SWORD],_attackPos),
+                new WeaponLance(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.LANCE],_attackPos),
+                new WeaponArrow(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.ARROW],_player,_attackPos,_poolPos),
+                new WeaponShield(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SHIELD], _attackPos)
             };
             _weaponAction = new List<IWeaponAction>(){
                 new CombatAction(),
                 new CombatAction(),
-                new CombatAction(),
-                new ArrowAction(_weaponBases[(int)WeaponType.ARROW])
+                new ArrowAction(),
+                new CombatAction()
             };
 
             for (int i = 0; i < _weaponDatas.Length; i++)

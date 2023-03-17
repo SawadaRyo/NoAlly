@@ -137,7 +137,6 @@ public class WeaponMenuHander : SingletonBehaviour<WeaponMenuHander>,IMenuHander
         }
         _reactiveCrossH.Value = _crossH;
         _reactiveCrossV.Value = _crossV;
-        Debug.Log($"{_crossH},{_crossV}");
     }
     /// <summary>
     /// ƒƒjƒ…[‰æ–Ê“WŠJ‚ÉŒÄ‚ÔŠÖ”

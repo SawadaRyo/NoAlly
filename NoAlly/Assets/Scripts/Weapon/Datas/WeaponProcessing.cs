@@ -33,13 +33,42 @@ public class WeaponProcessing : MonoBehaviour
         {
             SwichWeapon(Input.GetButton("SubWeaponSwitch"));
         }
-        _targetWeapon.Action.WeaponAttack(_playerAnimator,this);
+        WeaponAttack(_playerAnimator);
     }
     private void OnTriggerEnter(Collider other)
     {
-        TargetWeapon.Base.AttackMovement(other);
+        TargetWeapon.Base.AttackMovement(other,TargetWeapon.Action);
     }
-
+    /// <summary>
+    /// 武器の入力判定
+    /// </summary>
+    public void WeaponAttack(Animator playerAnimator)
+    {
+        if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
+        ////通常攻撃の処理
+        if (Input.GetButtonDown("Attack"))
+        {
+            playerAnimator.SetTrigger("AttackTrigger");
+            playerAnimator.SetInteger("WeaponType", (int)TargetWeapon.Type);
+        }
+        else
+        {
+            //溜め攻撃の処理(弓矢のアニメーションもこの処理）
+            if (Input.GetButton("Attack"))
+            {
+                TargetWeapon.Action.ChargeCount += Time.deltaTime;
+                playerAnimator.SetBool("Charge", true);
+                if (TargetWeapon.Action.ChargeCount > TargetWeapon.Base.ChargeLevels[0])
+                {
+                    playerAnimator.SetTrigger("ChargeAttackTrigger");
+                }
+            }
+            else if (Input.GetButtonUp("Attack"))
+            {
+                playerAnimator.SetBool("Charge", false);
+            }
+        }
+    }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数
     /// </summary>
@@ -71,6 +100,10 @@ public class WeaponProcessing : MonoBehaviour
             _targetWeapon = _mainAndSub[(int)type];
         }
     }
+    /// <summary>
+    /// 属性の装備
+    /// </summary>
+    /// <param name="elementType"></param>
     public void SetElement(ElementType elementType)
     {
         switch (elementType)
@@ -84,6 +117,7 @@ public class WeaponProcessing : MonoBehaviour
         }
         _targetWeapon.Base.WeaponModeToElement(elementType);
     }
+
 }
 
 

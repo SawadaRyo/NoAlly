@@ -34,10 +34,6 @@ public enum WeaponDeformation:int
     Deformation
 }
 
-public enum PlayerClimbWall
-{
-    NONE,
-    GRIPING
-}
+
 
 

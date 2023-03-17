@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerContoller : MonoBehaviour
 {
@@ -19,8 +17,6 @@ public class PlayerContoller : MonoBehaviour
     float _v;
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
-    [Tooltip("ダッシュ判定")]
-    bool _dashChack = false;
     [Tooltip("プレイヤーカメラ")]
     Camera _playerCamera = null;
     [Tooltip("Playerの向き")]
@@ -50,7 +46,7 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Header("壁の接触判定のRayの射程")]
     float _walldistance = 0.1f;
     [SerializeField, Header("壁の接触判定")]
-    LayerMask _wallMask = ~0;
+    LayerMask[] _wallMask;
     [SerializeField, Header("接地判定のRayの射出点")]
     Transform _gripPos = null;
     [Tooltip("壁のずり落ち判定")]
@@ -61,7 +57,7 @@ public class PlayerContoller : MonoBehaviour
     Animator _animator = null;
 
     [Tooltip("壁キックのインターバル")]
-    bool _wallKicking = false;
+    bool _isKickWall = false;
     [Tooltip("PlayerAnimationStateを格納する変数")]
     PlayerAnimationState _animState;
     [Tooltip("Rigidbodyコンポーネントの取得")]
@@ -76,17 +72,11 @@ public class PlayerContoller : MonoBehaviour
     RaycastHit _hitInfo;
 
 
-    public Animator PlayerAnimator => _animator;
     public Rigidbody Rb => _rb;
     public PlayerVec Vec => _playerVec;
     public RaycastHit HitInfo => _hitInfo;
     //public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
-    public enum PlayerVec
-    {
-        RIGHT,
-        LEFT,
-        UP
-    }
+
 
     void Start()
     {
@@ -144,7 +134,41 @@ public class PlayerContoller : MonoBehaviour
 
         return new Vector2(h, v);
     }
+    /// <summary>
+    /// 接壁判定
+    /// </summary>
+    public PlayerClimbWall IsWalled(Vector2 currentNormal)
+    {
+        if (IsGrounded()) return PlayerClimbWall.NONE;
+        else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
 
+        Ray isWallOnRay = new(_gripPos.transform.position, new Vector3(currentNormal.normalized.x, 1f, 0f));
+
+        PlayerClimbWall hitflg = PlayerClimbWall.NONE;
+        if (Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPING]))
+        {
+            _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
+            hitflg = PlayerClimbWall.GRIPING;
+        }
+        //else if(Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPINGEGDE]))
+        //{
+        //    _rb.isKinematic = true;
+        //    DOTween.To(() => );
+        //}
+        return hitflg;
+    }
+    /// <summary>
+    /// 接地判定
+    /// </summary>
+    bool IsGrounded()
+    {
+        Vector3 isGroundCenter = _footPos.transform.position; //Rayの原点
+        Ray ray = new Ray(isGroundCenter, Vector3.down);　//Ray射出
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);　//Ray末端にSphereCast
+        return hitFlg; //接地判定をboolで返す
+    }
+
+    //Playerの動きを処理が書かれた関数-------------------------------------//
     void RotateMethod(Vector2 rotVector)
     {
         //if (h != 0)
@@ -168,8 +192,6 @@ public class PlayerContoller : MonoBehaviour
             _playerVec = PlayerVec.UP;
         }
     }
-
-    //Playerの動きを処理が書かれた関数-------------------------------------//
     /// <summary>
     /// プレイヤーの移動
     /// </summary>
@@ -184,29 +206,27 @@ public class PlayerContoller : MonoBehaviour
                 if (dash)
                 {
                     moveSpeed = _dashSpeed;
-                    _dashChack = true;
                 }
                 else
                 {
                     moveSpeed = _speed;
-                    _dashChack = false;
                 }
                 //_beforeSpeed = moveSpeed;
             }
             else if (!IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerClimbWall.NONE)
             {
-                if (_dashChack)
+                if (dash)
                 {
                     moveSpeed = _dashSpeed;
                 }
-                else if (!_dashChack || IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
+                else if (!dash || IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
                 {
                     moveSpeed = _speed;
                 }
             }
 
             Vector3 normalVector = _hitInfo.normal;
-            if (_wallKicking)
+            if (_isKickWall)
             {
                 h = 0;
             }
@@ -234,7 +254,7 @@ public class PlayerContoller : MonoBehaviour
         if (jump && IsGrounded() && _animState.AbleMove)
         {
             //m_audio.PlayOneShot(m_jumpSound);
-            _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+            _rb.AddForce(gameObject.transform.up * _jumpPower, ForceMode.Impulse);
         }
         _animator.SetBool("Jump", !IsGrounded());
 
@@ -259,7 +279,6 @@ public class PlayerContoller : MonoBehaviour
                 _slideWall = true;
                 _rb.isKinematic = false;
             }
-            if (_dashChack) _dashChack = false;
             if (jump)
             {
                 StartCoroutine(WallKick());
@@ -280,47 +299,11 @@ public class PlayerContoller : MonoBehaviour
             _rb.velocity = new Vector3(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, -_wallSlideSpeed, float.MaxValue));
         }
     }
-    /// <summary>
-    /// 接壁判定
-    /// </summary>
-    public PlayerClimbWall IsWalled(Vector2 currentNormal)
-    {
-        if (IsGrounded()) return PlayerClimbWall.NONE;
-        else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
-
-        Vector3 isWallCenter = _gripPos.transform.position;
-        Ray isWallOnRay = new(isWallCenter, new Vector3(currentNormal.normalized.x, 1f, 0f));
-
-        PlayerClimbWall hitflg = PlayerClimbWall.NONE;
-        if (Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask))
-        {
-            _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
-            hitflg = PlayerClimbWall.GRIPING;
-        }
-        return hitflg;
-    }
-    /// <summary>
-    /// 接地判定
-    /// </summary>
-    bool IsGrounded()
-    {
-        Vector3 isGroundCenter = _footPos.transform.position; //Rayの原点
-        Ray ray = new Ray(isGroundCenter, Vector3.down);　//Ray射出
-        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);　//Ray末端にSphereCast
-        return hitFlg; //接地判定をboolで返す
-    }
-
     IEnumerator WallKick()
     {
-        _wallKicking = true;
+        _isKickWall = true;
         yield return new WaitForSeconds(0.2f);
-        _wallKicking = false;
-    }
-    //AnimatorEventで呼ぶ関数----------------------------------------------//
-    //TODO:効果音やBGMはSoundManagerで管理する
-    void PlaySound(SoundUsage usage, int soundNum)
-    {
-        GameManager.InstanceSM.CallSound(usage, SoundType.SE, soundNum);
+        _isKickWall = false;
     }
 
     private void OnDrawGizmos()
@@ -330,4 +313,21 @@ public class PlayerContoller : MonoBehaviour
         Gizmos.DrawRay(_gripPos.position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _walldistance);
         Gizmos.DrawRay(_footPos.position, new Vector3(_velo.x, _velo.y, 0));
     }
+}
+public enum PlayerVec
+{
+    RIGHT,
+    LEFT,
+    UP
+}
+public enum PlayerClimbWall
+{
+    NONE = -1,
+    GRIPING = 0,
+    GRIPINGEGDE = 1
+}
+public enum GroundStatus
+{
+    NONE = -1,
+    NORMAL = 0,
 }

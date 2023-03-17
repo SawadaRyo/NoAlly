@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class EnemyBullet : ObjectBase, IObjectPool<GunTypeEnemy>,IBullet
+public class EnemyBullet : ObjectBase, IBullet<GunTypeEnemy>
 {
     [SerializeField, Header("’e‚Ì‘¬“x")]
     float _bulletSpeed = 0;
@@ -61,7 +61,7 @@ public class EnemyBullet : ObjectBase, IObjectPool<GunTypeEnemy>,IBullet
 
     public void HitMovement(Collider target)
     {
-        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
+        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && target.tag == "Player")
         {
             hitObj.BehaviorOfHit(bulletPowers, ElementType.ELEKE);
             Disactive();

@@ -29176,14 +29176,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.16666667
-    functionName: PlaySound
+    functionName: MoveSound
     data: 
     objectReferenceParameter: {fileID: 8300000, guid: 80239785e252f734a942b4bd5c1b91e1, type: 3}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
   - time: 0.4
-    functionName: PlaySound
+    functionName: MoveSound
     data: 
     objectReferenceParameter: {fileID: 8300000, guid: 80239785e252f734a942b4bd5c1b91e1, type: 3}
     floatParameter: 0

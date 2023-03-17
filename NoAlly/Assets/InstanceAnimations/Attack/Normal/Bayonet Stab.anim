@@ -68724,7 +68724,14 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.43333334
+  - time: 0
+    functionName: FinishAttackMove
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 5
+    messageOptions: 0
+  - time: 0.33333334
     functionName: AttackToCombatWeapon
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -68732,13 +68739,13 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.5
-    functionName: PlaySound
+    functionName: MoveSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.73333335
+  - time: 0.8333333
     functionName: AttackToCombatWeapon
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -8,9 +8,9 @@ using UnityEngine;
 public class SoundManager : IObjectGenerator
 {
     [Tooltip("")]
-    ObjectPool<SoundObject, SoundManager,SoundUsage> _pool = new();
+    SoundObjectPool<SoundObject, SoundManager,SoundUsage> _pool = new();
     [Tooltip("")]
-    ObjectPool<SoundObject, SoundManager,SoundUsage>.ObjectKey[] _keys = null;
+    Dictionary<SoundUsage,SoundObjectPool<SoundObject, SoundManager,SoundUsage>.ObjectKey> _keys = new();
     [Tooltip("サウンドのScriptableObject")]
     Dictionary<SoundUsage, SoundScriptable> _soundDataBase = new();
     [Tooltip("現在ループさせているサウンド")]
@@ -24,17 +24,14 @@ public class SoundManager : IObjectGenerator
     public void SetSoundData(SoundScriptable[] datas)
     {
         _soundDataBase = datas.OrderBy(x => x.Usage).ToDictionary(key => key.Usage, x => x);
-        _keys = new SoundObjectPool<SoundObject, SoundManager>.ObjectKey[datas.Length];
 
-        int i = 0;
-        for(int index = 0; index < _keys.Length; index++)
+        for(int index = 0; index < Enum.GetValues(typeof(SoundUsage)).Length; index++)
         {
             _usage = (SoundUsage)index;
             if (_soundDataBase.TryGetValue(_usage, out SoundScriptable soundData))
             {
-                _keys[i] = _pool.SetBaseObj(_soundDataBase[_usage].SoundPlayer, this);
-                _pool.SetCapacity(_keys[i], 10);
-                i++;
+                _keys.Add(_usage,_pool.SetBaseObj(_soundDataBase[_usage].SoundPlayer, this));
+                _pool.SetCapacity(_keys[_usage], 10);
             }
         }
     }
@@ -59,7 +56,7 @@ public class SoundManager : IObjectGenerator
             case SoundType.SE:
                 break;
         }
-        soundObject = _pool.Instantiate(_keys[(int)_usage], type, soundNumber);
+        soundObject = _pool.Instantiate(_keys[_usage], type, soundNumber);
         _loopingSoundObj = soundObject;
     }
 }

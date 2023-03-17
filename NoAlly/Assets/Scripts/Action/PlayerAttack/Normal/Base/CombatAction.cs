@@ -11,19 +11,16 @@ public class CombatAction : WeaponAction, ICombatAction
     /// <param name="chargeLevels">—­‚ß’iŠK</param>
     /// <param name="weaponPower"></param>
     /// <param name="elementType"></param>
-    public override void WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, float[] weaponPower, ElementType elementType)
+    public float[] CombatChargeAttackMethod(float chrageCount, float[] chargeLevels, float[] weaponPower, ElementType elementType)
     {
-        if (chrageCount < chargeLevels[0])
+        if (chrageCount >= chargeLevels[0] && chrageCount < chargeLevels[1])
         {
-            ChargePower(weaponPower, elementType, 1);
-        }
-        else if (chrageCount >= chargeLevels[0] && chrageCount < chargeLevels[1])
-        {
-            ChargePower(weaponPower, elementType, chargeLevels[0]);
+            return ChargePower(weaponPower, elementType, chargeLevels[0]);
         }
         else if (chrageCount >= chargeLevels[1])
         {
-            ChargePower(weaponPower, elementType, chargeLevels[1]);
+            return ChargePower(weaponPower, elementType, chargeLevels[1]);
         }
+        return ChargePower(weaponPower, elementType, 1);
     }
 }

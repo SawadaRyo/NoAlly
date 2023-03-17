@@ -118,7 +118,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             {
                 _ableMove = true;
             }
-            else if (info.IsTag("AirAttack") || info.IsTag("AirAttack"))
+            else if (info.IsTag("AirAttack"))
             {
                 _ableInput = true;
             }
@@ -128,15 +128,22 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
 
     //AnimationEvent�ŌĂԊ֐�
     void AttackToCombatWeapon(BoolAttack isAttack) => _boolAttack.Value = isAttack;
+    void AttackToArrowWeapon()
+    {
+        if(_weaponProcessing.TargetWeapon.Base is IArrowWeapon arrow)
+        {
+            arrow.InsBullet(_weaponProcessing.TargetWeapon.Action);
+        }
+    }
     void FinishAttackMove(int moveSpeed)
     {
         Vector3 vec = Vector3.zero;
         switch (_playerContoller.Vec)
         {
-            case PlayerContoller.PlayerVec.RIGHT:
+            case PlayerVec.RIGHT:
                 vec = Vector3.right;
                 break;
-            case PlayerContoller.PlayerVec.LEFT:
+            case PlayerVec.LEFT:
                 vec = Vector3.left;
                 break;
             default:
@@ -144,6 +151,17 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         }
         Vector3 onPlane = Vector3.ProjectOnPlane(vec, _playerContoller.HitInfo.normal);
         _playerContoller.Rb.velocity = onPlane * moveSpeed;
+    }
+    void MoveSound(int soundNum)
+    {
+        GameManager.InstanceSM.CallSound(SoundUsage.PLAYERMOVE, SoundType.SE, soundNum);
+    }
+    void InsBullet(Transform muzzlePos)
+    {
+        if(_weaponProcessing.TargetWeapon.Type == WeaponType.ARROW)
+        {
+            //_weaponProcessing.TargetWeapon.Action.WeaponChargeAttackMethod()
+        }
     }
 
     private void OnDisable()

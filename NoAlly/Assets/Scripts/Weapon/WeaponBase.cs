@@ -12,6 +12,8 @@ public abstract class WeaponBase : IWeaponBase
     protected float[] _weaponPower = new float[Enum.GetValues(typeof(ElementType)).Length];
     [Tooltip("—­‚ß’iŠKB—v‘f1:—­‚ßUŒ‚‘æ1’iŠK,—v‘f2:—­‚ßUŒ‚‘æ2’iŠK")]
     protected float[] _chargeLevels = null;
+    [Tooltip("UŒ‚”»’è‚Ì’†S")]
+    protected Transform _attackPos;
     [Tooltip("‚±‚Ì•Ší‚Ìƒf[ƒ^")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("•Ší‚ª•ÏŒ`’†‚©‚Ç‚¤‚©")]
@@ -27,12 +29,13 @@ public abstract class WeaponBase : IWeaponBase
     public ObjectOwner Owner => _owner;
     public float[] ChargeLevels => _chargeLevels;
 
-    public virtual void AttackMovement(Collider target) { }
+    public virtual void AttackMovement(Collider target,IWeaponAction weaponAction) { }
 
-    public WeaponBase(WeaponDataEntity weaponData)
+    public WeaponBase(WeaponDataEntity weaponData,Transform attackPos)
     {
         _weaponData = weaponData;
         _weaponType = _weaponData.Type;
+        _attackPos = attackPos;
         _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
         _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];
         _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
