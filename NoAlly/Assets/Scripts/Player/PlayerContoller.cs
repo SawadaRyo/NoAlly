@@ -281,7 +281,7 @@ public class PlayerContoller : MonoBehaviour
             }
             if (jump)
             {
-                StartCoroutine(WallKick());
+                StartCoroutine(AbleWallKick());
                 Vector3 vec = transform.up + _wallVec * 2f;
                 if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
                 else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
@@ -299,7 +299,7 @@ public class PlayerContoller : MonoBehaviour
             _rb.velocity = new Vector3(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, -_wallSlideSpeed, float.MaxValue));
         }
     }
-    IEnumerator WallKick()
+    IEnumerator AbleWallKick()
     {
         _isKickWall = true;
         yield return new WaitForSeconds(0.2f);
