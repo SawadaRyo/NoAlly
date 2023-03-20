@@ -27,8 +27,6 @@ public class PlayerContoller : MonoBehaviour
     float _jumpPower = 5f;
     [SerializeField, Header("接地判定のRayの射程")]
     float _graundDistance = 1f;
-    [SerializeField, Header("接地判定のRayの射出点")]
-    Transform _footPos;
     [SerializeField, Header("接地判定のSphierCastの半径")]
     float _isGroundRengeRadios = 1f;
     [SerializeField, Header("接地判定のLayerMask")]
@@ -47,8 +45,6 @@ public class PlayerContoller : MonoBehaviour
     float _walldistance = 0.1f;
     [SerializeField, Header("壁の接触判定")]
     LayerMask[] _wallMask;
-    [SerializeField, Header("接地判定のRayの射出点")]
-    Transform _gripPos = null;
     [Tooltip("壁のずり落ち判定")]
     bool _slideWall = false;
 
@@ -70,6 +66,11 @@ public class PlayerContoller : MonoBehaviour
     Vector3 _wallVec = Vector3.zero;
     [Tooltip("接触しているオブジェクトの情報")]
     RaycastHit _hitInfo;
+
+    bool[] _isClimbWall = new bool[3];
+    bool _clinbing = false;
+    [SerializeField, Header("接地、接触判定のposition")]
+    Transform[] _isClimbWallPos = new Transform[3];
 
 
     public Rigidbody Rb => _rb;
@@ -97,7 +98,7 @@ public class PlayerContoller : MonoBehaviour
             _isJump = Input.GetButtonDown("Jump");
 
             JumpMethod(_isJump);
-            WallJumpMethod(_isJump, _isDash);
+            WallJumpMethod(_isJump, _isDash, IsWalled(CurrentNormal(new Vector2(_h, _v))));
         }
     }
     void FixedUpdate()
@@ -141,28 +142,34 @@ public class PlayerContoller : MonoBehaviour
     {
         if (IsGrounded()) return PlayerClimbWall.NONE;
         else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
-
-        Ray isWallOnRay = new(_gripPos.transform.position, new Vector3(currentNormal.normalized.x, 1f, 0f));
-
-        PlayerClimbWall hitflg = PlayerClimbWall.NONE;
-        if (Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPING]))
+        int hitCount = 0;
+        for (int i = 0; i < _isClimbWallPos.Length; i++)
+        {
+            Ray isWallOnRay = new(_isClimbWallPos[i].transform.position, new Vector3(currentNormal.normalized.x, 1f, 0f));
+            _isClimbWall[i] = Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPING]);
+            if (_isClimbWall[i])
+            {
+                hitCount++;
+            }
+        }
+        if (hitCount == _isClimbWallPos.Length)
         {
             _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
-            hitflg = PlayerClimbWall.GRIPING;
+            return PlayerClimbWall.GRIPING;
         }
-        //else if(Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPINGEGDE]))
-        //{
-        //    _rb.isKinematic = true;
-        //    DOTween.To(() => );
-        //}
-        return hitflg;
+        else if (!_isClimbWall[0] && _isClimbWall[1] && _isClimbWall[2]
+              || !_isClimbWall[0] && !_isClimbWall[1] && _isClimbWall[2])
+        {
+            return PlayerClimbWall.GRIPINGEGDE;
+        }
+        return PlayerClimbWall.NONE;
     }
     /// <summary>
     /// 接地判定
     /// </summary>
     bool IsGrounded()
     {
-        Vector3 isGroundCenter = _footPos.transform.position; //Rayの原点
+        Vector3 isGroundCenter = _isClimbWallPos[2].transform.position; //Rayの原点
         Ray ray = new Ray(isGroundCenter, Vector3.down);　//Ray射出
         bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);　//Ray末端にSphereCast
         return hitFlg; //接地判定をboolで返す
@@ -262,35 +269,40 @@ public class PlayerContoller : MonoBehaviour
     /// <summary>
     /// プレイヤーの壁ジャンプ
     /// </summary>
-    void WallJumpMethod(bool jump, bool isDash)
+    void WallJumpMethod(bool jump, bool isDash, PlayerClimbWall climbWall)
     {
-        _animator.SetBool("WallGrip", IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE);
-        if (IsGrounded())
+        switch (climbWall)
         {
-            _slideWall = false;
-            return;
-        }
-        //ToDo移動コマンドで壁キックの力が変わる様にする
-        else if (IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
-        {
-            if (!_slideWall)
-            {
-                _rb.isKinematic = true;
-                _slideWall = true;
-                _rb.isKinematic = false;
-            }
-            if (jump)
-            {
-                StartCoroutine(AbleWallKick());
-                Vector3 vec = transform.up + _wallVec * 2f;
-                if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
-                else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
-                //_animator.SetTrigger("WallJump");
-            }
-        }
-        else
-        {
-            _slideWall = false;
+            case PlayerClimbWall.NONE:
+                _animator.SetBool("WallGrip", false);
+                _slideWall = false;
+                return;
+            case PlayerClimbWall.GRIPING:
+                _animator.SetBool("WallGrip", true);
+                if (!_slideWall)
+                {
+                    _rb.isKinematic = true;
+                    _slideWall = true;
+                    _rb.isKinematic = false;
+                }
+                if (jump)
+                {
+                    StartCoroutine(AbleWallKick());
+                    Vector3 vec = transform.up + _wallVec * 2f;
+                    if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
+                    else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
+                }
+                break;
+            case PlayerClimbWall.GRIPINGEGDE:
+                if (!_clinbing && _hitInfo.collider.TryGetComponent(out BoxCollider col))
+                {
+                    _slideWall = false;
+                    Vector3 wallOfTop =new Vector3(_hitInfo.transform.position.x
+                                                 , _hitInfo.transform.position.y + col.size.y
+                                                 , _hitInfo.transform.position.z);
+                    StartCoroutine(Climbing(wallOfTop, 0.5f));
+                }
+                return;
         }
 
 
@@ -305,17 +317,41 @@ public class PlayerContoller : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         _isKickWall = false;
     }
+    IEnumerator Climbing(Vector3 endPoint, float duration)
+    {
+        float time = 0;
+        Vector3 startPoint = transform.position;
+        _rb.isKinematic = true;
+        _clinbing = true;
+        _animator.SetBool("Climbing",true);
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(startPoint, endPoint, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        _animator.SetBool("Climbing", false);
+        _animator.SetBool("WallGrip", false);
+        transform.position = endPoint;
+        _clinbing = false;
+        _rb.isKinematic = false;
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_footPos.position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
-        Gizmos.DrawRay(_gripPos.position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _walldistance);
-        Gizmos.DrawRay(_footPos.position, new Vector3(_velo.x, _velo.y, 0));
+        Gizmos.DrawWireSphere(_isClimbWallPos[2].position - new Vector3(0f, _graundDistance, 0f), _isGroundRengeRadios);
+        Gizmos.DrawRay(_isClimbWallPos[1].position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _walldistance);
+        Gizmos.DrawRay(_isClimbWallPos[2].position, new Vector3(_velo.x, _velo.y, 0));
+
+        Gizmos.DrawRay(_isClimbWallPos[0].position, transform.forward * _walldistance);
+        Gizmos.DrawRay(_isClimbWallPos[1].position, transform.forward * _walldistance);
+        Gizmos.DrawRay(_isClimbWallPos[2].position, transform.forward * _walldistance);
     }
 }
 public enum PlayerVec
 {
+    NONE,
     RIGHT,
     LEFT,
     UP
