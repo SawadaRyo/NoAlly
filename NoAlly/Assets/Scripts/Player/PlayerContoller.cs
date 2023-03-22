@@ -53,7 +53,7 @@ public class PlayerContoller : MonoBehaviour
     Animator _animator = null;
 
     [Tooltip("壁キックのインターバル")]
-    bool _isKickWall = false;
+    bool _ableInput = true;
     [Tooltip("PlayerAnimationStateを格納する変数")]
     PlayerAnimationState _animState;
     [Tooltip("Rigidbodyコンポーネントの取得")]
@@ -233,22 +233,25 @@ public class PlayerContoller : MonoBehaviour
             }
 
             Vector3 normalVector = _hitInfo.normal;
-            if (_isKickWall)
+            if (_ableInput)
             {
-                h = 0;
+                Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
+                _velo.x = onPlane.x * moveSpeed;
+                _velo.y = onPlane.y * moveSpeed;
+                if (Mathf.Abs(_velo.y) <= 0.01f)
+                {
+                    _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
+                }
+                else if (Mathf.Abs(_velo.y) > 0.01f)
+                {
+                    _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
+                }
+                _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
             }
-            Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
-            _velo.x = onPlane.x * moveSpeed;
-            _velo.y = onPlane.y * moveSpeed;
-            if (Mathf.Abs(_velo.y) <= 0.01f)
+            else
             {
-                _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
+                _animator.SetFloat("MoveSpeed", 0);
             }
-            else if (Mathf.Abs(_velo.y) > 0.01f)
-            {
-                _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
-            }
-            _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
         }
 
     }
@@ -288,16 +291,26 @@ public class PlayerContoller : MonoBehaviour
                 if (jump)
                 {
                     StartCoroutine(AbleWallKick());
-                    Vector3 vec = transform.up + _wallVec * 2f;
-                    if (isDash) _rb.AddForce(vec.normalized * _wallJump2, ForceMode.Impulse);
-                    else _rb.AddForce(vec.normalized * _wallJump, ForceMode.Impulse);
+                    Vector3 vec = transform.up + _wallVec;
+                    Debug.Log(_wallVec);
+                    Vector3 kickPower;
+                    if (isDash)
+                    {
+                        kickPower = vec.normalized * _wallJump2;
+                    }
+                    else
+                    {
+                        kickPower = vec.normalized * _wallJump;
+                    }
+
+                    _rb.AddForce(kickPower, ForceMode.Impulse);
                 }
                 break;
             case PlayerClimbWall.GRIPINGEGDE:
                 if (!_clinbing && _hitInfo.collider.TryGetComponent(out BoxCollider col))
                 {
                     _slideWall = false;
-                    Vector3 wallOfTop =new Vector3(_hitInfo.transform.position.x
+                    Vector3 wallOfTop = new Vector3(_hitInfo.transform.position.x
                                                  , _hitInfo.transform.position.y + col.size.y
                                                  , _hitInfo.transform.position.z);
                     StartCoroutine(Climbing(wallOfTop, 0.5f));
@@ -313,9 +326,9 @@ public class PlayerContoller : MonoBehaviour
     }
     IEnumerator AbleWallKick()
     {
-        _isKickWall = true;
+        _ableInput = false;
         yield return new WaitForSeconds(0.2f);
-        _isKickWall = false;
+        _ableInput = true;
     }
     IEnumerator Climbing(Vector3 endPoint, float duration)
     {
@@ -323,7 +336,7 @@ public class PlayerContoller : MonoBehaviour
         Vector3 startPoint = transform.position;
         _rb.isKinematic = true;
         _clinbing = true;
-        _animator.SetBool("Climbing",true);
+        _animator.SetBool("Climbing", true);
         while (time < duration)
         {
             transform.position = Vector3.Lerp(startPoint, endPoint, time / duration);

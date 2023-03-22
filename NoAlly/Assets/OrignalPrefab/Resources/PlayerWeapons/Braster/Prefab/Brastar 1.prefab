@@ -5580,7 +5580,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 29077300315030148, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: ShapeModule.radius.value
-      value: 0.725
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 636157993568117662, guid: 036f96004d25eae4398fc2ee3b9339b4, type: 3}
       propertyPath: m_RootOrder
