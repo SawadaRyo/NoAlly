@@ -64,7 +64,7 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     public virtual void Disactive()
     {
         _isActive = false;
-        ActiveCollider(_isActive);
+        ActiveObject(_isActive);
         _objectAnimator.SetBool("Death", !_isActive);
 
     }

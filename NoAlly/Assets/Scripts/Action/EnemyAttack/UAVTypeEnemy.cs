@@ -26,6 +26,7 @@ public class UAVTypeEnemy : EnemyBase
     bool _hit = false;
     [Tooltip("")]
     float _currentSpeed = 0f;
+    float _time = 0f;
 
     public override void Start()
     {
@@ -43,10 +44,11 @@ public class UAVTypeEnemy : EnemyBase
             if (_hit)
             {
                 _currentSpeed = (-_speed * _moveMagnification);
-                float time = Time.deltaTime;
-                if (time > 1f)
+                _time += Time.deltaTime;
+                if (_time > 1f || !InSight())
                 {
                     _hit = false;
+                    _time = 0f;
                 }
             }
             else
@@ -84,6 +86,7 @@ public class UAVTypeEnemy : EnemyBase
     public override void Disactive()
     {
         _rb.velocity = Vector3.zero;
+        _rb.isKinematic = true;
     }
     //public override void OnDrawGizmos()
     //{

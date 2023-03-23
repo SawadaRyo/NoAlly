@@ -20,10 +20,12 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
     ObjectPool<EnemyBullet,GunTypeEnemy,EnemyBulletType> _bulletPool = new ObjectPool<EnemyBullet,GunTypeEnemy,EnemyBulletType>();
     ObjectPool<EnemyBullet, GunTypeEnemy, EnemyBulletType>.ObjectKey _key = null;
     Vector3 _distance = Vector3.zero;
+    PlayerVec _enemyVec = PlayerVec.NONE; 
 
     public float Interval => _interval;
     public Transform GenerateTrance => _muzzleTrans;
     public Vector3 Distance => _distance;
+    public PlayerVec EnemyVec => _enemyVec; 
 
     public override void Start()
     {
@@ -41,10 +43,12 @@ public class GunTypeEnemy : EnemyBase, IObjectGenerator
         if (_distance.x == 1)
         {
             this.transform.DORotate(new Vector3(0f, 90f, 0f), _turnSpeed);
+            _enemyVec = PlayerVec.RIGHT;
         }
         else if (_distance.x == -1)
         {
             this.transform.DORotate(new Vector3(0f, -90f, 0f), _turnSpeed);
+            _enemyVec = PlayerVec.LEFT;
         }
     }
 

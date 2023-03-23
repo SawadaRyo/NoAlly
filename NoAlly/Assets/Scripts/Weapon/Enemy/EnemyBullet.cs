@@ -11,10 +11,11 @@ public class EnemyBullet : ObjectBase, IBullet<GunTypeEnemy>
     [SerializeField, Header("íeÇÃRigitbody")]
     Rigidbody _rb = default;
 
+    float _speed = 0f;
     [Tooltip("íeÇÃçUåÇóÕ")]
-    float[] bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
+    float[] _bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
     [Tooltip("íeÇÃëÆê´")]
-    ElementType elementType;
+    ElementType _elementType;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
     Transform _muzzlePos = null;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈï˚å¸")]
@@ -23,19 +24,28 @@ public class EnemyBullet : ObjectBase, IBullet<GunTypeEnemy>
     Vector3 _velo = Vector3.zero;
     public GunTypeEnemy Owner { get; set; }
 
+    public void FixedUpdate()
+    {
+        if (_isActive)
+        {
+            _velo.x = _bulletSpeed * _speed;
+            _velo.y = _muzzleForwardPos.y;
+            _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         HitMovement(other);
-        Disactive();
     }
 
     public void Create()
     {
-        _rb.isKinematic = false;
+        _isActive = true;
+        _rb.isKinematic = !_isActive;
+        SetTrans();
         ActiveObject(true);
-        _velo = _rb.velocity;
-        _muzzleForwardPos = _muzzlePos.position;
-        this.transform.position = _muzzleForwardPos;
+        Disactive(_intervalTime);
     }
 
     public void Disactive()
@@ -54,17 +64,36 @@ public class EnemyBullet : ObjectBase, IBullet<GunTypeEnemy>
     {
         Owner = owner;
         _isActive = false;
-        ActiveObject(_isActive);
         _rb = GetComponent<Rigidbody>();
+        _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
+        ActiveObject(_isActive);
     }
 
     public void HitMovement(Collider target)
     {
-        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && target.tag == "Player")
+        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && hitObj.Owner != ObjectOwner.PLAYER)
         {
-            hitObj.BehaviorOfHit(bulletPowers, ElementType.ELEKE);
+            hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+            Disactive();
+        }
+        else if (target.gameObject.tag == "TargetObject")
+        {
             Disactive();
         }
     }
+    void SetTrans()
+    {
+        _muzzleForwardPos = _muzzlePos.position;
+        this.transform.position = _muzzleForwardPos;
+        if (Owner.EnemyVec == PlayerVec.RIGHT)
+        {
+            _speed = 1;
+        }
+        else if (Owner.EnemyVec == PlayerVec.LEFT)
+        {
+            _speed = -1;
+        }
+    }
+
 }

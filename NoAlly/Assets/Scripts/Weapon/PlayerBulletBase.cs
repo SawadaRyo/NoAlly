@@ -76,7 +76,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 
     public void HitMovement(Collider target)
     {
-        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
+        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && hitObj.Owner != ObjectOwner.PLAYER)
         {
             hitObj.BehaviorOfHit(_bulletPowers, _elementType);
             Disactive();

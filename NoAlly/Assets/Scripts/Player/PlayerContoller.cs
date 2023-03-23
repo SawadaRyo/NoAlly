@@ -178,7 +178,7 @@ public class PlayerContoller : MonoBehaviour
     //Player‚Ì“®‚«‚ğˆ—‚ª‘‚©‚ê‚½ŠÖ”-------------------------------------//
     void RotateMethod(Vector2 rotVector)
     {
-        //if (h != 0)
+        if (!_ableInput) return;
         //ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·
         if (rotVector.x == -1)
         {
@@ -290,7 +290,6 @@ public class PlayerContoller : MonoBehaviour
                 }
                 if (jump)
                 {
-                    StartCoroutine(AbleWallKick());
                     Vector3 vec = transform.up + _wallVec;
                     Debug.Log(_wallVec);
                     Vector3 kickPower;
@@ -302,8 +301,9 @@ public class PlayerContoller : MonoBehaviour
                     {
                         kickPower = vec.normalized * _wallJump;
                     }
-
+                    RotateMethod((Vector2)_hitInfo.normal);
                     _rb.AddForce(kickPower, ForceMode.Impulse);
+                    StartCoroutine(AbleWallKick());
                 }
                 break;
             case PlayerClimbWall.GRIPINGEGDE:

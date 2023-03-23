@@ -1,19 +1,21 @@
 using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// 武器のモーションや可視化などの武器にまつわる処理を行うクラス
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
-    [SerializeField,Tooltip("武器のプレハブ")]
+    [SerializeField, Tooltip("武器のプレハブ")]
     ObjectBase _weaponPrefab = null;
     [SerializeField, Header("プレイヤーのアニメーター")]
     Animator _playerAnimator = null;
     [SerializeField, Header("武器の斬撃エフェクト")]
     ParticleSystem _myParticleSystem = default;
 
+    ObservableStateMachineTrigger _trigger = null;
     [Tooltip("メイン武器とサブ武器")]
     WeaponData[] _mainAndSub = new WeaponData[2];
     [Tooltip("装備している武器")]
@@ -25,19 +27,23 @@ public class WeaponProcessing : MonoBehaviour
 
     private void Start()
     {
+        _trigger = _weaponPrefab.ObjectAnimator.GetBehaviour<ObservableStateMachineTrigger>();
         _myParticleSystem.Stop();
     }
     void Update()
     {
-        if (!WeaponMenuHander.Instance.MenuIsOpen && !PlayerAnimationState.Instance.IsAttack)
+        if (!WeaponMenuHander.Instance.MenuIsOpen)
         {
-            SwichWeapon(Input.GetButton("SubWeaponSwitch"));
+            if (!PlayerAnimationState.Instance.IsAttack)
+            {
+                SwichWeapon(Input.GetButton("SubWeaponSwitch"));
+            }
+            WeaponAttack(_playerAnimator);
         }
-        WeaponAttack(_playerAnimator);
     }
     private void OnTriggerEnter(Collider other)
     {
-        TargetWeapon.Base.AttackMovement(other,TargetWeapon.Action);
+        TargetWeapon.Base.AttackMovement(other, TargetWeapon.Action);
     }
     /// <summary>
     /// 武器の入力判定
@@ -94,10 +100,13 @@ public class WeaponProcessing : MonoBehaviour
     public void SetEquipment(WeaponData weaponType, CommandType type)
     {
         _mainAndSub[(int)type] = weaponType;
-        _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)weaponType.Type);
         if (_targetWeapon == null)
         {
             _targetWeapon = _mainAndSub[(int)type];
+        }
+        if (_targetWeapon.Type == _mainAndSub[(int)type].Type)
+        {
+            _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)weaponType.Type);
         }
     }
     /// <summary>
