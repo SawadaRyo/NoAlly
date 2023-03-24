@@ -15,6 +15,11 @@ public class WeaponProcessing : MonoBehaviour
     [SerializeField, Header("武器の斬撃エフェクト")]
     ParticleSystem _myParticleSystem = default;
 
+    [Tooltip("武器が変形中かどうか")]
+    bool _inDeformation = false;
+    [Tooltip("武器切り替えの")]
+    BoolReactiveProperty _isSwtchWeapon = new BoolReactiveProperty();
+    [Tooltip("武器のアニメーションの状態")]
     ObservableStateMachineTrigger _trigger = null;
     [Tooltip("メイン武器とサブ武器")]
     WeaponData[] _mainAndSub = new WeaponData[2];
@@ -29,6 +34,8 @@ public class WeaponProcessing : MonoBehaviour
     {
         _trigger = _weaponPrefab.ObjectAnimator.GetBehaviour<ObservableStateMachineTrigger>();
         _myParticleSystem.Stop();
+        SwichWeapon(_isSwtchWeapon);
+        WeaponState();
     }
     void Update()
     {
@@ -36,7 +43,7 @@ public class WeaponProcessing : MonoBehaviour
         {
             if (!PlayerAnimationState.Instance.IsAttack)
             {
-                SwichWeapon(Input.GetButton("SubWeaponSwitch"));
+                _isSwtchWeapon.Value = Input.GetButton("SubWeaponSwitch");
             }
             WeaponAttack(_playerAnimator);
         }
@@ -51,6 +58,7 @@ public class WeaponProcessing : MonoBehaviour
     public void WeaponAttack(Animator playerAnimator)
     {
         if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
+        if (_inDeformation) return;
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack"))
         {
@@ -75,22 +83,43 @@ public class WeaponProcessing : MonoBehaviour
             }
         }
     }
+    void WeaponState()
+    {
+        IDisposable weaponState = _trigger
+        .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
+        .Subscribe(onStateInfo =>
+        {
+            if (onStateInfo.StateInfo.IsTag("InDeformation"))
+            {
+                _inDeformation = true;
+            }
+            else
+            {
+                _inDeformation = false;
+            }
+        }).AddTo(this);
+    }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数
     /// </summary>
-    public void SwichWeapon(bool weaponSwitch)
+    public void SwichWeapon(BoolReactiveProperty weaponSwitch)
     {
-        _targetWeapon.WeaponEnabled = false;
-        if (!weaponSwitch)
-        {
-            _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
-        }
-        else
-        {
-            _targetWeapon = _mainAndSub[(int)CommandType.SUB];
-        }
-        _targetWeapon.WeaponEnabled = true;
-        _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
+        weaponSwitch
+            .Subscribe(onWeaponSwitch =>
+            {
+                _targetWeapon.WeaponEnabled = false;
+                if (!onWeaponSwitch)
+                {
+                    _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
+                }
+                else
+                {
+                    _targetWeapon = _mainAndSub[(int)CommandType.SUB];
+                }
+                _targetWeapon.WeaponEnabled = true;
+                _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
+                _playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
+            }).AddTo(this);
     }
     /// <summary>
     /// 武器の装備
@@ -100,10 +129,7 @@ public class WeaponProcessing : MonoBehaviour
     public void SetEquipment(WeaponData weaponType, CommandType type)
     {
         _mainAndSub[(int)type] = weaponType;
-        if (_targetWeapon == null)
-        {
-            _targetWeapon = _mainAndSub[(int)type];
-        }
+        _targetWeapon = _mainAndSub[(int)type];
         if (_targetWeapon.Type == _mainAndSub[(int)type].Type)
         {
             _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)weaponType.Type);
@@ -127,6 +153,10 @@ public class WeaponProcessing : MonoBehaviour
         _targetWeapon.Base.WeaponModeToElement(elementType);
     }
 
+    private void OnDisable()
+    {
+        _isSwtchWeapon.Dispose();
+    }
 }
 
 
