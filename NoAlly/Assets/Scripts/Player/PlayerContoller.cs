@@ -242,11 +242,11 @@ public class PlayerContoller : MonoBehaviour
                 {
                     _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0);
                 }
-                else if (Mathf.Abs(_velo.y) > 0.01f)
+                else if (Mathf.Abs(_velo.y) > 0.01f && !_isJump)
                 {
                     _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
                 }
-                _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.x));
+                _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.normalized.x * moveSpeed));
             }
             else
             {
