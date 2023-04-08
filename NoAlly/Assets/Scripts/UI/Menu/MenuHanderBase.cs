@@ -83,7 +83,7 @@ public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
 
             if (Input.GetButtonDown("Decision"))
             {
-                DisideCommand(_targetButton);
+                _targetButton.Disaide(true);
             }
         }
     }
@@ -129,14 +129,6 @@ public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
             if (_crossV < 0) _crossV = _allButtons.GetLength(0) - 1;
         }
         return _allButtons[_crossV];
-    }
-    /// <summary>
-    /// 選択されたボタンに登録された関数を実行する関数
-    /// </summary>
-    /// <param name="targetButton"></param>
-    void DisideCommand(ICommandButton targetButton)
-    {
-        targetButton.Disaide(true);
     }
 
     public void Initialize()
