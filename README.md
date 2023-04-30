@@ -7,3 +7,5 @@
    3.[fix]：コンポーネントを修正するとき  
    4.[delete]：コンポーネントを削除するとき  
 2.git上で管理しないデータはすべて、NoAlly/Assets/IgnoreFiles(UnityAssets)に入れる
+
+#使用しているAsset
