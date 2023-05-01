@@ -6,7 +6,7 @@
    2.[update]：コンポーネントを更新するとき  
    3.[fix]：コンポーネントを修正するとき  
    4.[delete]：コンポーネントを削除するとき  
-2.git上で管理しないデータはすべて、NoAlly/Assets/IgnoreFiles(UnityAssets)に入れる
+2.git上で管理しないデータはすべて、NoAlly/Assets/IgnoreFiles(UnityAssets)に入れる  
 3.開発ツールが膨大になる場合NoAllyObjectsで作業すること。
 
 ## 使用しているAsset
