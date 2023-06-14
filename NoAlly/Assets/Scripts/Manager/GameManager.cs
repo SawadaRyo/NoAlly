@@ -1,7 +1,7 @@
-//GameManager‚Ås‚¤ˆ—
-//1:IsGame‚Ì”»’è
-//2:ƒvƒŒƒCƒ„[‹y‚Ñ“GƒLƒƒƒ‰ƒNƒ^[‚ÌŠÇ—
-//3:ƒ}ƒl[ƒWƒƒ[ŠÇ—
+ï»¿//GameManagerã§è¡Œã†å‡¦ç†
+//1:IsGameã®åˆ¤å®š
+//2:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åŠã³æ•µã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ç®¡ç†
+//3:ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ç®¡ç†
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,12 +9,12 @@ using UnityEngine;
 
 public class GameManager
 {
-    [Tooltip("GameManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX")]
+    [Tooltip("GameManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹")]
     static GameManager _instance = new();
-    [Tooltip("SoundManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX")]
+    [Tooltip("SoundManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹")]
     static SoundManager _instanceSound = new();
 
-    [Tooltip("ƒQ[ƒ€’†‚©‚Ç‚¤‚©”»’è‚·‚é•Ï”")]
+    [Tooltip("ã‚²ãƒ¼ãƒ ä¸­ã‹ã©ã†ã‹åˆ¤å®šã™ã‚‹å¤‰æ•°")]
     GameState _state = GameState.GameStart;
 
     public static GameManager Instance
@@ -23,7 +23,7 @@ public class GameManager
         {
             if (_instance == null)
             {
-                Debug.LogError($"GameManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª‚ ‚è‚Ü‚¹‚ñ");
+                Debug.LogError($"GameManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã‚ã‚Šã¾ã›ã‚“");
             }
             return _instance;
         }
@@ -34,7 +34,7 @@ public class GameManager
         {
             if (_instanceSound == null)
             {
-                Debug.LogError($"SoundManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª‚ ‚è‚Ü‚¹‚ñ");
+                Debug.LogError($"SoundManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã‚ã‚Šã¾ã›ã‚“");
             }
             return _instanceSound;
         }
@@ -53,9 +53,9 @@ public class GameManager
         ChangedState(GameState.GameStart);
     }
     /// <summary>
-    /// ˆø”‚Åw’è‚µ‚½ƒXƒe[ƒg‚Ìˆ—‚ğÀs‚·‚éŠÖ”
+    /// å¼•æ•°ã§æŒ‡å®šã—ãŸã‚¹ãƒ†ãƒ¼ãƒˆæ™‚ã®å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="state">‘JˆÚ‚·‚éƒXƒe[ƒg</param>
+    /// <param name="state">é·ç§»ã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ</param>
     public void ChangedState(GameState state)
     {
 

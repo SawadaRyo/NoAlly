@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
+public class MenuHanderBase : MonoBehaviour, IMenuHander<ICommandButton>
 {
     [SerializeField, Tooltip("ボタン選択のインターバル")]
     float _interval = 0.3f;
@@ -70,7 +70,7 @@ public class MenuHanderBase : MonoBehaviour,IMenuHander<ICommandButton>
         {
             float v = Input.GetAxisRaw("CrossKeyV");
 
-            if (_canMove.IsCountUp() && (v != 0))
+            if (_canMove != null && _canMove.IsCountUp() && (v != 0))
             {
                 ICommandButton b = SelectButton(v);
                 if (b.Command)

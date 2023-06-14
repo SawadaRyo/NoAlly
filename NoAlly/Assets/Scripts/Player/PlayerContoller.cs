@@ -62,7 +62,7 @@ public class PlayerContoller : MonoBehaviour
     PlayerStatus _playerStatus = null;
     [Tooltip("プレイヤーの移動ベクトルを取得")]
     Vector3 _velo = Vector3.zero;
-    [Tooltip("プレイヤーの移動ベクトルを取得")]
+    [Tooltip("プレイヤーの壁の移動ベクトルを取得")]
     Vector3 _wallVec = Vector3.zero;
     [Tooltip("接触しているオブジェクトの情報")]
     RaycastHit _hitInfo;
