@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f10706c16b1304c438d147cea48f8fc8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
+  - _playerContoller: {instanceID: 0}
+  - _weaponEquipment: {instanceID: 0}
+  - _weaponMenuHander: {instanceID: 0}
+  - _weaponVisual: {instanceID: 0}
+  - _weaponProcessing: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
