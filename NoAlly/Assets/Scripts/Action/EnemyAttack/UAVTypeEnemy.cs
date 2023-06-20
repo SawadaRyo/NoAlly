@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
 {
-    [SerializeField,Tooltip("UŒ‚—Í")] 
-    float _power = 3;
-    [SerializeField, Tooltip("‘¬“x")] 
+    [SerializeField, Tooltip("UŒ‚—Í")]
+    float[] _power = new float[4] { 0, 0, 3, 0 };
+    [SerializeField, Tooltip("‘¬“x")]
     float _speed = 2;
-    [SerializeField, Tooltip("‰Á‘¬“x")] 
+    [SerializeField, Tooltip("‰Á‘¬“x")]
     float _moveMagnification = 2f;
-    [SerializeField, Tooltip("UŒ‚”ÍˆÍ")] 
+    [SerializeField, Tooltip("UŒ‚”ÍˆÍ")]
     float _attackRadius = 1.6f;
-    [SerializeField, Tooltip("UŒ‚”ÍˆÍ‚Ì’†S")] 
+    [SerializeField, Tooltip("UŒ‚”ÍˆÍ‚Ì’†S")]
     Transform _attackPos = default;
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("")]
     LayerMask _fieldLayer = ~0;
 
     [Tooltip("")]
@@ -35,9 +35,8 @@ public class UAVTypeEnemy : EnemyBase
     }
     public override void EnemyAttack()
     {
-        if (InSight())
+        if (InSight(out PlayerStatus player))
         {
-            PlayerStatus player = InSight();
             var targetPos = player.transform.position + new Vector3(0f, 1.8f, 0f);
             transform.LookAt(targetPos);
             _distance = (targetPos - transform.position);
@@ -45,7 +44,7 @@ public class UAVTypeEnemy : EnemyBase
             {
                 _currentSpeed = (-_speed * _moveMagnification);
                 _time += Time.deltaTime;
-                if (_time > 1f || !InSight())
+                if (_time > 1f || !InSight(out _))
                 {
                     _hit = false;
                     _time = 0f;
@@ -57,16 +56,20 @@ public class UAVTypeEnemy : EnemyBase
                 IHitBehavorOfAttack playerStatus = CallPlayerGauge();
                 if (playerStatus != null)
                 {
-                    //playerStatus.BehaviorOfHit(,MainMenu.Instance.Type);
+                    playerStatus.BehaviorOfHit(_power, ElementType.ELEKE);
                     _hit = true;
                 }
             }
-            _objectAnimator.SetBool("InSight",InSight());
         }
-        else
-        {
-            _distance = Vector3.zero;
-        }
+        _rb.velocity = _distance.normalized * _currentSpeed;
+    }
+
+    public override void ExitAttackState()
+    {
+        base.ExitAttackState();
+        _hit = false;
+        _currentSpeed = 0f;
+        _time = 0f;
         _rb.velocity = _distance.normalized * _currentSpeed;
     }
 

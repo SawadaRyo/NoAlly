@@ -8,10 +8,10 @@ public class TitlePanelPresenter : MonoBehaviour
     [SerializeField]
     MenuHanderBase _menuBase = null;
     [SerializeField]
-    CommandButton[] _commands = null;
+    //CommandButton[] _commands = null;
 
     public void Initializer()
     {
-        _menuBase.Initialize(_commands);
+        _menuBase.Initialize();
     }
 }

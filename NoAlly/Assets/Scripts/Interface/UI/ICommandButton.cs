@@ -28,12 +28,13 @@ public interface ICommandButton
 }
 public enum ButtonState : int
 {
-    None, //通常
-    Selected, //選択中
-    Disided //決定済み
+    NONE, //通常
+    SELECTED, //選択中
+    DISIDED //決定済み
 }
 public enum CommandType
 {
+    NONE = -1,
     MAIN = 0, //メイン武器
     SUB = 1, //サブ武器
     ELEMENT = 2 //属性

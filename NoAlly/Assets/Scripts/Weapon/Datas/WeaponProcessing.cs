@@ -32,94 +32,32 @@ public class WeaponProcessing : MonoBehaviour
 
     private void Start()
     {
-        _trigger = _weaponPrefab.ObjectAnimator.GetBehaviour<ObservableStateMachineTrigger>();
         _myParticleSystem.Stop();
-        SwichWeapon(_isSwtchWeapon);
-        WeaponState();
     }
-    void Update()
-    {
-        if (!WeaponMenuHander.Instance.MenuIsOpen)
-        {
-            if (!PlayerAnimationState.Instance.IsAttack)
-            {
-                _isSwtchWeapon.Value = Input.GetButton("SubWeaponSwitch");
-            }
-            WeaponAttack(_playerAnimator);
-        }
-    }
+    
     private void OnTriggerEnter(Collider other)
     {
         TargetWeapon.Base.AttackMovement(other, TargetWeapon.Action);
     }
-    /// <summary>
-    /// 武器の入力判定
-    /// </summary>
-    public void WeaponAttack(Animator playerAnimator)
-    {
-        if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
-        if (_inDeformation) return;
-        ////通常攻撃の処理
-        if (Input.GetButtonDown("Attack"))
-        {
-            playerAnimator.SetTrigger("AttackTrigger");
-            playerAnimator.SetInteger("WeaponType", (int)TargetWeapon.Type);
-        }
-        else
-        {
-            //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-            if (Input.GetButton("Attack"))
-            {
-                TargetWeapon.Action.ChargeCount += Time.deltaTime;
-                playerAnimator.SetBool("Charge", true);
-                if (TargetWeapon.Action.ChargeCount > TargetWeapon.Base.ChargeLevels[0])
-                {
-                    playerAnimator.SetTrigger("ChargeAttackTrigger");
-                }
-            }
-            else if (Input.GetButtonUp("Attack"))
-            {
-                playerAnimator.SetBool("Charge", false);
-            }
-        }
-    }
-    void WeaponState()
-    {
-        IDisposable weaponState = _trigger
-        .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
-        .Subscribe(onStateInfo =>
-        {
-            if (onStateInfo.StateInfo.IsTag("InDeformation"))
-            {
-                _inDeformation = true;
-            }
-            else
-            {
-                _inDeformation = false;
-            }
-        }).AddTo(this);
-    }
+    
+    
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数
     /// </summary>
-    public void SwichWeapon(BoolReactiveProperty weaponSwitch)
+    public void SwichWeapon(bool weaponSwitch)
     {
-        weaponSwitch
-            .Subscribe(onWeaponSwitch =>
-            {
-                _targetWeapon.WeaponEnabled = false;
-                if (!onWeaponSwitch)
-                {
-                    _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
-                }
-                else
-                {
-                    _targetWeapon = _mainAndSub[(int)CommandType.SUB];
-                }
-                _targetWeapon.WeaponEnabled = true;
-                _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
-                _playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
-            }).AddTo(this);
+        _targetWeapon.WeaponEnabled = false;
+        if (!weaponSwitch)
+        {
+            _targetWeapon = _mainAndSub[(int)CommandType.MAIN];
+        }
+        else
+        {
+            _targetWeapon = _mainAndSub[(int)CommandType.SUB];
+        }
+        _targetWeapon.WeaponEnabled = true;
+        _weaponPrefab.ObjectAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
+        _playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
     }
     /// <summary>
     /// 武器の装備

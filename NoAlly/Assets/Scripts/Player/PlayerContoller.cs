@@ -100,10 +100,11 @@ public class PlayerContoller : MonoBehaviour
             JumpMethod(_isJump);
             WallJumpMethod(_isJump, _isDash, IsWalled(CurrentNormal(new Vector2(_h, _v))));
         }
+        
     }
     void FixedUpdate()
     {
-        if (GameManager.Instance.IsGame == GameState.InGame)
+        if (GameManager.Instance.IsGame == GameState.InGame && _playerStatus.Living)
         {
             MoveMethod(CurrentNormal(new Vector2(_h, _v)).x, _isDash);
             RotateMethod(CurrentNormal(new Vector2(_h, _v)));

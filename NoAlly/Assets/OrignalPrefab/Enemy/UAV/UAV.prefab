@@ -409,7 +409,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _center: {fileID: 6037765406007133290}
-  _power: 3
+  _power:
+  - 0
+  - 0
+  - 3
+  - 0
   _speed: 2
   _moveMagnification: 2
   _attackRadius: 0.25

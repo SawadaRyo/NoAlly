@@ -16,7 +16,7 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     protected StateMachine<EnemyBase> _stateMachine = null;
 
     public Animator EnemyAnimator => _objectAnimator;
-    public PlayerStatus Player => InSight();
+    public PlayerStatus Player => InSight(out PlayerStatus playerStatus);
     /// <summary>
     /// ステートマシーンのオーナー(自分)を返すプロパティ(読み取り専用)
     /// </summary>
@@ -24,8 +24,10 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
 
     public IObjectGenerator Owner => throw new NotImplementedException();
 
+    public virtual void EnemyIdle() { }
     public virtual void EnemyAttack() { }
     public virtual void EnemyRotate(Transform playerPos) { }
+    public virtual void ExitAttackState() { }
     public virtual void Start() { }
     public void FixedUpdate()
     {
@@ -37,17 +39,18 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerExit(Collider other) { }
 
-    public PlayerStatus InSight()
+    public PlayerStatus InSight(out PlayerStatus playerState)
     {
+        playerState = null;
         Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
             if (s.gameObject.TryGetComponent(out PlayerStatus player))
             {
-                return player;
+                playerState = player;
             }
         }
-        return null;
+        return playerState;
     }
     /// <summary>
     /// オブジェクト有効時に呼ぶ関数
@@ -118,7 +121,7 @@ public class Search : State
                 _rotated = !_rotated;
                 if (_rotated)
                 {
-                    Owner.transform.DORotate(new Vector3(0f,-90f,0f),0.5f);
+                    Owner.transform.DORotate(new Vector3(0f, -90f, 0f), 0.5f);
                 }
                 else
                 {
@@ -138,7 +141,7 @@ public class Attack : State
     protected override void OnEnter(StateMachine<EnemyBase>.State prevState)
     {
         base.OnEnter(prevState);
-        Owner.EnemyAnimator.SetBool("Aiming", true);
+        Owner.EnemyAnimator.SetBool("InSight", true);
         //Owner.StartCoroutine(RapidFire((GunTypeEnemy)Owner));
     }
     protected override void OnUpdate()
@@ -157,7 +160,8 @@ public class Attack : State
     protected override void OnExit(StateMachine<EnemyBase>.State nextState)
     {
         base.OnExit(nextState);
-        Owner.EnemyAnimator.SetBool("Aiming", false);
+        Owner.EnemyAnimator.SetBool("InSight", false);
+        Owner.ExitAttackState();
     }
 }
 public class Death : State

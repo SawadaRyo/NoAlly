@@ -85,7 +85,7 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
             else if (info.IsTag("GroundAttackFinish"))
             {
                 _ableInput = false;
-                _ableMove = false;
+                _ableMove = true;
                 _isAttack = true;
             }
 
