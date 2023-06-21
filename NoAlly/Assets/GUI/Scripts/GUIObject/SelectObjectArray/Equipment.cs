@@ -19,10 +19,12 @@ public class Equipment : SelectObjecArrayBase
     ReactiveProperty<WeaponType> _mainWeapon = new();
     ReactiveProperty<WeaponType> _subWeapon = new();
     ReactiveProperty<ElementType> _elementType = new();
+    BoolReactiveProperty _equiped = new();
 
     public IReadOnlyReactiveProperty<WeaponType> MainWeapon => _mainWeapon;
     public IReadOnlyReactiveProperty<WeaponType> SubWeapon => _subWeapon;
     public IReadOnlyReactiveProperty<ElementType> Element => _elementType;
+    public IReadOnlyReactiveProperty<bool> Equiped => _equiped;
 
     
 
@@ -104,11 +106,13 @@ public class Equipment : SelectObjecArrayBase
                 _subWeapon.Value = _isEquipment.Item2;
                 break;
             case CommandType.ELEMENT:
+                _equiped.Value = true;
                 _elementType.Value = _isEquipment.Item3;
                 break;
             default:
                 break;
         }
+        _equiped.Value = true;
     }
     private void OnDisable()
     {

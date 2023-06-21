@@ -10,12 +10,15 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
     protected Animator _objectAnimator = null;
     [SerializeField, Header("決定時のイベント")]
     protected Button _event;
+    [SerializeField, Header("決定時自分のImageを消すか")]
+    bool _imageDisactiveDoEvent = false;
 
     [Tooltip("ボタンの親関係")]
     protected SelectObjecArrayBase _perent = null;
     [Tooltip("ボタンの状態")]
     protected ButtonState _state = ButtonState.NONE;
 
+    public bool imageDisactiveDoEvent => _imageDisactiveDoEvent;
     public SelectObjecArrayBase Perent => _perent;
     public Button Event => _event;
 
@@ -29,7 +32,10 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
         {
             _objectAnimator.enabled = isActive;
         }
-        Array.ForEach(_objectImage, x => x.enabled = isActive);
+        if (_objectImage != null)
+        {
+            Array.ForEach(_objectImage, x => x.enabled = isActive);
+        }
     }
 
     public virtual void Initialize(SelectObjecArrayBase perent)

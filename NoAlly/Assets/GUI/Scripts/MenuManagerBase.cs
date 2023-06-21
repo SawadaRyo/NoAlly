@@ -16,7 +16,7 @@ public class MenuManagerBase : MonoBehaviour
     [Tooltip("ひとつ前のメニュー画面")]
     SelectObjecArrayBase _beforeMenuPanel = null;
 
-
+    public bool isActive => _isActive;
 
     /// <summary>
     /// 初期化関数
@@ -60,8 +60,11 @@ public class MenuManagerBase : MonoBehaviour
     /// <param name="y"></param>
     public void SelectTargetButton(int x, int y)
     {
-        _targetButton.IsSelect(false);
-        _targetButton = _currentMenuPanel.Select(x, y);
+        if (_isActive)
+        {
+            _targetButton.IsSelect(false);
+            _targetButton = _currentMenuPanel.Select(x, y);
+        }
     }
 
     /// <summary>
@@ -69,12 +72,17 @@ public class MenuManagerBase : MonoBehaviour
     /// </summary>
     public void OnDisaide()
     {
+        if (!_isActive) return;
         if (_targetButton is SelectObjecArrayBase selectObjecArray)
         {
             _targetButton.IsSelect(false); //直前まで展開していた画面/ボタンを閉じる
+            if (_targetButton.imageDisactiveDoEvent)
+            {
+                _targetButton.ActiveUIObject(false);
+            }
             _beforeMenuPanel = selectObjecArray.Perent; //ひとつ前の画面/ボタンを指定
             _currentMenuPanel = selectObjecArray; //現在の画面/ボタンを指定
-            Array.ForEach(_currentMenuPanel.Childlen, childlen =>  Array.ForEach(childlen.ChildArrays, x => x.ActiveUIObject(true))); //子オブジェクトを表示
+            Array.ForEach(_currentMenuPanel.Childlen, childlen => Array.ForEach(childlen.ChildArrays, x => x.ActiveUIObject(true))); //子オブジェクトを表示
 
             if (_currentMenuPanel.ButtonTween)
             {
@@ -118,12 +126,17 @@ public class MenuManagerBase : MonoBehaviour
             });
             _currentMenuPanel = _beforeMenuPanel;
 
+
             if (_currentMenuPanel.Perent
              && _currentMenuPanel.Perent is SelectObjecArrayBase selectObjecPerent)
             {
                 _beforeMenuPanel = selectObjecPerent;
             }
             _targetButton = _currentMenuPanel.Select();
+            if (_targetButton.imageDisactiveDoEvent)
+            {
+                _targetButton.ActiveUIObject(true);
+            }
         }
     }
 }
