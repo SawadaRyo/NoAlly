@@ -19,7 +19,8 @@ public interface ISelectObject
     /// <summary>
     /// ボタンのイベントを実行する
     /// </summary>
-    public void DoEvent(bool isDoEvent);
+    public void Disided();
+    public void Canseled();
     /// <summary>
     /// メニュー展開時実行関数
     /// </summary>

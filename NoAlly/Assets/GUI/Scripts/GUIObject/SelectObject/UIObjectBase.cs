@@ -76,12 +76,13 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
         }
         _objectAnimator.SetBool("IsSelect", isSelect);
     }
-    public void DoEvent(bool isDoEvent)
+    public void Disided()
     {
-        if (isDoEvent)
-        {
-            _event.onClick.Invoke();
-        }
+        _event.onClick.Invoke();
+    }
+    public virtual void Canseled()
+    {
+
     }
     public virtual void MenuExtended()
     {

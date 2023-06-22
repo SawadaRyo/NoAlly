@@ -106,13 +106,13 @@ public class Equipment : SelectObjecArrayBase
                 _subWeapon.Value = _isEquipment.Item2;
                 break;
             case CommandType.ELEMENT:
-                _equiped.Value = true;
+                _equiped.SetValueAndForceNotify(true);
                 _elementType.Value = _isEquipment.Item3;
                 break;
             default:
                 break;
         }
-        _equiped.Value = true;
+        _equiped.SetValueAndForceNotify(true);
     }
     private void OnDisable()
     {

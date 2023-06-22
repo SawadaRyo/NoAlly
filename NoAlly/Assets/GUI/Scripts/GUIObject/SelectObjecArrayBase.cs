@@ -40,12 +40,12 @@ public class SelectObjecArrayBase : UIObjectBase
             Array.ForEach(childlen.ChildArrays, x => x.MenuClosed());
         });
     }
-    public UIObjectBase Select()
+    public UIObjectBase SelectChildlen()
     {
         _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1].IsSelect(true);
         return _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1];
     }
-    public UIObjectBase Select(int x, int y)
+    public UIObjectBase SelectChildlen(int x, int y)
     {
         if (x < 0)
         {
@@ -83,5 +83,4 @@ public class SelectObjecArrayBase : UIObjectBase
         _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1].IsSelect(true);
         return _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1];
     }
-
 }

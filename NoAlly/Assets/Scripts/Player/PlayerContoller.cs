@@ -52,7 +52,7 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField, Header("Animationを取得する為の変数")]
     Animator _animator = null;
 
-    [Tooltip("壁キックのインターバル")]
+    [Tooltip("入力可能かどうか")]
     bool _ableInput = true;
     [Tooltip("PlayerAnimationStateを格納する変数")]
     PlayerAnimationState _animState;
@@ -69,14 +69,14 @@ public class PlayerContoller : MonoBehaviour
 
     bool[] _isClimbWall = new bool[3];
     bool _clinbing = false;
+    bool _ableJumpInput = true;
     [SerializeField, Header("接地、接触判定のposition")]
     Transform[] _isClimbWallPos = new Transform[3];
 
-
+    public bool ableJumpInput { get => _ableJumpInput; set => _ableJumpInput = value; }
     public Rigidbody Rb => _rb;
     public PlayerVec Vec => _playerVec;
     public RaycastHit HitInfo => _hitInfo;
-    //public Vector3 NormalOfStickingWall { get; private set; } = Vector3.zero;
 
 
     void Start()
@@ -97,10 +97,13 @@ public class PlayerContoller : MonoBehaviour
             _isDash = Input.GetButton("Dash");
             _isJump = Input.GetButtonDown("Jump");
 
-            JumpMethod(_isJump);
-            WallJumpMethod(_isJump, _isDash, IsWalled(CurrentNormal(new Vector2(_h, _v))));
+            if (_ableJumpInput)
+            {
+                JumpMethod(_isJump);
+                WallJumpMethod(_isJump, _isDash, IsWalled(CurrentNormal(new Vector2(_h, _v))));
+            }
         }
-        
+
     }
     void FixedUpdate()
     {
@@ -247,14 +250,13 @@ public class PlayerContoller : MonoBehaviour
                 {
                     _rb.velocity = new Vector3(_velo.x, _velo.y, 0);
                 }
-                _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.normalized.x * moveSpeed));
             }
             else
             {
-                _animator.SetFloat("MoveSpeed", 0);
+                //_animator.SetFloat("MoveSpeed", 0);
             }
         }
-
+        _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.normalized.x * moveSpeed));
     }
     /// <summary>
     /// プレイヤーのジャンプ
@@ -331,6 +333,12 @@ public class PlayerContoller : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         _ableInput = true;
     }
+    /// <summary>
+    /// よじ登り
+    /// </summary>
+    /// <param name="endPoint">よじ登る終点</param>
+    /// <param name="duration">よじ登るのにかかる時間</param>
+    /// <returns></returns>
     IEnumerator Climbing(Vector3 endPoint, float duration)
     {
         float time = 0;

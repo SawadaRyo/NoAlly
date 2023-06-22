@@ -24,7 +24,7 @@ public class MenuManagerBase : MonoBehaviour
     public void Initialize()
     {
         _firstSelectObjects.Initialize(null);
-        _targetButton = _firstSelectObjects.Select(0, 0);
+        _targetButton = _firstSelectObjects.SelectChildlen(0, 0);
         _currentMenuPanel = _firstSelectObjects;
     }
 
@@ -42,7 +42,7 @@ public class MenuManagerBase : MonoBehaviour
             {
                 Array.ForEach(childlen.ChildArrays, x => x.MenuExtended());
             });
-            _targetButton = _firstSelectObjects.Select();
+            _targetButton = _firstSelectObjects.SelectChildlen();
         }
         else
         {
@@ -63,7 +63,7 @@ public class MenuManagerBase : MonoBehaviour
         if (_isActive)
         {
             _targetButton.IsSelect(false);
-            _targetButton = _currentMenuPanel.Select(x, y);
+            _targetButton = _currentMenuPanel.SelectChildlen(x, y);
         }
     }
 
@@ -88,11 +88,11 @@ public class MenuManagerBase : MonoBehaviour
             {
                 _currentMenuPanel.ButtonTween.ExtendsButton(true).Forget();
             }
-            _targetButton = _currentMenuPanel.Select(); //現在の画面/ボタンを選択
+            _targetButton = _currentMenuPanel.SelectChildlen(); //現在の画面/ボタンを選択
         }
         if (_targetButton.Event)
         {
-            _targetButton.DoEvent(true);
+            _targetButton.Disided();
         }
     }
 
@@ -119,7 +119,7 @@ public class MenuManagerBase : MonoBehaviour
                 await UniTask.WaitUntil(() => flag);
             }
             _currentMenuPanel.IsSelect(false);
-            _currentMenuPanel.DoEvent(false);
+            _currentMenuPanel.Disided();
             Array.ForEach(_currentMenuPanel.Childlen, childlen =>
             {
                 Array.ForEach(childlen.ChildArrays, x => x.ActiveUIObject(false));
@@ -132,7 +132,7 @@ public class MenuManagerBase : MonoBehaviour
             {
                 _beforeMenuPanel = selectObjecPerent;
             }
-            _targetButton = _currentMenuPanel.Select();
+            _targetButton = _currentMenuPanel.SelectChildlen();
             if (_targetButton.imageDisactiveDoEvent)
             {
                 _targetButton.ActiveUIObject(true);

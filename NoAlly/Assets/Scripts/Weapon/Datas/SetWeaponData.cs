@@ -51,7 +51,7 @@ namespace DataOfWeapon
 }
 
 
-
+[Serializable]
 public class WeaponData
 {
     [Tooltip("•Ší‚ğg—p‚µ‚Ä‚¢‚é‚©")]
@@ -73,6 +73,11 @@ public class WeaponData
         _base = @base;
         _action = action;
         _type = type;
+    }
+    public void SetActAndBase(IWeaponBase @base, IWeaponAction action)
+    {
+        _base = @base;
+        _action = action;
     }
 }
 

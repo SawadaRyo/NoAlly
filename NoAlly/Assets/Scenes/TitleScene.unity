@@ -206,6 +206,8 @@ GameObject:
   - component: {fileID: 422496666}
   - component: {fileID: 422496665}
   - component: {fileID: 422496667}
+  - component: {fileID: 422496669}
+  - component: {fileID: 422496668}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Canvas
@@ -307,10 +309,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 422496660}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b73a8f6b741254a88d812daa2f5c7b, type: 3}
+  m_Script: {fileID: 11500000, guid: edf95a90cbc0eb54c844bbf18debd139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interval: 0.3
+  _firstSelectObjects: {fileID: 748673790}
 --- !u!95 &422496666
 Animator:
   serializedVersion: 5
@@ -343,10 +345,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02421cc6221ff4295e9e33562a02b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _menuBase: {fileID: 422496665}
-  _commands:
-  - {fileID: 1206860505}
-  - {fileID: 768153636}
+  _menuBase: {fileID: 422496668}
+  _menuManagerBase: {fileID: 422496665}
+--- !u!114 &422496668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422496660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b3ce47f1f087b4995c582575eca8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interval: 0.3
+--- !u!114 &422496669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422496660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5175e9f692db4934ca56c63b43364d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _menuHander: {fileID: 422496668}
+  _playerContoller: {fileID: 0}
+  _menuManager: {fileID: 422496665}
 --- !u!1 &527981230
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,6 +462,7 @@ GameObject:
   - component: {fileID: 748673787}
   - component: {fileID: 748673789}
   - component: {fileID: 748673788}
+  - component: {fileID: 748673790}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
@@ -500,6 +529,29 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &748673790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748673786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495412a38745e3b48b2c993d55bbc1ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectImage: []
+  _objectAnimator: {fileID: 0}
+  _event: {fileID: 0}
+  _imageDisactiveDoEvent: 0
+  _depthOfMenu: 0
+  _buttonArrayExtend: {fileID: 0}
+  _childlenArray:
+  - _childArray:
+    - {fileID: 1206860505}
+  - _childArray:
+    - {fileID: 768153636}
 --- !u!1 &768153630
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,15 +700,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 768153630}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb4c0052d33fca4bb4e7111ac7fff86, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bc388601ca66d94192a08249e83a7a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 768153633}
-  _animator: {fileID: 768153635}
-  _buttonColors:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _commandType: 0
+  _objectImage: []
+  _objectAnimator: {fileID: 768153635}
+  _event: {fileID: 768153633}
+  _imageDisactiveDoEvent: 0
 --- !u!1 &875637358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,15 +1175,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1206860498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb4c0052d33fca4bb4e7111ac7fff86, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bc388601ca66d94192a08249e83a7a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 1206860500}
-  _animator: {fileID: 1206860504}
-  _buttonColors:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _commandType: 0
+  _objectImage: []
+  _objectAnimator: {fileID: 1206860504}
+  _event: {fileID: 1206860500}
+  _imageDisactiveDoEvent: 0
 --- !u!1 &1226305603
 GameObject:
   m_ObjectHideFlags: 0
