@@ -113,13 +113,7 @@ public class PlayerContoller : MonoBehaviour
             RotateMethod(CurrentNormal(new Vector2(_h, _v)));
         }
     }
-    //void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Vector3 isGroundCenter = m_footPos.transform.position;
-    //    Ray ray = new Ray(isGroundCenter, Vector3.right);
-    //    Gizmos.DrawRay(ray);
-    //}
+
     Vector2 CurrentNormal(Vector2 inputVector)
     {
         float h = 0;
@@ -142,15 +136,15 @@ public class PlayerContoller : MonoBehaviour
     /// <summary>
     /// 接壁判定
     /// </summary>
-    public PlayerClimbWall IsWalled(Vector2 currentNormal)
+    public PlayerWallState IsWalled(Vector2 currentNormal)
     {
-        if (IsGrounded()) return PlayerClimbWall.NONE;
-        else if (Mathf.Abs(_h) < 0.01f) return PlayerClimbWall.NONE;
+        if (IsGrounded()) return PlayerWallState.None;
+        else if (Mathf.Abs(_h) < 0.01f) return PlayerWallState.None;
         int hitCount = 0;
         for (int i = 0; i < _isClimbWallPos.Length; i++)
         {
             Ray isWallOnRay = new(_isClimbWallPos[i].transform.position, new Vector3(currentNormal.normalized.x, 1f, 0f));
-            _isClimbWall[i] = Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerClimbWall.GRIPING]);
+            _isClimbWall[i] = Physics.Raycast(isWallOnRay, out _hitInfo, _walldistance, _wallMask[(int)PlayerWallState.Griping]);
             if (_isClimbWall[i])
             {
                 hitCount++;
@@ -159,14 +153,14 @@ public class PlayerContoller : MonoBehaviour
         if (hitCount == _isClimbWallPos.Length)
         {
             _wallVec = new Vector3(currentNormal.x, 0f, 0f).normalized * -1f;
-            return PlayerClimbWall.GRIPING;
+            return PlayerWallState.Griping;
         }
         else if (!_isClimbWall[0] && _isClimbWall[1] && _isClimbWall[2]
               || !_isClimbWall[0] && !_isClimbWall[1] && _isClimbWall[2])
         {
-            return PlayerClimbWall.GRIPINGEGDE;
+            return PlayerWallState.GripingEdge;
         }
-        return PlayerClimbWall.NONE;
+        return PlayerWallState.None;
     }
     /// <summary>
     /// 接地判定
@@ -188,19 +182,19 @@ public class PlayerContoller : MonoBehaviour
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.LEFT;
+            _playerVec = PlayerVec.Left;
         }
         else if (rotVector.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.RIGHT;
+            _playerVec = PlayerVec.Right;
         }
         else if (rotVector.y == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.UP;
+            _playerVec = PlayerVec.Up;
         }
     }
     /// <summary>
@@ -212,7 +206,7 @@ public class PlayerContoller : MonoBehaviour
         //プレイヤーの移動
         if (_animState.AbleMove)
         {
-            if (IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerClimbWall.NONE)
+            if (IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerWallState.None)
             {
                 if (dash)
                 {
@@ -224,13 +218,13 @@ public class PlayerContoller : MonoBehaviour
                 }
                 //_beforeSpeed = moveSpeed;
             }
-            else if (!IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerClimbWall.NONE)
+            else if (!IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerWallState.None)
             {
                 if (dash)
                 {
                     moveSpeed = _dashSpeed;
                 }
-                else if (!dash || IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerClimbWall.NONE)
+                else if (!dash || IsWalled(CurrentNormal(new Vector2(_h, _v))) != PlayerWallState.None)
                 {
                     moveSpeed = _speed;
                 }
@@ -275,15 +269,15 @@ public class PlayerContoller : MonoBehaviour
     /// <summary>
     /// プレイヤーの壁ジャンプ
     /// </summary>
-    void WallJumpMethod(bool jump, bool isDash, PlayerClimbWall climbWall)
+    void WallJumpMethod(bool jump, bool isDash, PlayerWallState climbWall)
     {
         switch (climbWall)
         {
-            case PlayerClimbWall.NONE:
+            case PlayerWallState.None:
                 _animator.SetBool("WallGrip", false);
                 _slideWall = false;
                 return;
-            case PlayerClimbWall.GRIPING:
+            case PlayerWallState.Griping:
                 _animator.SetBool("WallGrip", true);
                 if (!_slideWall)
                 {
@@ -309,7 +303,7 @@ public class PlayerContoller : MonoBehaviour
                     StartCoroutine(AbleWallKick());
                 }
                 break;
-            case PlayerClimbWall.GRIPINGEGDE:
+            case PlayerWallState.GripingEdge:
                 if (!_clinbing && _hitInfo.collider.TryGetComponent(out BoxCollider col))
                 {
                     _slideWall = false;
@@ -371,21 +365,4 @@ public class PlayerContoller : MonoBehaviour
         Gizmos.DrawRay(_isClimbWallPos[2].position, transform.forward * _walldistance);
     }
 }
-public enum PlayerVec
-{
-    NONE,
-    RIGHT,
-    LEFT,
-    UP
-}
-public enum PlayerClimbWall
-{
-    NONE = -1,
-    GRIPING = 0,
-    GRIPINGEGDE = 1
-}
-public enum GroundStatus
-{
-    NONE = -1,
-    NORMAL = 0,
-}
+

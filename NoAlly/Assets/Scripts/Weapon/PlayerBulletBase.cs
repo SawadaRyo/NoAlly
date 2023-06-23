@@ -90,11 +90,11 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     {
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
-        if (Owner.playerVec == PlayerVec.RIGHT)
+        if (Owner.playerVec == PlayerVec.Right)
         {
             _speed = 1;
         }
-        else if (Owner.playerVec == PlayerVec.LEFT)
+        else if (Owner.playerVec == PlayerVec.Left)
         {
             _speed = -1;
         }
