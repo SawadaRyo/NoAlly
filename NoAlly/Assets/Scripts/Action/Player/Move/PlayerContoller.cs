@@ -17,10 +17,12 @@ public class PlayerContoller : MonoBehaviour
     float _v;
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
-    [Tooltip("プレイヤーカメラ")]
-    Camera _playerCamera = null;
     [Tooltip("Playerの向き")]
     PlayerVec _playerVec;
+
+    [Header("Camera")]
+    [SerializeField,Tooltip("プレイヤーカメラ")]
+    Camera _playerCamera = null;
 
     [Header("Jump")]
     [SerializeField, Header("プレイヤーのジャンプ力")]

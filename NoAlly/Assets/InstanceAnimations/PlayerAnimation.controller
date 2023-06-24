@@ -201,7 +201,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 190680f7b7b3759428463cbba9ddaaef, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9933caef172aeb14dba2f60169f3ab62, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -4603,7 +4603,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e82b2e7e938faee43883e8ec65799e42, type: 2}
+  m_Motion: {fileID: 7400000, guid: 0a3da50c35467c64aab23ff3732824d8, type: 2}
   m_Tag: GroundAttack
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -5805,7 +5805,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SwordAttackFinish
-  m_Speed: 1.5
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7416243449632485547}
@@ -5818,7 +5818,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 9933caef172aeb14dba2f60169f3ab62, type: 2}
+  m_Motion: {fileID: 7400000, guid: 190680f7b7b3759428463cbba9ddaaef, type: 2}
   m_Tag: GroundAttackFinish
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -7061,7 +7061,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.18507776
+  m_TransitionDuration: 0.03769523
   m_TransitionOffset: 0.28990507
   m_ExitTime: 0.5758387
   m_HasExitTime: 1
@@ -7723,7 +7723,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SwordAttack2
-  m_Speed: 1.2
+  m_Speed: 1.1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 7602904985535757604}
@@ -7737,7 +7737,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 0a3da50c35467c64aab23ff3732824d8, type: 2}
+  m_Motion: {fileID: 7400000, guid: e82b2e7e938faee43883e8ec65799e42, type: 2}
   m_Tag: GroundAttack
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -7954,11 +7954,11 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: 6741763883901356632}
+    second: []
   - first: {fileID: 791598476913637511}
     second: []
   - first: {fileID: 944806798494019495}
-    second: []
-  - first: {fileID: 6741763883901356632}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}

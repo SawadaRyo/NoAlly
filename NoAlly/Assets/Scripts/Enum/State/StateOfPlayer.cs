@@ -13,9 +13,11 @@ public enum StateOfPlayer
     Dash,
     Death,
 
-    Ground,
-    Wall,
-    Ari,
+    OnGround,
+    GripingWall,
+    GripingWallEdge,
+    HangingWallEgde,
+    InAri,
 
     Right,
     Left,
