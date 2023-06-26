@@ -3,11 +3,11 @@
 [CreateAssetMenu(fileName = "Sound", menuName = "ScriptableObjects/SoundScriptable", order = 1)]
 public class SoundScriptable : ScriptableObject
 {
-    [SerializeField,Tooltip("サウンドの種類")]
+    [SerializeField,Header("サウンドの種類")]
     SoundUsage _soundUsage;
-    [SerializeField, Tooltip("サウンドを再生するオブジェクト")]
+    [SerializeField, Header("サウンドを再生するオブジェクト")]
     SoundObject _soundPlayer = null;
-    [SerializeField, Tooltip("サウンドの配列")]
+    [SerializeField, Header("サウンドの配列")]
     SoundArray _soundAllay;
 
     public SoundUsage Usage => _soundUsage;

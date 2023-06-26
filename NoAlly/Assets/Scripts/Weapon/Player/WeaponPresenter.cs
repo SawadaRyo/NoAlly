@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UniRx;
 using DataOfWeapon;
@@ -11,10 +12,14 @@ public class WeaponPresenter : MonoBehaviour
     [Header("Model")]
     [SerializeField]
     SetWeaponData _weaponDatas = null;
-    [SerializeField, Header("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
-    Equipment[] _weaponEquipment = null;
     [SerializeField]
     WeaponInput _weaponInput = null;
+    [SerializeField, Tooltip("")]
+    MenuManagerBase _menuManager = null;
+
+    [Tooltip("WeaponEquipment‚ğŠi”[‚·‚éŠÖ”")]
+    Equipment[] _weaponEquipment = null;
+    [Tooltip("ƒƒjƒ…[“à‚ÌEquipment")]
     ReactiveCollection<Equipment> _equipment = new();
 
     [Space(15)]
@@ -32,6 +37,7 @@ public class WeaponPresenter : MonoBehaviour
     void Awake()
     {
         _weaponDatas.Initialize(_weaponScriptableObjects);
+        _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>().OrderBy(x => x.commandType).ToArray();
         for (int i = 0; i < _weaponEquipment.Length; i++)
         {
             int index = i;
@@ -72,7 +78,7 @@ public class WeaponPresenter : MonoBehaviour
                 }
             }).AddTo(this);
         _weaponEquipment[index].Equiped.Skip(1)
-            .Subscribe(equiped => 
+            .Subscribe(equiped =>
             {
                 _weaponInput.TargetWeapon = _weaponProcessing.SetEquipment(_isSwitch);
                 _weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);

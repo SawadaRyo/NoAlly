@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuManagerBase : MonoBehaviour
@@ -17,6 +18,7 @@ public class MenuManagerBase : MonoBehaviour
     SelectObjecArrayBase _beforeMenuPanel = null;
 
     public bool isActive => _isActive;
+    public List<T> GetComponentButtonList<T>() where T : UIObjectBase => _firstSelectObjects.SelectChildlen<T>();
 
     /// <summary>
     /// ‰Šú‰»ŠÖ”

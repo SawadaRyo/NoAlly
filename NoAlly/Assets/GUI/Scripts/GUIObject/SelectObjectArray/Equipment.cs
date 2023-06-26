@@ -25,6 +25,7 @@ public class Equipment : SelectObjecArrayBase
     public IReadOnlyReactiveProperty<WeaponType> SubWeapon => _subWeapon;
     public IReadOnlyReactiveProperty<ElementType> Element => _elementType;
     public IReadOnlyReactiveProperty<bool> Equiped => _equiped;
+    public CommandType commandType => _commandType;
 
     
 

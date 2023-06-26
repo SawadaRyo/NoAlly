@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DimensionalArray;
 using System;
@@ -82,5 +84,31 @@ public class SelectObjecArrayBase : UIObjectBase
         }
         _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1].IsSelect(true);
         return _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1];
+    }
+
+    /// <summary>
+    /// ボタンオブジェクト検索(実行時に使用推奨)
+    /// </summary>
+    /// <typeparam name="T">検索するボタンオブジェクトの型</typeparam>
+    /// <returns>このクラスの子オブジェクトにある検索対象の配列</returns>
+    public List<T> SelectChildlen<T>()
+        where T : UIObjectBase
+    {
+        List<T> result = new();
+        foreach (var childlen in _childlenArray)
+        {
+            for(int i = 0;i < childlen.ChildArrays.Length;i++)
+            {
+                if (childlen.ChildArrays[i] is T r)
+                {
+                    result.Add(r);
+                }
+                else if (childlen.ChildArrays[i] is SelectObjecArrayBase child)
+                {
+                    result.AddRange(child.SelectChildlen<T>());
+                }
+            }
+        }
+        return result;
     }
 }
