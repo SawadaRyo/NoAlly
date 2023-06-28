@@ -5,8 +5,6 @@ using UnityEngine;
 
 static public class HitMaps
 {
-    static public StateOfPlayer HitObjMapToWall(bool[] isPlayerPart) => _hitObjMapToWall[isPlayerPart];
-
     static Dictionary<bool[], StateOfPlayer> _hitObjMapToWall = new()
     {   
         //壁に掴まっている
@@ -20,4 +18,14 @@ static public class HitMaps
         //足をかけて登っている
         {new bool[]{ false,false,true },StateOfPlayer.HangingWallEgde}//足のみ当たっている
     };
+
+
+    static public StateOfPlayer HitObjMapToWall(bool[] isPlayerPart)
+    {
+        if (!_hitObjMapToWall.ContainsKey(isPlayerPart))
+        {
+            return StateOfPlayer.None;
+        }
+        return _hitObjMapToWall[isPlayerPart];
+    }
 }

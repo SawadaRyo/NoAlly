@@ -14,62 +14,79 @@ public class PlayerMoveInput : MonoBehaviour
     [SerializeField]
     Rigidbody _rb = null;
 
-    bool _ableJump = true;
     float _h = 0f;
     float _v = 0f;
     Vector2 _currentMoveVector = Vector2.zero;
     RaycastHit _hitInfo;
     BoolReactiveProperty _isJump = new();
+    bool _ableJump = true;
     BoolReactiveProperty _isDash = new();
     BoolReactiveProperty _onGroundPlayer = new();
-    ReactiveProperty<StateOfPlayer> _playerLocation = new();
+    ReactiveProperty<Vector2> _currentMove = new();
+    ReactiveProperty<(bool,StateOfPlayer)> _currentLocation = new();
 
     delegate void PlayerInputUpdate();
     PlayerInputUpdate _playerInputUpdate;
 
+    public IReadOnlyReactiveProperty<bool> IsDash => _isDash;
+    public IReadOnlyReactiveProperty<(bool, StateOfPlayer)> CurrentLocation => _currentLocation;
+    public IReadOnlyReactiveProperty<Vector2> CurrentMove => _currentMove;
+
     void Start()
     {
         _stateJudge.Initialize();
-        _playerAnimator.Initialize(this);
+        _playerAnimator.MoveAnimation(this);
+        OnEvent();
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                OnEvent();
                 OnUpdate();
+                _playerInputUpdate();
             }).AddTo(this);
     }
 
     void OnEvent()
     {
-        _onGroundPlayer
-            .Subscribe(onGroundPlayer =>
+        _currentLocation
+            .Subscribe(playerLocation =>
             {
-                if(onGroundPlayer)
+                if(playerLocation.Item1)
                 {
-                    _playerLocation.Value = StateOfPlayer.OnGround;
+                    _playerInputUpdate = UpdateOnGround;
+                    if (!_ableJump) _ableJump = true;
                 }
                 else
                 {
-                    _playerLocation.Value = StateOfPlayer.InAri;
+                    switch (playerLocation.Item2)
+                    {
+                        case StateOfPlayer.GripingWall:
+                            if (!_ableJump) _ableJump = true;
+                            break;
+                        case StateOfPlayer.InAri:
+                            _playerInputUpdate = UpdateInAir;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }).AddTo(this);
+            });
         _isDash
             .Skip(1)
-            .Where(_isDash => true)
+            .Where(_ =>_isDash.Value == true)
             .Subscribe(isDash =>
             {
-                ActorMove.DodgeVec(_playerParamater.dashSpeed);
+                ActorMove.DodgeVec(_rb,_currentMoveVector,_playerParamater.dashSpeed);
             }).AddTo(this);
         _isJump
             .Skip(1)
-            .Where(isJump => true)
+            .Where(_ => _isJump.Value == true)
             .Subscribe(isJump =>
             {
                 if (!_ableJump) return;
                 ActorMove.ActorJumpMethod(_playerParamater.jumpPower
                                         , _rb
                                         , _currentMoveVector
-                                        , _playerLocation.Value);
+                                        , _currentLocation.Value);
                 _ableJump = false;
             }).AddTo(this);
     }
@@ -79,36 +96,43 @@ public class PlayerMoveInput : MonoBehaviour
         _h = Input.GetAxisRaw("Horizontal");
         _v = Input.GetAxisRaw("Vertical");
         _isJump.Value = Input.GetButtonDown("Jump");
-        _currentMoveVector = _stateJudge.CurrentMoveVector(_h, _v);
-        _onGroundPlayer.Value = _stateJudge.IsGrounded(_playerParamater.isGroundRengeRadios
+
+        _currentMoveVector = _stateJudge.CurrentMoveVector(_h, _v); //現在のプレイヤーの進行方向を代入
+        _onGroundPlayer.Value = _stateJudge.IsGrounded(_playerParamater.isGroundRengeRadios //接地判定を代入
                                                 , _playerParamater.graundDistance
                                                 , _playerParamater.groundMask
                                                 , out _hitInfo);
-        switch (_playerLocation.Value)
-        {
-            case StateOfPlayer.OnGround:
-                _isDash.Value = Input.GetButtonDown("Dash");
-                break;
-            case StateOfPlayer.InAri:
-                StateOfPlayer playerLocation = _stateJudge.IsHitWall(_playerParamater.walldistance
-                                                    , _currentMoveVector
-                                                    , _playerParamater.wallMask
-                                                    , out RaycastHit[] hitInfo);
-                ActorMove.BehaviourInWall(_playerParamater.wallSlideSpeed, _rb, hitInfo, playerLocation);
-                break;
-            default:
-                break;
-        }
+
+        StateOfPlayer playerLocation = _stateJudge.IsHitWall(_playerParamater.walldistance
+                                                            , _currentMoveVector
+                                                            , _playerParamater.wallMask
+                                                            , out RaycastHit[] hitInfo);
         Vector3 moveVec = ActorMove.MoveMethod(_currentMoveVector.x, _playerParamater.speed, _rb, _hitInfo.normal);
         _rb.velocity = moveVec;
+        _currentMove.SetValueAndForceNotify(_rb.velocity);
         ActorMove.RotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector);
     }
+
+    void UpdateOnGround()
+    {
+        _isDash.Value = Input.GetButtonDown("Dash");
+    }
+    void UpdateInAir()
+    {
+        StateOfPlayer playerLocation = _stateJudge.IsHitWall(_playerParamater.walldistance
+                                                            , _currentMoveVector
+                                                            , _playerParamater.wallMask
+                                                            , out RaycastHit[] hitInfo);
+        ActorMove.BehaviourInWall(_playerParamater.wallSlideSpeed, _rb, hitInfo, playerLocation);
+    }
+
     void OnDisable()
     {
         _isDash.Dispose();
         _isJump.Dispose();
         _onGroundPlayer.Dispose();
-        _playerLocation.Dispose();
+        _currentMove.Dispose();
+        _currentLocation.Dispose();
     }
 
     private void OnDrawGizmos()

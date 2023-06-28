@@ -13,7 +13,7 @@ public class WeaponPresenter : MonoBehaviour
     [SerializeField]
     SetWeaponData _weaponDatas = null;
     [SerializeField]
-    WeaponInput _weaponInput = null;
+    InputToWeapon _weaponInput = null;
     [SerializeField, Tooltip("")]
     MenuManagerBase _menuManager = null;
 

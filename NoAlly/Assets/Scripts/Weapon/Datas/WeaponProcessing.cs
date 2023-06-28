@@ -4,7 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 
 /// <summary>
-/// 武器のモーションや可視化などの武器にまつわる処理を行うクラス
+/// 攻撃判定や切り替えなど武器ににまつわる処理を行うクラス
 /// </summary>
 public class WeaponProcessing : MonoBehaviour
 {
@@ -29,7 +29,7 @@ public class WeaponProcessing : MonoBehaviour
 
     public ObjectBase WeaponPrefab => _weaponPrefab;
     public ParticleSystem MyParticleSystem => _myParticleSystem;
-    public WeaponData TargetWeapon { get => _targetWeapon; set => _targetWeapon = value; }
+    public WeaponData TargetWeapon  => _targetWeapon;
 
     private void Start()
     {

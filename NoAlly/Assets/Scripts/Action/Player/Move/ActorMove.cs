@@ -80,17 +80,9 @@ public static class ActorMove
     /// </summary>
     /// <param name="DashPower"></param>
     /// <returns></returns>
-    static public Vector3 DodgeVec(float DashPower = 10f)
+    static public Vector3 DodgeVec(Rigidbody rb, Vector2 currentVec, float DashPower = 10f)
     {
-        switch (_playerVec)
-        {
-            case PlayerVec.Right:
-                return new Vector3(DashPower, 0f, 0f);
-            case PlayerVec.Left:
-                return new Vector3(-DashPower, 0f, 0f);
-            default:
-                return Vector3.zero;
-        }
+        return new Vector3(currentVec.x * DashPower, currentVec.y + rb.velocity.y, 0f);
     }
     /// <summary>
     /// プレイヤーのジャンプ
@@ -99,29 +91,24 @@ public static class ActorMove
     /// <param name="rb"></param>
     /// <param name="currentNormal"></param>
     /// <param name="stateOfPlayer"></param>
-    static public void ActorJumpMethod(float jumpPower, Rigidbody rb, Vector2 currentNormal, StateOfPlayer stateOfPlayer)
+    static public void ActorJumpMethod(float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool,StateOfPlayer) stateOfPlayer)
     {
-        switch (stateOfPlayer)
+        if(stateOfPlayer.Item1)
         {
-            case StateOfPlayer.OnGround:
-                rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
-                break;
-            case StateOfPlayer.GripingWall:
-                //Vector3 vec = rb.transform.up + _wallVec;
-                Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
-                Vector3 kickPower;
-
-                kickPower = vec.normalized * jumpPower;
-
-                //RotateMethod((Vector2)_hitInfo.normal);
-                rb.AddForce(kickPower, ForceMode.Impulse);
-                AbleWallKick();
-                break;
-            default:
-                break;
+            rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
         }
+        else if(stateOfPlayer.Item2 == StateOfPlayer.GripingWall)
+        {
+            //Vector3 vec = rb.transform.up + _wallVec;
+            Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
+            Vector3 kickPower;
 
+            kickPower = vec.normalized * jumpPower;
 
+            //RotateMethod((Vector2)_hitInfo.normal);
+            rb.AddForce(kickPower, ForceMode.Impulse);
+            AbleWallKick();
+        }
     }
     /// <summary>
     /// プレイヤーの壁ジャンプ
@@ -152,7 +139,7 @@ public static class ActorMove
                 rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
                 break;
             case StateOfPlayer.GripingWallEdge:
-                for(int i = 0; i < hitInfo.Length; i++)
+                for (int i = 0; i < hitInfo.Length; i++)
                 {
                     if (hitInfo[i].collider == null) continue;
                     if (!_clinbing && hitInfo[i].collider.TryGetComponent(out BoxCollider col))
@@ -165,7 +152,8 @@ public static class ActorMove
                         break;
                     }
                 }
-                
+                break;
+            case StateOfPlayer.HangingWallEgde:
                 break;
         }
     }
