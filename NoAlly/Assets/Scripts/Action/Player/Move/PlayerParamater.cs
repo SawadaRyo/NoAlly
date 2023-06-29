@@ -8,8 +8,10 @@ public class PlayerParamater : ScriptableObject
     [Header("Ground")]
     [SerializeField, Header("プレイヤーの移動速度")]
     float _speed = 5f;
-    [SerializeField, Header("ダッシュの移動速度")]
+    [SerializeField, Header("ダッシュ時の加算速度")]
     float _dashSpeed = 10f;
+    [SerializeField, Header("ダッシュしたときのクールダウン")]
+    float _dashIntarval = 0.5f;
     [SerializeField, Header("プレイヤーの振り向き速度")]
     float _turnSpeed = 25f;
 
@@ -42,6 +44,7 @@ public class PlayerParamater : ScriptableObject
     public float speed => _speed;
     public float dashSpeed => _dashSpeed;
     public float turnSpeed => _turnSpeed;
+    public float dashInterval => _dashIntarval;
 
     public float jumpPower => _jumpPower;
     public float graundDistance => _graundDistance;

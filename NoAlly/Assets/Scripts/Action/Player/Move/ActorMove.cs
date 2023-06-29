@@ -80,9 +80,9 @@ public static class ActorMove
     /// </summary>
     /// <param name="DashPower"></param>
     /// <returns></returns>
-    static public Vector3 DodgeVec(Rigidbody rb, Vector2 currentVec, float DashPower = 10f)
+    static public Vector3 DodgeVec(Rigidbody rb, Vector2 currentVec, float DashPower = 10f, float interval = 0.5f)
     {
-        return new Vector3(currentVec.x * DashPower, currentVec.y + rb.velocity.y, 0f);
+        return new Vector3(currentVec.x * DashPower, currentVec.y, 0f);
     }
     /// <summary>
     /// プレイヤーのジャンプ
@@ -91,13 +91,13 @@ public static class ActorMove
     /// <param name="rb"></param>
     /// <param name="currentNormal"></param>
     /// <param name="stateOfPlayer"></param>
-    static public void ActorJumpMethod(float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool,StateOfPlayer) stateOfPlayer)
+    static public void ActorJumpMethod(float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool, StateOfPlayer) stateOfPlayer)
     {
-        if(stateOfPlayer.Item1)
+        if (stateOfPlayer.Item1)
         {
             rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
         }
-        else if(stateOfPlayer.Item2 == StateOfPlayer.GripingWall)
+        else if (stateOfPlayer.Item2 == StateOfPlayer.GripingWall)
         {
             //Vector3 vec = rb.transform.up + _wallVec;
             Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
@@ -123,12 +123,6 @@ public static class ActorMove
     {
         switch (climbWall)
         {
-            case StateOfPlayer.None:
-                if (_slideWall)
-                {
-                    _slideWall = false;
-                }
-                break;
             case StateOfPlayer.GripingWall:
                 if (!_slideWall)
                 {
@@ -154,6 +148,20 @@ public static class ActorMove
                 }
                 break;
             case StateOfPlayer.HangingWallEgde:
+                if (!_clinbing && hitInfo[2].collider.TryGetComponent(out BoxCollider col1))
+                {
+                    _slideWall = false;
+                    Vector3 wallOfTop = new Vector3(hitInfo[2].transform.position.x
+                                                 , hitInfo[2].transform.position.y + col1.size.y
+                                                 , hitInfo[2].transform.position.z);
+                    Climbing(rb, wallOfTop);
+                }
+                break;
+            default:
+                if (_slideWall)
+                {
+                    _slideWall = false;
+                }
                 break;
         }
     }

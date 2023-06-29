@@ -45,12 +45,7 @@ public class ActorStateJudge : MonoBehaviour
         {
             h = _playerCamera.transform.right.x * -1;
         }
-        if (v > 0)
-        {
-            v = _playerCamera.transform.up.y;
-        }
-
-        return new Vector2(h, v);
+        return new Vector2(h, v).normalized;
     }
 
     /// <summary>
@@ -69,6 +64,7 @@ public class ActorStateJudge : MonoBehaviour
             _raycastHits[i] = hit;
         }
         hitInfo = _raycastHits;
+        Debug.Log($"{_isPlayerPart[0]},{_isPlayerPart[1]},{_isPlayerPart[2]}");
         return HitMaps.HitObjMapToWall(_isPlayerPart);
     }
 
