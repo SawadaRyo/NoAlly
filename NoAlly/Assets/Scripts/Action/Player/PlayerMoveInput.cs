@@ -30,6 +30,7 @@ public class PlayerMoveInput : MonoBehaviour
     delegate void PlayerInputUpdate();
     PlayerInputUpdate _playerInputUpdate;
 
+    public bool AbleDash => _ableDash;
     public IReadOnlyReactiveProperty<bool> IsDash => _isDash;
     public IReadOnlyReactiveProperty<(bool, StateOfPlayer)> CurrentLocation => _currentLocation;
     public IReadOnlyReactiveProperty<float> CurrentMove => _currentMove;
@@ -43,7 +44,13 @@ public class PlayerMoveInput : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnUpdate();
+            }).AddTo(this);
+        Observable.EveryFixedUpdate()
+            .Subscribe(_ =>
+            {
+                ActorMove.RotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector);
                 _playerInputUpdate();
+                _rb.velocity = new Vector3(_rb.velocity.x,ActorMove.ActorBehaviourInAir(_isJump.Value,_playerParamater.jumpPower, _currentLocation.Value).y,0f);
             }).AddTo(this);
     }
 
@@ -52,6 +59,7 @@ public class PlayerMoveInput : MonoBehaviour
         _currentLocation
             .Subscribe(playerLocation =>
             {
+                _ableDash = playerLocation.Item1;
                 if (playerLocation.Item1)
                 {
                     _playerInputUpdate = UpdateOnGround;
@@ -70,26 +78,16 @@ public class PlayerMoveInput : MonoBehaviour
                     }
                 }
             });
-        _isDash
-            .Skip(1)
-            .Where(_ => _isDash.Value == true)
-            .Subscribe(isDash =>
-            {
-                if (_ableDash)
-                {
-                    StartCoroutine(UpdateDoDash());
-                }
-            }).AddTo(this);
         _isJump
             .Skip(1)
             .Where(_ => _isJump.Value == true)
             .Subscribe(isJump =>
             {
                 if (!_ableJump) return;
-                ActorMove.ActorJumpMethod(_playerParamater.jumpPower
-                                        , _rb
-                                        , _currentMoveVector
-                                        , _currentLocation.Value);
+                //ActorMove.ActorJumpMethod(_playerParamater.jumpPower
+                //                        , _rb
+                //                        , _currentMoveVector
+                //                        , _currentLocation.Value);
                 _ableJump = false;
             }).AddTo(this);
     }
@@ -98,7 +96,9 @@ public class PlayerMoveInput : MonoBehaviour
     {
         _h = Input.GetAxisRaw("Horizontal");
         _v = Input.GetAxisRaw("Vertical");
-        _isJump.Value = Input.GetButtonDown("Jump");
+        _isDash.Value = Input.GetButtonDown("Dash");
+        //_isJump.Value = Input.GetButtonDown("Jump");
+        _isJump.Value = Input.GetButton("Jump");
 
         _currentMoveVector = _stateJudge.CurrentMoveVector(_h, _v); //現在のプレイヤーの進行方向を代入
 
@@ -114,16 +114,11 @@ public class PlayerMoveInput : MonoBehaviour
                                     , _playerParamater.wallMask
                                     , out _wallHitInfo)
             );
-        Debug.Log(_currentLocation.Value);
-        Debug.Log(_rb.velocity);
 
         _currentMove.SetValueAndForceNotify(_currentMoveVector.x * _playerParamater.speed);
-        ActorMove.RotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector);
     }
-
     void UpdateOnGround()
     {
-        _isDash.Value = Input.GetButtonDown("Dash");
         if (_ableDash && _currentMoveVector != Vector2.zero)
         {
             _rb.velocity = ActorMove.MoveMethod(_currentMoveVector.x, _playerParamater.speed, _rb, _groundHitInfo.normal);
@@ -141,7 +136,7 @@ public class PlayerMoveInput : MonoBehaviour
         {
             _rb.velocity =
             ActorMove.MoveMethod(_currentMoveVector.x, _playerParamater.speed, _rb, _groundHitInfo.normal)
-            + ActorMove.DodgeVec(_rb, _currentMoveVector, _playerParamater.dashSpeed);
+            + ActorMove.DodgeVec(_currentMoveVector, _playerParamater.dashSpeed);
             time -= Time.deltaTime;
             yield return null;
         }
@@ -149,7 +144,7 @@ public class PlayerMoveInput : MonoBehaviour
     }
     void UpdateInAir()
     {
-        ActorMove.BehaviourInWall(_playerParamater.wallSlideSpeed, _rb, _wallHitInfo, _currentLocation.Value.Item2);
+        ActorMove.ActorBehaviourInWall(_playerParamater.wallSlideSpeed, _rb, _wallHitInfo, _currentLocation.Value.Item2);
     }
 
     void OnDisable()

@@ -25,7 +25,7 @@ public enum StateOfPlayer
     Down,
 }
 
-public enum PlayerVec
+public enum ActorVec
 {
     None,
     Right,

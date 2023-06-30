@@ -12,13 +12,15 @@ public static class ActorMove
     [Tooltip("")]
     static bool _slideWall = false;
     [Tooltip("")]
-    static bool _ableInput = true;
+    static bool _ableJumpInput = true;
+    [Tooltip("")]
+    static float _timeInAir = 0f;
     [Tooltip("")]
     static Vector2 _velo = Vector2.zero;
     [Tooltip("Playerの向き")]
-    static PlayerVec _playerVec = PlayerVec.Right;
-
-    static public bool AbleInput => _ableInput;
+    static ActorVec _actorVec = ActorVec.Right;
+    [Tooltip("")]
+    static ActorVec _actorFallJudge = ActorVec.None;
 
     /// <summary>
     /// プレイヤーの回転
@@ -27,28 +29,28 @@ public static class ActorMove
     /// <param name="rb"></param>
     /// <param name="rotVector"></param>
     /// <returns></returns>
-    static public PlayerVec RotateMethod(float turnSpeed, Transform targetObject, Vector2 rotVector)
+    static public ActorVec RotateMethod(float turnSpeed, Transform targetObject, Vector2 rotVector)
     {
         //プレイヤーの方向転換
         if (rotVector.x == -1)
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
             targetObject.rotation = Quaternion.Slerp(targetObject.rotation, rotationLeft, Time.deltaTime * turnSpeed);
-            _playerVec = PlayerVec.Left;
+            _actorVec = ActorVec.Left;
         }
         else if (rotVector.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
             targetObject.rotation = Quaternion.Slerp(targetObject.rotation, rotationRight, Time.deltaTime * turnSpeed);
-            _playerVec = PlayerVec.Right;
+            _actorVec = ActorVec.Right;
         }
         else if (rotVector.y == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             targetObject.rotation = Quaternion.Slerp(targetObject.rotation, rotationUp, Time.deltaTime * turnSpeed);
-            _playerVec = PlayerVec.Up;
+            _actorVec = ActorVec.Up;
         }
-        return _playerVec;
+        return _actorVec;
     }
     /// <summary>
     /// プレイヤーの移動
@@ -80,7 +82,7 @@ public static class ActorMove
     /// </summary>
     /// <param name="DashPower"></param>
     /// <returns></returns>
-    static public Vector3 DodgeVec(Rigidbody rb, Vector2 currentVec, float DashPower = 10f, float interval = 0.5f)
+    static public Vector3 DodgeVec(Vector2 currentVec, float DashPower = 10f, float interval = 0.5f)
     {
         return new Vector3(currentVec.x * DashPower, currentVec.y, 0f);
     }
@@ -91,15 +93,15 @@ public static class ActorMove
     /// <param name="rb"></param>
     /// <param name="currentNormal"></param>
     /// <param name="stateOfPlayer"></param>
-    static public void ActorJumpMethod(float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool, StateOfPlayer) stateOfPlayer)
+    static public void ActorJumpMethod(bool isJump,float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool, StateOfPlayer) stateOfPlayer)
     {
-        if (stateOfPlayer.Item1)
+        if (stateOfPlayer.Item1 && stateOfPlayer.Item2 == StateOfPlayer.None)
         {
-            rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
+            //rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
+            rb.velocity = new Vector3(rb.velocity.x, ActorMove.ActorBehaviourInAir(isJump, jumpPower, stateOfPlayer).y, 0f);
         }
-        else if (stateOfPlayer.Item2 == StateOfPlayer.GripingWall)
+        else if (stateOfPlayer.Item2 == StateOfPlayer.GripingWall && _ableJumpInput)
         {
-            //Vector3 vec = rb.transform.up + _wallVec;
             Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
             Vector3 kickPower;
 
@@ -110,18 +112,75 @@ public static class ActorMove
             AbleWallKick();
         }
     }
+    static public Vector3 ActorBehaviourInAir(bool isJump,float jumoPawer, (bool, StateOfPlayer) stateOfPlayer, float fallSpeed = 60f, float jumpLowerLimit = 0.03f)
+    {
+        Vector3 ActorVertical = Vector3.zero;
+
+        if (stateOfPlayer.Item1)
+        {
+            if (isJump && _ableJumpInput)
+            {
+                _actorFallJudge = ActorVec.Up;
+                _ableJumpInput = false;
+            }
+            else if (_actorFallJudge == ActorVec.Down)
+            {
+                _actorFallJudge = ActorVec.None;
+            }
+            else if (!isJump)
+            {
+                _timeInAir = 0f;
+                _ableJumpInput = true;
+            }
+        }
+        switch (_actorFallJudge)
+        {
+            case ActorVec.Up:
+                _timeInAir += Time.deltaTime;
+                if (isJump || jumpLowerLimit > _timeInAir)
+                {
+                    ActorVertical.y = jumoPawer;
+                    ActorVertical.y -= (fallSpeed * Mathf.Pow(_timeInAir, 2));
+                }
+                else
+                {
+                    _timeInAir += Time.deltaTime; // 落下を早める
+                    ActorVertical.y = jumoPawer;
+                    ActorVertical.y -= (fallSpeed * Mathf.Pow(_timeInAir, 2));
+                }
+
+                if (0f > ActorVertical.y)
+                {
+                    _actorFallJudge = ActorVec.Down;
+                    ActorVertical.y = 0f;
+                    _timeInAir = 0.1f;
+                }
+                break;
+
+            case ActorVec.Down:
+                _timeInAir += Time.deltaTime;
+
+                ActorVertical.y = 0f;
+                ActorVertical.y = -(fallSpeed * Mathf.Pow(_timeInAir, 2));
+                break;
+
+            default:
+                break;
+        }
+        return ActorVertical;
+    }
     /// <summary>
-    /// プレイヤーの壁ジャンプ
+    /// プレイヤーの壁張り付き
     /// </summary>
     /// <param name="jump"></param>
     /// <param name="wallSlideSpeed"></param>
     /// <param name="wallJumpPower"></param>
     /// <param name="rb"></param>
     /// <param name="hitInfo"></param>
-    /// <param name="climbWall"></param>
-    static public void BehaviourInWall(float wallSlideSpeed, Rigidbody rb, RaycastHit[] hitInfo, StateOfPlayer climbWall)
+    /// <param name="stateOfPlayer"></param>
+    static public void ActorBehaviourInWall(float wallSlideSpeed, Rigidbody rb, RaycastHit[] hitInfo, StateOfPlayer stateOfPlayer)
     {
-        switch (climbWall)
+        switch (stateOfPlayer)
         {
             case StateOfPlayer.GripingWall:
                 if (!_slideWall)
@@ -165,15 +224,20 @@ public static class ActorMove
                 break;
         }
     }
+    static public Vector3 ActorBehaviourJump()
+    {
+        Vector3 ActorVertical = Vector3.zero;
+        return ActorVertical;
+    }
     /// <summary>
-    /// 
+    /// 壁キックのインターバル
     /// </summary>
     /// <param name="interval"></param>
     static async void AbleWallKick(float interval = 0.2f)
     {
-        _ableInput = false;
+        _ableJumpInput = false;
         await UniTask.Delay(TimeSpan.FromSeconds(interval));
-        _ableInput = true;
+        _ableJumpInput = true;
     }
     /// <summary>
     /// 壁のよじ登り
@@ -193,13 +257,13 @@ public static class ActorMove
             {
                 rb.isKinematic = true;
                 _clinbing = true;
-                _ableInput = false;
+                _ableJumpInput = false;
             })
             .OnComplete(() =>
             {
                 rb.transform.position = endPoint;
                 _clinbing = false;
-                _ableInput = true;
+                _ableJumpInput = true;
                 rb.isKinematic = false;
             });
         //while (time < duration)

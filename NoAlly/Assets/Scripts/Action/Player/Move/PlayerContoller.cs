@@ -18,7 +18,7 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("スライディングの判定")]
     bool _isDash = false;
     [Tooltip("Playerの向き")]
-    PlayerVec _playerVec;
+    ActorVec _playerVec;
 
     [Header("Camera")]
     [SerializeField,Tooltip("プレイヤーカメラ")]
@@ -77,7 +77,7 @@ public class PlayerContoller : MonoBehaviour
 
     public bool ableJumpInput { get => _ableJumpInput; set => _ableJumpInput = value; }
     public Rigidbody Rb => _rb;
-    public PlayerVec Vec => _playerVec;
+    public ActorVec Vec => _playerVec;
     public RaycastHit HitInfo => _hitInfo;
 
 
@@ -184,19 +184,19 @@ public class PlayerContoller : MonoBehaviour
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationLeft, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.Left;
+            _playerVec = ActorVec.Left;
         }
         else if (rotVector.x == 1)
         {
             Quaternion rotationRight = Quaternion.LookRotation(Vector3.right);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationRight, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.Right;
+            _playerVec = ActorVec.Right;
         }
         else if (rotVector.y == 1)
         {
             Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationUp, Time.deltaTime * _turnSpeed);
-            _playerVec = PlayerVec.Up;
+            _playerVec = ActorVec.Up;
         }
     }
     /// <summary>

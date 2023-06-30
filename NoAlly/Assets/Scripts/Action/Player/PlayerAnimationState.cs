@@ -140,10 +140,10 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
         Vector3 vec = Vector3.zero;
         switch (_playerContoller.Vec)
         {
-            case PlayerVec.Right:
+            case ActorVec.Right:
                 vec = Vector3.right;
                 break;
-            case PlayerVec.Left:
+            case ActorVec.Left:
                 vec = Vector3.left;
                 break;
             default:

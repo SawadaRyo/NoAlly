@@ -86,11 +86,11 @@ public class EnemyBullet : ObjectBase, IBullet<GunTypeEnemy>
     {
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
-        if (Owner.EnemyVec == PlayerVec.Right)
+        if (Owner.EnemyVec == ActorVec.Right)
         {
             _speed = 1;
         }
-        else if (Owner.EnemyVec == PlayerVec.Left)
+        else if (Owner.EnemyVec == ActorVec.Left)
         {
             _speed = -1;
         }

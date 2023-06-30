@@ -15,7 +15,7 @@ public class WeaponArrow : WeaponBase, IObjectGenerator,IArrowWeapon
     PlayerBulletBase[] _bulletPrefab = new PlayerBulletBase[3];
 
     public Transform GenerateTrance => _muzzleForward;
-    public PlayerVec playerVec => _contoller.Vec;
+    public ActorVec playerVec => _contoller.Vec;
     public ObjectPool<PlayerBulletBase, WeaponArrow, BulletType> BPool => _bPool;
     public ObjectPool<PlayerBulletBase, WeaponArrow, BulletType>.ObjectKey[] BPoolKeys => _keys;
 

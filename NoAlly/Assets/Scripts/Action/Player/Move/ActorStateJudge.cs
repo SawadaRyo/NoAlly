@@ -64,7 +64,6 @@ public class ActorStateJudge : MonoBehaviour
             _raycastHits[i] = hit;
         }
         hitInfo = _raycastHits;
-        Debug.Log($"{_isPlayerPart[0]},{_isPlayerPart[1]},{_isPlayerPart[2]}");
         return HitMaps.HitObjMapToWall(_isPlayerPart);
     }
 
