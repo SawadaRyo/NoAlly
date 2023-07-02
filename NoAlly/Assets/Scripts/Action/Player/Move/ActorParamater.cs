@@ -3,7 +3,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerParamater", menuName = "ScriptableObjects/PlayerParamater", order = 1)]
 
-public class PlayerParamater : ScriptableObject
+public class ActorParamater : ScriptableObject
 {
     [Header("Ground")]
     [SerializeField, Header("プレイヤーの移動速度")]

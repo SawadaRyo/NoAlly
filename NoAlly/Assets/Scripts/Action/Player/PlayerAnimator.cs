@@ -10,7 +10,7 @@ public class PlayerAnimator : MonoBehaviour
     public void MoveAnimation(PlayerMoveInput moveInput)
     {
         moveInput.IsDash
-            .Where(_ => moveInput.IsDash.Value == true && moveInput.AbleDash == true)
+            .Where(_ => moveInput.IsDash.Value == true && moveInput.AbleDash == true &&moveInput.CurrentMove.Value != 0f)
             .Subscribe(isDash =>
             {
                 _animator.SetTrigger("Dudge");
@@ -18,8 +18,8 @@ public class PlayerAnimator : MonoBehaviour
         moveInput.CurrentLocation
             .Subscribe(currentLocation =>
             {
-                _animator.SetBool("Jump", !currentLocation.Item1);
-                _animator.SetBool("WallGrip", currentLocation == (false, StateOfPlayer.GripingWall));
+                _animator.SetBool("Jump", currentLocation == StateOfPlayer.InAri);
+                _animator.SetBool("WallGrip", currentLocation == StateOfPlayer.GripingWall);
             }).AddTo(moveInput);
         moveInput.CurrentMove
             .Subscribe(currentMoveVec =>

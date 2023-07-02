@@ -24,7 +24,6 @@ static public class HitMaps
 
     static public StateOfPlayer HitObjMapToWall(bool[] isPlayerPart)
     {
-        Debug.Log($"{isPlayerPart[0]},{isPlayerPart[1]},{isPlayerPart[2]}");
         if (_hitObjMapToWall.TryGetValue((PlayerPartValues)isPlayerPart, out StateOfPlayer state))
         {
             return state;

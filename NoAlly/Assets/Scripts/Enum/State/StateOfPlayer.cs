@@ -28,6 +28,7 @@ public enum StateOfPlayer
 public enum ActorVec
 {
     None,
+    Horizontal,
     Right,
     Left,
     Up,

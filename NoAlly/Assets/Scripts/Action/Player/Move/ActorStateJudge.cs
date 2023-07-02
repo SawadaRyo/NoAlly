@@ -35,7 +35,7 @@ public class ActorStateJudge : MonoBehaviour
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    public Vector2 CurrentMoveVector(float h,float v)
+    public Vector2 CurrentMoveVector(float h, float v)
     {
         if (h > 0)
         {
@@ -48,6 +48,32 @@ public class ActorStateJudge : MonoBehaviour
         return new Vector2(h, v).normalized;
     }
 
+    public StateOfPlayer ActorCurrentLocation(ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
+    {
+
+        if (IsGrounded(actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo))
+        {
+            return StateOfPlayer.OnGround;
+        }
+        else
+        {
+            StateOfPlayer result = IsHitWall(actorParamater.walldistance, currentNormal, actorParamater.wallMask, out RaycastHit[] hitInfos);
+            if (result != StateOfPlayer.None)
+            {
+                foreach (var info in hitInfos)
+                {
+                    if (info.collider)
+                    {
+                        hitInfo = info;
+                        return result;
+                    }
+                }
+            }
+        }
+
+        return StateOfPlayer.InAri;
+    }
+
     /// <summary>
     /// 接壁判定
     /// </summary>
@@ -55,7 +81,7 @@ public class ActorStateJudge : MonoBehaviour
     /// <param name="currentNormal"></param>
     /// <param name="wallMask"></param>
     /// <returns></returns>
-    public StateOfPlayer IsHitWall(float walldistance, Vector2 currentNormal, LayerMask wallMask,out RaycastHit[] hitInfo)
+    StateOfPlayer IsHitWall(float walldistance, Vector2 currentNormal, LayerMask wallMask, out RaycastHit[] hitInfo)
     {
         for (int i = 0; i < _playerPartPos.Length; i++)//頭、胸、足からRayを飛ばし壁に当たっているか判定する
         {
@@ -75,11 +101,11 @@ public class ActorStateJudge : MonoBehaviour
     /// <param name="groundMask"></param>
     /// <param name="hitObjInfo"></param>
     /// <returns></returns>
-    public bool IsGrounded(float radios, float distance, LayerMask groundMask,out RaycastHit hitInfo)
+    bool IsGrounded(float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo)
     {
         Vector3 isGroundCenter = _playerPartPos[2].transform.position; //Rayの原点
-        Ray ray = new Ray(isGroundCenter, Vector3.down);　//Ray射出
-        
-        return Physics.SphereCast(ray, radios, out hitInfo, distance, groundMask); //接地判定をStateOfPlayerで返す
+        Ray ray = new Ray(isGroundCenter, Vector3.down); //Ray射出
+
+        return (Physics.SphereCast(ray, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
     }
 }

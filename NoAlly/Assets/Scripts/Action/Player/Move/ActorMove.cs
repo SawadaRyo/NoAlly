@@ -82,7 +82,7 @@ public static class ActorMove
     /// </summary>
     /// <param name="DashPower"></param>
     /// <returns></returns>
-    static public Vector3 DodgeVec(Vector2 currentVec, float DashPower = 10f, float interval = 0.5f)
+    static public Vector3 DodgeVec(Vector2 currentVec, float DashPower = 10f)
     {
         return new Vector3(currentVec.x * DashPower, currentVec.y, 0f);
     }
@@ -93,46 +93,136 @@ public static class ActorMove
     /// <param name="rb"></param>
     /// <param name="currentNormal"></param>
     /// <param name="stateOfPlayer"></param>
-    static public void ActorJumpMethod(bool isJump,float jumpPower, Rigidbody rb, Vector2 currentNormal, (bool, StateOfPlayer) stateOfPlayer)
-    {
-        if (stateOfPlayer.Item1 && stateOfPlayer.Item2 == StateOfPlayer.None)
-        {
-            //rb.AddForce(rb.transform.up * jumpPower, ForceMode.Impulse);
-            rb.velocity = new Vector3(rb.velocity.x, ActorMove.ActorBehaviourInAir(isJump, jumpPower, stateOfPlayer).y, 0f);
-        }
-        else if (stateOfPlayer.Item2 == StateOfPlayer.GripingWall && _ableJumpInput)
-        {
-            Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
-            Vector3 kickPower;
+    //static public void ActorJumpMethod(bool isJump, float jumpPower, Rigidbody rb, Vector2 currentNormal, StateOfPlayer stateOfPlayer)
+    //{
+    //    switch (stateOfPlayer)
+    //    {
+    //        case StateOfPlayer.OnGround:
+    //            //rb.velocity = new Vector3(rb.velocity.x, ActorMove.ActorBehaviourInAir(isJump, jumpPower, stateOfPlayer).y, 0f);
+    //            break;
+    //        case StateOfPlayer.GripingWall:
+    //            Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
+    //            Vector3 kickPower;
 
-            kickPower = vec.normalized * jumpPower;
+    //            kickPower = vec.normalized * jumpPower;
 
-            //RotateMethod((Vector2)_hitInfo.normal);
-            rb.AddForce(kickPower, ForceMode.Impulse);
-            AbleWallKick();
-        }
-    }
-    static public Vector3 ActorBehaviourInAir(bool isJump,float jumoPawer, (bool, StateOfPlayer) stateOfPlayer, float fallSpeed = 60f, float jumpLowerLimit = 0.03f)
+    //            //RotateMethod((Vector2)_hitInfo.normal);
+    //            rb.AddForce(kickPower, ForceMode.Impulse);
+    //            AbleWallKick();
+    //            break;
+    //    }
+    //}
+    /// <summary>
+    /// 空中での挙動
+    /// </summary>
+    /// <param name="isJump"></param>
+    /// <param name="jumpPawer"></param>
+    /// <param name="hitObj"></param>
+    /// <param name="stateOfPlayer"></param>
+    /// <param name="fallSpeed"></param>
+    /// <param name="jumpLowerLimit"></param>
+    /// <returns></returns>
+    static public Vector3 ActorBehaviourInAir(bool isJump, float jumpPawer, RaycastHit hitObj, StateOfPlayer stateOfPlayer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
     {
         Vector3 ActorVertical = Vector3.zero;
 
-        if (stateOfPlayer.Item1)
+        switch (stateOfPlayer)
         {
-            if (isJump && _ableJumpInput)
-            {
-                _actorFallJudge = ActorVec.Up;
-                _ableJumpInput = false;
-            }
-            else if (_actorFallJudge == ActorVec.Down)
-            {
-                _actorFallJudge = ActorVec.None;
-            }
-            else if (!isJump)
-            {
-                _timeInAir = 0f;
-                _ableJumpInput = true;
-            }
+            case StateOfPlayer.OnGround:
+                if (isJump && _ableJumpInput)
+                {
+                    _actorFallJudge = ActorVec.Up;
+                    _ableJumpInput = false;
+                }
+                else if (_actorFallJudge == ActorVec.Down)
+                {
+                    _actorFallJudge = ActorVec.None;
+                }
+                else if (!isJump)
+                {
+                    _timeInAir = 0f;
+                    _ableJumpInput = true;
+                }
+                break;
+            case StateOfPlayer.InAri:
+                if (_ableJumpInput)
+                {
+                    _actorFallJudge = ActorVec.Down;
+                    _ableJumpInput = false;
+                }
+                break;
+            default:
+                break;
         }
+
+        ActorVertical = ActorBehaviourJump(isJump, jumpPawer, hitObj.normal, stateOfPlayer, fallSpeed, jumpLowerLimit);
+
+        return ActorVertical;
+    }
+    /// <summary>
+    /// 壁張り付き中の挙動
+    /// </summary>
+    /// <param name="jump"></param>
+    /// <param name="wallSlideSpeed"></param>
+    /// <param name="wallJumpPower"></param>
+    /// <param name="rb"></param>
+    /// <param name="hitInfo"></param>
+    /// <param name="stateOfPlayer"></param>
+    static public void ActorBehaviourInWall(float wallSlideSpeed, Rigidbody rb, RaycastHit hitInfo, StateOfPlayer stateOfPlayer)
+    {
+        switch (stateOfPlayer)
+        {
+            case StateOfPlayer.GripingWall:
+                if (!_slideWall)
+                {
+                    rb.isKinematic = true;
+                    _slideWall = true;
+                    rb.isKinematic = false;
+                }
+                rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
+                break;
+            case StateOfPlayer.GripingWallEdge:
+                if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col))
+                {
+                    _slideWall = false;
+                    Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
+                                                 , hitInfo.transform.position.y + col.size.y
+                                                 , hitInfo.transform.position.z);
+                    Climbing(rb, wallOfTop);
+                    break;
+                }
+                break;
+            case StateOfPlayer.HangingWallEgde:
+                if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col1))
+                {
+                    _slideWall = false;
+                    Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
+                                                 , hitInfo.transform.position.y + col1.size.y
+                                                 , hitInfo.transform.position.z);
+                    Climbing(rb, wallOfTop);
+                }
+                break;
+            default:
+                if (_slideWall)
+                {
+                    _slideWall = false;
+                }
+                break;
+        }
+    }
+    /// <summary>
+    /// ジャンプ力と落下策度を計算
+    /// </summary>
+    /// <param name="isJump"></param>
+    /// <param name="jumoPawer"></param>
+    /// <param name="actorFallJudge"></param>
+    /// <param name="stateOfPlayer"></param>
+    /// <param name="fallSpeed"></param>
+    /// <param name="jumpLowerLimit"></param>
+    /// <returns></returns>
+    static Vector3 ActorBehaviourJump(bool isJump, float jumoPawer, Vector3 hitObjNormal, StateOfPlayer stateOfPlayer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
+    {
+        Vector3 ActorVertical = Vector3.zero;
         switch (_actorFallJudge)
         {
             case ActorVec.Up:
@@ -156,77 +246,21 @@ public static class ActorMove
                     _timeInAir = 0.1f;
                 }
                 break;
-
             case ActorVec.Down:
                 _timeInAir += Time.deltaTime;
 
-                ActorVertical.y = 0f;
+                //ActorVertical.y = 0f;
                 ActorVertical.y = -(fallSpeed * Mathf.Pow(_timeInAir, 2));
+                if (ActorVertical.y < -(fallSpeed / 2))
+                {
+                    ActorVertical.y = -(fallSpeed / 2);
+                }
+                //Debug.Log(-(fallSpeed * Mathf.Pow(_timeInAir, 2)));
                 break;
 
             default:
                 break;
         }
-        return ActorVertical;
-    }
-    /// <summary>
-    /// プレイヤーの壁張り付き
-    /// </summary>
-    /// <param name="jump"></param>
-    /// <param name="wallSlideSpeed"></param>
-    /// <param name="wallJumpPower"></param>
-    /// <param name="rb"></param>
-    /// <param name="hitInfo"></param>
-    /// <param name="stateOfPlayer"></param>
-    static public void ActorBehaviourInWall(float wallSlideSpeed, Rigidbody rb, RaycastHit[] hitInfo, StateOfPlayer stateOfPlayer)
-    {
-        switch (stateOfPlayer)
-        {
-            case StateOfPlayer.GripingWall:
-                if (!_slideWall)
-                {
-                    rb.isKinematic = true;
-                    _slideWall = true;
-                    rb.isKinematic = false;
-                }
-                rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
-                break;
-            case StateOfPlayer.GripingWallEdge:
-                for (int i = 0; i < hitInfo.Length; i++)
-                {
-                    if (hitInfo[i].collider == null) continue;
-                    if (!_clinbing && hitInfo[i].collider.TryGetComponent(out BoxCollider col))
-                    {
-                        _slideWall = false;
-                        Vector3 wallOfTop = new Vector3(hitInfo[i].transform.position.x
-                                                     , hitInfo[i].transform.position.y + col.size.y
-                                                     , hitInfo[i].transform.position.z);
-                        Climbing(rb, wallOfTop);
-                        break;
-                    }
-                }
-                break;
-            case StateOfPlayer.HangingWallEgde:
-                if (!_clinbing && hitInfo[2].collider.TryGetComponent(out BoxCollider col1))
-                {
-                    _slideWall = false;
-                    Vector3 wallOfTop = new Vector3(hitInfo[2].transform.position.x
-                                                 , hitInfo[2].transform.position.y + col1.size.y
-                                                 , hitInfo[2].transform.position.z);
-                    Climbing(rb, wallOfTop);
-                }
-                break;
-            default:
-                if (_slideWall)
-                {
-                    _slideWall = false;
-                }
-                break;
-        }
-    }
-    static public Vector3 ActorBehaviourJump()
-    {
-        Vector3 ActorVertical = Vector3.zero;
         return ActorVertical;
     }
     /// <summary>

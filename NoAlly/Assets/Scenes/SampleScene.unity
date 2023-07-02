@@ -2307,7 +2307,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23564
+  m_Name: pb_Mesh23562
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14428,7 +14428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45397a365d563744185d44c8a46b56b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerParamater: {fileID: 11400000, guid: 3864c27591b215c45a0ac5270e1f87fb, type: 2}
+  _playerParamater: {fileID: 0}
   _stateJudge: {fileID: 5188493205658940745}
   _playerAnimator: {fileID: 5188493205658940747}
   _rb: {fileID: 1313096563332471506}
@@ -26748,7 +26748,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9178463055825029410
 Transform:
   m_ObjectHideFlags: 0
