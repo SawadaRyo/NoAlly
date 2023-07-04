@@ -17,7 +17,7 @@ public enum StateOfPlayer
     GripingWall,
     GripingWallEdge,
     HangingWallEgde,
-    InAri,
+    InAir,
 
     Right,
     Left,

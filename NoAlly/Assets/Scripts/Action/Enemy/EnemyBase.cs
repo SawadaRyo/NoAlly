@@ -138,7 +138,7 @@ public class Search : State
 }
 public class Attack : State
 {
-    protected override void OnEnter(StateMachine<EnemyBase>.State prevState)
+    protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
         Owner.EnemyAnimator.SetBool("InSight", true);
@@ -157,7 +157,7 @@ public class Attack : State
             Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Saerching);
         }
     }
-    protected override void OnExit(StateMachine<EnemyBase>.State nextState)
+    protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
         Owner.EnemyAnimator.SetBool("InSight", false);

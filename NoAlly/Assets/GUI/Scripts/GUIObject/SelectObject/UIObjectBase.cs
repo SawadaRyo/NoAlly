@@ -6,6 +6,8 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
 {
     [SerializeField, Header("オブジェクトのImage")]
     protected Image[] _objectImage = null;
+    [SerializeField, Header("オブジェクトのText")]
+    protected Text[] _objectText = null;
     [SerializeField, Header("オブジェクトのAnimator")]
     protected Animator _objectAnimator = null;
     [SerializeField, Header("決定時のイベント")]
@@ -35,6 +37,10 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
         if (_objectImage != null)
         {
             Array.ForEach(_objectImage, x => x.enabled = isActive);
+        }
+        if(_objectText != null)
+        {
+            Array.ForEach(_objectText, x => x.enabled = isActive);
         }
     }
 

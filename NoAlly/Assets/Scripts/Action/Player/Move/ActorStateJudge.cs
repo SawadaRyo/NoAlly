@@ -48,10 +48,10 @@ public class ActorStateJudge : MonoBehaviour
         return new Vector2(h, v).normalized;
     }
 
-    public StateOfPlayer ActorCurrentLocation(ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
+    public StateOfPlayer ActorCurrentLocation(bool ableJump, ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
     {
 
-        if (IsGrounded(actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo))
+        if (IsGrounded(actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
         {
             return StateOfPlayer.OnGround;
         }
@@ -71,7 +71,7 @@ public class ActorStateJudge : MonoBehaviour
             }
         }
 
-        return StateOfPlayer.InAri;
+        return StateOfPlayer.InAir;
     }
 
     /// <summary>

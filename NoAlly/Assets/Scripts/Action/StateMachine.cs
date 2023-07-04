@@ -69,6 +69,17 @@ public class StateMachine<TOwner>
         /// </summary>
         protected TOwner Owner => stateMachine.Owner;
 
+        protected State() 
+        {
+            OnTranstion();
+        }
+
+        /// <summary>
+        /// 遷移条件
+        /// </summary>
+        protected virtual void OnTranstion() { }
+
+
         /// <summary>
         /// ステート開始
         /// </summary>

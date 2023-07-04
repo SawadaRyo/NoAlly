@@ -1,4 +1,5 @@
 //日本語コメント可
+using ActorBehaviour;
 using System.Collections;
 using UnityEngine;
 using UniRx;
@@ -19,25 +20,33 @@ public class PlayerMoveInput : MonoBehaviour
     bool _ableDash = true;
     float _h = 0f;
     float _v = 0f;
-    Vector2 _currentMoveVector = Vector2.zero;
-    RaycastHit _hitInfo;
+    StateMachine<PlayerMoveInput> _stateMachine = null;
     BoolReactiveProperty _isJump = new();
     BoolReactiveProperty _isDash = new();
-    FloatReactiveProperty _currentMove = new();
+    ReactiveProperty<Vector2> _currentMoveVector = new();
     ReactiveProperty<StateOfPlayer> _currentLocation = new();
+    RaycastHit _hitInfo;
 
     delegate void PlayerInputUpdate();
     PlayerInputUpdate? _playerInputUpdate;
 
     public bool AbleDash => _ableDash;
+    public StateMachine<PlayerMoveInput> PlayerStateMachine => _stateMachine;
+    public ActorParamater PlayerParamater => _playerParamater;
+    public ActorStateJudge PlayerStateJudge => _stateJudge;
+    public PlayerAnimator PlayerAnimatorContoller => _playerAnimator;
+    public Rigidbody Rb => _rb;
+    public RaycastHit HitInfo => _hitInfo;
     public IReadOnlyReactiveProperty<bool> IsDash => _isDash;
-    public IReadOnlyReactiveProperty<float> CurrentMove => _currentMove;
+    public IReadOnlyReactiveProperty<bool> IsJump => _isJump;
+    public IReadOnlyReactiveProperty<Vector2> CurrentMoveVector => _currentMoveVector;
     public IReadOnlyReactiveProperty<StateOfPlayer> CurrentLocation => _currentLocation;
 
     void Start()
     {
         _stateJudge.Initialize();
         _playerAnimator.MoveAnimation(this);
+        SetState();
         OnEvent();
         Observable.EveryUpdate()
             .Subscribe(_ =>
@@ -47,14 +56,23 @@ public class PlayerMoveInput : MonoBehaviour
         Observable.EveryFixedUpdate()
             .Subscribe(_ =>
             {
-                ActorMove.RotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector);
-                if(this._playerInputUpdate != null)
-                {
-                    _playerInputUpdate();
-                }
+                ActorMove.ActorRotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector.Value);
+                _stateMachine.Update();
+                //if (this._playerInputUpdate != null)
+                //{
+                //    _playerInputUpdate();
+                //    //Debug.Log(_rb.velocity);
+                //}
             }).AddTo(this);
     }
-
+    void SetState()
+    {
+        _stateMachine = new StateMachine<PlayerMoveInput>(this);
+        _stateMachine.AddAnyTransition<PlayerBehaviourOnGround>((int)StateOfPlayer.OnGround);
+        _stateMachine.AddAnyTransition<PlayerBehaviorInAir>((int)StateOfPlayer.InAir);
+        _stateMachine.AddAnyTransition<PlayerBehaviourOnWall>((int)StateOfPlayer.GripingWall);
+        _stateMachine.AddAnyTransition<PlayerBehaviorDash>((int)StateOfPlayer.Dash);
+    }
     void OnEvent()
     {
         _currentLocation
@@ -63,13 +81,16 @@ public class PlayerMoveInput : MonoBehaviour
                 switch (playerLocation)
                 {
                     case StateOfPlayer.OnGround:
-                        _playerInputUpdate = UpdateMove;
+                        _stateMachine.Dispatch((int)StateOfPlayer.OnGround);
+                        //_playerInputUpdate = UpdateMove;
                         if (!_ableJump) _ableJump = true;
                         break;
-                    case StateOfPlayer.InAri:
+                    case StateOfPlayer.InAir:
+                        _stateMachine.Dispatch((int)StateOfPlayer.InAir);
                         break;
                     case StateOfPlayer.GripingWall:
-                        _playerInputUpdate = UpdateOnWall;
+                        _stateMachine.Dispatch((int)StateOfPlayer.GripingWall);
+                        //_playerInputUpdate = UpdateOnWall;
                         if (!_ableJump) _ableJump = true;
                         break;
                     default:
@@ -97,25 +118,25 @@ public class PlayerMoveInput : MonoBehaviour
         _isDash.Value = Input.GetButtonDown("Dash");
         _isJump.Value = Input.GetButton("Jump");
 
-        _currentMoveVector = _stateJudge.CurrentMoveVector(_h, _v); //現在のプレイヤーの進行方向を代入
-        _currentMove.SetValueAndForceNotify(_currentMoveVector.x * _playerParamater.speed);
+        _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVector(_h, _v)); //現在のプレイヤーの進行方向を代入
 
-        _currentLocation.Value =_stateJudge.ActorCurrentLocation(_playerParamater,_currentMoveVector,out _hitInfo);
-        Debug.Log(_currentLocation.Value);
-        
+        _currentLocation.Value = _stateJudge.ActorCurrentLocation(_ableJump, _playerParamater, _currentMoveVector.Value, out _hitInfo);
+
     }
     void UpdateMove()
     {
-        if (_ableDash && _currentMoveVector != Vector2.zero)
+        if (_ableDash && _currentMoveVector.Value != Vector2.zero)
         {
-            _rb.velocity = ActorMove.MoveMethod(_currentMoveVector.x, _playerParamater.speed, _rb, _hitInfo.normal);
+            _rb.velocity =
+                ActorMove.ActorMoveMethod(_currentMoveVector.Value.x, _playerParamater.speed, _rb, _hitInfo.normal)
+                + ActorMove.ActorBehaviourJump(_isJump.Value, _playerParamater.jumpPower, _hitInfo, _currentLocation.Value);
+            //Debug.Log(_rb.velocity);
         }
-        else if(_currentMoveVector == Vector2.zero)
+        else if (_currentMoveVector.Value == Vector2.zero)
         {
-            _rb.velocity = new(0f,_rb.velocity.y);
+            _rb.velocity = Vector3.zero;
         }
 
-        _rb.velocity = new Vector3(_rb.velocity.x, ActorMove.ActorBehaviourInAir(_isJump.Value, _playerParamater.jumpPower,_hitInfo, _currentLocation.Value).y, 0f);
     }
     IEnumerator UpdateDoDash()
     {
@@ -123,9 +144,8 @@ public class PlayerMoveInput : MonoBehaviour
         float time = _playerParamater.dashInterval;
         while (time > 0)
         {
-            _rb.velocity =
-            ActorMove.MoveMethod(_currentMoveVector.x, _playerParamater.speed, _rb, _hitInfo.normal)
-            + ActorMove.DodgeVec(_currentMoveVector, _playerParamater.dashSpeed);
+            var moveVec = ActorMove.ActorMoveMethod(_currentMoveVector.Value.x, _playerParamater.speed, _rb, _hitInfo.normal);
+            _rb.velocity = moveVec + ActorMove.DodgeVec(moveVec.normalized, _playerParamater.dashSpeed);
             time -= Time.deltaTime;
             yield return null;
         }
@@ -133,15 +153,15 @@ public class PlayerMoveInput : MonoBehaviour
     }
     void UpdateOnWall()
     {
-        _rb.velocity = new Vector3(_rb.velocity.x, ActorMove.ActorBehaviourInAir(_isJump.Value, _playerParamater.jumpPower, _hitInfo, _currentLocation.Value).y, 0f);
-        ActorMove.ActorBehaviourInWall(_playerParamater.wallSlideSpeed, _rb, _hitInfo, _currentLocation.Value);
+        _rb.velocity = new Vector3(_rb.velocity.x, ActorMove.ActorBehaviourJump(_isJump.Value, _playerParamater.jumpPower, _hitInfo, _currentLocation.Value).y, 0f);
+        ActorMove.ActorBehaviourOnWall(_playerParamater.wallSlideSpeed, _rb, _hitInfo, _currentLocation.Value);
     }
 
     void OnDisable()
     {
         _isDash.Dispose();
         _isJump.Dispose();
-        _currentMove.Dispose();
+        _currentMoveVector.Dispose();
         _currentLocation.Dispose();
     }
 
@@ -150,10 +170,13 @@ public class PlayerMoveInput : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_stateJudge.playerPartPos[2].position - new Vector3(0f, _playerParamater.graundDistance, 0f), _playerParamater.isGroundRengeRadios);
         Gizmos.DrawRay(_stateJudge.playerPartPos[1].position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _playerParamater.walldistance);
-        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, new Vector3(_currentMoveVector.x, _currentMoveVector.y, 0));
+        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, new Vector3(_currentMoveVector.Value.x, _currentMoveVector.Value.y, 0));
 
-        Gizmos.DrawRay(_stateJudge.playerPartPos[0].position, _currentMoveVector * _playerParamater.walldistance);
-        Gizmos.DrawRay(_stateJudge.playerPartPos[1].position, _currentMoveVector * _playerParamater.walldistance);
-        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, _currentMoveVector * _playerParamater.walldistance);
+        Gizmos.DrawRay(_stateJudge.playerPartPos[0].position, _currentMoveVector.Value * _playerParamater.walldistance);
+        Gizmos.DrawRay(_stateJudge.playerPartPos[1].position, _currentMoveVector.Value * _playerParamater.walldistance);
+        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, _rb.velocity * _playerParamater.walldistance);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, _hitInfo.normal * _playerParamater.walldistance);
     }
 }
