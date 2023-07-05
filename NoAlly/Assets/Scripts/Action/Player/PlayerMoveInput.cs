@@ -33,8 +33,6 @@ public class PlayerMoveInput : MonoBehaviour
     public bool AbleDash => _ableDash;
     public StateMachine<PlayerMoveInput> PlayerStateMachine => _stateMachine;
     public ActorParamater PlayerParamater => _playerParamater;
-    public ActorStateJudge PlayerStateJudge => _stateJudge;
-    public PlayerAnimator PlayerAnimatorContoller => _playerAnimator;
     public Rigidbody Rb => _rb;
     public RaycastHit HitInfo => _hitInfo;
     public IReadOnlyReactiveProperty<bool> IsDash => _isDash;
@@ -72,6 +70,7 @@ public class PlayerMoveInput : MonoBehaviour
         _stateMachine.AddAnyTransition<PlayerBehaviorInAir>((int)StateOfPlayer.InAir);
         _stateMachine.AddAnyTransition<PlayerBehaviourOnWall>((int)StateOfPlayer.GripingWall);
         _stateMachine.AddAnyTransition<PlayerBehaviorDash>((int)StateOfPlayer.Dash);
+        _stateMachine.Start<PlayerBehaviourOnGround>();
     }
     void OnEvent()
     {

@@ -69,15 +69,12 @@ public class StateMachine<TOwner>
         /// </summary>
         protected TOwner Owner => stateMachine.Owner;
 
-        protected State() 
-        {
-            OnTranstion();
-        }
+       
 
         /// <summary>
         /// ‘JˆÚğŒ
         /// </summary>
-        protected virtual void OnTranstion() { }
+        public virtual void OnTranstion() { }
 
 
         /// <summary>
@@ -150,6 +147,7 @@ public class StateMachine<TOwner>
     {
         var state = new T();
         state.stateMachine = this;
+        state.OnTranstion();
         states.AddLast(state);
         return state;
     }
