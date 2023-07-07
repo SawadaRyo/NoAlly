@@ -70,7 +70,7 @@ namespace ActorBehaviour
             Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
             _velo.x = onPlane.x * moveSpeed;
             _velo.y = onPlane.y * moveSpeed;
-            Debug.Log(onPlane.y);
+            //Debug.Log(onPlane.y);
             if (Mathf.Abs(onPlane.y) <= 0.01f || Mathf.Abs(onPlane.y) > 1f && _ableJumpInput)
             {
                 velo = new Vector3(_velo.x, rb.velocity.y, 0);
