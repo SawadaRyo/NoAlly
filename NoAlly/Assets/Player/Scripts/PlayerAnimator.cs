@@ -27,7 +27,7 @@ public class PlayerAnimator : MonoBehaviour
         moveInput.CurrentMoveVector
             .Subscribe(currentMoveVec =>
             {
-                _animator.SetFloat("MoveSpeed", Mathf.Abs(currentMoveVec.x));
+                _animator.SetFloat("MoveSpeed", Mathf.Abs(currentMoveVec.x * moveInput.PlayerParamater.speed));
             }).AddTo(moveInput);
     }
     public void ActionAnimation(InputToWeapon weaponInput)

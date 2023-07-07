@@ -21,6 +21,7 @@ public class PlayerBehaviorDash : State
         base.OnUpdate();
         var moveVec = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
         Owner.Rb.velocity = moveVec + ActorMove.DodgeVec(moveVec.normalized, Owner.PlayerParamater.dashSpeed);
+        _velo = moveVec;
         _time.Value -= Time.deltaTime;
     }
     protected override void OnExit(State nextState)
