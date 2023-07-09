@@ -122,39 +122,6 @@ public class PlayerMoveInput : MonoBehaviour
         _currentLocation.Value = _stateJudge.ActorCurrentLocation(_ableJump, _playerParamater, _currentMoveVector.Value, out _hitInfo);
         Debug.Log(_currentLocation.Value);
     }
-    void UpdateMove()
-    {
-        if (_ableDash && _currentMoveVector.Value != Vector2.zero)
-        {
-            _rb.velocity =
-                ActorMove.ActorMoveMethod(_currentMoveVector.Value.x, _playerParamater.speed, _rb, _hitInfo.normal)
-                + ActorMove.ActorBehaviourJump(_isJump.Value, _playerParamater.jumpPower, _hitInfo, _currentLocation.Value);
-            //Debug.Log(_rb.velocity);
-        }
-        else if (_currentMoveVector.Value == Vector2.zero)
-        {
-            _rb.velocity = Vector3.zero;
-        }
-
-    }
-    IEnumerator UpdateDoDash()
-    {
-        _ableDash = false;
-        float time = _playerParamater.dashInterval;
-        while (time > 0)
-        {
-            var moveVec = ActorMove.ActorMoveMethod(_currentMoveVector.Value.x, _playerParamater.speed, _rb, _hitInfo.normal);
-            _rb.velocity = moveVec + ActorMove.DodgeVec(moveVec.normalized, _playerParamater.dashSpeed);
-            time -= Time.deltaTime;
-            yield return null;
-        }
-        _ableDash = true;
-    }
-    void UpdateOnWall()
-    {
-        _rb.velocity = new Vector3(_rb.velocity.x, ActorMove.ActorBehaviourJump(_isJump.Value, _playerParamater.jumpPower, _hitInfo, _currentLocation.Value).y, 0f);
-        ActorMove.ActorBehaviourOnWall(_playerParamater.wallSlideSpeed, _rb, _hitInfo, _currentLocation.Value);
-    }
 
     void OnDisable()
     {

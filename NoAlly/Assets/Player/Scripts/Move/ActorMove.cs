@@ -91,32 +91,6 @@ namespace ActorBehaviour
             return new Vector3(currentVec.x, currentVec.y, 0f) * DashPower;
         }
         /// <summary>
-        /// プレイヤーのジャンプ
-        /// </summary>
-        /// <param name="jumpPower"></param>
-        /// <param name="rb"></param>
-        /// <param name="currentNormal"></param>
-        /// <param name="stateOfPlayer"></param>
-        //static public void ActorJumpMethod(bool isJump, float jumpPower, Rigidbody rb, Vector2 currentNormal, StateOfPlayer stateOfPlayer)
-        //{
-        //    switch (stateOfPlayer)
-        //    {
-        //        case StateOfPlayer.OnGround:
-        //            //rb.velocity = new Vector3(rb.velocity.x, ActorMove.ActorBehaviourInAir(isJump, jumpPower, stateOfPlayer).y, 0f);
-        //            break;
-        //        case StateOfPlayer.GripingWall:
-        //            Vector3 vec = new Vector3(currentNormal.x, rb.transform.up.y, 0f).normalized * -1f;
-        //            Vector3 kickPower;
-
-        //            kickPower = vec.normalized * jumpPower;
-
-        //            //RotateMethod((Vector2)_hitInfo.normal);
-        //            rb.AddForce(kickPower, ForceMode.Impulse);
-        //            AbleWallKick();
-        //            break;
-        //    }
-        //}
-        /// <summary>
         /// 空中での挙動
         /// </summary>
         /// <param name="isJump"></param>
@@ -126,7 +100,7 @@ namespace ActorBehaviour
         /// <param name="fallSpeed"></param>
         /// <param name="jumpLowerLimit"></param>
         /// <returns></returns>
-        static public Vector3 ActorBehaviourJump(bool isJump, float jumpPawer, RaycastHit hitObj, StateOfPlayer stateOfPlayer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
+        static public Vector3 ActorBehaviourJump(bool isJump, float jumpPawer, StateOfPlayer stateOfPlayer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
         {
             Vector3 ActorVertical = Vector3.zero;
             switch (stateOfPlayer)
@@ -166,7 +140,7 @@ namespace ActorBehaviour
                     break;
             }
 
-            ActorVertical = ActorVectorInAir(isJump, jumpPawer, stateOfPlayer, fallSpeed, jumpLowerLimit);
+            ActorVertical = ActorVectorInAir(isJump, jumpPawer, fallSpeed, jumpLowerLimit);
 
             return ActorVertical;
         }
@@ -231,7 +205,7 @@ namespace ActorBehaviour
         /// <param name="fallSpeed"></param>
         /// <param name="jumpLowerLimit"></param>
         /// <returns></returns>
-        static public Vector3 ActorVectorInAir(bool isJump, float jumoPawer, StateOfPlayer stateOfPlayer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
+        static public Vector3 ActorVectorInAir(bool isJump, float jumoPawer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
         {
             Vector3 ActorVertical = Vector3.zero;
             switch (_actorFallJudge)
