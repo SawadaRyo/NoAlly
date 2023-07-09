@@ -18,7 +18,7 @@ public class PlayerBehaviorInAir : State
     {
         base.OnUpdate();
         Owner.Rb.velocity = _beforeMoveVec
-            + ActorMove.ActorVectorInAir(Owner.IsJump.Value,Owner.PlayerParamater.jumpPower,Owner.CurrentLocation.Value);
+            + ActorMove.ActorVectorInAir(Owner.IsJump.Value,Owner.PlayerParamater.jumpPower);
     }
     protected override void OnExit(State nextState)
     {
