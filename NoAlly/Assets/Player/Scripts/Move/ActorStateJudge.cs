@@ -47,17 +47,23 @@ public class ActorStateJudge : MonoBehaviour
         }
         return new Vector2(h, v).normalized;
     }
-
+    /// <summary>
+    /// プレイヤーのロケーション
+    /// </summary>
+    /// <param name="ableJump"></param>
+    /// <param name="actorParamater"></param>
+    /// <param name="currentNormal"></param>
+    /// <param name="hitInfo"></param>
+    /// <returns></returns>
     public StateOfPlayer ActorCurrentLocation(bool ableJump, ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
     {
-
-        if (IsGrounded(actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
+        if (IsGrounded(_playerPartPos[2],actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
         {
             return StateOfPlayer.OnGround;
         }
         else
         {
-            StateOfPlayer result = IsHitWall(actorParamater.walldistance, currentNormal, actorParamater.wallMask, out RaycastHit[] hitInfos);
+            StateOfPlayer result = IsHitWall(_playerPartPos,actorParamater.walldistance, currentNormal, actorParamater.wallMask, out RaycastHit[] hitInfos);
             if (result != StateOfPlayer.None)
             {
                 foreach (var info in hitInfos)
@@ -73,7 +79,21 @@ public class ActorStateJudge : MonoBehaviour
 
         return StateOfPlayer.InAir;
     }
+    /// <summary>
+    /// 接地判定
+    /// </summary>
+    /// <param name="radios"></param>
+    /// <param name="distance"></param>
+    /// <param name="groundMask"></param>
+    /// <param name="hitObjInfo"></param>
+    /// <returns></returns>
+    bool IsGrounded(Transform playerPartPos, float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo)
+    {
+        Vector3 rayCenter = _playerPartPos[2].transform.position; //Rayの原点
+        Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
 
+        return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+    }
     /// <summary>
     /// 接壁判定
     /// </summary>
@@ -81,7 +101,7 @@ public class ActorStateJudge : MonoBehaviour
     /// <param name="currentNormal"></param>
     /// <param name="wallMask"></param>
     /// <returns></returns>
-    StateOfPlayer IsHitWall(float walldistance, Vector2 currentNormal, LayerMask wallMask, out RaycastHit[] hitInfo)
+    StateOfPlayer IsHitWall(Transform[] playerPartPos, float walldistance, Vector2 currentNormal, LayerMask wallMask, out RaycastHit[] hitInfo)
     {
         for (int i = 0; i < _playerPartPos.Length; i++)//頭、胸、足からRayを飛ばし壁に当たっているか判定する
         {
@@ -93,22 +113,11 @@ public class ActorStateJudge : MonoBehaviour
         return HitMaps.HitObjMapToWall(_isPlayerPart);
     }
 
-    /// <summary>
-    /// 接地判定
-    /// </summary>
-    /// <param name="radios"></param>
-    /// <param name="distance"></param>
-    /// <param name="groundMask"></param>
-    /// <param name="hitObjInfo"></param>
-    /// <returns></returns>
-    bool IsGrounded(float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo,float rayDistance = 0.3f)
+    public bool GroundNormal(Transform playerPartPos, float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo, float rayDistance = 0.3f)
     {
-        Vector3 rayCenter = _playerPartPos[2].transform.position; //Rayの原点
+        Vector3 rayCenter = _playerPartPos[2].transform.position + Vector3.forward * rayDistance; //Rayの原点
         Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
-        Vector3 nextRayCenter = new(rayCenter.x, rayCenter.y, rayCenter.z + rayDistance);
-        Ray rayOneFootPlayer = new Ray(nextRayCenter, Vector3.down); //Ray射出
 
-        return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)
-            && Physics.SphereCast(rayOneFootPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+        return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
     }
 }
