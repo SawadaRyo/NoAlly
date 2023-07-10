@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-10T08:43:51.616Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67" etag="oLUc7Lfy2Dg38z8JVaP5" version="21.6.1" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-10T11:22:20.203Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67" etag="cSPZg1x8l8VIuWRUZ0_H" version="21.6.1" type="github">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="996" dy="619" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -49,11 +49,21 @@
           <mxGeometry x="200" y="470" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="iiV7SqjSZfQjSf6b4sjV-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="1" source="iiV7SqjSZfQjSf6b4sjV-7" target="iiV7SqjSZfQjSf6b4sjV-8">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="720" />
+              <mxPoint x="260" y="720" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-        <mxCell id="iiV7SqjSZfQjSf6b4sjV-48" value="Text" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="iiV7SqjSZfQjSf6b4sjV-23">
-          <mxGeometry x="0.2229" relative="1" as="geometry">
+        <mxCell id="iiV7SqjSZfQjSf6b4sjV-52" value="Text" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="iiV7SqjSZfQjSf6b4sjV-23">
+          <mxGeometry x="-0.0029" relative="1" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iiV7SqjSZfQjSf6b4sjV-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="iiV7SqjSZfQjSf6b4sjV-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="680" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="iiV7SqjSZfQjSf6b4sjV-7" value="Attack" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -92,13 +102,18 @@
         <mxCell id="iiV7SqjSZfQjSf6b4sjV-25" value="Death" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="510" y="340" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="iiV7SqjSZfQjSf6b4sjV-42" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" edge="1" parent="1" target="iiV7SqjSZfQjSf6b4sjV-3">
+        <mxCell id="iiV7SqjSZfQjSf6b4sjV-42" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="iiV7SqjSZfQjSf6b4sjV-8" target="iiV7SqjSZfQjSf6b4sjV-3">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="390" y="680" as="sourcePoint" />
             <mxPoint x="350" y="380" as="targetPoint" />
             <Array as="points">
               <mxPoint x="390" y="380" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iiV7SqjSZfQjSf6b4sjV-49" value="playerが索敵範囲から出た" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="iiV7SqjSZfQjSf6b4sjV-42">
+          <mxGeometry x="-0.2249" relative="1" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
