@@ -115,12 +115,30 @@ public class PlayerMoveInput : MonoBehaviour
         _h = Input.GetAxisRaw("Horizontal");
         _v = Input.GetAxisRaw("Vertical");
         _isDash.Value = Input.GetButtonDown("Dash");
-        _isJump.Value = Input.GetButton("Jump");
 
         _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVector(_h, _v)); //現在のプレイヤーの進行方向を代入
 
         _currentLocation.Value = _stateJudge.ActorCurrentLocation(_ableJump, _playerParamater, _currentMoveVector.Value, out _hitInfo);
         Debug.Log(_currentLocation.Value);
+    }
+
+    void InputUpdateJump()
+    {
+        _isJump.Value = Input.GetButton("Jump");
+        //if (IsJump.Value && _ableJumpInput)
+        //{
+        //    _actorFallJudge = ActorVec.Up;
+        //    _ableJumpInput = false;
+        //}
+        //else if (_actorFallJudge == ActorVec.Down)
+        //{
+        //    _actorFallJudge = ActorVec.None;
+        //}
+        //else if (!IsJump.Value)
+        //{
+        //    //_timeInAir = 0f;
+        //    _ableJumpInput = true;
+        //}
     }
 
     void OnDisable()
