@@ -89,7 +89,7 @@ public class ActorStateJudge : MonoBehaviour
     /// <returns></returns>
     bool IsGrounded(Transform playerPartPos, float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo)
     {
-        Vector3 rayCenter = _playerPartPos[2].transform.position; //Rayの原点
+        Vector3 rayCenter = playerPartPos.transform.position; //Rayの原点
         Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
 
         return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
@@ -103,9 +103,9 @@ public class ActorStateJudge : MonoBehaviour
     /// <returns></returns>
     StateOfPlayer IsHitWall(Transform[] playerPartPos, float walldistance, Vector2 currentNormal, LayerMask wallMask, out RaycastHit[] hitInfo)
     {
-        for (int i = 0; i < _playerPartPos.Length; i++)//頭、胸、足からRayを飛ばし壁に当たっているか判定する
+        for (int i = 0; i < playerPartPos.Length; i++)//頭、胸、足からRayを飛ばし壁に当たっているか判定する
         {
-            Ray isWallOnRay = new(_playerPartPos[i].transform.position, new(currentNormal.normalized.x, 1f, 0f));
+            Ray isWallOnRay = new(playerPartPos[i].transform.position, new(currentNormal.normalized.x, 1f, 0f));
             _isPlayerPart[i] = Physics.Raycast(isWallOnRay, out RaycastHit hit, walldistance, wallMask);
             _raycastHits[i] = hit;
         }
@@ -119,5 +119,9 @@ public class ActorStateJudge : MonoBehaviour
         Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
 
         return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+    }
+    public void JumpInputJudge()
+    {
+
     }
 }
