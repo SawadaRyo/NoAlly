@@ -7,9 +7,9 @@ using UniRx;
 public class PlayerBehaviorDash : State
 {
     FloatReactiveProperty _time = new();
-    Vector3 _velo = Vector3.zero;
+    float _veloX = 0f;
 
-    public Vector3 Velo => _velo;
+    public float VeloX => _veloX;
 
     protected override void OnEnter(State prevState)
     {
@@ -21,7 +21,8 @@ public class PlayerBehaviorDash : State
         base.OnUpdate();
         var moveVec = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
         Owner.Rb.velocity = moveVec + ActorMove.DodgeVec(moveVec.normalized, Owner.PlayerParamater.dashSpeed);
-        _velo = moveVec;
+        Debug.Log(Owner.Rb.velocity);
+        _veloX = Owner.CurrentMoveVector.Value.x * (Owner.PlayerParamater.speed + Owner.PlayerParamater.dashSpeed);
         _time.Value -= Time.deltaTime;
     }
     protected override void OnExit(State nextState)
@@ -30,12 +31,18 @@ public class PlayerBehaviorDash : State
         _time.Value = 0f;
         if (nextState is PlayerBehaviorInAir air)
         {
-            air.BeforeMoveVec = _velo;
+            air.BeforeMoveVec = new Vector3(_veloX, 0f, 0f);
         }
     }
 
     public override void OnTranstion()
     {
+        Owner.CurrentLocation
+           .Skip(1)
+           .Subscribe(currentLocation =>
+           {
+               Owner.PlayerStateMachine.Dispatch((int)currentLocation);
+           }).AddTo(Owner);
         _time
             .Subscribe(time =>
             {
@@ -44,12 +51,13 @@ public class PlayerBehaviorDash : State
                     Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
                 }
             });
-        Owner.CurrentLocation
-           .Skip(1)
-           .Subscribe(currentLocation =>
-           {
-               Owner.PlayerStateMachine.Dispatch((int)currentLocation);
-           }).AddTo(Owner);
+        Owner.CurrentMoveVector
+            .Skip(1)
+            .Where(_ => Owner.CurrentMoveVector.Value == Vector2.zero)
+            .Subscribe(moveVector =>
+            {
+                Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
+            });
     }
 
     ~PlayerBehaviorDash()

@@ -10,7 +10,7 @@ public class PlayerMoveInput : MonoBehaviour
     [SerializeField]
     ActorParamater _playerParamater;
     [SerializeField]
-    ActorStateJudge _stateJudge;
+    PlayerStateJudge _stateJudge;
     [SerializeField]
     PlayerAnimator _playerAnimator;
     [SerializeField]
@@ -30,7 +30,17 @@ public class PlayerMoveInput : MonoBehaviour
     delegate void PlayerInputUpdate();
     PlayerInputUpdate? _playerInputUpdate;
 
-    public bool AbleDash => _ableDash;
+    public bool AbleDash
+    {
+        get 
+        { 
+            if(_stateMachine != null)
+            {
+                return !(_stateMachine.CurrentState is PlayerBehaviorDash);
+            }
+            return false;
+        }
+    }
     public StateMachine<PlayerMoveInput> PlayerStateMachine => _stateMachine;
     public ActorParamater PlayerParamater => _playerParamater;
     public Rigidbody Rb => _rb;
@@ -49,7 +59,8 @@ public class PlayerMoveInput : MonoBehaviour
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                OnUpdate();
+                OnUpdateMove();
+                OnUpdateJump();
             }).AddTo(this);
         Observable.EveryFixedUpdate()
             .Subscribe(_ =>
@@ -110,7 +121,7 @@ public class PlayerMoveInput : MonoBehaviour
             }).AddTo(this);
     }
 
-    void OnUpdate()
+    void OnUpdateMove()
     {
         _h = Input.GetAxisRaw("Horizontal");
         _v = Input.GetAxisRaw("Vertical");
@@ -122,7 +133,7 @@ public class PlayerMoveInput : MonoBehaviour
         Debug.Log(_currentLocation.Value);
     }
 
-    void InputUpdateJump()
+    void OnUpdateJump()
     {
         _isJump.Value = Input.GetButton("Jump");
         //if (IsJump.Value && _ableJumpInput)
