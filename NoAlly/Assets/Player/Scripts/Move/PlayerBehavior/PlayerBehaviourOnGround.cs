@@ -19,20 +19,6 @@ public class PlayerBehaviourOnGround : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (Owner.IsJump.Value && _ableJumpInput)
-        {
-            _actorFallJudge = ActorVec.Up;
-            _ableJumpInput = false;
-        }
-        else if (_actorFallJudge == ActorVec.Down)
-        {
-            _actorFallJudge = ActorVec.None;
-        }
-        else if (!Owner.IsJump.Value)
-        {
-            //_timeInAir = 0f;
-            _ableJumpInput = true;
-        }
         if (Owner.CurrentMoveVector.Value == Vector2.zero)
         {
             Owner.Rb.velocity = Vector3.zero;
@@ -74,7 +60,8 @@ public class PlayerBehaviourOnGround : State
                 }
             }).AddTo(Owner);
         Owner.IsDash
-            .Where(_ => Owner.IsDash.Value == true)
+            .Where(_ => Owner.IsDash.Value
+                     && Owner.AbleDash)
             .Subscribe(isDash =>
             {
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);

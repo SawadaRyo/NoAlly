@@ -10,8 +10,7 @@ public class PlayerAnimator : MonoBehaviour
     public void MoveAnimation(PlayerMoveInput moveInput)
     {
         moveInput.IsDash
-            .Where(_ => moveInput.IsDash.Value == true 
-                     && moveInput.AbleDash == true 
+            .Where(_ => moveInput.AbleDash == true 
                      && moveInput.CurrentMoveVector.Value.x != 0f
                      && moveInput.CurrentLocation.Value == StateOfPlayer.OnGround)
             .Subscribe(isDash =>
