@@ -1,9 +1,8 @@
 //日本語コメント可
-using ActorBehaviourMove;
 using State = StateMachine<PlayerMoveInput>.State;
-using ActorBehaviourJump;
 using UnityEngine;
 using UniRx;
+using ActorBehaviourMove.Move;
 
 public class PlayerBehaviourOnGround : State
 {
@@ -25,7 +24,7 @@ public class PlayerBehaviourOnGround : State
         else if (Owner.CurrentMoveVector.Value != Vector2.zero)
         {
             Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
-            if(Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
+            if (Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
             {
                 Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.GroundNormal);
             }
@@ -68,7 +67,7 @@ public class PlayerBehaviourOnGround : State
             {
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
-        Owner.IsJump
-            .Where()
+        //Owner.IsJump
+        //    .Where()
     }
 }
