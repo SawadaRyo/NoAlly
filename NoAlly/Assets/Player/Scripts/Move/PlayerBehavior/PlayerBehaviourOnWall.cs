@@ -1,5 +1,5 @@
 //日本語コメント可
-using ActorBehaviour;
+using ActorBehaviourMove;
 using UniRx;
 using State = StateMachine<PlayerMoveInput>.State;
 

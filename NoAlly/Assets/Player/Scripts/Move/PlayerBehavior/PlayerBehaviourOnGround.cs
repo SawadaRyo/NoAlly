@@ -1,14 +1,13 @@
 //日本語コメント可
-using ActorBehaviour;
+using ActorBehaviourMove;
 using State = StateMachine<PlayerMoveInput>.State;
+using ActorBehaviourJump;
 using UnityEngine;
 using UniRx;
 
 public class PlayerBehaviourOnGround : State
 {
-    bool _ableJumpInput = true;
     Vector3 _velo = Vector3.zero;
-    ActorVec _actorFallJudge;
 
     public Vector3 Velo => _velo;
 
@@ -25,9 +24,12 @@ public class PlayerBehaviourOnGround : State
         }
         else if (Owner.CurrentMoveVector.Value != Vector2.zero)
         {
-            Owner.Rb.velocity =
-                ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
-            //Debug.Log(_rb.velocity);
+            Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
+            if(Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
+            {
+                Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.GroundNormal);
+            }
+            Debug.Log(Owner.Rb.velocity);
             _velo = Owner.Rb.velocity;
         }
 
@@ -66,5 +68,7 @@ public class PlayerBehaviourOnGround : State
             {
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
+        Owner.IsJump
+            .Where()
     }
 }

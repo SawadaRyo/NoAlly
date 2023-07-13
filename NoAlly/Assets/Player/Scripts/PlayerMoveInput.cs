@@ -1,5 +1,5 @@
 //日本語コメント可
-using ActorBehaviour;
+using ActorBehaviourMove;
 using System.Collections;
 using UnityEngine;
 using UniRx;
@@ -17,7 +17,6 @@ public class PlayerMoveInput : MonoBehaviour
     Rigidbody _rb = null;
 
     bool _ableJump = true;
-    bool _ableDash = true;
     float _h = 0f;
     float _v = 0f;
     StateMachine<PlayerMoveInput> _stateMachine = null;
@@ -44,6 +43,7 @@ public class PlayerMoveInput : MonoBehaviour
     public StateMachine<PlayerMoveInput> PlayerStateMachine => _stateMachine;
     public ActorParamater PlayerParamater => _playerParamater;
     public Rigidbody Rb => _rb;
+    public Vector3 GroundNormal => _stateJudge.GroundNormalChack(_currentMoveVector.Value,_playerParamater.graundDistance,_playerParamater.groundMask);
     public RaycastHit HitInfo => _hitInfo;
     public IReadOnlyReactiveProperty<bool> IsDash => _isDash;
     public IReadOnlyReactiveProperty<bool> IsJump => _isJump;
@@ -67,11 +67,6 @@ public class PlayerMoveInput : MonoBehaviour
             {
                 ActorMove.ActorRotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector.Value);
                 _stateMachine.Update();
-                //if (this._playerInputUpdate != null)
-                //{
-                //    _playerInputUpdate();
-                //    //Debug.Log(_rb.velocity);
-                //}
             }).AddTo(this);
     }
     void SetState()
@@ -107,18 +102,6 @@ public class PlayerMoveInput : MonoBehaviour
                         break;
                 }
             });
-        _isJump
-            .Skip(1)
-            .Where(_ => _isJump.Value == true)
-            .Subscribe(isJump =>
-            {
-                if (!_ableJump) return;
-                //ActorMove.ActorJumpMethod(_playerParamater.jumpPower
-                //                        , _rb
-                //                        , _currentMoveVector
-                //                        , _currentLocation.Value);
-                _ableJump = false;
-            }).AddTo(this);
     }
 
     void OnUpdateMove()
@@ -127,7 +110,7 @@ public class PlayerMoveInput : MonoBehaviour
         _v = Input.GetAxisRaw("Vertical");
         _isDash.Value = Input.GetButtonDown("Dash");
 
-        _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVector(_h, _v)); //現在のプレイヤーの進行方向を代入
+        _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVectorNormal(_h, _v)); //現在のプレイヤーの進行方向を代入
 
         _currentLocation.Value = _stateJudge.ActorCurrentLocation(_ableJump, _playerParamater, _currentMoveVector.Value, out _hitInfo);
         Debug.Log(_currentLocation.Value);
@@ -135,21 +118,7 @@ public class PlayerMoveInput : MonoBehaviour
 
     void OnUpdateJump()
     {
-        _isJump.Value = Input.GetButton("Jump");
-        //if (IsJump.Value && _ableJumpInput)
-        //{
-        //    _actorFallJudge = ActorVec.Up;
-        //    _ableJumpInput = false;
-        //}
-        //else if (_actorFallJudge == ActorVec.Down)
-        //{
-        //    _actorFallJudge = ActorVec.None;
-        //}
-        //else if (!IsJump.Value)
-        //{
-        //    //_timeInAir = 0f;
-        //    _ableJumpInput = true;
-        //}
+        _isJump.SetValueAndForceNotify(Input.GetButton("Jump"));
     }
 
     void OnDisable()

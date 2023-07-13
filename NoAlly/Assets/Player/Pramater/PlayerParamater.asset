@@ -18,7 +18,7 @@ MonoBehaviour:
   _turnSpeed: 25
   _jumpPower: 12
   _graundDistance: 0.25
-  _isGroundRengeRadios: 0.1
+  _isGroundRengeRadios: 0.2
   _groundMask:
     serializedVersion: 2
     m_Bits: 72
