@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActorStateJudge : MonoBehaviour
+public class PlayerStateJudge : MonoBehaviour
 {
     [SerializeField, Header("接地、接触判定のposition")]
     Transform[] _playerPartPos = new Transform[3];
     [SerializeField, Header("プレイヤーカメラ")]
     Camera _playerCamera = null;
+    [SerializeField, Header("")]
+    Vector3 _rayDirection = Vector3.zero;
 
     [Tooltip("")]
     Dictionary<PlayerPart, Transform> _playerPartPosList = new();
@@ -35,7 +37,7 @@ public class ActorStateJudge : MonoBehaviour
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    public Vector2 CurrentMoveVector(float h, float v)
+    public Vector2 CurrentMoveVectorNormal(float h, float v)
     {
         if (h > 0)
         {
@@ -57,13 +59,13 @@ public class ActorStateJudge : MonoBehaviour
     /// <returns></returns>
     public StateOfPlayer ActorCurrentLocation(bool ableJump, ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
     {
-        if (IsGrounded(_playerPartPos[2],actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
+        if (IsGrounded(_playerPartPos[2], actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
         {
             return StateOfPlayer.OnGround;
         }
         else
         {
-            StateOfPlayer result = IsHitWall(_playerPartPos,actorParamater.walldistance, currentNormal, actorParamater.wallMask, out RaycastHit[] hitInfos);
+            StateOfPlayer result = IsHitWall(_playerPartPos, actorParamater.walldistance, currentNormal, actorParamater.wallMask, out RaycastHit[] hitInfos);
             if (result != StateOfPlayer.None)
             {
                 foreach (var info in hitInfos)
@@ -113,15 +115,31 @@ public class ActorStateJudge : MonoBehaviour
         return HitMaps.HitObjMapToWall(_isPlayerPart);
     }
 
-    public bool GroundNormal(Transform playerPartPos, float radios, float distance, LayerMask groundMask, out RaycastHit hitInfo, float rayDistance = 0.3f)
+    public Vector3 GroundNormalChack(Vector2 currntMoveVec, float distance, LayerMask groundMask)
     {
-        Vector3 rayCenter = _playerPartPos[2].transform.position + Vector3.forward * rayDistance; //Rayの原点
-        Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
-
-        return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+        var rayDirectionX = _rayDirection.x * currntMoveVec.x;
+        var rayDirection = (_playerPartPos[2].transform.localPosition + new Vector3(rayDirectionX, _rayDirection.y)).normalized;
+        Ray rayUnderPlayer = new Ray(_playerPartPos[2].transform.localPosition, rayDirection); //Ray射出
+        if(Physics.Raycast(rayUnderPlayer, out RaycastHit hitInfo, distance, groundMask))
+        {
+            Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(currntMoveVec.x, 0f, 0f), hitInfo.normal);
+            if(Mathf.Abs(onPlane.y) <= 0.01f)
+            {
+                return onPlane.normalized;
+            }
+        }
+        return Vector3.zero;
     }
-    public void JumpInputJudge()
-    {
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        var rayCenter1 = new Vector3(_playerPartPos[2].transform.localPosition.x + _rayDirection.x, _playerPartPos[2].transform.localPosition.y + _rayDirection.y);
+        var rayCenter2 = new Vector3(-(_playerPartPos[2].transform.localPosition.x + _rayDirection.x), _playerPartPos[2].transform.localPosition.y + _rayDirection.y);
+
+        Ray rayUnderPlayer1 = new Ray(_playerPartPos[2].transform.position, rayCenter1);
+        Ray rayUnderPlayer2 = new Ray(_playerPartPos[2].transform.position, rayCenter2);
+        Gizmos.DrawRay(rayUnderPlayer1);
+        Gizmos.DrawRay(rayUnderPlayer2);
     }
 }
