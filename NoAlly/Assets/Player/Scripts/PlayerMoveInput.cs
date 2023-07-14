@@ -1,11 +1,12 @@
 //日本語コメント可
-using ActorBehaviourMove;
-using System.Collections;
+using ActorBehaviour.Move;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
+using ActorBehaviour.Jump;
+using ActorBehaviour.Wall;
 
-public class PlayerMoveInput : MonoBehaviour
+public class PlayerMoveInput : MonoBehaviour,IHumanoid,IActor<PlayerMoveInput>
 {
     [SerializeField]
     ActorParamater _playerParamater;
@@ -19,15 +20,16 @@ public class PlayerMoveInput : MonoBehaviour
     bool _ableJump = true;
     float _h = 0f;
     float _v = 0f;
+    ActorAir _actorJump = null;
+    ActorMove _actorMove = new ActorMove();
+    ActorWall _actorWall = new ActorWall();
+
     StateMachine<PlayerMoveInput> _stateMachine = null;
     BoolReactiveProperty _isJump = new();
     BoolReactiveProperty _isDash = new();
     ReactiveProperty<Vector2> _currentMoveVector = new();
     ReactiveProperty<StateOfPlayer> _currentLocation = new();
     RaycastHit _hitInfo;
-
-    delegate void PlayerInputUpdate();
-    PlayerInputUpdate? _playerInputUpdate;
 
     public bool AbleDash
     {
@@ -49,9 +51,13 @@ public class PlayerMoveInput : MonoBehaviour
     public IReadOnlyReactiveProperty<bool> IsJump => _isJump;
     public IReadOnlyReactiveProperty<Vector2> CurrentMoveVector => _currentMoveVector;
     public IReadOnlyReactiveProperty<StateOfPlayer> CurrentLocation => _currentLocation;
+    public ActorAir JumpBehaviour => _actorJump;
+    public ActorMove MoveBehaviour => _actorMove;
+    public ActorWall WallBehaviour => _actorWall;
 
     void Start()
     {
+        _actorJump = new ActorAir(this);
         _stateJudge.Initialize();
         _playerAnimator.MoveAnimation(this);
         SetState();
@@ -65,7 +71,7 @@ public class PlayerMoveInput : MonoBehaviour
         Observable.EveryFixedUpdate()
             .Subscribe(_ =>
             {
-                ActorMove.ActorRotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector.Value);
+                _actorMove.ActorRotateMethod(_playerParamater.turnSpeed, transform, _currentMoveVector.Value);
                 _stateMachine.Update();
             }).AddTo(this);
     }

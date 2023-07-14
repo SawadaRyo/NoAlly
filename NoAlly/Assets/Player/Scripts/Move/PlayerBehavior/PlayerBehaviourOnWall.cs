@@ -1,5 +1,4 @@
 //日本語コメント可
-using ActorBehaviourMove;
 using UniRx;
 using State = StateMachine<PlayerMoveInput>.State;
 
@@ -31,7 +30,7 @@ public class PlayerBehaviourOnWall : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        ActorMove.ActorBehaviourOnWall(Owner.PlayerParamater.wallSlideSpeed
+        Owner.WallBehaviour.ActorBehaviourOnWall(Owner.PlayerParamater.wallSlideSpeed
             ,Owner.Rb
             ,Owner.HitInfo
             ,Owner.CurrentLocation.Value);

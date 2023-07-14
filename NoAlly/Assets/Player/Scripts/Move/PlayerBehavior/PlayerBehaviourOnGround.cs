@@ -2,17 +2,16 @@
 using State = StateMachine<PlayerMoveInput>.State;
 using UnityEngine;
 using UniRx;
-using ActorBehaviourMove.Move;
 
 public class PlayerBehaviourOnGround : State
 {
-    Vector3 _velo = Vector3.zero;
+    float _veloX = 0f;
 
-    public Vector3 Velo => _velo;
 
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
+        _veloX = 0f;
     }
     protected override void OnUpdate()
     {
@@ -23,22 +22,21 @@ public class PlayerBehaviourOnGround : State
         }
         else if (Owner.CurrentMoveVector.Value != Vector2.zero)
         {
-            Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
+            Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
             if (Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
             {
-                Owner.Rb.velocity = ActorMove.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.GroundNormal);
+                Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.GroundNormal);
             }
             Debug.Log(Owner.Rb.velocity);
-            _velo = Owner.Rb.velocity;
         }
-
+        _veloX = Owner.CurrentMoveVector.Value.x * Owner.PlayerParamater.speed;
     }
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
         if (nextState is PlayerBehaviorInAir air)
         {
-            air.BeforeMoveVec = _velo;
+            air.BeforeMoveVecX = _veloX;
         }
     }
 
@@ -53,9 +51,6 @@ public class PlayerBehaviourOnGround : State
                     case StateOfPlayer.InAir:
                         Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
                         break;
-                    case StateOfPlayer.GripingWall:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.GripingWall);
-                        break;
                     default:
                         break;
                 }
@@ -67,7 +62,12 @@ public class PlayerBehaviourOnGround : State
             {
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
-        //Owner.IsJump
-        //    .Where()
+        Owner.IsJump
+            .Where(_ => Owner.IsJump.Value)
+            .Subscribe(isjump =>
+            {
+                Owner.Rb.velocity =  new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+                Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
+            });
     }
 }

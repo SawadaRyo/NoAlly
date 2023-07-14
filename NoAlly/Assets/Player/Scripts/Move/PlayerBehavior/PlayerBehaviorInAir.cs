@@ -1,14 +1,13 @@
 //日本語コメント可
-using ActorBehaviourMove;
 using State = StateMachine<PlayerMoveInput>.State;
 using UnityEngine;
 using UniRx;
 
 public class PlayerBehaviorInAir : State
 {
-    Vector3 _beforeMoveVec = Vector3.zero;
+    float _beforeMoveVecX = 0f;
 
-    public Vector3 BeforeMoveVec { get => _beforeMoveVec; set => _beforeMoveVec = value; } 
+    public float BeforeMoveVecX { get => _beforeMoveVecX; set => _beforeMoveVecX = value; } 
 
     protected override void OnEnter(State prevState)
     {
@@ -17,7 +16,8 @@ public class PlayerBehaviorInAir : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        //Owner.Rb.velocity = _beforeMoveVec+ ActorMove.ActorVectorInAir(Owner.IsJump.Value,Owner.PlayerParamater.jumpPower);
+        Owner.Rb.velocity = new Vector3(_beforeMoveVecX ,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+        Debug.Log(Owner.Rb.velocity);
     }
     protected override void OnExit(State nextState)
     {
