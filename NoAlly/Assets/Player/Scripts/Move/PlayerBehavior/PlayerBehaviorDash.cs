@@ -22,6 +22,7 @@ public class PlayerBehaviorDash : State
         var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
         Owner.Rb.velocity = moveVec + Owner.MoveBehaviour.DodgeVec(moveVec.normalized, Owner.PlayerParamater.dashSpeed);
         _veloX = Owner.CurrentMoveVector.Value.x * (Owner.PlayerParamater.speed + Owner.PlayerParamater.dashSpeed);
+        Debug.Log(_veloX);
         _time.Value -= Time.deltaTime;
     }
     protected override void OnExit(State nextState)
@@ -31,6 +32,7 @@ public class PlayerBehaviorDash : State
         if (nextState is PlayerBehaviorInAir air)
         {
             air.BeforeMoveVecX = _veloX;
+            
         }
     }
 
@@ -48,7 +50,6 @@ public class PlayerBehaviorDash : State
                 if (time < 0f)
                 {
                     Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
-                    _veloX = 0f;
                 }
             });
         Owner.CurrentMoveVector
@@ -59,7 +60,7 @@ public class PlayerBehaviorDash : State
                 Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
             });
         Owner.IsJump
-            .Where(_ => Owner.IsJump.Value)
+            .Where(_ => Owner.IsJump.Value && IsActive && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
                 Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);

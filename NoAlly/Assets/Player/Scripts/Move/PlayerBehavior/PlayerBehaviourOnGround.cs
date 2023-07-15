@@ -27,7 +27,6 @@ public class PlayerBehaviourOnGround : State
             {
                 Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.GroundNormal);
             }
-            Debug.Log(Owner.Rb.velocity);
         }
         _veloX = Owner.CurrentMoveVector.Value.x * Owner.PlayerParamater.speed;
     }
@@ -37,6 +36,7 @@ public class PlayerBehaviourOnGround : State
         if (nextState is PlayerBehaviorInAir air)
         {
             air.BeforeMoveVecX = _veloX;
+            Debug.Log(_veloX);
         }
     }
 
@@ -63,7 +63,7 @@ public class PlayerBehaviourOnGround : State
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
         Owner.IsJump
-            .Where(_ => Owner.IsJump.Value)
+            .Where(_ => Owner.IsJump.Value && IsActive && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
                 Owner.Rb.velocity =  new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);

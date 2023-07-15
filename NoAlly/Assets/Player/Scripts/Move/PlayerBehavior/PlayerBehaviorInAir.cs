@@ -17,11 +17,12 @@ public class PlayerBehaviorInAir : State
     {
         base.OnUpdate();
         Owner.Rb.velocity = new Vector3(_beforeMoveVecX ,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
-        Debug.Log(Owner.Rb.velocity);
+        Debug.Log(_beforeMoveVecX);
     }
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
+        //_beforeMoveVecX = 0f;
     }
 
     public override void OnTranstion()

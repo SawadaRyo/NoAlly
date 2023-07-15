@@ -55,19 +55,22 @@ public class StateMachine<TOwner>
     /// </summary>
     public abstract class State
     {
-        /// <summary>
-        /// このステートを管理しているステートマシン
-        /// </summary>
+        
+        [Tooltip("このステートを管理しているステートマシン")]
         protected StateMachine<TOwner> StateMachine => stateMachine;
         internal StateMachine<TOwner> stateMachine;
-        /// <summary>
-        /// 遷移の一覧
-        /// </summary>
+        [Tooltip("遷移の一覧")]
         internal Dictionary<int, State> transitions = new Dictionary<int, State>();
+        [Tooltip("このステートの起動判定")]
+        bool isActive = false;
         /// <summary>
         /// このステートのオーナー
         /// </summary>
         protected TOwner Owner => stateMachine.Owner;
+        /// <summary>
+        /// このステートの起動判定
+        /// </summary>
+        protected bool IsActive => isActive;
 
        
 
@@ -82,6 +85,7 @@ public class StateMachine<TOwner>
         /// </summary>
         internal void Enter(State prevState)
         {
+            isActive = true;
             OnEnter(prevState);
         }
         /// <summary>
@@ -106,6 +110,7 @@ public class StateMachine<TOwner>
         /// </summary>
         internal void Exit(State nextState)
         {
+            isActive = false;
             OnExit(nextState);
         }
         /// <summary>
