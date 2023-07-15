@@ -2,49 +2,89 @@
 using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using DG.Tweening;
 
-namespace ActorBehaviourMove
+namespace ActorBehaviour
 {
     namespace Jump
     {
-        public static class ActorJump
+        public class ActorAir
         {
             [Tooltip("")]
-            static float _timeInAir = 0f;
+            IHumanoid _owner = null;
             [Tooltip("")]
-            static ActorVec _actorFallJudge = ActorVec.None;
+            bool _keyLook = false;
             [Tooltip("")]
-            static bool _keyLook = false;
+            bool _isJump = false;
+            [Tooltip("")]
+            float _timeInAir = 0f;
+            [Tooltip("")]
+            ActorVec _actorFallJudge = ActorVec.None;
 
-            static public void SetPlayerState(bool jumpKey)
+            [Tooltip("")]
+            StateOfPlayer stateOfPlayer => _owner.CurrentLocation.Value;
+            public bool KeyLook => _keyLook;
+
+            public ActorAir(IHumanoid owner)
             {
-                if (jumpKey)
-                {
+                _owner = owner;
+                ValueWatcher();
+            }
 
-                }
-                else
-                {
-                    _keyLook = false;
-                }
+            void ValueWatcher()
+            {
+                _owner.IsJump
+                    .Subscribe(isJump =>
+                    {
+                        if (isJump)
+                        {
+                            _isJump = !_keyLook;
+                            if(_isJump && stateOfPlayer == StateOfPlayer.OnGround)
+                            {
+                                _actorFallJudge = ActorVec.Up;
+                            }
+                        }
+                        else
+                        {
+                            _isJump = false;
+                            _keyLook = false;
+                        }
+                    });
+                _owner.CurrentLocation
+                    .Subscribe(location =>
+                    {
+                        switch(location)
+                        {
+                            case StateOfPlayer.OnGround:
+                                _timeInAir = 0f;
+                                _keyLook = true;
+                                break;
+                            case StateOfPlayer.GripingWall:
+                                _timeInAir = 0f;
+                                _keyLook = true;
+                                break;
+                            default:
+                                break;
+                        }
+                    });
             }
 
             /// <summary>
             /// ジャンプ力と落下策度を計算(毎フレーム計算)
             /// </summary>
-            /// <param name="isJump"></param>
             /// <param name="jumoPawer"></param>
             /// <param name="fallSpeed"></param>
             /// <param name="jumpLowerLimit"></param>
             /// <returns></returns>
-            static public Vector3 ActorVectorInAir(bool isJump, float jumoPawer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
+            public Vector3 ActorVectorInAir(float jumoPawer, float fallSpeed = 120f, float jumpLowerLimit = 0.03f)
             {
                 Vector3 ActorVertical = Vector3.zero;
                 switch (_actorFallJudge)
                 {
                     case ActorVec.Up:
                         _timeInAir += Time.deltaTime;
-                        if (isJump || jumpLowerLimit > _timeInAir)
+                        if (_isJump || jumpLowerLimit > _timeInAir)
                         {
                             ActorVertical.y = jumoPawer;
                             ActorVertical.y -= (fallSpeed * Mathf.Pow(_timeInAir, 2));
@@ -78,21 +118,20 @@ namespace ActorBehaviourMove
                     default:
                         break;
                 }
-                Debug.Log(_timeInAir);
                 return ActorVertical;
             }
         }
     }
     namespace Move
     {
-        public static class ActorMove
+        public class ActorMove
         {
             [Tooltip("")]
-            static bool _ableJumpInput = true;
+            bool _ableJumpInput = true;
             [Tooltip("")]
-            static Vector2 _velo = Vector2.zero;
+            Vector2 _velo = Vector2.zero;
             [Tooltip("Playerの向き")]
-            static ActorVec _actorVec = ActorVec.Right;
+            ActorVec _actorVec = ActorVec.Right;
 
             /// <summary>
             /// プレイヤーの回転
@@ -101,7 +140,7 @@ namespace ActorBehaviourMove
             /// <param name="rb"></param>
             /// <param name="rotVector"></param>
             /// <returns></returns>
-            static public ActorVec ActorRotateMethod(float turnSpeed, Transform targetObject, Vector2 rotVector)
+            public ActorVec ActorRotateMethod(float turnSpeed, Transform targetObject, Vector2 rotVector)
             {
                 //プレイヤーの方向転換
                 if (rotVector.x == -1)
@@ -132,7 +171,7 @@ namespace ActorBehaviourMove
             /// <param name="normalVector">地面の法線ベクトル</param>
             /// <param name="playerState"></param>
             /// <returns></returns>
-            static public Vector3 ActorMoveMethod(float h, float moveSpeed, Rigidbody rb, Vector3 normalVector)
+            public Vector3 ActorMoveMethod(float h, float moveSpeed, Rigidbody rb, Vector3 normalVector)
             {
                 //Debug.Log(normalVector);
                 //プレイヤーの移動
@@ -156,32 +195,26 @@ namespace ActorBehaviourMove
             /// </summary>
             /// <param name="DashPower"></param>
             /// <returns></returns>
-            static public Vector3 DodgeVec(Vector2 currentVec, float DashPower = 10f)
+            public Vector3 DodgeVec(Vector2 currentVec, float DashPower = 10f)
             {
                 return new Vector3(currentVec.x, currentVec.y, 0f) * DashPower;
             }
-
-            
         }
     }
     namespace Wall
     {
-        static public class ActorWall
+        public class ActorWall
         {
             [Tooltip("")]
-            static bool _clinbing = false;
+            BoolReactiveProperty _clinbing = new();
             [Tooltip("")]
-            static bool _slideWall = false;
+            bool _slideWall = false;
             [Tooltip("")]
-            static bool _ableJumpInput = true;
+            bool _ableJumpInput = true;
             [Tooltip("")]
-            static float _timeInAir = 0f;
-            [Tooltip("")]
-            static Vector2 _velo = Vector2.zero;
-            [Tooltip("Playerの向き")]
-            static ActorVec _actorVec = ActorVec.Right;
-            [Tooltip("")]
-            static ActorVec _actorFallJudge = ActorVec.None;
+            Vector2 _velo = Vector2.zero;
+
+            public IReadOnlyReactiveProperty<bool> Climbing => _clinbing;
 
             /// <summary>
             /// 壁張り付き中の挙動
@@ -192,7 +225,7 @@ namespace ActorBehaviourMove
             /// <param name="rb"></param>
             /// <param name="hitInfo"></param>
             /// <param name="stateOfPlayer"></param>
-            static public void ActorBehaviourOnWall(float wallSlideSpeed, Rigidbody rb, RaycastHit hitInfo, StateOfPlayer stateOfPlayer)
+            public void ActorBehaviourOnWall(float wallSlideSpeed, Rigidbody rb, RaycastHit hitInfo, StateOfPlayer stateOfPlayer)
             {
                 switch (stateOfPlayer)
                 {
@@ -206,24 +239,24 @@ namespace ActorBehaviourMove
                         rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
                         break;
                     case StateOfPlayer.GripingWallEdge:
-                        if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col))
+                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col))
                         {
                             _slideWall = false;
                             Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
                                                          , hitInfo.transform.position.y + col.size.y
                                                          , hitInfo.transform.position.z);
-                            Climbing(rb, wallOfTop);
+                            ClimbWall(rb, wallOfTop);
                             break;
                         }
                         break;
                     case StateOfPlayer.HangingWallEgde:
-                        if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col1))
+                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
                         {
                             _slideWall = false;
                             Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
                                                          , hitInfo.transform.position.y + col1.size.y
                                                          , hitInfo.transform.position.z);
-                            Climbing(rb, wallOfTop);
+                            ClimbWall(rb, wallOfTop);
                         }
                         break;
                     default:
@@ -240,7 +273,7 @@ namespace ActorBehaviourMove
             /// 壁キックのインターバル
             /// </summary>
             /// <param name="interval"></param>
-            static async void AbleWallKick(float interval = 0.2f)
+            async void AbleWallKick(float interval = 0.2f)
             {
                 _ableJumpInput = false;
                 await UniTask.Delay(TimeSpan.FromSeconds(interval));
@@ -252,7 +285,7 @@ namespace ActorBehaviourMove
             /// <param name="endPoint">よじ登る終点</param>
             /// <param name="duration">よじ登るのにかかる時間</param>
             /// <returns></returns>
-            static void Climbing(Rigidbody rb, Vector3 endPoint, float duration = 0.5f)
+            void ClimbWall(Rigidbody rb, Vector3 endPoint, float duration = 0.5f)
             {
                 //float time = 0;
                 //Vector3 startPoint = rb.transform.position;
@@ -263,13 +296,13 @@ namespace ActorBehaviourMove
                     .OnStart(() =>
                     {
                         rb.isKinematic = true;
-                        _clinbing = true;
+                        _clinbing.Value = true;
                         _ableJumpInput = false;
                     })
                     .OnComplete(() =>
                     {
                         rb.transform.position = endPoint;
-                        _clinbing = false;
+                        _clinbing.Value = false;
                         _ableJumpInput = true;
                         rb.isKinematic = false;
                     });
