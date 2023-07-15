@@ -206,19 +206,15 @@ namespace ActorBehaviour
         public class ActorWall
         {
             [Tooltip("")]
-            bool _clinbing = false;
+            BoolReactiveProperty _clinbing = new();
             [Tooltip("")]
             bool _slideWall = false;
             [Tooltip("")]
             bool _ableJumpInput = true;
             [Tooltip("")]
-            float _timeInAir = 0f;
-            [Tooltip("")]
             Vector2 _velo = Vector2.zero;
-            [Tooltip("Playerの向き")]
-            ActorVec _actorVec = ActorVec.Right;
-            [Tooltip("")]
-            ActorVec _actorFallJudge = ActorVec.None;
+
+            public IReadOnlyReactiveProperty<bool> Climbing => _clinbing;
 
             /// <summary>
             /// 壁張り付き中の挙動
@@ -243,24 +239,24 @@ namespace ActorBehaviour
                         rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
                         break;
                     case StateOfPlayer.GripingWallEdge:
-                        if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col))
+                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col))
                         {
                             _slideWall = false;
                             Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
                                                          , hitInfo.transform.position.y + col.size.y
                                                          , hitInfo.transform.position.z);
-                            Climbing(rb, wallOfTop);
+                            ClimbWall(rb, wallOfTop);
                             break;
                         }
                         break;
                     case StateOfPlayer.HangingWallEgde:
-                        if (!_clinbing && hitInfo.collider.TryGetComponent(out BoxCollider col1))
+                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
                         {
                             _slideWall = false;
                             Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
                                                          , hitInfo.transform.position.y + col1.size.y
                                                          , hitInfo.transform.position.z);
-                            Climbing(rb, wallOfTop);
+                            ClimbWall(rb, wallOfTop);
                         }
                         break;
                     default:
@@ -289,7 +285,7 @@ namespace ActorBehaviour
             /// <param name="endPoint">よじ登る終点</param>
             /// <param name="duration">よじ登るのにかかる時間</param>
             /// <returns></returns>
-            void Climbing(Rigidbody rb, Vector3 endPoint, float duration = 0.5f)
+            void ClimbWall(Rigidbody rb, Vector3 endPoint, float duration = 0.5f)
             {
                 //float time = 0;
                 //Vector3 startPoint = rb.transform.position;
@@ -300,13 +296,13 @@ namespace ActorBehaviour
                     .OnStart(() =>
                     {
                         rb.isKinematic = true;
-                        _clinbing = true;
+                        _clinbing.Value = true;
                         _ableJumpInput = false;
                     })
                     .OnComplete(() =>
                     {
                         rb.transform.position = endPoint;
-                        _clinbing = false;
+                        _clinbing.Value = false;
                         _ableJumpInput = true;
                         rb.isKinematic = false;
                     });

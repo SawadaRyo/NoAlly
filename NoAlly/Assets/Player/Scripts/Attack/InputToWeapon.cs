@@ -6,9 +6,11 @@ using UniRx.Triggers;
 
 public class InputToWeapon : MonoBehaviour
 {
-    [SerializeField, Tooltip("武器のプレハブ")]
+    [SerializeField, Header("")]
+    WeaponScriptableObjects _weaponData = null;
+    [SerializeField, Header("武器のプレハブ")]
     ObjectBase _weaponPrefab = null;
-    [SerializeField]
+    [SerializeField,Header("")]
     Animator _playerAnimator = null;
 
     [Tooltip("武器が変形中かどうか")]

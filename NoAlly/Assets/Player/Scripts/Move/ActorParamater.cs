@@ -1,7 +1,7 @@
 //日本語コメント可
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerParamater", menuName = "ScriptableObjects/PlayerParamater", order = 1)]
+[CreateAssetMenu(fileName = "ActorParamater", menuName = "ScriptableObjects/ActorParamater/Player", order = 1)]
 
 public class ActorParamater : ScriptableObject
 {

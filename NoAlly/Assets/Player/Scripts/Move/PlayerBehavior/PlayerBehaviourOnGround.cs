@@ -56,17 +56,20 @@ public class PlayerBehaviourOnGround : State
                 }
             }).AddTo(Owner);
         Owner.IsDash
-            .Where(_ => Owner.IsDash.Value
+            .Where(_ => IsActive
+                     && Owner.IsDash.Value
                      && Owner.AbleDash)
             .Subscribe(isDash =>
             {
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
         Owner.IsJump
-            .Where(_ => Owner.IsJump.Value && IsActive && !Owner.JumpBehaviour.KeyLook)
+            .Where(_ => IsActive
+                     && Owner.IsJump.Value
+                     && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
-                Owner.Rb.velocity =  new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+                Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
             });
     }

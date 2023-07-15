@@ -10,7 +10,7 @@ public class PlayerAnimator : MonoBehaviour
     public void MoveAnimation(PlayerMoveInput moveInput)
     {
         moveInput.IsDash
-            .Where(_ => moveInput.AbleDash == true 
+            .Where(_ => moveInput.AbleDash == true
                      && moveInput.CurrentMoveVector.Value.x != 0f
                      && moveInput.CurrentLocation.Value == StateOfPlayer.OnGround)
             .Subscribe(isDash =>
@@ -28,6 +28,11 @@ public class PlayerAnimator : MonoBehaviour
             {
                 _animator.SetFloat("MoveSpeed", Mathf.Abs(currentMoveVec.x * moveInput.PlayerParamater.speed));
             }).AddTo(moveInput);
+        moveInput.WallBehaviour.Climbing
+            .Subscribe(climbing =>
+            {
+                _animator.SetBool("Climbing", climbing);
+            });
     }
     public void ActionAnimation(InputToWeapon weaponInput)
     {

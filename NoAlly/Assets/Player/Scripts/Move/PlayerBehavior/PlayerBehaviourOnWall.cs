@@ -1,5 +1,6 @@
 //日本語コメント可
 using UniRx;
+using UnityEngine;
 using State = StateMachine<PlayerMoveInput>.State;
 
 public class PlayerBehaviourOnWall : State
@@ -7,6 +8,7 @@ public class PlayerBehaviourOnWall : State
     public override void OnTranstion()
     {
         Owner.CurrentLocation
+            .Where(_ => IsActive)
             .Subscribe(currentLocation =>
             {
                 switch (currentLocation)
@@ -21,6 +23,15 @@ public class PlayerBehaviourOnWall : State
                         break;
                 }
             }).AddTo(Owner);
+        Owner.IsJump
+            .Where(_ => IsActive 
+                     && Owner.IsJump.Value
+                     && !Owner.JumpBehaviour.KeyLook)
+            .Subscribe(isJump =>
+            {
+                Debug.Log(Owner.HitInfo.normal);
+                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * Owner.PlayerParamater.speed,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.speed).y);
+            });
     }
 
     protected override void OnEnter(State prevState)
