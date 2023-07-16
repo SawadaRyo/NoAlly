@@ -30,7 +30,7 @@ public class PlayerBehaviourOnWall : State
             .Subscribe(isJump =>
             {
                 Debug.Log(Owner.HitInfo.normal);
-                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * Owner.PlayerParamater.speed,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.speed).y);
+                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * Owner.PlayerParamater.speed,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.speed,Owner.PlayerParamater.fallSpeed).y);
             });
     }
 

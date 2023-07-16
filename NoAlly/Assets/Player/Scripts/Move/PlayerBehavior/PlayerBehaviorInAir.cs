@@ -16,7 +16,7 @@ public class PlayerBehaviorInAir : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        Owner.Rb.velocity = new Vector3(_beforeMoveVecX ,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+        Owner.Rb.velocity = new Vector3(_beforeMoveVecX ,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower,Owner.PlayerParamater.fallSpeed).y);
         Debug.Log(_beforeMoveVecX);
     }
     protected override void OnExit(State nextState)

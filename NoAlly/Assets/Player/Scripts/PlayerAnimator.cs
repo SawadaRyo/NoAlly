@@ -34,8 +34,4 @@ public class PlayerAnimator : MonoBehaviour
                 _animator.SetBool("Climbing", climbing);
             });
     }
-    public void ActionAnimation(InputToWeapon weaponInput)
-    {
-
-    }
 }

@@ -69,7 +69,7 @@ public class PlayerBehaviourOnGround : State
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
-                Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+                Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower, Owner.PlayerParamater.fallSpeed).y);
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
             });
     }

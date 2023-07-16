@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
+public class PlayerAttackStateController : SingletonBehaviour<PlayerAttackStateController>
 {
     [SerializeField,Tooltip("WeaponProcessingƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
     WeaponProcessing _weaponProcessing;
