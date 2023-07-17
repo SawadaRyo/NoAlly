@@ -20,7 +20,7 @@ public class PlayerAnimator : MonoBehaviour
         moveInput.CurrentLocation
             .Subscribe(currentLocation =>
             {
-                _animator.SetBool("Jump", currentLocation == StateOfPlayer.InAir);
+                _animator.SetBool("InAir", currentLocation == StateOfPlayer.InAir);
                 _animator.SetBool("WallGrip", currentLocation == StateOfPlayer.GripingWall);
             }).AddTo(moveInput);
         moveInput.CurrentMoveVector
