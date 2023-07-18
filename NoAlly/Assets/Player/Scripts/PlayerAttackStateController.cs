@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
+public class PlayerAttackStateController : SingletonBehaviour<PlayerAttackStateController>
 {
     [SerializeField,Tooltip("WeaponProcessingクラスを格納する変数")]
     WeaponProcessing _weaponProcessing;
@@ -12,8 +12,6 @@ public class PlayerAnimationState : SingletonBehaviour<PlayerAnimationState>
     bool _ableMove = true;
     [Tooltip("入力可能か判定する変数")]
     bool _ableInput = true;
-    [Tooltip("「_able…」の変数の値を初期化するか判定する変数")]
-    float _shootTiming = 0.35f;
     [Tooltip("攻撃アニメーションに遷移しているか確認する変数")]
     bool _isAttack = false;
     ReactiveProperty<BoolAttack> _boolAttack = new ReactiveProperty<BoolAttack>();

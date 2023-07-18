@@ -38,7 +38,7 @@ public class InputToWeapon : MonoBehaviour
     {
         //if (!WeaponMenuHander.Instance.MenuIsOpen)
         {
-            if (!PlayerAnimationState.Instance.IsAttack)
+            if (!PlayerAttackStateController.Instance.IsAttack)
             {
                 _isSwtchWeapon.Value = Input.GetButton("SubWeaponSwitch");
             }
@@ -67,7 +67,7 @@ public class InputToWeapon : MonoBehaviour
     public void WeaponAttack(Animator playerAnimator)
     {
         //if (!PlayerAnimationState.Instance.AbleInput || WeaponMenuHander.Instance.MenuIsOpen) return;
-        if (!PlayerAnimationState.Instance.AbleInput) return;
+        if (!PlayerAttackStateController.Instance.AbleInput) return;
         if (_inDeformation) return;
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack") && _targetWeapon != null)

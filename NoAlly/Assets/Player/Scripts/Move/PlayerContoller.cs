@@ -57,7 +57,7 @@ public class PlayerContoller : MonoBehaviour
     [Tooltip("入力可能かどうか")]
     bool _ableInput = true;
     [Tooltip("PlayerAnimationStateを格納する変数")]
-    PlayerAnimationState _animState;
+    PlayerAttackStateController _animState;
     [Tooltip("Rigidbodyコンポーネントの取得")]
     Rigidbody _rb;
     [Tooltip("プレイヤーのステータス")]
@@ -88,7 +88,7 @@ public class PlayerContoller : MonoBehaviour
         _velo = _rb.velocity;
         _animator = GetComponent<Animator>();
         _playerStatus = GetComponentInChildren<PlayerStatus>();
-        _animState = PlayerAnimationState.Instance;
+        _animState = PlayerAttackStateController.Instance;
     }
     void Update()
     {

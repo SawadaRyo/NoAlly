@@ -16,7 +16,7 @@ MonoBehaviour:
   _dashSpeed: 5
   _dashIntarval: 0.5
   _turnSpeed: 25
-  _jumpPower: 12
+  _jumpPower: 14
   _graundDistance: 0.25
   _isGroundRengeRadios: 0.2
   _groundMask:

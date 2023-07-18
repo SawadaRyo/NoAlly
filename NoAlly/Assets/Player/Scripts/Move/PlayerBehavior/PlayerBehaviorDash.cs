@@ -1,5 +1,5 @@
 //日本語コメント可
-using State = StateMachine<PlayerMoveInput>.State;
+using State = StateMachine<InputToPlayerMove>.State;
 using UnityEngine;
 using UniRx;
 
@@ -19,10 +19,9 @@ public class PlayerBehaviorDash : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.Rb, Owner.HitInfo.normal);
+        var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.HitInfo);
         Owner.Rb.velocity = moveVec + Owner.MoveBehaviour.DodgeVec(moveVec.normalized, Owner.PlayerParamater.dashSpeed);
-        _veloX = Owner.CurrentMoveVector.Value.x * (Owner.PlayerParamater.speed + Owner.PlayerParamater.dashSpeed);
-        Debug.Log(_veloX);
+        _veloX = Owner.PlayerParamater.speed + Owner.PlayerParamater.dashSpeed;
         _time.Value -= Time.deltaTime;
     }
     protected override void OnExit(State nextState)
@@ -31,8 +30,11 @@ public class PlayerBehaviorDash : State
         _time.Value = 0f;
         if (nextState is PlayerBehaviorInAir air)
         {
-            air.BeforeMoveVecX = _veloX;
-            
+            air.MoveSpeedX = _veloX;
+        }
+        else if(nextState is PlayerBehaviourOnWall wall)
+        {
+            wall.MoveSpeedX = _veloX;
         }
     }
 

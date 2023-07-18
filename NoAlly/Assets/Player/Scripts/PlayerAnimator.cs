@@ -1,13 +1,17 @@
 //日本語コメント可
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField]
     Animator _animator = null;
 
-    public void MoveAnimation(PlayerMoveInput moveInput)
+    [Tooltip("Animationの遷移状況")]
+    ObservableStateMachineTrigger _trigger = default;
+
+    public void MoveAnimation(InputToPlayerMove moveInput)
     {
         moveInput.IsDash
             .Where(_ => moveInput.AbleDash == true
@@ -20,7 +24,7 @@ public class PlayerAnimator : MonoBehaviour
         moveInput.CurrentLocation
             .Subscribe(currentLocation =>
             {
-                _animator.SetBool("Jump", currentLocation == StateOfPlayer.InAir);
+                _animator.SetBool("InAir", currentLocation == StateOfPlayer.InAir);
                 _animator.SetBool("WallGrip", currentLocation == StateOfPlayer.GripingWall);
             }).AddTo(moveInput);
         moveInput.CurrentMoveVector
@@ -33,9 +37,5 @@ public class PlayerAnimator : MonoBehaviour
             {
                 _animator.SetBool("Climbing", climbing);
             });
-    }
-    public void ActionAnimation(InputToWeapon weaponInput)
-    {
-
     }
 }

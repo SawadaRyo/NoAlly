@@ -18,6 +18,8 @@ public class ActorParamater : ScriptableObject
     [Header("Jump")]
     [SerializeField, Header("プレイヤーのジャンプ力")]
     float _jumpPower = 7f;
+    [SerializeField, Header("プレイヤーの落下速度")]
+    float _fallSpeed = 90f;
     [SerializeField, Header("接地判定のRayの射程")]
     float _graundDistance = 0.25f;
     [SerializeField, Header("接地判定のSphierCastの半径")]
@@ -47,6 +49,7 @@ public class ActorParamater : ScriptableObject
     public float dashInterval => _dashIntarval;
 
     public float jumpPower => _jumpPower;
+    public float fallSpeed => _fallSpeed;
     public float graundDistance => _graundDistance;
     public float isGroundRengeRadios => _isGroundRengeRadios;
     public LayerMask groundMask => _groundMask;
