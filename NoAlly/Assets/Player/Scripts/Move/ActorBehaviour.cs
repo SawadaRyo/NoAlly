@@ -1,7 +1,6 @@
 //日本語コメント可
 using System;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 using UniRx;
 using DG.Tweening;
 
@@ -40,7 +39,7 @@ namespace ActorBehaviour
                         if (isJump)
                         {
                             _isJump = !_keyLook;
-                            if(_isJump && stateOfPlayer == StateOfPlayer.OnGround)
+                            if (_isJump && stateOfPlayer == StateOfPlayer.OnGround)
                             {
                                 _actorFallJudge = ActorVec.Up;
                             }
@@ -54,7 +53,7 @@ namespace ActorBehaviour
                 _owner.CurrentLocation
                     .Subscribe(location =>
                     {
-                        switch(location)
+                        switch (location)
                         {
                             case StateOfPlayer.OnGround:
                                 _timeInAir = 0f;
@@ -164,17 +163,51 @@ namespace ActorBehaviour
                 return _actorVec;
             }
             /// <summary>
-            /// プレイヤーの移動
+            /// プレイヤーの移動(RaycastHit版)
             /// </summary>
             /// <param name="h"></param>
             /// <param name="moveSpeed"></param>
-            /// <param name="normalVector">地面の法線ベクトル</param>
-            /// <param name="playerState"></param>
+            /// <param name="hitNormal">地面の法線ベクトル</param>
             /// <returns></returns>
-            public Vector3 ActorMoveMethod(float h, float moveSpeed, Rigidbody rb, Vector3 normalVector)
+            public Vector3 ActorMoveMethod(float h, float moveSpeed, RaycastHit hitNormal, bool ableInput = true)
             {
-                //Debug.Log(normalVector);
-                //プレイヤーの移動
+                if (!ableInput) return Vector3.zero;
+
+                Vector3 velo = Vector3.zero;
+                if (hitNormal.collider)
+                {
+                    Vector3 normalVector = hitNormal.normal;
+                    Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
+                    _velo.x = onPlane.x * moveSpeed;
+                    _velo.y = onPlane.y * moveSpeed;
+                    //Debug.Log(onPlane.y);
+                    if (Mathf.Abs(onPlane.y) <= 0.01f || Mathf.Abs(onPlane.y) > 1f && _ableJumpInput)
+                    {
+                        velo = new Vector3(_velo.x, 0f, 0f);
+                    }
+                    else if (Mathf.Abs(onPlane.y) > 0.01f && _ableJumpInput)
+                    {
+                        velo = new Vector3(_velo.x, _velo.y, 0f);
+                    }
+                }
+                else
+                {
+                    velo = new Vector3(h * moveSpeed, 0f, 0f);
+                }
+                return velo;
+            }
+
+            /// <summary>
+            /// プレイヤーの移動(RaycastHit版)
+            /// </summary>
+            /// <param name="h">入力方向</param>
+            /// <param name="moveSpeed">移動速度</param>
+            /// <param name="normalVector">地面の法線ベクトル</param>
+            /// <returns></returns>
+            public Vector3 ActorMoveMethod(float h, float moveSpeed, Vector3 normalVector, bool ableInput = true)
+            {
+                if (!ableInput) return Vector3.zero;
+
                 Vector3 velo = Vector3.zero;
                 Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(h, 0f, 0f), normalVector);
                 _velo.x = onPlane.x * moveSpeed;
@@ -269,16 +302,7 @@ namespace ActorBehaviour
             }
 
 
-            /// <summary>
-            /// 壁キックのインターバル
-            /// </summary>
-            /// <param name="interval"></param>
-            async void AbleWallKick(float interval = 0.2f)
-            {
-                _ableJumpInput = false;
-                await UniTask.Delay(TimeSpan.FromSeconds(interval));
-                _ableJumpInput = true;
-            }
+
             /// <summary>
             /// 壁のよじ登り
             /// </summary>

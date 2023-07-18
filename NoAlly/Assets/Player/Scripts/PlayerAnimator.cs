@@ -1,13 +1,17 @@
 //日本語コメント可
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField]
     Animator _animator = null;
 
-    public void MoveAnimation(PlayerMoveInput moveInput)
+    [Tooltip("Animationの遷移状況")]
+    ObservableStateMachineTrigger _trigger = default;
+
+    public void MoveAnimation(InputToPlayerMove moveInput)
     {
         moveInput.IsDash
             .Where(_ => moveInput.AbleDash == true
