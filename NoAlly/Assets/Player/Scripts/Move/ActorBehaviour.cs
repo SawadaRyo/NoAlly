@@ -258,7 +258,7 @@ namespace ActorBehaviour
             /// <param name="rb"></param>
             /// <param name="hitInfo"></param>
             /// <param name="stateOfPlayer"></param>
-            public void ActorBehaviourOnWall(float wallSlideSpeed, Rigidbody rb, RaycastHit hitInfo, StateOfPlayer stateOfPlayer)
+            public void ActorSlideWall(float wallSlideSpeed, Rigidbody rb, RaycastHit hitInfo, StateOfPlayer stateOfPlayer)
             {
                 switch (stateOfPlayer)
                 {
@@ -270,27 +270,6 @@ namespace ActorBehaviour
                             rb.isKinematic = false;
                         }
                         rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
-                        break;
-                    case StateOfPlayer.GripingWallEdge:
-                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col))
-                        {
-                            _slideWall = false;
-                            Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
-                                                         , hitInfo.transform.position.y + col.size.y
-                                                         , hitInfo.transform.position.z);
-                            ClimbWall(rb, wallOfTop);
-                            break;
-                        }
-                        break;
-                    case StateOfPlayer.HangingWallEgde:
-                        if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
-                        {
-                            _slideWall = false;
-                            Vector3 wallOfTop = new Vector3(hitInfo.transform.position.x
-                                                         , hitInfo.transform.position.y + col1.size.y
-                                                         , hitInfo.transform.position.z);
-                            ClimbWall(rb, wallOfTop);
-                        }
                         break;
                     default:
                         if (_slideWall)
@@ -309,27 +288,35 @@ namespace ActorBehaviour
             /// <param name="endPoint">よじ登る終点</param>
             /// <param name="duration">よじ登るのにかかる時間</param>
             /// <returns></returns>
-            void ClimbWall(Rigidbody rb, Vector3 endPoint, float duration = 0.5f)
+            public void ClimbWall(Rigidbody rb, RaycastHit hitInfo, float duration = 0.5f)
             {
                 //float time = 0;
                 //Vector3 startPoint = rb.transform.position;
 
                 //_animator.SetBool("Climbing", true);
+                if (_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
+                {
+                    _slideWall = false;
+                    Vector3 endPoint = new Vector3(hitInfo.transform.position.x
+                                                 , hitInfo.transform.position.y + col1.size.y
+                                                 , hitInfo.transform.position.z);
 
-                rb.transform.DOMove(endPoint, duration)
-                    .OnStart(() =>
-                    {
-                        rb.isKinematic = true;
-                        _clinbing.Value = true;
-                        _ableJumpInput = false;
-                    })
-                    .OnComplete(() =>
-                    {
-                        rb.transform.position = endPoint;
-                        _clinbing.Value = false;
-                        _ableJumpInput = true;
-                        rb.isKinematic = false;
-                    });
+                    rb.transform.DOMove(endPoint, duration)
+                        .OnStart(() =>
+                        {
+                            rb.isKinematic = true;
+                            _clinbing.Value = true;
+                            _ableJumpInput = false;
+                        })
+                        .OnComplete(() =>
+                        {
+                            rb.transform.position = endPoint;
+                            _clinbing.Value = false;
+                            _ableJumpInput = true;
+                            rb.isKinematic = false;
+                        });
+                }
+                
                 //while (time < duration)
                 //{
                 //    rb.transform.position = Vector3.Lerp(startPoint, endPoint, time / duration);
