@@ -8,6 +8,9 @@ using State = StateMachine<InputToPlayerMove>.State;
 public class PlayerBehaviourOnWall : State
 {
     float _moveSpeedX = 0f;
+    RaycastHit _wallState;
+
+    public RaycastHit WallState => _wallState;
 
     public float MoveSpeedX { get => _moveSpeedX; set => _moveSpeedX = value; }
 
@@ -17,15 +20,17 @@ public class PlayerBehaviourOnWall : State
             .Where(_ => IsActive)
             .Subscribe(currentLocation =>
             {
+                _wallState = Owner.HitInfo;
                 switch (currentLocation)
                 {
-                    case StateOfPlayer.OnGround:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.OnGround);
+                    case StateOfPlayer.GripingWallEdge:
+                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.GripingWallEdge);
                         break;
-                    case StateOfPlayer.InAir:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
+                    case StateOfPlayer.HangingWallEgde:
+                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.HangingWallEgde);
                         break;
                     default:
+                        Owner.PlayerStateMachine.Dispatch((int)currentLocation);
                         break;
                 }
             }).AddTo(Owner);
@@ -35,7 +40,7 @@ public class PlayerBehaviourOnWall : State
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isJump =>
             {
-                Debug.Log(Owner.HitInfo.normal);
+                //Debug.Log(Owner.HitInfo.normal);
                 Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * MoveSpeedX,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.speed,Owner.PlayerParamater.fallSpeed).y);
                 AbleWallKick(Owner.PlayerParamater.wallKickInterval);
             });
@@ -48,7 +53,7 @@ public class PlayerBehaviourOnWall : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        Owner.WallBehaviour.ActorBehaviourOnWall(Owner.PlayerParamater.wallSlideSpeed
+        Owner.WallBehaviour.ActorSlideWall(Owner.PlayerParamater.wallSlideSpeed
             ,Owner.Rb
             ,Owner.HitInfo
             ,Owner.CurrentLocation.Value);
