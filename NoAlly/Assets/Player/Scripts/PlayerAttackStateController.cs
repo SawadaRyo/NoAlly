@@ -6,7 +6,7 @@ using UniRx.Triggers;
 public class PlayerAttackStateController : SingletonBehaviour<PlayerAttackStateController>
 {
     [SerializeField,Tooltip("WeaponProcessingƒNƒ‰ƒX‚ğŠi”[‚·‚é•Ï”")]
-    WeaponProcessing _weaponProcessing;
+    WeaponController _weaponProcessing;
 
     [Tooltip("ˆÚ“®‰Â”\‚©”»’è‚·‚é•Ï”")]
     bool _ableMove = true;
@@ -128,9 +128,9 @@ public class PlayerAttackStateController : SingletonBehaviour<PlayerAttackStateC
     void AttackToCombatWeapon(BoolAttack isAttack) => _boolAttack.Value = isAttack;
     void AttackToArrowWeapon()
     {
-        if(_weaponProcessing.TargetWeapon.Base is IArrowWeapon arrow)
+        if(_weaponProcessing.EquipementWeapon is IArrowWeapon arrow)
         {
-            arrow.InsBullet(_weaponProcessing.TargetWeapon.Action);
+            arrow.InsBullet();
         }
     }
     void FinishAttackMove(int moveSpeed)
@@ -153,13 +153,6 @@ public class PlayerAttackStateController : SingletonBehaviour<PlayerAttackStateC
     void MoveSound(int soundNum)
     {
         GameManager.InstanceSM.CallSound(SoundUsage.PLAYERMOVE, SoundType.SE, soundNum);
-    }
-    void InsBullet(Transform muzzlePos)
-    {
-        if(_weaponProcessing.TargetWeapon.Type == WeaponType.ARROW)
-        {
-            //_weaponProcessing.TargetWeapon.Action.WeaponChargeAttackMethod()
-        }
     }
 
     private void OnDisable()

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ArrowAction : WeaponAction,IArrowAction
+public class ArrowAction
 {
     public BulletType WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, ElementType elementType)
     {

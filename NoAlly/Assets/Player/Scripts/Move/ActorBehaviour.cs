@@ -294,7 +294,7 @@ namespace ActorBehaviour
                 //Vector3 startPoint = rb.transform.position;
 
                 //_animator.SetBool("Climbing", true);
-                if (_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
+                if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
                 {
                     _slideWall = false;
                     Vector3 endPoint = new Vector3(hitInfo.transform.position.x

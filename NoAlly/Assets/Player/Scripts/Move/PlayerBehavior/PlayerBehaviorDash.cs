@@ -42,6 +42,7 @@ public class PlayerBehaviorDash : State
     {
         Owner.CurrentLocation
            .Skip(1)
+           .Where(_ => IsActive)
            .Subscribe(currentLocation =>
            {
                Owner.PlayerStateMachine.Dispatch((int)currentLocation);

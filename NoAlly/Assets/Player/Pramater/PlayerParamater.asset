@@ -26,7 +26,7 @@ MonoBehaviour:
   _wallJump: 10
   _wallSlideSpeed: 1.5
   _wallKickInterval: 0.3
-  _walldistance: 0.3
+  _walldistance: 0.5
   _wallRadios: 0.3
   _colliderPointOnWall:
   - {x: 0, y: 0, z: 0}
