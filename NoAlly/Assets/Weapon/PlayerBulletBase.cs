@@ -12,7 +12,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     Rigidbody _rb = default;
 
     [Tooltip("íeÇÃçUåÇóÕ")]
-    float[] _bulletPowers = new float[Enum.GetValues(typeof(ElementType)).Length];
+    WeaponPower _bulletPowers = WeaponPower.zero;
     float _speed = 0f;
     [Tooltip("íeÇÃëÆê´")]
     ElementType _elementType;
@@ -46,8 +46,8 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         _rb.isKinematic = !_isActive;
         SetTrans();
         ActiveObject(true);
-        _bulletPowers = Owner.WeaponPower;
-        _elementType = Owner.ElementType;
+        _bulletPowers = Owner.GetWeaponPower;
+        _elementType = Owner.WeaponOwner.CurrentElement.Value;
         Disactive(_intervalTime);
     }
 
@@ -70,7 +70,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         _rb = GetComponent<Rigidbody>();
         _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
-        _bulletPowers = Owner.WeaponPower;
+        _bulletPowers = Owner.GetWeaponPower;
         ActiveObject(_isActive);
     }
 

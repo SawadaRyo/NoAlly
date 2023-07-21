@@ -8,76 +8,90 @@ namespace DataOfWeapon
 {
     public class SetWeaponData : MonoBehaviour
     {
-        [SerializeField]
-        PlayerContoller _player;
-        [SerializeField, Header("攻撃判定の中心点")]
-        Transform _attackPos = null;
-        [SerializeField, Header("攻撃判定の中心点")]
-        Transform _poolPos = null;
+        [Tooltip("")]
+        Dictionary<WeaponType, WeaponBase> _weaponDataEntity = new();
 
-        [Tooltip("武器のスクリプタブルオブジェクト")]
-        WeaponScriptableObjects _weaponScriptableObjects = null;
-        WeaponData[] _weaponDatas = new WeaponData[Enum.GetValues(typeof(WeaponType)).Length - 1];
-        List<IWeaponBase> _weaponBases = null;
-        List<IWeaponAction> _weaponAction = null;
+        public Dictionary<WeaponType, WeaponBase> WeaponDatas => _weaponDataEntity;
 
-        public WeaponData[] GetAllWeapons => _weaponDatas;
-        public WeaponData GetWeapon(WeaponType type) => _weaponDatas[(int)type];
-
-
-        public void Initialize(WeaponScriptableObjects weapon)
+        public void WeaponBaseInstantiate(WeaponController weaponOwner, WeaponScriptableObjects weaponData)
         {
-            if (_weaponScriptableObjects != null) return;
-            _weaponScriptableObjects = weapon;
-            _weaponBases = new List<IWeaponBase>(){
-                new WeaponSword(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SWORD],_attackPos),
-                new WeaponLance(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.LANCE],_attackPos),
-                new WeaponArrow(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.ARROW],_player,_attackPos,_poolPos),
-                new WeaponShield(_weaponScriptableObjects.WeaponDatas[(int)WeaponType.SHIELD], _attackPos)
-            };
-            _weaponAction = new List<IWeaponAction>(){
-                new CombatAction(),
-                new CombatAction(),
-                new ArrowAction(),
-                new CombatAction()
-            };
-
-            for (int i = 0; i < _weaponDatas.Length; i++)
+            foreach (var d in weaponData.WeaponDatas)
             {
-                _weaponDatas[i] = new WeaponData(_weaponBases[i], _weaponAction[i], (WeaponType)i);
+                WeaponBase weaponBase = null;
+                try
+                {
+                    var t = Type.GetType(d.WeaponBaseName.ToString());
+                    object obj = Activator.CreateInstance(t);
+                    if (obj is WeaponCombat combat)
+                    {
+                        weaponBase = combat;
+                    }
+                    else if (obj is WeaponArrow arrow)
+                    {
+                        weaponBase = arrow;
+                    }
+                    else if (obj is WeaponShield shield)
+                    {
+                        weaponBase = shield;
+                    }
+                    else
+                    {
+                        Debug.LogError("想定されていないクラスです");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                
+                if(weaponBase != null)
+                {
+                    weaponBase.Initializer(weaponOwner, d);
+                    _weaponDataEntity.Add(d.TypeOfWeapon, weaponBase);
+                }
             }
         }
     }
 }
 
-
-[Serializable]
 public class WeaponData
 {
-    [Tooltip("武器を使用しているか")]
-    bool _weaponEnabled;
-    [Tooltip("武器本体")]
-    IWeaponBase _base = null;
-    [Tooltip("武器のアクション")]
-    IWeaponAction _action = null;
-    [Tooltip("武器の種類")]
-    WeaponType _type = WeaponType.NONE;
+    WeaponBase _weaponBase;
+    WeaponDataEntity _weaponDataEntity;
 
-    public bool WeaponEnabled { get => _weaponEnabled; set => _weaponEnabled = value; }
-    public IWeaponBase Base => _base;
-    public IWeaponAction Action => _action;
-    public WeaponType Type => _type;
+    public WeaponBase weaponBase => _weaponBase;
+    public WeaponDataEntity weaponDataEntity => _weaponDataEntity;
 
-    public WeaponData(IWeaponBase @base, IWeaponAction action, WeaponType type)
+    public WeaponData(WeaponDataEntity weaponDataEntity)
     {
-        _base = @base;
-        _action = action;
-        _type = type;
-    }
-    public void SetActAndBase(IWeaponBase @base, IWeaponAction action)
-    {
-        _base = @base;
-        _action = action;
+        _weaponDataEntity = weaponDataEntity;
+
+        try
+        {
+            var t = Type.GetType(_weaponDataEntity.WeaponBaseName.ToString());
+            object obj = Activator.CreateInstance(t);
+            if (obj is WeaponCombat combat)
+            {
+                _weaponBase = combat;
+            }
+            else if (obj is WeaponArrow arrow)
+            {
+                _weaponBase = arrow;
+            }
+            else if (obj is WeaponShield shield)
+            {
+                _weaponBase = shield;
+            }
+            else
+            {
+                Debug.LogError("想定されていないクラスです");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.ToString());
+        }
     }
 }
+
 

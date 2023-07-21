@@ -3,53 +3,98 @@ using System.Collections;
 using UnityEngine;
 
 
-public abstract class WeaponBase : IWeaponBase
+public abstract class WeaponBase : IWeaponBase<WeaponController>
 {
+    [Tooltip("—­‚ßŽžŠÔ")]
+    float _chargeCount = 0f;
     [Tooltip("•Ší‚ÌƒI[ƒi[")]
-    protected ObjectOwner _owner = ObjectOwner.PLAYER;
+    protected WeaponController _owner = null;
+    [Tooltip("")]
+    protected WeaponPower _weaponPower = WeaponPower.zero;
 
-    [Tooltip("•Ší‚ÌUŒ‚—Í —v‘f1:•Ší‚Ì•¨—UŒ‚—Í,—v‘f2:•Ší‚Ì‰ŠUŒ‚—Í,—v‘f3:•Ší‚Ì—‹UŒ‚—Í,—v‘f4:•Ší‚Ì•XŒ‹UŒ‚—Í")]
-    protected float[] _weaponPower = new float[Enum.GetValues(typeof(ElementType)).Length];
-    [Tooltip("—­‚ß’iŠKB—v‘f1:—­‚ßUŒ‚‘æ1’iŠK,—v‘f2:—­‚ßUŒ‚‘æ2’iŠK")]
-    protected float[] _chargeLevels = null;
     [Tooltip("UŒ‚”»’è‚Ì’†S")]
     protected Transform _attackPos;
     [Tooltip("‚±‚Ì•Ší‚Ìƒf[ƒ^")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("•Ší‚ª•ÏŒ`’†‚©‚Ç‚¤‚©")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
-    [Tooltip("•Ší‚Ìƒ^ƒCƒv")]
-    protected WeaponType _weaponType;
-    [Tooltip("•Ší‚Ì‘®«")]
-    protected ElementType _elementType;
 
-    public float[] WeaponPower => _weaponPower;
-    public ElementType ElementType => _elementType;
+    public float ChargeCount => _chargeCount;
+    public WeaponPower GetWeaponPower => _weaponPower;
     public WeaponDeformation Deformated => _isDeformated;
-    public ObjectOwner Owner => _owner;
-    public float[] ChargeLevels => _chargeLevels;
+    public WeaponController WeaponOwner => _owner;
+    public WeaponDataEntity WeaponData => _weaponData;
 
-    public virtual void AttackMovement(Collider target,IWeaponAction weaponAction) { }
-
-    public WeaponBase(WeaponDataEntity weaponData,Transform attackPos)
+    public virtual void Initializer(WeaponController owner, WeaponDataEntity weaponData)
     {
+        _owner = owner;
         _weaponData = weaponData;
-        _weaponType = _weaponData.Type;
-        _attackPos = attackPos;
-        _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
-        _chargeLevels = _weaponData.ChargeLevels;
     }
-    public virtual void WeaponModeToElement(ElementType elementType)
+    public virtual void AttackBehaviour() { }
+    public virtual void WeaponModeToElement(ElementType type)
     {
-        _weaponPower[(int)ElementType.RIGIT] = _weaponData.RigitPower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.FIRE] = _weaponData.FirePower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.ELEKE] = _weaponData.ElekePower[(int)_isDeformated];
-        _weaponPower[(int)ElementType.FROZEN] = _weaponData.FrozenPower[(int)_isDeformated];
-        _elementType = elementType;
+        if (type == _weaponData.ElementDeformation)
+        {
+            _isDeformated = WeaponDeformation.Deformation;
+        }
+        else
+        {
+            _isDeformated = WeaponDeformation.NONE;
+        }
     }
+    public void Charge(bool isCharge)
+    {
+        if(isCharge)
+        {
+            _chargeCount++;
+        }
+        else
+        {
+            _chargeCount = 0f;
+        }
+    }
+    public WeaponPower CurrentPower(float magnification = 1f)
+    {
+        WeaponPower weaponPower = WeaponPower.zero;
+        weaponPower.defaultPower = _weaponData.RigitPower[(int)_isDeformated];
+        switch (_weaponData.ElementDeformation)
+        {
+            case ElementType.FIRE:
+                weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            case ElementType.ELEKE:
+                weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            case ElementType.FROZEN:
+                weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            default:
+                break;
+        }
+        if (magnification > 1f)
+        {
+            switch (_isDeformated)
+            {
+                case WeaponDeformation.NONE:
+                    weaponPower.defaultPower *= magnification;
+                    break;
+                case WeaponDeformation.Deformation:
+                    weaponPower.defaultPower *= 1.1f;
+                    weaponPower.elementPower *= magnification;
+                    break;
+            }
+        }
+        return weaponPower;
+    }
+    public void OnEquipment()
+    {
+        
+    }
+    public void OnLift()
+    {
+        _chargeCount = 0f;
+    }
+
 }
 
 

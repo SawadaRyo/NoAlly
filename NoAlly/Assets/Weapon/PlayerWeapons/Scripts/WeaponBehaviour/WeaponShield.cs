@@ -3,12 +3,8 @@ using UnityEngine;
 public class WeaponShield : WeaponBase
 {
     Vector3 _hitRenge = Vector3.zero;
-    public WeaponShield(WeaponDataEntity weaponData,Transform attackPos) : base(weaponData,attackPos)
-    {
 
-    }
-
-    public override void AttackMovement(Collider target,IWeaponAction weaponAction)
+    public override void AttackBehaviour()
     {
         Collider[] targets = Physics.OverlapBox(_attackPos.position,_hitRenge, _attackPos.rotation);
         foreach(Collider targetCollider in targets)
@@ -18,7 +14,6 @@ public class WeaponShield : WeaponBase
                 //bullet.Disactive();
             }
         }
-        weaponAction.ChargeCount = 0f;
     }
 
     public override void WeaponModeToElement(ElementType type)
