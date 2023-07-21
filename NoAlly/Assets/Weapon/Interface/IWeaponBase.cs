@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public interface IWeaponBase
+public interface IWeaponBase<T> where T : class
 {
-    public ObjectOwner Owner { get; }
-    public float[] WeaponPower { get; }
-    public float[] ChargeLevels { get; }
-    public ElementType ElementType { get; }
+    public T WeaponOwner { get; }
     public WeaponDeformation Deformated { get; }
+    public void Initializer(T owner, WeaponDataEntity weaponData);
     public void WeaponModeToElement(ElementType elementType);
-    public void AttackMovement(Collider target,IWeaponAction weaponAction);
+    public void AttackBehaviour();
+    public WeaponPower CurrentPower(float magnification = 1f);
+    public void OnEquipment();
+    public void OnLift();
 }

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IArrowWeapon:IWeaponBase
+public interface IArrowWeapon
 {
-    public void InsBullet(IWeaponAction weaponAction);
+    public void InsBullet();
+    public BulletType WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, ElementType elementType);
 }

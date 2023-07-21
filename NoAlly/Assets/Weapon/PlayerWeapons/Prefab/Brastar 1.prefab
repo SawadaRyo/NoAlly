@@ -5314,7 +5314,10 @@ GameObject:
   - component: {fileID: 5785630500104816687}
   - component: {fileID: 4009065848111511044}
   - component: {fileID: 7743493402772332588}
-  - component: {fileID: 5621943052009570291}
+  - component: {fileID: 715491449951558020}
+  - component: {fileID: 3113138534747045063}
+  - component: {fileID: 8266695061144720445}
+  - component: {fileID: 1667911044721099477}
   m_Layer: 7
   m_Name: Brastar 1
   m_TagString: Untagged
@@ -5428,7 +5431,7 @@ MonoBehaviour:
   - {fileID: 1516635459469811749}
   - {fileID: 4907600562354509511}
   _objectAnimator: {fileID: 5785630500104816687}
---- !u!114 &5621943052009570291
+--- !u!114 &715491449951558020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5437,12 +5440,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 9153705405047431978}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12eb4c0f4ba9a8d49a548ea4820ed5f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f4f7b8fc2e89704ab7026c7455708d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3113138534747045063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153705405047431978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7c3a477f2208744b77af37fc706950, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8266695061144720445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153705405047431978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2cecf277f1f844e8a7703f926fa0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _setWeaponData: {fileID: 715491449951558020}
+  _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
   _weaponPrefab: {fileID: 7743493402772332588}
-  _playerAnimator: {fileID: 0}
+  _attackPos: {fileID: 0}
+  _poolPos: {fileID: 0}
   _myParticleSystem: {fileID: 2535850563167026178}
+--- !u!114 &1667911044721099477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153705405047431978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c85993a6f1329a44b60eec9db3f534b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponController: {fileID: 8266695061144720445}
+  _weaponAnimator: {fileID: 3113138534747045063}
+  _inputToPlayer: {fileID: 0}
 --- !u!1001 &852632005689342466
 PrefabInstance:
   m_ObjectHideFlags: 0

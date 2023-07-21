@@ -19,27 +19,29 @@ public class WeaponArrow : WeaponBase, IObjectGenerator,IArrowWeapon
     public ObjectPool<PlayerBulletBase, WeaponArrow, BulletType> BPool => _bPool;
     public ObjectPool<PlayerBulletBase, WeaponArrow, BulletType>.ObjectKey[] BPoolKeys => _keys;
 
-
-    public WeaponArrow(WeaponDataEntity weaponData,PlayerContoller player,Transform attackPos,Transform poolPos) : base(weaponData,attackPos)
+    public override void Initializer(WeaponController owner, WeaponDataEntity weaponData)
     {
-        _muzzleForward = attackPos;
-        _contoller = player;
+        base.Initializer(owner, weaponData);
+        _muzzleForward = _owner.GetAttackPos;
+        //_contoller = player;
         _bulletPrefab = Resources.LoadAll<PlayerBulletBase>(_filePath);
         for (int i = 0; i < _bulletPrefab.Length; i++)
         {
-            _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, poolPos, (BulletType)i);
+            _keys[i] = _bPool.SetBaseObj(_bulletPrefab[i], this, _owner.GetPoolPos, (BulletType)i);
             _bPool.SetCapacity(_keys[i], 10);
         }
     }
 
-    public void InsBullet(IWeaponAction weaponAction)
+    public void InsBullet()
     {
-        if(weaponAction is IArrowAction arrow)
-        {
-            BulletType type = arrow.WeaponChargeAttackMethod(weaponAction.ChargeCount, _chargeLevels, _elementType);
-            _bPool.Instantiate(_keys[(int)type]);
-            weaponAction.ChargeCount = 0f;
-        }
+        //BulletType type = WeaponChargeAttackMethod(Owner.ChargeCount, _weaponData.ChargeLevels, _elementType);
+        //_bPool.Instantiate(_keys[(int)type]);
+        //weaponAction.ChargeCount = 0f;
+    }
+
+    public BulletType WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, ElementType elementType)
+    {
+        throw new NotImplementedException();
     }
 }
 
