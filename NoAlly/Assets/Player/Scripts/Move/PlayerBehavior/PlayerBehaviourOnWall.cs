@@ -10,7 +10,7 @@ public class PlayerBehaviourOnWall : State
     float _moveSpeedX = 0f;
     RaycastHit _wallState;
 
-    public RaycastHit WallState => _wallState;
+    public RaycastHit HitWall => _wallState;
 
     public float MoveSpeedX { get => _moveSpeedX; set => _moveSpeedX = value; }
 
