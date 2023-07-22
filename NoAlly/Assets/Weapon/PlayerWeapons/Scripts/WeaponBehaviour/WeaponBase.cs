@@ -19,7 +19,6 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     [Tooltip("•Ší‚ª•ÏŒ`’†‚©‚Ç‚¤‚©")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
 
-    public float ChargeCount => _chargeCount;
     public WeaponPower GetWeaponPower => _weaponPower;
     public WeaponDeformation Deformated => _isDeformated;
     public WeaponController WeaponOwner => _owner;
@@ -42,16 +41,21 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
             _isDeformated = WeaponDeformation.NONE;
         }
     }
-    public void Charge(bool isCharge)
+    public bool Charge(bool isCharge)
     {
         if(isCharge)
         {
-            _chargeCount++;
+            _chargeCount += Time.deltaTime;
+            if(_chargeCount > _weaponData.ChargeLevels[0])
+            {
+                return true;
+            }
         }
         else
         {
             _chargeCount = 0f;
         }
+        return false;
     }
     public WeaponPower CurrentPower(float magnification = 1f)
     {

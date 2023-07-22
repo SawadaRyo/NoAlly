@@ -49,7 +49,7 @@ public class WeaponStatePresenter : MonoBehaviour
             .Where(_ => _inputToPlayer.InputAttackCharge.Value)
             .Subscribe(inputCharge =>
             {
-                _weaponController.EquipementWeapon.Value.Charge(true);
+                
             });
         _inputToPlayer.InputAttackUp
             .Where(_ => _inputToPlayer.InputAttackUp.Value)
