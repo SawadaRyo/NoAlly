@@ -40,5 +40,4 @@ public class WeaponAnimator : MonoBehaviour
         _targetWeapon.ObjectAnimator.SetInteger("WeaponType",(int)weaponType);
         _targetWeapon.ObjectAnimator.SetBool("IsOpen",elementType != ElementType.RIGIT);
     }
-    public void 
 }
