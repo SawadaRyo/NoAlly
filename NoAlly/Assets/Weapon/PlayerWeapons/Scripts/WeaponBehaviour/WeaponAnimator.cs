@@ -6,16 +6,18 @@ using UniRx.Triggers;
 
 public class WeaponAnimator : MonoBehaviour
 {
+    [SerializeField,Header("")]
+    ObjectBase _targetWeapon = null;
+
     [Tooltip("武器が変形中かどうか")]
     bool _inBoostMode = false;
     [Tooltip("武器のアニメーションの状態")]
     ObservableStateMachineTrigger _weaponAnimationTrigger = null;
 
-    ObjectBase _targetWeapon = null;
+    public bool InBoostMode => _inBoostMode;
 
-    public void Initializer(ObjectBase weaponPrefab)
+    public void Initializer()
     {
-        _targetWeapon = weaponPrefab;
         _weaponAnimationTrigger = _targetWeapon.ObjectAnimator.GetBehaviour<ObservableStateMachineTrigger>();
         WeaponState();
     }
@@ -39,5 +41,6 @@ public class WeaponAnimator : MonoBehaviour
     {
         _targetWeapon.ObjectAnimator.SetInteger("WeaponType",(int)weaponType);
         _targetWeapon.ObjectAnimator.SetBool("IsOpen",elementType != ElementType.RIGIT);
+        _targetWeapon.ObjectAnimator.SetTrigger("Transforming");
     }
 }

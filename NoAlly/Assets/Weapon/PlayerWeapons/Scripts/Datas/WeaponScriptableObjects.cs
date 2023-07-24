@@ -32,6 +32,9 @@ public class WeaponDataEntity
     [SerializeField, Header("変形必要な属性")]
     ElementType _elementType = ElementType.RIGIT;
 
+    [SerializeField, Range(0.1f, 1f), Header("チャージ中の移動速度の倍率")]
+    float _magnificationInCharge = 1f;
+
     public WeaponClassName WeaponBaseName => _weaponBaseName;
     public WeaponType TypeOfWeapon => _type;
     public float[] RigitPower => _rigitPower;
@@ -40,6 +43,7 @@ public class WeaponDataEntity
     public float[] FrozenPower => _frozenPower;
     public float[] ChargeLevels => _chargeLevels;
     public ElementType ElementDeformation => _elementType;
+    public float SpeedInCharge => _magnificationInCharge;
 }
 
 public enum WeaponClassName
