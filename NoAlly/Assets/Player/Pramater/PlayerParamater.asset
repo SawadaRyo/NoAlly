@@ -12,25 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdeea4550be5fbc448a6a635a320f108, type: 3}
   m_Name: PlayerParamater
   m_EditorClassIdentifier: 
-  _speed: 5
-  _dashSpeed: 5
-  _dashIntarval: 0.5
-  _turnSpeed: 25
-  _jumpPower: 14
-  _fallSpeed: 90
-  _graundDistance: 0.25
-  _isGroundRengeRadios: 0.2
-  _groundMask:
+  speed: 5
+  dashSpeed: 5
+  dashIntarval: 0.5
+  turnSpeed: 25
+  jumpPower: 14
+  fallSpeed: 90
+  graundDistance: 0.25
+  isGroundRengeRadios: 0.15
+  groundMask:
     serializedVersion: 2
-    m_Bits: 72
-  _wallJump: 10
-  _wallSlideSpeed: 1.5
-  _wallKickInterval: 0.3
-  _walldistance: 0.5
-  _wallRadios: 0.3
-  _colliderPointOnWall:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  _wallMask:
+    m_Bits: 8
+  wallJump: 0
+  wallSlideSpeed: 0
+  wallKickInterval: 0
+  walldistance: 0
+  wallRadios: 0
+  colliderPointOnWall: []
+  wallMask:
     serializedVersion: 2
     m_Bits: 64

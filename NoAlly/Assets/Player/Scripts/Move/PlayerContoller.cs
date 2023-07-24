@@ -1,78 +1,78 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
 public class PlayerContoller : MonoBehaviour
 {
     [Header("Ground")]
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚ÌˆÚ“®‘¬“x")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•é€Ÿåº¦")]
     float _speed = 5f;
-    [SerializeField, Header("ƒ_ƒbƒVƒ…‚Ì”{—¦")]
+    [SerializeField, Header("ãƒ€ãƒƒã‚·ãƒ¥ã®å€ç‡")]
     float _dashSpeed = 10f;
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚ÌU‚èŒü‚«‘¬“x")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æŒ¯ã‚Šå‘ãé€Ÿåº¦")]
     float _turnSpeed = 25f;
-    [Tooltip("‰¡ˆÚ“®‚ÌƒxƒNƒgƒ‹")]
+    [Tooltip("æ¨ªç§»å‹•ã®ãƒ™ã‚¯ãƒˆãƒ«")]
     float _h;
-    [Tooltip("cˆÚ“®‚ÌƒxƒNƒgƒ‹")]
+    [Tooltip("ç¸¦ç§»å‹•ã®ãƒ™ã‚¯ãƒˆãƒ«")]
     float _v;
-    [Tooltip("ƒXƒ‰ƒCƒfƒBƒ“ƒO‚Ì”»’è")]
+    [Tooltip("ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°ã®åˆ¤å®š")]
     bool _isDash = false;
-    [Tooltip("Player‚ÌŒü‚«")]
+    [Tooltip("Playerã®å‘ã")]
     ActorVec _playerVec;
 
     [Header("Camera")]
-    [SerializeField,Tooltip("ƒvƒŒƒCƒ„[ƒJƒƒ‰")]
+    [SerializeField,Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚«ãƒ¡ãƒ©")]
     Camera _playerCamera = null;
 
     [Header("Jump")]
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv—Í")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¸ãƒ£ãƒ³ãƒ—åŠ›")]
     float _jumpPower = 5f;
-    [SerializeField, Header("Ú’n”»’è‚ÌRay‚ÌË’ö")]
+    [SerializeField, Header("æ¥åœ°åˆ¤å®šã®Rayã®å°„ç¨‹")]
     float _graundDistance = 1f;
-    [SerializeField, Header("Ú’n”»’è‚ÌSphierCast‚Ì”¼Œa")]
+    [SerializeField, Header("æ¥åœ°åˆ¤å®šã®SphierCastã®åŠå¾„")]
     float _isGroundRengeRadios = 1f;
-    [SerializeField, Header("Ú’n”»’è‚ÌLayerMask")]
+    [SerializeField, Header("æ¥åœ°åˆ¤å®šã®LayerMask")]
     LayerMask _groundMask = ~0;
-    [Tooltip("ƒWƒƒƒ“ƒv‚Ì“ü—Í”»’è")]
+    [Tooltip("ã‚¸ãƒ£ãƒ³ãƒ—ã®å…¥åŠ›åˆ¤å®š")]
     bool _isJump = false;
 
     [Header("WallJump")]
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì—Í")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å£ã‚­ãƒƒã‚¯ã®åŠ›")]
     float _wallJump = 7f;
     [SerializeField]
     float _wallJump2 = 7f;
-    [SerializeField, Header("•Ç‚ğ‚¸‚è—‚¿‚é‘¬“x")]
+    [SerializeField, Header("å£ã‚’ãšã‚Šè½ã¡ã‚‹é€Ÿåº¦")]
     float _wallSlideSpeed = 0.8f;
-    [SerializeField, Header("•Ç‚ÌÚG”»’è‚ÌRay‚ÌË’ö")]
+    [SerializeField, Header("å£ã®æ¥è§¦åˆ¤å®šã®Rayã®å°„ç¨‹")]
     float _walldistance = 0.1f;
-    [SerializeField, Header("•Ç‚ÌÚG”»’è")]
+    [SerializeField, Header("å£ã®æ¥è§¦åˆ¤å®š")]
     LayerMask[] _wallMask;
-    [Tooltip("•Ç‚Ì‚¸‚è—‚¿”»’è")]
+    [Tooltip("å£ã®ãšã‚Šè½ã¡åˆ¤å®š")]
     bool _slideWall = false;
 
     [Header("Animation")]
-    [SerializeField, Header("Animation‚ğæ“¾‚·‚éˆ×‚Ì•Ï”")]
+    [SerializeField, Header("Animationã‚’å–å¾—ã™ã‚‹ç‚ºã®å¤‰æ•°")]
     Animator _animator = null;
 
-    [Tooltip("“ü—Í‰Â”\‚©‚Ç‚¤‚©")]
+    [Tooltip("å…¥åŠ›å¯èƒ½ã‹ã©ã†ã‹")]
     bool _ableInput = true;
-    [Tooltip("PlayerAnimationState‚ğŠi”[‚·‚é•Ï”")]
+    [Tooltip("PlayerAnimationStateã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°")]
     PlayerAttackStateController _animState;
-    [Tooltip("RigidbodyƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìæ“¾")]
+    [Tooltip("Rigidbodyã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—")]
     Rigidbody _rb;
-    [Tooltip("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒ^ƒX")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹")]
     PlayerStatus _playerStatus = null;
-    [Tooltip("ƒvƒŒƒCƒ„[‚ÌˆÚ“®ƒxƒNƒgƒ‹‚ğæ“¾")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—")]
     Vector3 _velo = Vector3.zero;
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì•Ç‚ÌˆÚ“®ƒxƒNƒgƒ‹‚ğæ“¾")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å£ã®ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—")]
     Vector3 _wallVec = Vector3.zero;
-    [Tooltip("ÚG‚µ‚Ä‚¢‚éƒIƒuƒWƒFƒNƒg‚Ìî•ñ")]
+    [Tooltip("æ¥è§¦ã—ã¦ã„ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æƒ…å ±")]
     RaycastHit _hitInfo;
 
     bool[] _isClimbWall = new bool[3];
     bool _clinbing = false;
     bool _ableJumpInput = true;
-    [SerializeField, Header("Ú’nAÚG”»’è‚Ìposition")]
+    [SerializeField, Header("æ¥åœ°ã€æ¥è§¦åˆ¤å®šã®position")]
     Transform[] _isClimbWallPos = new Transform[3];
 
     public bool ableJumpInput { get => _ableJumpInput; set => _ableJumpInput = value; }
@@ -136,7 +136,7 @@ public class PlayerContoller : MonoBehaviour
         return new Vector2(h, v);
     }
     /// <summary>
-    /// Ú•Ç”»’è
+    /// æ¥å£åˆ¤å®š
     /// </summary>
     public PlayerWallState IsWalled(Vector2 currentNormal)
     {
@@ -165,21 +165,21 @@ public class PlayerContoller : MonoBehaviour
         return PlayerWallState.None;
     }
     /// <summary>
-    /// Ú’n”»’è
+    /// æ¥åœ°åˆ¤å®š
     /// </summary>
     bool IsGrounded()
     {
-        Vector3 isGroundCenter = _isClimbWallPos[2].transform.position; //Ray‚ÌŒ´“_
-        Ray ray = new Ray(isGroundCenter, Vector3.down);@//RayËo
-        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);@//Ray––’[‚ÉSphereCast
-        return hitFlg; //Ú’n”»’è‚ğbool‚Å•Ô‚·
+        Vector3 isGroundCenter = _isClimbWallPos[2].transform.position; //Rayã®åŸç‚¹
+        Ray ray = new Ray(isGroundCenter, Vector3.down);ã€€//Rayå°„å‡º
+        bool hitFlg = Physics.SphereCast(ray, _isGroundRengeRadios, out _hitInfo, _graundDistance, _groundMask);ã€€//Rayæœ«ç«¯ã«SphereCast
+        return hitFlg; //æ¥åœ°åˆ¤å®šã‚’boolã§è¿”ã™
     }
 
-    //Player‚Ì“®‚«‚ğˆ—‚ª‘‚©‚ê‚½ŠÖ”-------------------------------------//
+    //Playerã®å‹•ãã‚’å‡¦ç†ãŒæ›¸ã‹ã‚ŒãŸé–¢æ•°-------------------------------------//
     void RotateMethod(Vector2 rotVector)
     {
         if (!_ableInput) return;
-        //ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘è»¢æ›
         if (rotVector.x == -1)
         {
             Quaternion rotationLeft = Quaternion.LookRotation(Vector3.left);
@@ -200,12 +200,12 @@ public class PlayerContoller : MonoBehaviour
         }
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ÌˆÚ“®
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•
     /// </summary>
     void MoveMethod(float h, bool dash)
     {
         float moveSpeed = 0f;
-        //ƒvƒŒƒCƒ„[‚ÌˆÚ“®
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•
         if (_animState.AbleMove)
         {
             if (IsGrounded() && IsWalled(CurrentNormal(new Vector2(_h, _v))) == PlayerWallState.None)
@@ -255,11 +255,11 @@ public class PlayerContoller : MonoBehaviour
         _animator.SetFloat("MoveSpeed", Mathf.Abs(_velo.normalized.x * moveSpeed));
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¸ãƒ£ãƒ³ãƒ—
     /// </summary>
     void JumpMethod(bool jump)
     {
-        //ƒWƒƒƒ“ƒv‚Ìˆ—
+        //ã‚¸ãƒ£ãƒ³ãƒ—ã®å‡¦ç†
         if (jump && IsGrounded() && _animState.AbleMove)
         {
             //m_audio.PlayOneShot(m_jumpSound);
@@ -269,7 +269,7 @@ public class PlayerContoller : MonoBehaviour
 
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì•ÇƒWƒƒƒ“ƒv
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å£ã‚¸ãƒ£ãƒ³ãƒ—
     /// </summary>
     void WallJumpMethod(bool jump, bool isDash, PlayerWallState climbWall)
     {
@@ -330,10 +330,10 @@ public class PlayerContoller : MonoBehaviour
         _ableInput = true;
     }
     /// <summary>
-    /// ‚æ‚¶“o‚è
+    /// ã‚ˆã˜ç™»ã‚Š
     /// </summary>
-    /// <param name="endPoint">‚æ‚¶“o‚éI“_</param>
-    /// <param name="duration">‚æ‚¶“o‚é‚Ì‚É‚©‚©‚éŠÔ</param>
+    /// <param name="endPoint">ã‚ˆã˜ç™»ã‚‹çµ‚ç‚¹</param>
+    /// <param name="duration">ã‚ˆã˜ç™»ã‚‹ã®ã«ã‹ã‹ã‚‹æ™‚é–“</param>
     /// <returns></returns>
     IEnumerator Climbing(Vector3 endPoint, float duration)
     {

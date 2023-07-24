@@ -1,5 +1,5 @@
 //日本語コメント可
-using State = StateMachine<InputToPlayerMove>.State;
+using State = StateMachine<PlayerBehaviorController>.State;
 using UnityEngine;
 using UniRx;
 
@@ -13,15 +13,15 @@ public class PlayerBehaviorDash : State
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
-        _time.Value = Owner.PlayerParamater.dashInterval;
+        _time.Value = Owner.ParamaterCon.GetParamater.dashIntarval;
         _veloX = 0f;
     }
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.HitInfo);
-        Owner.Rb.velocity = moveVec + Owner.MoveBehaviour.DodgeVec(moveVec.normalized, Owner.PlayerParamater.dashSpeed);
-        _veloX = Owner.PlayerParamater.speed + Owner.PlayerParamater.dashSpeed;
+        var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.ParamaterCon.GetParamater.speed, Owner.HitInfo);
+        Owner.Rb.velocity = moveVec + Owner.MoveBehaviour.DodgeVec(moveVec.normalized, Owner.ParamaterCon.GetParamater.dashSpeed);
+        _veloX = Owner.ParamaterCon.GetParamater.speed + Owner.ParamaterCon.GetParamater.dashSpeed;
         _time.Value -= Time.deltaTime;
     }
     protected override void OnExit(State nextState)
@@ -48,6 +48,7 @@ public class PlayerBehaviorDash : State
                Owner.PlayerStateMachine.Dispatch((int)currentLocation);
            }).AddTo(Owner);
         _time
+            .Where(_ => IsActive)
             .Subscribe(time =>
             {
                 if (time < 0f)
@@ -66,7 +67,7 @@ public class PlayerBehaviorDash : State
             .Where(_ => Owner.IsJump.Value && IsActive && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
-                Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower).y);
+                Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower).y);
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
             });
     }

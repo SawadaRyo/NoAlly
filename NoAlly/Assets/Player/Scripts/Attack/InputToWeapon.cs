@@ -70,27 +70,27 @@ public class InputToWeapon : MonoBehaviour
         if (!PlayerAttackStateController.Instance.AbleInput) return;
         if (_inDeformation) return;
         ////通常攻撃の処理
-        if (Input.GetButtonDown("Attack") && _targetWeapon != null)
-        {
-            playerAnimator.SetTrigger("AttackTrigger");
-            playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
-        }
-        else
-        {
-            //溜め攻撃の処理(弓矢のアニメーションもこの処理）
-            if (Input.GetButton("Attack") && _targetWeapon != null)
-            {
-                _targetWeapon.Action.ChargeCount += Time.deltaTime;
-                playerAnimator.SetBool("Charge", true);
-                if (_targetWeapon.Action.ChargeCount > _targetWeapon.Base.ChargeLevels[0])
-                {
-                    playerAnimator.SetTrigger("ChargeAttackTrigger");
-                }
-            }
-            else if (Input.GetButtonUp("Attack"))
-            {
-                playerAnimator.SetBool("Charge", false);
-            }
-        }
+        //if (Input.GetButtonDown("Attack") && _targetWeapon != null)
+        //{
+        //    playerAnimator.SetTrigger("AttackTrigger");
+        //    playerAnimator.SetInteger("WeaponType", (int)_targetWeapon.Type);
+        //}
+        //else
+        //{
+        //    溜め攻撃の処理(弓矢のアニメーションもこの処理）
+        //    if (Input.GetButton("Attack") && _targetWeapon != null)
+        //    {
+        //        _targetWeapon.Action.ChargeCount += Time.deltaTime;
+        //        playerAnimator.SetBool("Charge", true);
+        //        if (_targetWeapon.Action.ChargeCount > _targetWeapon.Base.ChargeLevels[0])
+        //        {
+        //            playerAnimator.SetTrigger("ChargeAttackTrigger");
+        //        }
+        //    }
+        //    else if (Input.GetButtonUp("Attack"))
+        //    {
+        //        playerAnimator.SetBool("Charge", false);
+        //    }
+        //}
     }
 }
