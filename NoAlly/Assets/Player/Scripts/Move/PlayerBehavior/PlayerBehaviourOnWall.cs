@@ -3,7 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using State = StateMachine<InputToPlayerMove>.State;
+using State = StateMachine<PlayerBehaviorController>.State;
 
 public class PlayerBehaviourOnWall : State
 {
@@ -41,8 +41,9 @@ public class PlayerBehaviourOnWall : State
             .Subscribe(isJump =>
             {
                 //Debug.Log(Owner.HitInfo.normal);
-                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * MoveSpeedX,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.speed,Owner.PlayerParamater.fallSpeed).y);
-                AbleWallKick(Owner.PlayerParamater.wallKickInterval);
+                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * MoveSpeedX
+                                               ,Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed,Owner.ParamaterCon.GetParamater.fallSpeed).y);
+                AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);
             });
     }
 
@@ -53,7 +54,7 @@ public class PlayerBehaviourOnWall : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        Owner.WallBehaviour.ActorSlideWall(Owner.PlayerParamater.wallSlideSpeed
+        Owner.WallBehaviour.ActorSlideWall(Owner.ParamaterCon.GetParamater.wallSlideSpeed
             ,Owner.Rb
             ,Owner.HitInfo
             ,Owner.CurrentLocation.Value);

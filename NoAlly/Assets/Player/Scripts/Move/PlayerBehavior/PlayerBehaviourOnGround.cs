@@ -1,5 +1,5 @@
 //日本語コメント可
-using State = StateMachine<InputToPlayerMove>.State;
+using State = StateMachine<PlayerBehaviorController>.State;
 using UnityEngine;
 using UniRx;
 
@@ -19,10 +19,12 @@ public class PlayerBehaviourOnGround : State
         }
         else if (Owner.AbleMove && Owner.CurrentMoveVector.Value != Vector2.zero)
         {
-            Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.HitInfo);
+            Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.ParamaterCon.GetParamater.speed, Owner.HitInfo);
             if (Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
             {
-                Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.PlayerParamater.speed, Owner.GroundNormal);
+                Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x
+                                                                      , Owner.ParamaterCon.GetParamater.speed
+                                                                      , Owner.GroundNormal);
             }
         }
     }
@@ -31,11 +33,11 @@ public class PlayerBehaviourOnGround : State
         base.OnExit(nextState);
         if (nextState is PlayerBehaviorInAir air)
         {
-            air.MoveSpeedX = Owner.PlayerParamater.speed;
+            air.MoveSpeedX = Owner.ParamaterCon.GetParamater.speed;
         }
         else if (nextState is PlayerBehaviourOnWall wall)
         {
-            wall.MoveSpeedX = Owner.PlayerParamater.speed;
+            wall.MoveSpeedX = Owner.ParamaterCon.GetParamater.speed;
         }
     }
 
@@ -68,7 +70,9 @@ public class PlayerBehaviourOnGround : State
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
-                Owner.Rb.velocity = new Vector3(Owner.CurrentMoveVector.Value.x, Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower, Owner.PlayerParamater.fallSpeed).y);
+                Owner.Rb.velocity = new Vector3(Owner.CurrentMoveVector.Value.x
+                                              , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower
+                                              , Owner.ParamaterCon.GetParamater.fallSpeed).y);
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
             });
     }

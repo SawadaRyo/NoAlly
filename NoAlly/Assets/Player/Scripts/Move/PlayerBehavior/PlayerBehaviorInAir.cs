@@ -1,5 +1,5 @@
 //日本語コメント可
-using State = StateMachine<InputToPlayerMove>.State;
+using State = StateMachine<PlayerBehaviorController>.State;
 using UnityEngine;
 using UniRx;
 
@@ -19,7 +19,7 @@ public class PlayerBehaviorInAir : State
     {
         base.OnUpdate();
         Owner.Rb.velocity = new Vector3(Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, _moveSpeedX, Owner.HitInfo, Owner.AbleMove).x 
-            ,Owner.JumpBehaviour.ActorVectorInAir(Owner.PlayerParamater.jumpPower,Owner.PlayerParamater.fallSpeed).y);
+            ,Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower,Owner.ParamaterCon.GetParamater.fallSpeed).y);
     }
     protected override void OnExit(State nextState)
     {

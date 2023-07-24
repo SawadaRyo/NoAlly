@@ -6,7 +6,7 @@ using UniRx;
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField]
-    Animator _animator = null;
+    Animator _playerAnimator = null;
     [SerializeField]
     CapsuleCollider _actorCollider = null;
 
@@ -18,22 +18,23 @@ public class PlayerAnimator : MonoBehaviour
     [Tooltip("")]
     CapsuleColliderValue _colliderValue;
 
+    public Animator GetPlayerAnimator => _playerAnimator;
     public void IsAttackFlg(BoolAttack boolAttack) => _isAttack.Value = boolAttack;
 
     /// <summary>
     /// 初期化関数
     /// </summary>
     /// <param name="moveInput"></param>
-    public void Initialize(InputToPlayerMove moveInput)
+    public void Initialize(PlayerBehaviorController moveInput)
     {
         _colliderValue = new CapsuleColliderValue(_actorCollider.center, _actorCollider.height);
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                var height = _animator.GetFloat("ColliderHeight");
-                var center = new Vector3(_animator.GetFloat("ColliderCenterX")
-                                       , _animator.GetFloat("ColliderCenterY")
-                                       , _animator.GetFloat("ColliderCenterZ"));
+                var height = _playerAnimator.GetFloat("ColliderHeight");
+                var center = new Vector3(_playerAnimator.GetFloat("ColliderCenterX")
+                                       , _playerAnimator.GetFloat("ColliderCenterY")
+                                       , _playerAnimator.GetFloat("ColliderCenterZ"));
                 //Debug.Log(height);
                 //Debug.Log(center);
                 if (height != 0)
@@ -56,13 +57,12 @@ public class PlayerAnimator : MonoBehaviour
 
             }).AddTo(moveInput);
         MoveAnimation(moveInput);
-        WeaponActionAnimation();
     }
     /// <summary>
     /// プレイヤーの移動関係のアニメーションを管理する関数
     /// </summary>
     /// <param name="moveInput"></param>
-    public void MoveAnimation(InputToPlayerMove moveInput)
+    public void MoveAnimation(PlayerBehaviorController moveInput)
     {
         moveInput.IsDash
             .Where(_ => moveInput.AbleDash == true
@@ -70,48 +70,47 @@ public class PlayerAnimator : MonoBehaviour
                      && moveInput.CurrentLocation.Value == StateOfPlayer.OnGround)
             .Subscribe(isDash =>
             {
-                _animator.SetTrigger("Dudge");
+                _playerAnimator.SetTrigger("Dudge");
             }).AddTo(moveInput);
         moveInput.CurrentLocation
             .Subscribe(currentLocation =>
             {
-                _animator.SetBool("InAir", currentLocation == StateOfPlayer.InAir);
-                _animator.SetBool("WallGrip", currentLocation == StateOfPlayer.GripingWall);
+                _playerAnimator.SetBool("InAir", currentLocation == StateOfPlayer.InAir);
+                _playerAnimator.SetBool("WallGrip", currentLocation == StateOfPlayer.GripingWall);
             }).AddTo(moveInput);
         moveInput.CurrentMoveVector
             .Subscribe(currentMoveVec =>
             {
-                _animator.SetFloat("MoveSpeed", Mathf.Abs(moveInput.Rb.velocity.x));
+                _playerAnimator.SetFloat("MoveSpeed", Mathf.Abs(moveInput.Rb.velocity.x));
             }).AddTo(moveInput);
         moveInput.WallBehaviour.Climbing
             .Subscribe(climbing =>
             {
-                _animator.SetBool("Climbing", climbing);
+                _playerAnimator.SetBool("Climbing", climbing);
             });
     }
     /// <summary>
     /// プレイヤーの攻撃関係のアニメーションを管理する関数
     /// </summary>
-    public void WeaponActionAnimation()
+    public void WeaponActionAnimation(PlayerBehaviorController moveInput)
     {
         ////通常攻撃の処理
         if (Input.GetButtonDown("Attack"))
         {
-            _animator.SetTrigger("AttackTrigger");
+            _playerAnimator.SetTrigger("AttackTrigger");
         }
         else
         {
             //溜め攻撃の処理(弓矢のアニメーションもこの処理）
             if (Input.GetButton("Attack"))
             {
-                //if (_chargeCount > )
                 {
-                    _animator.SetBool("Charge", true);
+                    _playerAnimator.SetBool("Charge", true);
                 }
             }
             else if (Input.GetButtonUp("Attack"))
             {
-                _animator.SetBool("Charge", false);
+                _playerAnimator.SetBool("Charge", false);
             }
         }
     }
