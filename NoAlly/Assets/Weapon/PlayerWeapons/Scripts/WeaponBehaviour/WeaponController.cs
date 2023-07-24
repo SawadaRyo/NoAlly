@@ -12,8 +12,6 @@ public class WeaponController : MonoBehaviour
     SetWeaponData _setWeaponData = null;
     [SerializeField, Header("WeaponScriptableObjects本体")]
     WeaponScriptableObjects _weaponScriptableObjects;
-    [SerializeField, Header("武器のプレハブ")]
-    ObjectBase _weaponPrefab = null;
 
     [SerializeField]
     Transform _attackPos = null;
@@ -33,7 +31,6 @@ public class WeaponController : MonoBehaviour
     [Tooltip("現在の属性")]
     ReactiveProperty<ElementType> _currentElement = new();
 
-    public ObjectBase WeaponPrefab => _weaponPrefab;
     public Transform GetAttackPos => _attackPos;
     public Transform GetPoolPos => _poolPos;
     public IReadOnlyReactiveProperty<Collider> TargetCol => _targetCol;
@@ -47,7 +44,7 @@ public class WeaponController : MonoBehaviour
     /// <param name="weaponProcessing"></param>
     /// <param name="main"></param>
     /// <param name="sub"></param>
-    public void Initializer(WeaponType main, WeaponType sub)
+    public void Initializer(WeaponType main = WeaponType.SWORD, WeaponType sub = WeaponType.LANCE)
     {
         _setWeaponData.WeaponBaseInstantiate(this, _weaponScriptableObjects);
         _mainWeapon = _setWeaponData.WeaponDatas[main];
