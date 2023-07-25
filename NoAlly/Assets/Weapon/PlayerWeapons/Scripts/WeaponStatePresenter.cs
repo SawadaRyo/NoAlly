@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class WeaponStatePresenter : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField,Header("武器本体の挙動")]
     WeaponController _weaponController;
-    [SerializeField]
+    [SerializeField, Header("武器のアニメーションの挙動")]
     WeaponAnimator _weaponAnimator;
-    [SerializeField]
+    [SerializeField, Header("プレイヤー本体の挙動")]
     PlayerBehaviorController _inputToPlayer;
-    [SerializeField]
-    PlayerAnimator _playerAnimator;
+    [SerializeField, Header("プレイヤーのアニメーションの挙動")]
+    PlayerAnimatorController _playerAnimator;
     [SerializeField,Header("")]
     WeaponType[] mainAndSub = new WeaponType[2];
 
@@ -19,11 +19,16 @@ public class WeaponStatePresenter : MonoBehaviour
     {
         _weaponController.Initializer(mainAndSub[0], mainAndSub[1]);
         _weaponAnimator.Initializer();
-        AnimationStateChacker();
+        _playerAnimator.Initializer(_inputToPlayer);
+        _playerAnimator.StateChacker();
+        _playerAnimator.WeaponActionAnimation(_inputToPlayer,_weaponController);
+        WeaponStateChacker();
         InputStateChacker();
+        AttackStateChacker();
+        InputUpdate();
     }
 
-    void AnimationStateChacker()
+    void WeaponStateChacker()
     {
         _weaponController.EquipementWeapon
             .Skip(1)
@@ -38,38 +43,49 @@ public class WeaponStatePresenter : MonoBehaviour
                 _weaponAnimator.DeformationWeapon(_weaponController.EquipementWeapon.Value.WeaponData.TypeOfWeapon, element);
             });
     }
+    void AttackStateChacker()
+    {
+        _playerAnimator.IsAttack
+            .Subscribe(isAttack =>
+            {
+                if(_weaponController.EquipementWeapon.Value is WeaponCombat combat)
+                {
+                    combat.WeaponCombatAttack(isAttack);
+                }
+            });
+    }
     void InputStateChacker()
     {
         _inputToPlayer.IsSwichWeapon
             .Subscribe(switchWeapon =>
             {
                 _weaponController.SwichEquipmentWeapon(switchWeapon);
-                
             });
 
-        _inputToPlayer.InputAttackDown
-            .Where(_ => _inputToPlayer.InputAttackDown.Value)
-            .Subscribe(inputDown =>
-            {
-                _playerAnimator.GetPlayerAnimator.SetInteger("WeaponType", (int)_weaponController.EquipementWeapon.Value.WeaponData.TypeOfWeapon);
-                _playerAnimator.GetPlayerAnimator.SetTrigger("AttackTrigger");
-            });
+       
         _inputToPlayer.InputAttackCharge
-            .Where(_ => _inputToPlayer.InputAttackCharge.Value)
+            .Where(_ => _inputToPlayer.InputAttackCharge.Value && _playerAnimator.AbleInput)
             .Subscribe(inputCharge =>
             {
                 float speedInCharge = _weaponController.EquipementWeapon.Value.WeaponData.SpeedInCharge;
                 _inputToPlayer.ParamaterCon.ChangeMoveSpeed(speedInCharge);
-                _playerAnimator.GetPlayerAnimator.SetBool("Charge", _weaponController.EquipementWeapon.Value.Charge(true));
                 
             });
         _inputToPlayer.InputAttackUp
-            .Where(_ => _inputToPlayer.InputAttackUp.Value)
+            .Where(_ => _inputToPlayer.InputAttackUp.Value && _playerAnimator.AbleInput)
             .Subscribe(inputUp =>
             {
                 _inputToPlayer.ParamaterCon.ChangeMoveSpeed();
                 _weaponController.EquipementWeapon.Value.Charge(false);
-                _playerAnimator.GetPlayerAnimator.SetBool("Charge", _weaponController.EquipementWeapon.Value.Charge(false));
             });
+    }
+    void InputUpdate()
+    {
+        Observable.EveryUpdate()
+            .Subscribe(_ =>
+            {
+                _inputToPlayer.AbleMove = _playerAnimator.AbleMove;
+                _inputToPlayer.AbleJump = _playerAnimator.AbleJump;
+            }).AddTo(this);
     }
 }
