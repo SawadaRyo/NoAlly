@@ -6,7 +6,7 @@ using UniRx;
 using UniRx.Triggers;
 using DataOfWeapon;
 
-public class WeaponController : MonoBehaviour
+public class WeaponController : MonoBehaviour,IWeaponController
 {
     [SerializeField, Header("")]
     SetWeaponData _setWeaponData = null;
@@ -33,6 +33,7 @@ public class WeaponController : MonoBehaviour
 
     public Transform GetAttackPos => _attackPos;
     public Transform GetPoolPos => _poolPos;
+    public ParticleSystem MyParticle => _myParticleSystem;
     public IReadOnlyReactiveProperty<Collider> TargetCol => _targetCol;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
     public IReadOnlyReactiveProperty<ElementType> CurrentElement => _currentElement;
@@ -50,6 +51,7 @@ public class WeaponController : MonoBehaviour
         _mainWeapon = _setWeaponData.WeaponDatas[main];
         _subWeapon = _setWeaponData.WeaponDatas[sub];
         _equipementWeapon.Value = _mainWeapon;
+        _myParticleSystem.Stop();
     }
     /// <summary>
     /// メイン武器・サブ武器の装備をボタンで切り替える関数

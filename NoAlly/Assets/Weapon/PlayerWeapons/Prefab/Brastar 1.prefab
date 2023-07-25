@@ -5455,6 +5455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e7c3a477f2208744b77af37fc706950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _targetWeapon: {fileID: 0}
 --- !u!114 &8266695061144720445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5469,7 +5470,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _setWeaponData: {fileID: 715491449951558020}
   _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
-  _weaponPrefab: {fileID: 7743493402772332588}
   _attackPos: {fileID: 0}
   _poolPos: {fileID: 0}
   _myParticleSystem: {fileID: 2535850563167026178}
@@ -5488,6 +5488,8 @@ MonoBehaviour:
   _weaponController: {fileID: 8266695061144720445}
   _weaponAnimator: {fileID: 3113138534747045063}
   _inputToPlayer: {fileID: 0}
+  _playerAnimator: {fileID: 0}
+  mainAndSub: 0000000000000000
 --- !u!1001 &852632005689342466
 PrefabInstance:
   m_ObjectHideFlags: 0

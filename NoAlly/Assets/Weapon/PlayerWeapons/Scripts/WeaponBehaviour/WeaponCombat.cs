@@ -19,16 +19,16 @@ public class WeaponCombat : WeaponBase
             });
     }
 
-    void WeaponCombatAttack(BoolAttack flg)
+    public void WeaponCombatAttack(BoolAttack flg)
     {
         if (flg == BoolAttack.ATTACKING)
         {
-            //_myParticleSystem.Play();
+            _owner.MyParticle.Play();
             //_weaponPrefab.ActiveCollider(true);
         }
         else if (flg == BoolAttack.NONE)
         {
-            //_myParticleSystem.Stop();
+            _owner.MyParticle.Stop();
             //_weaponPrefab.ActiveCollider(false);
         }
     }
