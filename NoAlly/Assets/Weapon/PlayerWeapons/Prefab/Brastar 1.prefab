@@ -5470,6 +5470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _setWeaponData: {fileID: 715491449951558020}
   _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
+  _weaponPrefab: {fileID: 0}
   _attackPos: {fileID: 0}
   _poolPos: {fileID: 0}
   _myParticleSystem: {fileID: 2535850563167026178}

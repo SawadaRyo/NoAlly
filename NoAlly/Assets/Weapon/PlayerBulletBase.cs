@@ -13,7 +13,6 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 
     [Tooltip("íeÇÃçUåÇóÕ")]
     WeaponPower _bulletPowers = WeaponPower.zero;
-    float _speed = 0f;
     [Tooltip("íeÇÃëÆê´")]
     ElementType _elementType;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
@@ -29,7 +28,8 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     {
         if (_isActive)
         {
-            _velo.x = _bulletSpeed * _speed;
+            //_velo.x = _bulletSpeed * _speed;
+            _velo.x = _bulletSpeed;
             _velo.y = _muzzleForwardPos.y;
             _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
         }
@@ -53,14 +53,16 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 
     public void Disactive()
     {
-        _rb.isKinematic = true;
-        ActiveObject(false);
+        _isActive = false;
+        _rb.isKinematic = !_isActive;
+        ActiveObject(_isActive);
     }
 
     public async void Disactive(float interval)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(interval));
         _isActive = false;
+        _rb.isKinematic = !_isActive;
         ActiveObject(_isActive);
     }
     public void DisactiveForInstantiate(WeaponArrow owner)
@@ -76,15 +78,16 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 
     public void HitMovement(Collider target)
     {
-        if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && hitObj.Owner != ObjectOwner.PLAYER)
+        if (target)
         {
-            hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+            if (target.CompareTag("Player")) return;
+            if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && hitObj.Owner != ObjectOwner.PLAYER)
+            {
+                hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+            }
             Disactive();
         }
-        else if (target.gameObject.tag == "TargetObject")
-        {
-            Disactive();
-        }
+
     }
     void SetTrans()
     {
@@ -92,11 +95,11 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         this.transform.position = _muzzleForwardPos;
         if (Owner.playerVec == ActorVec.Right)
         {
-            _speed = 1;
+            //_speed = 1;
         }
         else if (Owner.playerVec == ActorVec.Left)
         {
-            _speed = -1;
+            //_speed = -1;
         }
     }
 }

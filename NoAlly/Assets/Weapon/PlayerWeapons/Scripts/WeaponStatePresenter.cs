@@ -50,13 +50,14 @@ public class WeaponStatePresenter : MonoBehaviour
             {
                 if(_weaponController.EquipementWeapon.Value is WeaponCombat combat)
                 {
-                    combat.WeaponCombatAttack(isAttack);
+                    combat.AttackWeaponCombat(isAttack);
                 }
             });
     }
     void InputStateChacker()
     {
         _inputToPlayer.IsSwichWeapon
+            .Where(_ => _playerAnimator.IsAttack.Value == BoolAttack.NONE)
             .Subscribe(switchWeapon =>
             {
                 _weaponController.SwichEquipmentWeapon(switchWeapon);
