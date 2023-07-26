@@ -2,10 +2,15 @@ using UniRx;
 
 public class WeaponCombat : WeaponBase
 {
-
+    public override void Initializer(WeaponController owner, WeaponDataEntity weaponData)
+    {
+        base.Initializer(owner, weaponData);
+        AttackBehaviour();
+    }
     public override void AttackBehaviour()
     {
         _owner.TargetCol
+            .Skip(1)
             .Subscribe(target =>
             {
                 if (target.TryGetComponent(out IHitBehavorOfAttack characterHp))
@@ -19,17 +24,17 @@ public class WeaponCombat : WeaponBase
             });
     }
 
-    public void WeaponCombatAttack(BoolAttack flg)
+    public void AttackWeaponCombat(BoolAttack flg)
     {
         if (flg == BoolAttack.ATTACKING)
         {
             _owner.MyParticle.Play();
-            //_weaponPrefab.ActiveCollider(true);
+            _owner.WeaponPrefab.ActiveCollider(true);
         }
         else if (flg == BoolAttack.NONE)
         {
             _owner.MyParticle.Stop();
-            //_weaponPrefab.ActiveCollider(false);
+            _owner.WeaponPrefab.ActiveCollider(false);
         }
     }
 }

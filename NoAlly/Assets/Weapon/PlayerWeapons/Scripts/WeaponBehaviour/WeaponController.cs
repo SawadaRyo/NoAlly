@@ -12,8 +12,10 @@ public class WeaponController : MonoBehaviour,IWeaponController
     SetWeaponData _setWeaponData = null;
     [SerializeField, Header("WeaponScriptableObjects本体")]
     WeaponScriptableObjects _weaponScriptableObjects;
+    [SerializeField,Header("武器のプレハブ本体")]
+    ObjectBase _weaponPrefab;
 
-    [SerializeField]
+    [SerializeField,Header("攻撃の中心点")]
     Transform _attackPos = null;
     [SerializeField]
     Transform _poolPos = null;
@@ -33,6 +35,7 @@ public class WeaponController : MonoBehaviour,IWeaponController
 
     public Transform GetAttackPos => _attackPos;
     public Transform GetPoolPos => _poolPos;
+    public ObjectBase WeaponPrefab => _weaponPrefab; 
     public ParticleSystem MyParticle => _myParticleSystem;
     public IReadOnlyReactiveProperty<Collider> TargetCol => _targetCol;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
@@ -102,5 +105,12 @@ public class WeaponController : MonoBehaviour,IWeaponController
     {
         _equipementWeapon.Value.WeaponModeToElement(elementType);
         _currentElement.Value = elementType;
+    }
+
+    private void OnDisable()
+    {
+        _targetCol.Dispose();
+        _equipementWeapon.Dispose();
+        _currentElement.Dispose();
     }
 }
