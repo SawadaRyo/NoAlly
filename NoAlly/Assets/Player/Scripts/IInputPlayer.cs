@@ -2,7 +2,7 @@
 using UnityEngine;
 using UniRx;
 
-public interface IInput
+public interface IInputPlayer
 {
     public bool AbleDash { get; }
     public IReadOnlyReactiveProperty<bool> IsDash { get; }

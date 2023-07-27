@@ -13,7 +13,7 @@ public class PlayerBehaviourOnGround : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (Owner.CurrentMoveVector.Value == Vector2.zero)
+        if (Owner.CurrentMoveVector.Value == Vector2.zero || !Owner.AbleMove)
         {
             Owner.Rb.velocity = Vector3.zero;
         }
@@ -66,6 +66,7 @@ public class PlayerBehaviourOnGround : State
             });
         Owner.IsJump
             .Where(_ => IsActive
+                     && Owner.AbleJump
                      && Owner.IsJump.Value
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
