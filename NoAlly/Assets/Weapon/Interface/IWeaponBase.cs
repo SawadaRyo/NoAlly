@@ -10,7 +10,7 @@ public interface IWeaponBase<T> where T : class
     public void Initializer(T owner, WeaponDataEntity weaponData);
     public void WeaponModeToElement(ElementType elementType);
     public void AttackBehaviour();
-    public bool Charge(bool isCharge);
+    public float InputCharging(float chargeTime);
     public WeaponPower CurrentPower(float magnification = 1f);
     public void OnEquipment();
     public void OnLift();

@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using DataOfWeapon;
 
 public class WeaponController : MonoBehaviour,IWeaponController
@@ -14,7 +10,6 @@ public class WeaponController : MonoBehaviour,IWeaponController
     WeaponScriptableObjects _weaponScriptableObjects;
     [SerializeField,Header("武器のプレハブ本体")]
     ObjectBase _weaponPrefab;
-
     [SerializeField,Header("攻撃の中心点")]
     Transform _attackPos = null;
     [SerializeField]
@@ -40,7 +35,7 @@ public class WeaponController : MonoBehaviour,IWeaponController
     public IReadOnlyReactiveProperty<Collider> TargetCol => _targetCol;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
     public IReadOnlyReactiveProperty<ElementType> CurrentElement => _currentElement;
-    void OnTriggerEnter(Collider other) => _targetCol.Value = other;
+    void OnTriggerEnter(Collider other) => _targetCol.SetValueAndForceNotify(other);
 
     /// <summary>
     /// 初期化関数

@@ -5,8 +5,10 @@ using UnityEngine;
 
 public abstract class WeaponBase : IWeaponBase<WeaponController>
 {
+    [Tooltip("装備判定")]
+    protected bool _isEquipment = false;
     [Tooltip("溜め時間")]
-    float _chargeCount = 0f;
+    protected float _chargeCount = 0f;
     [Tooltip("武器のオーナー")]
     protected WeaponController _owner = null;
     [Tooltip("")]
@@ -19,6 +21,7 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
 
+    public bool IsCharged => _chargeCount > _weaponData.ChargeLevels[0];
     public WeaponPower GetWeaponPower => _weaponPower;
     public WeaponDeformation Deformated => _isDeformated;
     public WeaponController WeaponOwner => _owner;
@@ -30,6 +33,21 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
         _weaponData = weaponData;
     }
     public virtual void AttackBehaviour() { }
+    public void Charging(bool isInputCharge)
+    {
+        if (isInputCharge)
+        {
+            _chargeCount += Time.deltaTime;
+        }
+        else
+        {
+            if (IsCharged)
+            {
+                _weaponPower = CurrentPower(InputCharging(_chargeCount));
+            }
+            _chargeCount = 0;
+        }
+    }
     public virtual void WeaponModeToElement(ElementType type)
     {
         if (type == _weaponData.ElementDeformation)
@@ -41,22 +59,30 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
             _isDeformated = WeaponDeformation.NONE;
         }
     }
-    public bool Charge(bool isCharge)
+
+    /// <summary>
+    /// 溜めコマンド中の判定と処理
+    /// </summary>
+    /// <param name="chargeTime">現在溜め時間</param>
+    /// <returns>攻撃の倍率</returns>
+    public float InputCharging(float chargeTime)
     {
-        if(isCharge)
+        float magnification = 1f;
+        if (chargeTime > _weaponData.ChargeLevels[0])
         {
-            _chargeCount += Time.deltaTime;
-            if(_chargeCount > _weaponData.ChargeLevels[0])
-            {
-                return true;
-            }
+            magnification = _weaponData.ChargePowerLevels[0];
         }
-        else
+        else if (chargeTime > _weaponData.ChargeLevels[1])
         {
-            _chargeCount = 0f;
+            magnification = _weaponData.ChargePowerLevels[1];
         }
-        return false;
+        return magnification;
     }
+    /// <summary>
+    /// 現在の武器の攻撃力
+    /// </summary>
+    /// <param name="magnification">武器の倍率</param>
+    /// <returns>現在の攻撃力</returns>
     public WeaponPower CurrentPower(float magnification = 1f)
     {
         WeaponPower weaponPower = WeaponPower.zero;
@@ -90,12 +116,20 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
         }
         return weaponPower;
     }
+    /// <summary>
+    /// 装備時実行する関数
+    /// </summary>
     public void OnEquipment()
     {
-        
+        _isEquipment = true;
+        _weaponPower = CurrentPower();
     }
+    /// <summary>
+    /// 装備解除時実行する関数
+    /// </summary>
     public void OnLift()
     {
+        _isEquipment = false;
         _chargeCount = 0f;
     }
 
