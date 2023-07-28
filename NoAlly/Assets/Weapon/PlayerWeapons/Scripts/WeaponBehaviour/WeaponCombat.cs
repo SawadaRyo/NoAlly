@@ -10,9 +10,10 @@ public class WeaponCombat : WeaponBase
     public override void AttackBehaviour()
     {
         _owner.TargetCol
-            .Skip(1)
+            .Where(target => _isEquipment && target != null)
             .Subscribe(target =>
             {
+                _weaponPower = CurrentPower(InputCharging(_chargeCount));
                 if (target.TryGetComponent(out IHitBehavorOfAttack characterHp))
                 {
                     characterHp.BehaviorOfHit(_weaponPower, _owner.CurrentElement.Value);

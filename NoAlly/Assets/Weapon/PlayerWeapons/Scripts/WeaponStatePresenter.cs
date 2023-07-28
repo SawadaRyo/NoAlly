@@ -31,17 +31,15 @@ public class WeaponStatePresenter : MonoBehaviour
     void WeaponStateChacker()
     {
         _weaponController.EquipementWeapon
-            .Skip(1)
             .Subscribe(weapon =>
             {
                 _weaponAnimator.DeformationWeapon(weapon.WeaponData.TypeOfWeapon, _weaponController.CurrentElement.Value);
-            });
+            }).AddTo(this);
         _weaponController.CurrentElement
-            .Skip(1)
             .Subscribe(element =>
             {
                 _weaponAnimator.DeformationWeapon(_weaponController.EquipementWeapon.Value.WeaponData.TypeOfWeapon, element);
-            });
+            }).AddTo(this);
     }
     void AttackStateChacker()
     {
@@ -61,7 +59,7 @@ public class WeaponStatePresenter : MonoBehaviour
             .Subscribe(switchWeapon =>
             {
                 _weaponController.SwichEquipmentWeapon(switchWeapon);
-            });
+            }).AddTo(this);
 
        
         _inputToPlayer.InputAttackCharge
@@ -70,23 +68,27 @@ public class WeaponStatePresenter : MonoBehaviour
             {
                 float speedInCharge = _weaponController.EquipementWeapon.Value.WeaponData.SpeedInCharge;
                 _inputToPlayer.ParamaterCon.ChangeMoveSpeed(speedInCharge);
-                
-            });
+                _weaponController.EquipementWeapon.Value.Charging(inputCharge);
+            }).AddTo(this);
         _inputToPlayer.InputAttackUp
             .Where(_ => _inputToPlayer.InputAttackUp.Value && _playerAnimator.AbleInput)
             .Subscribe(inputUp =>
             {
                 _inputToPlayer.ParamaterCon.ChangeMoveSpeed();
-                _weaponController.EquipementWeapon.Value.Charge(false);
-            });
+                _weaponController.EquipementWeapon.Value.Charging(false);
+            }).AddTo(this);
     }
     void InputUpdate()
     {
-        Observable.EveryUpdate()
-            .Subscribe(_ =>
+        _playerAnimator.AbleMove
+            .Subscribe(ableMove =>
             {
-                _inputToPlayer.AbleMove = _playerAnimator.AbleMove;
-                _inputToPlayer.AbleJump = _playerAnimator.AbleJump;
+                _inputToPlayer.AbleMove = ableMove;
+            }).AddTo(this);
+        _playerAnimator.AbleJump
+            .Subscribe(ableJump =>
+            {
+                _inputToPlayer.AbleJump = ableJump;
             }).AddTo(this);
     }
 }

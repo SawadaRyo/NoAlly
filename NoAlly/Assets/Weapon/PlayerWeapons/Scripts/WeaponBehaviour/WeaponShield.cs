@@ -16,17 +16,5 @@ public class WeaponShield : WeaponBase
         }
     }
 
-    public override void WeaponModeToElement(ElementType type)
-    {
-        switch (type)
-        {
-            case ElementType.ELEKE:
-                _isDeformated = WeaponDeformation.Deformation;
-                break;
-            default:
-                _isDeformated = WeaponDeformation.NONE;
-                break;
-        }
-        base.WeaponModeToElement(type);
-    }
+    
 }
