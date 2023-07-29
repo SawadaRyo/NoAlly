@@ -3,32 +3,25 @@ using UnityEngine;
 using UniRx;
 using DataOfWeapon;
 
-public class WeaponPresenter : MonoBehaviour
+public class WeaponMenuPresenter : MonoBehaviour
 {
-    [SerializeField, Header("WeaponScriptableObjectsñ{ëÃ")]
-    WeaponScriptableObjects _weaponScriptableObjects;
-
     [Space(15)]
     [Header("Model")]
-    [SerializeField]
-    SetWeaponData _weaponDatas = null;
-    [SerializeField]
-    InputToWeapon _weaponInput = null;
+    
     [SerializeField, Tooltip("")]
     MenuManagerBase _menuManager = null;
+    [SerializeField, Header("")]
+    WeaponController _weaponStateController = null;
+
+    [Space(15)]
+    [Header("View")]
+    [SerializeField, Header("")]
+    //WeaponElementColor _weaponElementColor = null;
 
     [Tooltip("WeaponEquipmentÇäiî[Ç∑ÇÈä÷êî")]
     Equipment[] _weaponEquipment = null;
     [Tooltip("ÉÅÉjÉÖÅ[ì‡ÇÃEquipment")]
     ReactiveCollection<Equipment> _equipment = new();
-
-    [Space(15)]
-    [Header("View")]
-    [SerializeField, Header("WeaponProcessingÇäiî[Ç∑ÇÈä÷êî")]
-    WeaponProcessing _weaponProcessing = null;
-    [SerializeField, Header("")]
-    //WeaponElementColor _weaponElementColor = null;
-
     bool _isSwitch = false;
     WeaponType _cullentWeaponType;
 
@@ -36,7 +29,6 @@ public class WeaponPresenter : MonoBehaviour
 
     void Awake()
     {
-        _weaponDatas.Initialize(_weaponScriptableObjects);
         _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>().OrderBy(x => x.commandType).ToArray();
         for (int i = 0; i < _weaponEquipment.Length; i++)
         {
@@ -44,12 +36,9 @@ public class WeaponPresenter : MonoBehaviour
             _equipment.Add(_weaponEquipment[index]);
             WeaponEquipmentState(index);
         }
-        WeaponProcessingState();
         _isSwitch = false;
-        _weaponProcessing.SetWeapon(_weaponDatas.GetWeapon(WeaponType.SWORD), CommandType.MAIN);
-        _weaponProcessing.SetWeapon(_weaponDatas.GetWeapon(WeaponType.LANCE), CommandType.SUB);
-        _weaponProcessing.SetEquipment(_isSwitch);
-        _weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
+        
+        //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
     }
     void WeaponEquipmentState(int index)
     {
@@ -57,21 +46,21 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment[index].MainWeapon.Skip(1)
             .Subscribe(mainWeapon =>
             {
-                _weaponProcessing.SetWeapon(_weaponDatas.GetWeapon(mainWeapon), CommandType.MAIN);
+                _weaponStateController.SetEquipmentWeapon(mainWeapon, CommandType.MAIN);
                 //_cullentWeaponType = mainWeapon;
                 Debug.Log(mainWeapon);
             }).AddTo(this);
         _weaponEquipment[index].SubWeapon.Skip(1)
            .Subscribe(subWeapon =>
            {
-               _weaponProcessing.SetWeapon(_weaponDatas.GetWeapon(subWeapon), CommandType.SUB);
+               _weaponStateController.SetEquipmentWeapon(subWeapon, CommandType.SUB);
                //_cullentWeaponType = subWeapon;
                Debug.Log(subWeapon);
            }).AddTo(this);
         _weaponEquipment[index].Element.Skip(1)
             .Subscribe(element =>
             {
-                _weaponProcessing.SetElement(element);
+                _weaponStateController.SetElement(element);
                 if (element != ElementType.RIGIT)
                 {
                     //_weaponElementColor.IsActiveElement(_cullentWeaponType,element);
@@ -80,18 +69,9 @@ public class WeaponPresenter : MonoBehaviour
         _weaponEquipment[index].Equiped.Skip(1)
             .Subscribe(equiped =>
             {
-                _weaponInput.TargetWeapon = _weaponProcessing.SetEquipment(_isSwitch);
-                _weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
+                //_weaponInput.TargetWeapon = _weaponProcessing.SetEquipment(_isSwitch);
+                //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
             });
 
-    }
-    void WeaponProcessingState()
-    {
-        _weaponInput.IsSwichWeapon.Skip(1)
-           .Subscribe(isSwich =>
-           {
-               _weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(isSwich);
-               _isSwitch = isSwich;
-           }).AddTo(this);
     }
 }
