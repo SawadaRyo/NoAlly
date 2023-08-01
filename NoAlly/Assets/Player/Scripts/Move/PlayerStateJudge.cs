@@ -57,9 +57,9 @@ public class PlayerStateJudge : MonoBehaviour
     /// <param name="currentNormal"></param>
     /// <param name="hitInfo"></param>
     /// <returns></returns>
-    public StateOfPlayer ActorCurrentLocation(bool ableJump, ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
+    public StateOfPlayer ActorCurrentLocation(ActorParamater actorParamater, Vector2 currentNormal, out RaycastHit hitInfo)
     {
-        if (IsGrounded(_playerPartPos[2], actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo) && ableJump)
+        if (IsGrounded(_playerPartPos[2], actorParamater.isGroundRengeRadios, actorParamater.graundDistance, actorParamater.groundMask, out hitInfo))
         {
             return StateOfPlayer.OnGround;
         }

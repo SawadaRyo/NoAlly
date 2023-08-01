@@ -6,20 +6,21 @@ using ActorBehaviour.Move;
 using ActorBehaviour.Jump;
 using ActorBehaviour.Wall;
 
-public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBehaviorController>,IHumanoid
+public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<PlayerBehaviorController>, IHumanoid, IInputWeapon
 {
-    [SerializeField,Header("プレイヤーの挙動に関するパラメーター")]
+    [SerializeField, Header("プレイヤーの挙動に関するパラメーター")]
     ParamaterController _paramaterController = null;
     [SerializeField, Header("")]
     PlayerStateJudge _stateJudge;
     [SerializeField, Header("")]
-    PlayerAnimator _playerAnimator;
+    PlayerAnimatorController _playerAnimator;
     [SerializeField, Header("")]
     Rigidbody _rb = null;
 
     #region Paramater Move
     bool _ableJump = true;
     bool _ableMove = true;
+    bool _ableInput = true;
     float _h = 0f;
     float _v = 0f;
 
@@ -31,6 +32,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
     ActorAir _actorJump = null;
     ActorMove _actorMove = new ActorMove();
     ActorWall _actorWall = new ActorWall();
+    Vector2 _currentMoveVec = Vector2.zero;
     RaycastHit _hitInfo;
 
     public bool AbleDash
@@ -45,6 +47,9 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
         }
     }
     public bool AbleMove { get => _ableMove; set => _ableMove = value; }
+    public bool AbleJump { get => _ableJump; set => _ableJump = value; }
+    public bool AbleInput { get => _ableInput; set => _ableInput = value; }
+    public Vector2 CurrentVec => _currentMoveVec;
     public StateMachine<PlayerBehaviorController> PlayerStateMachine => _stateMachine;
     public ActorAir JumpBehaviour => _actorJump;
     public ActorMove MoveBehaviour => _actorMove;
@@ -83,7 +88,6 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
         _paramaterController.Initializer();
         _actorJump = new ActorAir(this);
         _stateJudge.Initialize();
-        _playerAnimator.Initialize(this);
         SetState();
         OnEvent();
         Observable.EveryUpdate()
@@ -99,6 +103,9 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
                 _stateMachine.Update();
             }).AddTo(this);
     }
+    /// <summary>
+    /// プレイヤーのステートを設定する関数
+    /// </summary>
     void SetState()
     {
         _stateMachine = new StateMachine<PlayerBehaviorController>(this);
@@ -110,6 +117,9 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
         _stateMachine.AddAnyTransition<PlayerBehaviorClimbWall>((int)StateOfPlayer.HangingWallEgde);
         _stateMachine.Start<PlayerBehaviourOnGround>();
     }
+    /// <summary>
+    /// 
+    /// </summary>
     void OnEvent()
     {
         _currentLocation
@@ -118,12 +128,12 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
                 switch (playerLocation)
                 {
                     case StateOfPlayer.OnGround:
-                        if (!_ableJump) _ableJump = true;
+                        //if (!_ableJump) _ableJump = true;
                         break;
                     case StateOfPlayer.InAir:
                         break;
                     case StateOfPlayer.GripingWall:
-                        if (!_ableJump) _ableJump = true;
+                        //if (!_ableJump) _ableJump = true;
                         break;
                     default:
                         break;
@@ -137,20 +147,20 @@ public class PlayerBehaviorController : MonoBehaviour, IInput, IActor<PlayerBeha
         _isJump.SetValueAndForceNotify(Input.GetButton("Jump"));
         _isDash.Value = Input.GetButtonDown("Dash");
 
+        if (_h != 0)
+        {
+            _currentMoveVec = _stateJudge.CurrentMoveVectorNormal(_h, _v);
+        }
         _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVectorNormal(_h, _v)); //現在のプレイヤーの進行方向を代入
 
-        _currentLocation.Value = _stateJudge.ActorCurrentLocation(_ableJump, _paramaterController.GetParamater, _currentMoveVector.Value, out _hitInfo);
-        Debug.Log(_currentLocation.Value);
+        _currentLocation.Value = _stateJudge.ActorCurrentLocation(_paramaterController.GetParamater, _currentMoveVector.Value, out _hitInfo);
+        Debug.Log(_ableJump);
     }
     void OnUpdateAttack()
     {
-        if (!PlayerAttackStateController.Instance.AbleInput) return;
+        if (!_ableInput) return;
         //if (_inDeformation) return;
-
-        if (!PlayerAttackStateController.Instance.IsAttack)
-        {
-            _isSwtchWeapon.Value = Input.GetButton("SubWeaponSwitch");
-        }
+        _isSwtchWeapon.SetValueAndForceNotify(Input.GetButton("SubWeaponSwitch"));
         _inputAttackDown.Value = Input.GetButtonDown("Attack");
         _inputAttackCharge.SetValueAndForceNotify(Input.GetButton("Attack"));
         _inputAttackUp.Value = Input.GetButtonUp("Attack");

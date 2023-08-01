@@ -35,14 +35,15 @@ public class PlayerBehaviourOnWall : State
                 }
             }).AddTo(Owner);
         Owner.IsJump
-            .Where(_ => IsActive 
+            .Where(_ => IsActive
+                     && Owner.AbleJump
                      && Owner.IsJump.Value
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isJump =>
             {
                 //Debug.Log(Owner.HitInfo.normal);
                 Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * MoveSpeedX
-                                               ,Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed,Owner.ParamaterCon.GetParamater.fallSpeed).y);
+                                               , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y);
                 AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);
             });
     }
@@ -55,9 +56,9 @@ public class PlayerBehaviourOnWall : State
     {
         base.OnUpdate();
         Owner.WallBehaviour.ActorSlideWall(Owner.ParamaterCon.GetParamater.wallSlideSpeed
-            ,Owner.Rb
-            ,Owner.HitInfo
-            ,Owner.CurrentLocation.Value);
+            , Owner.Rb
+            , Owner.HitInfo
+            , Owner.CurrentLocation.Value);
     }
     protected override void OnExit(State nextState)
     {
@@ -68,7 +69,7 @@ public class PlayerBehaviourOnWall : State
     /// 壁キックのインターバル
     /// </summary>
     /// <param name="interval"></param>
-    async void AbleWallKick(float interval = 0.2f)
+    async void AbleWallKick(float interval = 0.5f)
     {
         Owner.AbleMove = false;
         await UniTask.Delay(TimeSpan.FromSeconds(interval));

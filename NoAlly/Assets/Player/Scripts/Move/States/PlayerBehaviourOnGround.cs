@@ -43,7 +43,6 @@ public class PlayerBehaviourOnGround : State
 
     public override void OnTranstion()
     {
-        Debug.Log(Owner);
         Owner.CurrentLocation
             .Subscribe(currentLocation =>
             {
@@ -65,9 +64,9 @@ public class PlayerBehaviourOnGround : State
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
             });
         Owner.IsJump
-            .Where(_ => IsActive
+            .Where(isjump => IsActive
+                     && isjump == true
                      && Owner.AbleJump
-                     && Owner.IsJump.Value
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
