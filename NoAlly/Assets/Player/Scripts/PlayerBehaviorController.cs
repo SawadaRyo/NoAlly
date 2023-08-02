@@ -8,13 +8,13 @@ using ActorBehaviour.Wall;
 
 public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<PlayerBehaviorController>, IHumanoid, IInputWeapon
 {
-    [SerializeField, Header("プレイヤーの挙動に関するパラメーター")]
+    [SerializeField, Header("プレイヤーのパラメーターを管理")]
     ParamaterController _paramaterController = null;
-    [SerializeField, Header("")]
+    [SerializeField, Header("プレイヤーの接地、接壁判定")]
     PlayerStateJudge _stateJudge;
-    [SerializeField, Header("")]
+    [SerializeField, Header("プレイヤーのアニメーションを管理")]
     PlayerAnimatorController _playerAnimator;
-    [SerializeField, Header("")]
+    [SerializeField, Header("プレイヤーのRigidbody")]
     Rigidbody _rb = null;
 
     #region Paramater Move
