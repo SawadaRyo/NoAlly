@@ -11,7 +11,7 @@ namespace ActorBehaviour
         public class ActorAir
         {
             [Tooltip("")]
-            IInput _owner = null;
+            IInputPlayer _owner = null;
             [Tooltip("")]
             bool _keyLook = false;
             [Tooltip("")]
@@ -25,7 +25,7 @@ namespace ActorBehaviour
             StateOfPlayer stateOfPlayer => _owner.CurrentLocation.Value;
             public bool KeyLook => _keyLook;
 
-            public ActorAir(IInput owner)
+            public ActorAir(IInputPlayer owner)
             {
                 _owner = owner;
                 ValueWatcher();
@@ -117,6 +117,7 @@ namespace ActorBehaviour
                     default:
                         break;
                 }
+                //Debug.Log(ActorVertical);
                 return ActorVertical;
             }
         }

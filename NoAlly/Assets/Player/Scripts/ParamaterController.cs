@@ -21,6 +21,5 @@ public class ParamaterController : MonoBehaviour
     public void ChangeMoveSpeed(float magnification = 1f)
     {
         _playerParamater.speed = _beforeParamater.speed * magnification;
-        Debug.Log(_playerParamater.speed);
     }
 }

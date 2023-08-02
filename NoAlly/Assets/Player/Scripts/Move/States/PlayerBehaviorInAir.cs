@@ -9,21 +9,28 @@ public class PlayerBehaviorInAir : State
     RaycastHit _hitWall;
 
     public RaycastHit HitWall => _hitWall;
-    public float MoveSpeedX { get => _moveSpeedX; set => _moveSpeedX = value; } 
+    public float MoveSpeedX { get => _moveSpeedX; set => _moveSpeedX = value; }
 
     protected override void OnEnter(State prevState)
     {
-       base.OnEnter(prevState);
+        base.OnEnter(prevState);
     }
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        Owner.Rb.velocity = new Vector3(Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, _moveSpeedX, Owner.HitInfo, Owner.AbleMove).x 
-            ,Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower,Owner.ParamaterCon.GetParamater.fallSpeed).y);
+        if (Owner.AbleMove)
+        {
+            Owner.Rb.velocity = new Vector3(Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, _moveSpeedX, Owner.HitInfo, Owner.AbleMove).x
+                , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower, Owner.ParamaterCon.GetParamater.fallSpeed).y);
+        }
     }
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
+        if (nextState is PlayerBehaviourOnWall wall)
+        {
+            wall.MoveSpeedX = _moveSpeedX;
+        }
         //_beforeMoveVecX = 0f;
     }
 
