@@ -4,7 +4,6 @@ using UnityEngine;
 
 public interface IWeaponController
 {
-    public IReadOnlyReactiveProperty<Collider> TargetCol { get; }
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon { get; }
     public IReadOnlyReactiveProperty<ElementType> CurrentElement { get; }
     /// <summary>

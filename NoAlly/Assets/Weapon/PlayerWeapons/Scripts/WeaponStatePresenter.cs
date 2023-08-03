@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponStatePresenter : MonoBehaviour
 {
-    [SerializeField,Header("武器本体の挙動")]
+    [SerializeField, Header("武器本体の挙動")]
     WeaponController _weaponController;
     [SerializeField, Header("武器のアニメーションの挙動")]
     WeaponAnimator _weaponAnimator;
@@ -12,7 +12,7 @@ public class WeaponStatePresenter : MonoBehaviour
     PlayerBehaviorController _inputToPlayer;
     [SerializeField, Header("プレイヤーのアニメーションの挙動")]
     PlayerAnimatorController _playerAnimator;
-    [SerializeField,Header("")]
+    [SerializeField, Header("")]
     WeaponType[] mainAndSub = new WeaponType[2];
 
     void Start()
@@ -21,7 +21,7 @@ public class WeaponStatePresenter : MonoBehaviour
         _weaponAnimator.Initializer();
         _playerAnimator.Initializer(_inputToPlayer);
         _playerAnimator.StateChacker();
-        _playerAnimator.WeaponActionAnimation(_inputToPlayer,_weaponController);
+        _playerAnimator.WeaponActionAnimation(_inputToPlayer, _weaponController);
         WeaponStateChacker();
         InputStateChacker();
         AttackStateChacker();
@@ -44,11 +44,18 @@ public class WeaponStatePresenter : MonoBehaviour
     void AttackStateChacker()
     {
         _playerAnimator.IsAttack
+            .Where(isAttack => isAttack == BoolAttack.ATTACKING)
             .Subscribe(isAttack =>
             {
-                if(_weaponController.EquipementWeapon.Value is WeaponCombat combat)
+                _weaponController.EquipementWeapon.Value.AttackBehaviour();
+
+            });
+        _playerAnimator.IsAttack
+            .Subscribe(isParticle =>
+            {
+                if (_weaponController.EquipementWeapon.Value is WeaponCombat combat)
                 {
-                    combat.AttackWeaponCombat(isAttack);
+                    combat.DoParticle(isParticle);
                 }
             });
     }
@@ -61,7 +68,7 @@ public class WeaponStatePresenter : MonoBehaviour
                 _weaponController.SwichEquipmentWeapon(switchWeapon);
             }).AddTo(this);
 
-       
+
         _inputToPlayer.InputAttackCharge
             .Where(_ => _inputToPlayer.InputAttackCharge.Value && _playerAnimator.AbleInput)
             .Subscribe(inputCharge =>
@@ -89,6 +96,15 @@ public class WeaponStatePresenter : MonoBehaviour
             .Subscribe(ableJump =>
             {
                 _inputToPlayer.AbleJump = ableJump;
+            }).AddTo(this);
+        _playerAnimator.AttackMoveSpeed
+            .Subscribe(speed =>
+            {
+                if (speed != 0f)
+                {
+                    Vector2 vec = _inputToPlayer.MoveBehaviour.ActorMoveMethod(_inputToPlayer.CurrentVec.x, speed, _inputToPlayer.HitInfo);
+                    _inputToPlayer.Rb.velocity = vec;
+                }
             }).AddTo(this);
     }
 }
