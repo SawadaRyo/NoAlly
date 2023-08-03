@@ -50,13 +50,13 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     }
     public virtual void WeaponModeToElement(ElementType type)
     {
-        if (type == _weaponData.ElementDeformation)
+        if (type == ElementType.RIGIT)
         {
-            _isDeformated = WeaponDeformation.Deformation;
+            _isDeformated = WeaponDeformation.NONE;
         }
         else
         {
-            _isDeformated = WeaponDeformation.NONE;
+            _isDeformated = WeaponDeformation.Deformation;
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     {
         WeaponPower weaponPower = WeaponPower.zero;
         weaponPower.defaultPower = _weaponData.RigitPower[(int)_isDeformated];
-        switch (_weaponData.ElementDeformation)
+        switch (_owner.CurrentElement.Value)
         {
             case ElementType.FIRE:
                 weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];

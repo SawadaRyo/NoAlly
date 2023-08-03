@@ -29,10 +29,8 @@ public class WeaponDataEntity
     float[] _frozenPower = new float[2];
     [SerializeField, Header("—­‚ßUŒ‚‚Ì‚½‚ßŽžŠÔ")]
     float[] _chargeLevels = new float[2] { 1f, 3f };
-    [SerializeField, Header("—­‚ßUŒ‚‚Ì‚½‚ßŽžŠÔ")]
+    [SerializeField, Header("—­‚ßUŒ‚‚ÌUŒ‚”{—¦")]
     float[] _chargePowerLevels = new float[2] { 1.2f, 1.5f };
-    [SerializeField, Header("•ÏŒ`•K—v‚È‘®«")]
-    ElementType _elementType = ElementType.RIGIT;
 
     [SerializeField, Range(0.1f, 1f), Header("ƒ`ƒƒ[ƒW’†‚ÌˆÚ“®‘¬“x‚Ì”{—¦")]
     float _magnificationInCharge = 1f;
@@ -45,7 +43,6 @@ public class WeaponDataEntity
     public float[] FrozenPower => _frozenPower;
     public float[] ChargeLevels => _chargeLevels;
     public float[] ChargePowerLevels => _chargePowerLevels;
-    public ElementType ElementDeformation => _elementType;
     public float SpeedInCharge => _magnificationInCharge;
 }
 

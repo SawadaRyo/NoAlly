@@ -16,6 +16,8 @@ public class WeaponController : MonoBehaviour,IWeaponController
     Transform _poolPos = null;
     [SerializeField, Header("武器の斬撃エフェクト")]
     ParticleSystem _myParticleSystem = default;
+    [SerializeField, Header("判定するオブジェクトのレイヤー")]
+    LayerMask hitLayer = ~0;
 
     [Tooltip("")]
     ReactiveProperty<WeaponBase> _equipementWeapon = new();
@@ -23,8 +25,6 @@ public class WeaponController : MonoBehaviour,IWeaponController
     WeaponBase _mainWeapon;
     [Tooltip("サブ配置")]
     WeaponBase _subWeapon;
-    [Tooltip("")]
-    ReactiveProperty<Collider> _targetCol = new();
     [Tooltip("現在の属性")]
     ReactiveProperty<ElementType> _currentElement = new();
 
@@ -32,10 +32,9 @@ public class WeaponController : MonoBehaviour,IWeaponController
     public Transform GetPoolPos => _poolPos;
     public ObjectBase WeaponPrefab => _weaponPrefab; 
     public ParticleSystem MyParticle => _myParticleSystem;
-    public IReadOnlyReactiveProperty<Collider> TargetCol => _targetCol;
+    public LayerMask HitLayer => hitLayer;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
     public IReadOnlyReactiveProperty<ElementType> CurrentElement => _currentElement;
-    void OnTriggerEnter(Collider other) => _targetCol.SetValueAndForceNotify(other);
 
     /// <summary>
     /// 初期化関数
@@ -104,8 +103,19 @@ public class WeaponController : MonoBehaviour,IWeaponController
 
     private void OnDisable()
     {
-        _targetCol.Dispose();
         _equipementWeapon.Dispose();
         _currentElement.Dispose();
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        // 攻撃範囲を赤い線でシーンビューに表示する
+        Gizmos.color = Color.red;
+        var oldMatrix = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(_attackPos.position, _attackPos.rotation, _attackPos.lossyScale);
+        Gizmos.DrawWireCube(Vector3.zero, Vector3.one * 1.1f);
+        Gizmos.matrix = oldMatrix;
+    }
+#endif
 }
