@@ -25,7 +25,10 @@ public class WeaponCombat : WeaponBase
         //    });
 
 
-            Collider[] cols = Physics.OverlapBox(_attackPos.position, _attackPos.localScale, _attackPos.rotation, _owner.HitLayer);
+            Collider[] cols = Physics.OverlapBox(_owner.GetAttackPos.position
+                                               , _owner.GetAttackPos.localScale
+                                               , _owner.GetAttackPos.rotation
+                                               , _owner.HitLayer);
             if (cols.Length == 0) return;
             _weaponPower = CurrentPower(InputCharging(_chargeCount));
             foreach (Collider col in cols)

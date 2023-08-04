@@ -15,6 +15,11 @@ public class WeaponStatePresenter : MonoBehaviour
     [SerializeField, Header("")]
     WeaponType[] mainAndSub = new WeaponType[2];
 
+    public void DoAttack()
+    {
+        _weaponController.EquipementWeapon.Value.AttackBehaviour();
+    }
+
     void Start()
     {
         _weaponController.Initializer(mainAndSub[0], mainAndSub[1]);
@@ -27,7 +32,6 @@ public class WeaponStatePresenter : MonoBehaviour
         AttackStateChacker();
         InputUpdate();
     }
-
     void WeaponStateChacker()
     {
         _weaponController.EquipementWeapon
@@ -43,13 +47,6 @@ public class WeaponStatePresenter : MonoBehaviour
     }
     void AttackStateChacker()
     {
-        _playerAnimator.IsAttack
-            .Where(isAttack => isAttack == BoolAttack.ATTACKING)
-            .Subscribe(isAttack =>
-            {
-                _weaponController.EquipementWeapon.Value.AttackBehaviour();
-
-            });
         _playerAnimator.IsAttack
             .Subscribe(isParticle =>
             {

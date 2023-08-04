@@ -2,15 +2,15 @@ using UnityEngine;
 using UniRx;
 using DataOfWeapon;
 
-public class WeaponController : MonoBehaviour,IWeaponController
+public class WeaponController : MonoBehaviour, IWeaponController
 {
     [SerializeField, Header("")]
     SetWeaponData _setWeaponData = null;
     [SerializeField, Header("WeaponScriptableObjects本体")]
     WeaponScriptableObjects _weaponScriptableObjects;
-    [SerializeField,Header("武器のプレハブ本体")]
+    [SerializeField, Header("武器のプレハブ本体")]
     ObjectBase _weaponPrefab;
-    [SerializeField,Header("攻撃の中心点")]
+    [SerializeField, Header("攻撃の中心点")]
     Transform _attackPos = null;
     [SerializeField]
     Transform _poolPos = null;
@@ -30,7 +30,7 @@ public class WeaponController : MonoBehaviour,IWeaponController
 
     public Transform GetAttackPos => _attackPos;
     public Transform GetPoolPos => _poolPos;
-    public ObjectBase WeaponPrefab => _weaponPrefab; 
+    public ObjectBase WeaponPrefab => _weaponPrefab;
     public ParticleSystem MyParticle => _myParticleSystem;
     public LayerMask HitLayer => hitLayer;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
@@ -111,11 +111,14 @@ public class WeaponController : MonoBehaviour,IWeaponController
     private void OnDrawGizmos()
     {
         // 攻撃範囲を赤い線でシーンビューに表示する
-        Gizmos.color = Color.red;
-        var oldMatrix = Gizmos.matrix;
-        Gizmos.matrix = Matrix4x4.TRS(_attackPos.position, _attackPos.rotation, _attackPos.lossyScale);
-        Gizmos.DrawWireCube(Vector3.zero, Vector3.one * 1.1f);
-        Gizmos.matrix = oldMatrix;
+        if (_attackPos != null)
+        {
+            Gizmos.color = Color.red;
+            var oldMatrix = Gizmos.matrix;
+            Gizmos.matrix = Matrix4x4.TRS(_attackPos.position, _attackPos.rotation, _attackPos.lossyScale);
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one * 1.1f);
+            Gizmos.matrix = oldMatrix;
+        }
     }
 #endif
 }

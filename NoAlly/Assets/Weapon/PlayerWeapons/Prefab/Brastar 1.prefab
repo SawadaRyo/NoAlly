@@ -5317,7 +5317,6 @@ GameObject:
   - component: {fileID: 715491449951558020}
   - component: {fileID: 3113138534747045063}
   - component: {fileID: 8266695061144720445}
-  - component: {fileID: 1667911044721099477}
   m_Layer: 7
   m_Name: Brastar 1
   m_TagString: Untagged
@@ -5474,23 +5473,9 @@ MonoBehaviour:
   _attackPos: {fileID: 0}
   _poolPos: {fileID: 0}
   _myParticleSystem: {fileID: 2535850563167026178}
---- !u!114 &1667911044721099477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9153705405047431978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c85993a6f1329a44b60eec9db3f534b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _weaponController: {fileID: 8266695061144720445}
-  _weaponAnimator: {fileID: 3113138534747045063}
-  _inputToPlayer: {fileID: 0}
-  _playerAnimator: {fileID: 0}
-  mainAndSub: 0000000000000000
+  hitLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1001 &852632005689342466
 PrefabInstance:
   m_ObjectHideFlags: 0
