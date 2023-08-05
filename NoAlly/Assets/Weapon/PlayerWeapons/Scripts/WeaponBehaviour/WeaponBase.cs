@@ -14,8 +14,6 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     [Tooltip("")]
     protected WeaponPower _weaponPower = WeaponPower.zero;
 
-    [Tooltip("攻撃判定の中心")]
-    protected Transform _attackPos;
     [Tooltip("この武器のデータ")]
     protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
