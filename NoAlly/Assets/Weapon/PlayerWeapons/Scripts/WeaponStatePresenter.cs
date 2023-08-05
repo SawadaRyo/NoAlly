@@ -67,7 +67,7 @@ public class WeaponStatePresenter : MonoBehaviour
 
 
         _inputToPlayer.InputAttackCharge
-            .Where(_ => _inputToPlayer.InputAttackCharge.Value && _playerAnimator.AbleInput)
+            .Where(_ => _inputToPlayer.InputAttackCharge.Value && _playerAnimator.AbleAttack)
             .Subscribe(inputCharge =>
             {
                 float speedInCharge = _weaponController.EquipementWeapon.Value.WeaponData.SpeedInCharge;
@@ -75,7 +75,7 @@ public class WeaponStatePresenter : MonoBehaviour
                 _weaponController.EquipementWeapon.Value.Charging(inputCharge);
             }).AddTo(this);
         _inputToPlayer.InputAttackUp
-            .Where(_ => _inputToPlayer.InputAttackUp.Value && _playerAnimator.AbleInput)
+            .Where(_ => _inputToPlayer.InputAttackUp.Value && _playerAnimator.AbleAttack)
             .Subscribe(inputUp =>
             {
                 _inputToPlayer.ParamaterCon.ChangeMoveSpeed();
@@ -84,6 +84,12 @@ public class WeaponStatePresenter : MonoBehaviour
     }
     void InputUpdate()
     {
+        _playerAnimator.AbleDash
+            .Subscribe(ableDash =>
+            {
+                Debug.Log(ableDash);
+                _inputToPlayer.AbleDash = ableDash;
+            });
         _playerAnimator.AbleMove
             .Subscribe(ableMove =>
             {
