@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class WeaponShield : WeaponBase
 {
-    public void Brocking()
+    public void ISBrocking()
     {
-
+        //GameObject.Instantiate _owner.GetAttackPos
     }
 
     public override void AttackBehaviour()
