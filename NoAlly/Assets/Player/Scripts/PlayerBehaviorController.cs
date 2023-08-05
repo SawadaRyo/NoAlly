@@ -19,7 +19,9 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
 
     #region Paramater Move
     bool _ableJump = true;
+    bool _ableWallJump = true;
     bool _ableMove = true;
+    bool _ableDash = true;
     bool _ableInput = true;
     float _h = 0f;
     float _v = 0f;
@@ -35,19 +37,10 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     Vector2 _currentMoveVec = Vector2.zero;
     RaycastHit _hitInfo;
 
-    public bool AbleDash
-    {
-        get
-        {
-            if (_stateMachine != null)
-            {
-                return !(_stateMachine.CurrentState is PlayerBehaviorDash);
-            }
-            return false;
-        }
-    }
+    public bool AbleDash { get => _ableDash; set => _ableDash = _ableDash = value; }
     public bool AbleMove { get => _ableMove; set => _ableMove = value; }
     public bool AbleJump { get => _ableJump; set => _ableJump = value; }
+    public bool AbleWallJump { get => _ableWallJump; set => _ableWallJump = value; }
     public bool AbleInput { get => _ableInput; set => _ableInput = value; }
     public Vector2 CurrentVec => _currentMoveVec;
     public StateMachine<PlayerBehaviorController> PlayerStateMachine => _stateMachine;
@@ -91,6 +84,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
         SetState();
         OnEvent();
         Observable.EveryUpdate()
+            .Where(_ => _ableInput)
             .Subscribe(_ =>
             {
                 OnUpdateMove();
@@ -99,7 +93,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
         Observable.EveryFixedUpdate()
             .Subscribe(_ =>
             {
-                _actorMove.ActorRotateMethod(_paramaterController.GetParamater.turnSpeed, transform, _currentMoveVector.Value);
+                //_actorMove.ActorRotateMethod(_paramaterController.GetParamater.turnSpeed, transform, _currentMoveVector.Value);
                 _stateMachine.Update();
             }).AddTo(this);
     }
@@ -152,13 +146,13 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
             _currentMoveVec = _stateJudge.CurrentMoveVectorNormal(_h, _v);
         }
         _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVectorNormal(_h, _v)); //現在のプレイヤーの進行方向を代入
-
+        //Debug.Log(_currentMoveVector.Value);
+        //Debug.Log(_currentLocation.Value);
         _currentLocation.Value = _stateJudge.ActorCurrentLocation(_paramaterController.GetParamater, _currentMoveVector.Value, out _hitInfo);
-        Debug.Log(_ableJump);
+        //Debug.Log(_ableJump);
     }
     void OnUpdateAttack()
     {
-        if (!_ableInput) return;
         //if (_inDeformation) return;
         _isSwtchWeapon.SetValueAndForceNotify(Input.GetButton("SubWeaponSwitch"));
         _inputAttackDown.Value = Input.GetButtonDown("Attack");

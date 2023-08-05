@@ -16,18 +16,18 @@ MonoBehaviour:
   dashSpeed: 5
   dashIntarval: 0.5
   turnSpeed: 25
-  jumpPower: 14
-  fallSpeed: 90
+  jumpPower: 15
+  fallSpeed: 180
   graundDistance: 0.25
-  isGroundRengeRadios: 0.15
+  isGroundRengeRadios: 0.2
   groundMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 328
   wallJump: 0
-  wallSlideSpeed: 0
-  wallKickInterval: 0
-  walldistance: 0
-  wallRadios: 0
+  wallSlideSpeed: 1.5
+  wallKickInterval: 0.5
+  walldistance: 0.3
+  wallRadios: 0.3
   colliderPointOnWall: []
   wallMask:
     serializedVersion: 2

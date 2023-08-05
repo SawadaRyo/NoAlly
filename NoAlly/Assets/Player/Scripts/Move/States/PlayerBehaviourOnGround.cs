@@ -19,6 +19,7 @@ public class PlayerBehaviourOnGround : State
         }
         else if (Owner.AbleMove && Owner.CurrentMoveVector.Value != Vector2.zero)
         {
+            Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.CurrentMoveVector.Value);
             Owner.Rb.velocity = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.ParamaterCon.GetParamater.speed, Owner.HitInfo);
             if (Mathf.Abs(Owner.GroundNormal.y) > 0.01f)
             {
@@ -34,10 +35,6 @@ public class PlayerBehaviourOnGround : State
         if (nextState is PlayerBehaviorInAir air)
         {
             air.MoveSpeedX = Owner.ParamaterCon.GetParamater.speed;
-        }
-        else if (nextState is PlayerBehaviourOnWall wall)
-        {
-            wall.MoveSpeedX = Owner.ParamaterCon.GetParamater.speed;
         }
     }
 
@@ -57,7 +54,6 @@ public class PlayerBehaviourOnGround : State
             }).AddTo(Owner);
         Owner.IsDash
             .Where(_ => IsActive
-                     && Owner.IsDash.Value
                      && Owner.AbleDash)
             .Subscribe(isDash =>
             {

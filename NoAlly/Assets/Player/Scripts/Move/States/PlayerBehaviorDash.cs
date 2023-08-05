@@ -5,7 +5,6 @@ using UniRx;
 
 public class PlayerBehaviorDash : State
 {
-    FloatReactiveProperty _time = new();
     float _veloX = 0f;
 
     public float VeloX => _veloX;
@@ -13,28 +12,26 @@ public class PlayerBehaviorDash : State
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
-        _time.Value = Owner.ParamaterCon.GetParamater.dashIntarval;
         _veloX = 0f;
     }
     protected override void OnUpdate()
     {
         base.OnUpdate();
+        Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.CurrentMoveVector.Value);
         var moveVec = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, Owner.ParamaterCon.GetParamater.speed, Owner.HitInfo);
         Owner.Rb.velocity = moveVec + Owner.MoveBehaviour.DodgeVec(moveVec.normalized, Owner.ParamaterCon.GetParamater.dashSpeed);
         _veloX = Owner.ParamaterCon.GetParamater.speed + Owner.ParamaterCon.GetParamater.dashSpeed;
-        _time.Value -= Time.deltaTime;
+        if(Owner.AbleDash)
+        {
+            Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
+        }
     }
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
-        _time.Value = 0f;
         if (nextState is PlayerBehaviorInAir air)
         {
             air.MoveSpeedX = _veloX;
-        }
-        else if(nextState is PlayerBehaviourOnWall wall)
-        {
-            wall.MoveSpeedX = _veloX;
         }
     }
 
@@ -47,15 +44,6 @@ public class PlayerBehaviorDash : State
            {
                Owner.PlayerStateMachine.Dispatch((int)currentLocation);
            }).AddTo(Owner);
-        _time
-            .Where(_ => IsActive)
-            .Subscribe(time =>
-            {
-                if (time < 0f)
-                {
-                    Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
-                }
-            });
         Owner.CurrentMoveVector
             .Skip(1)
             .Where(_ => Owner.CurrentMoveVector.Value == Vector2.zero)
@@ -70,10 +58,5 @@ public class PlayerBehaviorDash : State
                 Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower).y);
                 Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
             });
-    }
-
-    ~PlayerBehaviorDash()
-    {
-        _time.Dispose();
     }
 }
