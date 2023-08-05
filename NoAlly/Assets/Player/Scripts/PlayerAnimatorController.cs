@@ -14,6 +14,8 @@ public class PlayerAnimatorController : MonoBehaviour
 
     [Tooltip("攻撃可能か判定する変数")]
     bool _ableAttack = true;
+    [Tooltip("ダッシュ可能か判定する変数")]
+    BoolReactiveProperty _ableDash = new(true);
     [Tooltip("移動可能か判定する変数")]
     BoolReactiveProperty _ableMove = new();
     [Tooltip("ジャンプ可能か判定する変数")]
@@ -27,13 +29,14 @@ public class PlayerAnimatorController : MonoBehaviour
     [Tooltip("")]
     CapsuleColliderValue _colliderValue;
 
-    public bool AbleInput => _ableAttack;
+    public bool AbleAttack => _ableAttack;
+    public IReadOnlyReactiveProperty<bool> AbleDash => _ableDash;
     public IReadOnlyReactiveProperty<bool> AbleMove => _ableMove;
     public IReadOnlyReactiveProperty<bool> AbleJump => _ableJump;
     public IReadOnlyReactiveProperty<float> AttackMoveSpeed => _attackMovePlayerSpeed;
     public IReadOnlyReactiveProperty<BoolAttack> IsAttack => _isAttack;
 
-    public void IsAttackFlg(BoolAttack boolAttack) => _isAttack.Value = boolAttack;
+    public void IsParticleFlg(BoolAttack boolAttack) => _isAttack.Value = boolAttack;
     public void SetMovePlayerCallback(float moveSpeed) => _attackMovePlayerSpeed.SetValueAndForceNotify(moveSpeed);
 
     /// <summary>
@@ -80,37 +83,51 @@ public class PlayerAnimatorController : MonoBehaviour
     /// <param name="movePlayer"></param>
     public void StateChacker()
     {
-        IDisposable weaponState = _trigger
-        .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
-        .Subscribe(onStateInfo =>
-        {
-            if (onStateInfo.StateInfo.IsName("Idle"))
+        _trigger
+            .OnStateEnterAsObservable()　　//Animationの遷移開始を検知
+            .Subscribe(onStateInfo =>
             {
-                _ableAttack = true;
-                _ableMove.Value = true;
-                _ableJump.Value = true;
-            }
-            else if (onStateInfo.StateInfo.IsTag("AbleInput"))
+                if (onStateInfo.StateInfo.IsName("Idle"))
+                {
+                    _ableAttack = true;
+                    _ableMove.Value = true;
+                    _ableJump.Value = true;
+                }
+                else if (onStateInfo.StateInfo.IsName("Running Slide"))
+                {
+                    _ableDash.Value = false;
+                }
+                else if (onStateInfo.StateInfo.IsTag("AbleInput"))
+                {
+                    _ableMove.Value = true;
+                    _ableJump.Value = true;
+                }
+                else if (onStateInfo.StateInfo.IsTag("DisableInput"))
+                {
+                    _ableAttack = false;
+                    _ableMove.Value = false;
+                    _ableJump.Value = false;
+                }
+                else if (onStateInfo.StateInfo.IsTag("DisableMove"))
+                {
+                    _ableMove.Value = false;
+                    _ableJump.Value = false;
+                }
+                else if (onStateInfo.StateInfo.IsTag("DisableJump"))
+                {
+                    _ableJump.Value = false;
+                }
+            });
+
+        _trigger
+            .OnStateExitAsObservable()
+            .Subscribe(onStateInfo =>
             {
-                _ableMove.Value = true;
-                _ableJump.Value = true;
-            }
-            else if (onStateInfo.StateInfo.IsTag("DisableInput"))
-            {
-                _ableAttack = false;
-                _ableMove.Value = false;
-                _ableJump.Value = false;
-            }
-            else if (onStateInfo.StateInfo.IsTag("DisableMove"))
-            {
-                _ableMove.Value = false;
-                _ableJump.Value = false;
-            }
-            else if (onStateInfo.StateInfo.IsTag("DisableJump"))
-            {
-                _ableJump.Value = false;
-            }
-        });
+                if (onStateInfo.StateInfo.IsName("Running Slide"))
+                {
+                    _ableDash.Value = true;
+                }
+            });
     }
     /// <summary>
     /// プレイヤーの移動関係のアニメーションを管理する関数
@@ -119,12 +136,12 @@ public class PlayerAnimatorController : MonoBehaviour
     public void MoveAnimation(PlayerBehaviorController moveInput)
     {
         moveInput.IsDash
-            .Where(_ => moveInput.AbleDash == true
+            .Where(_ => _ableDash.Value
                      && moveInput.CurrentMoveVector.Value.x != 0f
                      && moveInput.CurrentLocation.Value == StateOfPlayer.OnGround)
             .Subscribe(isDash =>
             {
-                _playerAnimator.SetTrigger("Dudge");
+                if (isDash) _playerAnimator.SetTrigger("Dudge");
             }).AddTo(moveInput);
         moveInput.CurrentLocation
             .Subscribe(currentLocation =>
@@ -181,8 +198,10 @@ public class PlayerAnimatorController : MonoBehaviour
 
     void OnDisable()
     {
+        _ableDash.Dispose();
         _ableMove.Dispose();
         _ableJump.Dispose();
+        _isAttack.Dispose();
         _attackMovePlayerSpeed.Dispose();
     }
 }

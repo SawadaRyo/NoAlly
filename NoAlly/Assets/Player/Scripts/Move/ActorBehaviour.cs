@@ -111,7 +111,7 @@ namespace ActorBehaviour
                         {
                             ActorVertical.y = -(fallSpeed / 2);
                         }
-                        //Debug.Log(-(fallSpeed * Mathf.Pow(_timeInAir, 2)));
+                        Debug.Log(ActorVertical.y);
                         break;
 
                     default:
@@ -170,10 +170,8 @@ namespace ActorBehaviour
             /// <param name="moveSpeed"></param>
             /// <param name="hitNormal">地面の法線ベクトル</param>
             /// <returns></returns>
-            public Vector3 ActorMoveMethod(float h, float moveSpeed, RaycastHit hitNormal, bool ableInput = true)
+            public Vector3 ActorMoveMethod(float h, float moveSpeed, RaycastHit hitNormal)
             {
-                if (!ableInput) return Vector3.zero;
-
                 Vector3 velo = Vector3.zero;
                 if (hitNormal.collider)
                 {
@@ -286,9 +284,9 @@ namespace ActorBehaviour
             /// <summary>
             /// 壁のよじ登り
             /// </summary>
-            /// <param name="endPoint">よじ登る終点</param>
-            /// <param name="duration">よじ登るのにかかる時間</param>
-            /// <returns></returns>
+            /// <param name="rb"></param>
+            /// <param name="hitInfo"></param>
+            /// <param name="duration"></param>
             public void ClimbWall(Rigidbody rb, RaycastHit hitInfo, float duration = 0.5f)
             {
                 //float time = 0;
@@ -298,9 +296,7 @@ namespace ActorBehaviour
                 if (!_clinbing.Value && hitInfo.collider.TryGetComponent(out BoxCollider col1))
                 {
                     _slideWall = false;
-                    Vector3 endPoint = new Vector3(hitInfo.transform.position.x
-                                                 , hitInfo.transform.position.y + col1.size.y
-                                                 , hitInfo.transform.position.z);
+                    Vector3 endPoint = hitInfo.transform.position + new Vector3(0f, col1.size.y * hitInfo.transform.localScale.y, 0f);
 
                     rb.transform.DOMove(endPoint, duration)
                         .OnStart(() =>
@@ -317,7 +313,7 @@ namespace ActorBehaviour
                             rb.isKinematic = false;
                         });
                 }
-                
+
                 //while (time < duration)
                 //{
                 //    rb.transform.position = Vector3.Lerp(startPoint, endPoint, time / duration);

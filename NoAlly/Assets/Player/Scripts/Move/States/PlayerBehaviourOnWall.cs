@@ -12,8 +12,6 @@ public class PlayerBehaviourOnWall : State
 
     public RaycastHit HitWall => _wallState;
 
-    public float MoveSpeedX { get => _moveSpeedX; set => _moveSpeedX = value; }
-
     public override void OnTranstion()
     {
         Owner.CurrentLocation
@@ -36,14 +34,25 @@ public class PlayerBehaviourOnWall : State
             }).AddTo(Owner);
         Owner.IsJump
             .Where(_ => IsActive
-                     && Owner.AbleJump
+                     && Owner.AbleWallJump
                      && Owner.IsJump.Value
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isJump =>
             {
-                //Debug.Log(Owner.HitInfo.normal);
-                Owner.Rb.velocity = new Vector3(Owner.HitInfo.normal.x * MoveSpeedX
-                                               , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y);
+                Debug.Log(Owner.HitInfo.normal);
+                float x = 0f;
+                float y = 0f;
+                if (Owner.IsDash.Value)
+                {
+                    x = Owner.HitInfo.normal.x * Owner.ParamaterCon.GetParamater.speed;
+                }
+                else
+                {
+                    x = Owner.HitInfo.normal.x * Owner.ParamaterCon.GetParamater.dashSpeed;
+                }
+                y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y;
+                Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.HitInfo.normal);
+                Owner.Rb.velocity = new Vector3(x, y);
                 AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);
             });
     }
@@ -51,6 +60,7 @@ public class PlayerBehaviourOnWall : State
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
+        Owner.AbleWallJump = true;
     }
     protected override void OnUpdate()
     {

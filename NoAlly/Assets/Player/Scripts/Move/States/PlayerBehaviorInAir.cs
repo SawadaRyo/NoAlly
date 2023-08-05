@@ -18,21 +18,17 @@ public class PlayerBehaviorInAir : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
+        float x = 0f;
+        float y = 0f;
         if (Owner.AbleMove)
         {
-            Owner.Rb.velocity = new Vector3(Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, _moveSpeedX, Owner.HitInfo, Owner.AbleMove).x
-                , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower, Owner.ParamaterCon.GetParamater.fallSpeed).y);
+            Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.CurrentMoveVector.Value);
+            x = Owner.MoveBehaviour.ActorMoveMethod(Owner.CurrentMoveVector.Value.x, _moveSpeedX, Owner.HitInfo).x;
         }
+        y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower, Owner.ParamaterCon.GetParamater.fallSpeed).y;
+        Owner.Rb.velocity = new Vector3(x, y);
     }
-    protected override void OnExit(State nextState)
-    {
-        base.OnExit(nextState);
-        if (nextState is PlayerBehaviourOnWall wall)
-        {
-            wall.MoveSpeedX = _moveSpeedX;
-        }
-        //_beforeMoveVecX = 0f;
-    }
+    
 
     public override void OnTranstion()
     {
