@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Bits: 328
   wallJump: 0
   wallSlideSpeed: 1.5
-  wallKickInterval: 0.5
+  wallKickInterval: 0.2
   walldistance: 0.3
   wallRadios: 0.3
   colliderPointOnWall: []

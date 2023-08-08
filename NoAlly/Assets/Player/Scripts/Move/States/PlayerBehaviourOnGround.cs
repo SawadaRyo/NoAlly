@@ -46,7 +46,7 @@ public class PlayerBehaviourOnGround : State
                 switch (currentLocation)
                 {
                     case StateOfPlayer.InAir:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
+                        Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.InAir);
                         break;
                     default:
                         break;
@@ -57,7 +57,7 @@ public class PlayerBehaviourOnGround : State
                      && Owner.AbleDash)
             .Subscribe(isDash =>
             {
-                Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.Dash);
+                Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.Dash);
             });
         Owner.IsJump
             .Where(isjump => IsActive
@@ -69,7 +69,7 @@ public class PlayerBehaviourOnGround : State
                 Owner.Rb.velocity = new Vector3(Owner.CurrentMoveVector.Value.x
                                               , Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower
                                               , Owner.ParamaterCon.GetParamater.fallSpeed).y);
-                Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
+                Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.InAir);
             });
     }
 }
