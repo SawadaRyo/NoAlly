@@ -26,7 +26,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     float _h = 0f;
     float _v = 0f;
 
-    StateMachine<PlayerBehaviorController> _stateMachine = null;
+    StateMachine<PlayerBehaviorController> _stateMachinePlayerMove = null;
     BoolReactiveProperty _isJump = new();
     BoolReactiveProperty _isDash = new();
     ReactiveProperty<Vector2> _currentMoveVector = new();
@@ -43,7 +43,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     public bool AbleWallJump { get => _ableWallJump; set => _ableWallJump = value; }
     public bool AbleInput { get => _ableInput; set => _ableInput = value; }
     public Vector2 CurrentVec => _currentMoveVec;
-    public StateMachine<PlayerBehaviorController> PlayerStateMachine => _stateMachine;
+    public StateMachine<PlayerBehaviorController> StateMachinePlayerMove => _stateMachinePlayerMove;
     public ActorAir JumpBehaviour => _actorJump;
     public ActorMove MoveBehaviour => _actorMove;
     public ActorWall WallBehaviour => _actorWall;
@@ -93,8 +93,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
         Observable.EveryFixedUpdate()
             .Subscribe(_ =>
             {
-                //_actorMove.ActorRotateMethod(_paramaterController.GetParamater.turnSpeed, transform, _currentMoveVector.Value);
-                _stateMachine.Update();
+                _stateMachinePlayerMove.Update();
             }).AddTo(this);
     }
     /// <summary>
@@ -102,14 +101,14 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     /// </summary>
     void SetState()
     {
-        _stateMachine = new StateMachine<PlayerBehaviorController>(this);
-        _stateMachine.AddAnyTransition<PlayerBehaviourOnGround>((int)StateOfPlayer.OnGround);
-        _stateMachine.AddAnyTransition<PlayerBehaviorDash>((int)StateOfPlayer.Dash);
-        _stateMachine.AddAnyTransition<PlayerBehaviorInAir>((int)StateOfPlayer.InAir);
-        _stateMachine.AddAnyTransition<PlayerBehaviourOnWall>((int)StateOfPlayer.GripingWall);
-        _stateMachine.AddAnyTransition<PlayerBehaviorClimbWall>((int)StateOfPlayer.GripingWallEdge);
-        _stateMachine.AddAnyTransition<PlayerBehaviorClimbWall>((int)StateOfPlayer.HangingWallEgde);
-        _stateMachine.Start<PlayerBehaviourOnGround>();
+        _stateMachinePlayerMove = new StateMachine<PlayerBehaviorController>(this);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviourOnGround>((int)StateOfPlayer.OnGround);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviorDash>((int)StateOfPlayer.Dash);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviorInAir>((int)StateOfPlayer.InAir);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviourOnWall>((int)StateOfPlayer.GripingWall);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviorClimbWall>((int)StateOfPlayer.GripingWallEdge);
+        _stateMachinePlayerMove.AddAnyTransition<PlayerBehaviorClimbWall>((int)StateOfPlayer.HangingWallEgde);
+        _stateMachinePlayerMove.Start<PlayerBehaviourOnGround>();
     }
     /// <summary>
     /// 

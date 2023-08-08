@@ -39,7 +39,8 @@ namespace ActorBehaviour
                         if (isJump)
                         {
                             _isJump = !_keyLook;
-                            if (_isJump && stateOfPlayer == StateOfPlayer.OnGround)
+                            if (_isJump 
+                            && (stateOfPlayer == StateOfPlayer.OnGround || stateOfPlayer == StateOfPlayer.GripingWall))
                             {
                                 _actorFallJudge = ActorVec.Up;
                             }
@@ -95,7 +96,7 @@ namespace ActorBehaviour
                             ActorVertical.y -= (fallSpeed * Mathf.Pow(_timeInAir, 2));
                         }
 
-                        if (0f > ActorVertical.y)
+                        if (0f >= ActorVertical.y)
                         {
                             _actorFallJudge = ActorVec.Down;
                             ActorVertical.y = 0f;
@@ -111,7 +112,6 @@ namespace ActorBehaviour
                         {
                             ActorVertical.y = -(fallSpeed / 2);
                         }
-                        Debug.Log(ActorVertical.y);
                         break;
 
                     default:
@@ -157,7 +157,7 @@ namespace ActorBehaviour
                 }
                 else if (rotVector.y == 1)
                 {
-                    Quaternion rotationUp = Quaternion.LookRotation(Vector3.zero);
+                    Quaternion rotationUp = Quaternion.LookRotation(Vector3.up);
                     targetObject.rotation = Quaternion.Slerp(targetObject.rotation, rotationUp, Time.deltaTime * turnSpeed);
                     _actorVec = ActorVec.Up;
                 }

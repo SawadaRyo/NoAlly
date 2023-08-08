@@ -23,7 +23,7 @@ public class PlayerBehaviorDash : State
         _veloX = Owner.ParamaterCon.GetParamater.speed + Owner.ParamaterCon.GetParamater.dashSpeed;
         if(Owner.AbleDash)
         {
-            Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
+            Owner.StateMachinePlayerMove.Dispatch((int)Owner.CurrentLocation.Value);
         }
     }
     protected override void OnExit(State nextState)
@@ -42,21 +42,21 @@ public class PlayerBehaviorDash : State
            .Where(_ => IsActive)
            .Subscribe(currentLocation =>
            {
-               Owner.PlayerStateMachine.Dispatch((int)currentLocation);
+               Owner.StateMachinePlayerMove.Dispatch((int)currentLocation);
            }).AddTo(Owner);
         Owner.CurrentMoveVector
             .Skip(1)
             .Where(_ => Owner.CurrentMoveVector.Value == Vector2.zero)
             .Subscribe(moveVector =>
             {
-                Owner.PlayerStateMachine.Dispatch((int)Owner.CurrentLocation.Value);
+                Owner.StateMachinePlayerMove.Dispatch((int)Owner.CurrentLocation.Value);
             });
         Owner.IsJump
             .Where(_ => Owner.IsJump.Value && IsActive && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isjump =>
             {
                 Owner.Rb.velocity = new Vector3(_veloX, Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower).y);
-                Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.InAir);
+                Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.InAir);
             });
     }
 }

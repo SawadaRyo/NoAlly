@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IActor<T>
 {
-    public StateMachine<T> PlayerStateMachine { get; }
+    public StateMachine<T> StateMachinePlayerMove { get; }
     public Rigidbody Rb { get; }
     public Vector3 GroundNormal { get; }
     public RaycastHit HitInfo { get; }

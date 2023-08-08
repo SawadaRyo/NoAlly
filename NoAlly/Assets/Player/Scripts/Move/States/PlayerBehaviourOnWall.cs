@@ -8,6 +8,7 @@ using State = StateMachine<PlayerBehaviorController>.State;
 public class PlayerBehaviourOnWall : State
 {
     float _moveSpeedX = 0f;
+    float _moveVecX = 0f;
     RaycastHit _wallState;
 
     public RaycastHit HitWall => _wallState;
@@ -22,13 +23,13 @@ public class PlayerBehaviourOnWall : State
                 switch (currentLocation)
                 {
                     case StateOfPlayer.GripingWallEdge:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.GripingWallEdge);
+                        Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.GripingWallEdge);
                         break;
                     case StateOfPlayer.HangingWallEgde:
-                        Owner.PlayerStateMachine.Dispatch((int)StateOfPlayer.HangingWallEgde);
+                        Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.HangingWallEgde);
                         break;
                     default:
-                        Owner.PlayerStateMachine.Dispatch((int)currentLocation);
+                        Owner.StateMachinePlayerMove.Dispatch((int)currentLocation);
                         break;
                 }
             }).AddTo(Owner);
@@ -50,10 +51,15 @@ public class PlayerBehaviourOnWall : State
                 {
                     x = Owner.HitInfo.normal.x * Owner.ParamaterCon.GetParamater.dashSpeed;
                 }
+                _moveVecX = Owner.HitInfo.normal.x;
+                _moveSpeedX = x;//x軸方向のベクトルを保存
                 y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y;
                 Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.HitInfo.normal);
                 Owner.Rb.velocity = new Vector3(x, y);
-                AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);
+                Debug.Log(Owner.Rb.velocity);
+                AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);//壁キック中の入力制限
+                Owner.AbleWallJump = false;
+                Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.InAir);
             });
     }
 
@@ -73,6 +79,14 @@ public class PlayerBehaviourOnWall : State
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
+        if(!Owner.AbleWallJump && nextState is PlayerBehaviorInAir inAir)
+        {
+            inAir.MoveSpeedX = _moveSpeedX;
+            inAir.MoveVecX = _moveVecX;
+        }
+        _moveSpeedX = 0f;
+        _moveVecX = 0f;
+        Owner.AbleWallJump = false;
     }
 
     /// <summary>
