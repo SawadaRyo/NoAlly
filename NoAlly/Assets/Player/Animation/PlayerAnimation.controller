@@ -3583,6 +3583,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: InAir
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Climbing
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -865059699344726474}
   m_Solo: 0
