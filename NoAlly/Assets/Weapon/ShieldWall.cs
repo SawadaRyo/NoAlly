@@ -56,7 +56,7 @@ public class ShieldWall : ObjectBase
         WallActive((FadeType)i);
     }
 
-    void WallActive(FadeType type)
+    public void WallActive(FadeType type)
     {
         if (_inFading) return;
 

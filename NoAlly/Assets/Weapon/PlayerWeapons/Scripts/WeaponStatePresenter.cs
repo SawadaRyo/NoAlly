@@ -87,7 +87,7 @@ public class WeaponStatePresenter : MonoBehaviour
         _playerAnimator.AbleDash
             .Subscribe(ableDash =>
             {
-                Debug.Log(ableDash);
+                //Debug.Log(ableDash);
                 _inputToPlayer.AbleDash = ableDash;
             });
         _playerAnimator.AbleMove
