@@ -30,6 +30,9 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
         _owner = owner;
         _weaponData = weaponData;
     }
+    /// <summary>
+    /// “ü—ÍŽž‚Ì‹““®
+    /// </summary>
     public virtual void AttackBehaviour() { }
     public void Charging(bool isInputCharge)
     {
