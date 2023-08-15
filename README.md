@@ -12,3 +12,4 @@
 ## 使用しているAsset
 1. UniRx
 2. UniTask
+3. Addressables
