@@ -17,12 +17,9 @@ public abstract class DoorSwitchBase : MonoBehaviour, IHitBehavorOfGimic
 
     public virtual void ObjectAction() { }
 
-    public void BehaviorOfHit(IWeaponBase weaponBase, ElementType type)
+    public void BehaviorOfHit<T>(T weaponBase, ElementType type) where T : MonoBehaviour
     {
-        if(weaponBase.Owner == ObjectOwner.PLAYER)
-        {
-            DoorLock();
-        }
+        DoorLock();
     }
     public void Initalize()
     {
