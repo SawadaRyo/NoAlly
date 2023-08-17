@@ -10,7 +10,7 @@ public class DoInit : MonoBehaviour
 
     void Awake()
     {
-        _panelFade.ImageFade(PanelFade.FadeType.FadeIn);
+        _panelFade.ImageFade(FadeType.FadeIn);
         Array.ForEach(_initializerBases, x => x.Init());
     }
 }

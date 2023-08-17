@@ -55,7 +55,7 @@ public class StateMachine<TOwner>
     /// </summary>
     public abstract class State
     {
-        
+
         [Tooltip("このステートを管理しているステートマシン")]
         protected StateMachine<TOwner> StateMachine => stateMachine;
         internal StateMachine<TOwner> stateMachine;
@@ -71,8 +71,6 @@ public class StateMachine<TOwner>
         /// このステートの起動判定
         /// </summary>
         protected bool IsActive => isActive;
-
-       
 
         /// <summary>
         /// 遷移条件

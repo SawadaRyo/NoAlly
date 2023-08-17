@@ -56,7 +56,7 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
     }
     public ObjectOwner Owner => _owner;
 
-    public void BehaviorOfHit(float[] damageValue, ElementType type)
+    public void BehaviorOfHit(WeaponPower damageValue, ElementType type)
     {
         Status.Damage(damageValue, this, type);
     }
@@ -78,4 +78,8 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
         }
     }
 
+    public void BehaviorOfHit(float[] damageValue, ElementType type)
+    {
+        throw new System.NotImplementedException();
+    }
 }
