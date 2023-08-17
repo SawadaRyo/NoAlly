@@ -11,7 +11,7 @@ public class SceneController : MonoBehaviour
     public async void Load(string name)
     {
         var token = this.GetCancellationTokenOnDestroy();
-        _panelFade.ImageFade(PanelFade.FadeType.FadeOut);
+        _panelFade.ImageFade(FadeType.FadeOut);
         await UniTask.Delay(TimeSpan.FromSeconds(_panelFade.Interval)); 
         SceneManager.LoadScene(name);
     }
