@@ -18,7 +18,7 @@ public class PlayerBehaviorInAir : State
         base.OnEnter(prevState);
         if (prevState is PlayerBehaviourOnWall)
         {
-            Debug.Log(_moveVecX);
+            //Debug.Log(_moveVecX);
         }
     }
     protected override void OnUpdate()
