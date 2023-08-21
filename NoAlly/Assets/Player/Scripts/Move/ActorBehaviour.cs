@@ -22,13 +22,19 @@ namespace ActorBehaviour
             ActorVec _actorFallJudge = ActorVec.None;
 
             [Tooltip("")]
-            StateOfPlayer stateOfPlayer => _owner.CurrentLocation.Value;
+            StateOfPlayer _beforeStateOfPlayer = StateOfPlayer.None;
             public bool KeyLook => _keyLook;
 
             public ActorAir(IInputPlayer owner)
             {
                 _owner = owner;
                 ValueWatcher();
+                Observable.EveryFixedUpdate()
+                    .Subscribe(_ =>
+                    {
+                        //Debug.Log(_actorFallJudge);
+                        Debug.Log(_owner.IsJump.Value);
+                    });
             }
 
             void ValueWatcher()
@@ -39,8 +45,9 @@ namespace ActorBehaviour
                         if (isJump)
                         {
                             _isJump = !_keyLook;
-                            if (_isJump 
-                            && (stateOfPlayer == StateOfPlayer.OnGround || stateOfPlayer == StateOfPlayer.GripingWall))
+                            if (_isJump
+                            && (_owner.CurrentLocation.Value == StateOfPlayer.OnGround
+                             || _owner.CurrentLocation.Value == StateOfPlayer.GripingWall))
                             {
                                 _actorFallJudge = ActorVec.Up;
                             }
@@ -58,15 +65,31 @@ namespace ActorBehaviour
                         {
                             case StateOfPlayer.OnGround:
                                 _timeInAir = 0f;
+                                _actorFallJudge = ActorVec.None;
                                 _keyLook = true;
                                 break;
                             case StateOfPlayer.GripingWall:
                                 _timeInAir = 0f;
+                                _actorFallJudge = ActorVec.None;
                                 _keyLook = true;
+                                break;
+                            case StateOfPlayer.InAir:
+                                if (!_isJump)
+                                {
+                                    if (_beforeStateOfPlayer == StateOfPlayer.GripingWall)
+                                    {
+                                        _actorFallJudge = ActorVec.Down;
+                                    }
+                                    else if (_beforeStateOfPlayer == StateOfPlayer.OnGround)
+                                    {
+                                        _actorFallJudge = ActorVec.Down;
+                                    }
+                                }
                                 break;
                             default:
                                 break;
                         }
+                        _beforeStateOfPlayer = location;
                     });
             }
 

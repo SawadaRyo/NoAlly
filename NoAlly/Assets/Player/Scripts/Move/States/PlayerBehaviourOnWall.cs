@@ -56,7 +56,7 @@ public class PlayerBehaviourOnWall : State
                 y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y;
                 Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.HitInfo.normal);
                 Owner.Rb.velocity = new Vector3(x, y);
-                Debug.Log(Owner.Rb.velocity);
+                //Debug.Log(Owner.Rb.velocity);
                 AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);//壁キック中の入力制限
                 Owner.AbleWallJump = false;
                 Owner.StateMachinePlayerMove.Dispatch((int)StateOfPlayer.InAir);
