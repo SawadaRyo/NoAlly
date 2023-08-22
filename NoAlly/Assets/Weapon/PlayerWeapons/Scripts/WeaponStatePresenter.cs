@@ -50,11 +50,13 @@ public class WeaponStatePresenter : MonoBehaviour
         _playerAnimator.IsAttack
             .Subscribe(isParticle =>
             {
+                Debug.Log("Do");
                 if (_weaponController.EquipementWeapon.Value is WeaponCombat combat)
                 {
                     combat.DoParticle(isParticle);
                 }
-            });
+                _weaponAnimator.AttackJudge(isParticle);
+            }).AddTo(this);
     }
     void InputStateChacker()
     {
@@ -89,7 +91,7 @@ public class WeaponStatePresenter : MonoBehaviour
             {
                 //Debug.Log(ableDash);
                 _inputToPlayer.AbleDash = ableDash;
-            });
+            }).AddTo(this);
         _playerAnimator.AbleMove
             .Subscribe(ableMove =>
             {

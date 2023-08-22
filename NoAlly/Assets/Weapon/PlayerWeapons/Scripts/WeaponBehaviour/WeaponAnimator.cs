@@ -14,6 +14,8 @@ public class WeaponAnimator : MonoBehaviour
     [Tooltip("武器のアニメーションの状態")]
     ObservableStateMachineTrigger _weaponAnimationTrigger = null;
 
+    public void AttackJudge(BoolAttack boolAttack) => _targetWeapon.ObjectAnimator.SetBool("IsAttack",boolAttack == BoolAttack.ATTACKING);
+
     public bool InBoostMode => _inBoostMode;
 
     public void Initializer()
