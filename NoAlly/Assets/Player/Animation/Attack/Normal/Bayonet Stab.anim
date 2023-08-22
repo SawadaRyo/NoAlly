@@ -68891,8 +68891,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 2
     messageOptions: 0
-  - time: 0.5
+  - time: 0.43333334
     functionName: MoveSound
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.5
+    functionName: IsParticleFlg
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -68906,7 +68913,7 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.8333333
-    functionName: IsAttackFlg
+    functionName: IsParticleFlg
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

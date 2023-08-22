@@ -37803,7 +37803,7 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.33333334
-    functionName: IsAttackFlg
+    functionName: DoAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
