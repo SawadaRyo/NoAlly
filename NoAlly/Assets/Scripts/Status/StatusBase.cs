@@ -5,14 +5,16 @@ using UniRx;
 
 public abstract class StatusBase : MonoBehaviour
 {
-    [SerializeField, Tooltip("無敵時間の値")]
-    float _invincibleTimeValue = 1f;
     [SerializeField, Tooltip("HPの上限")]
     protected float _maxHP = 5;
     [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
     protected float _maxSAP = 20;
+    [SerializeField, Tooltip("無敵時間の値")]
+    protected float _invincibleTimeValue = 1f;
     [SerializeField, Tooltip("ダメージサウンド")]
     protected AudioClip _damageSound;
+    [SerializeField]
+    protected DamageEffects _damageEffects;
 
 
     [Tooltip("オブジェクトのHP")]
@@ -69,6 +71,10 @@ public abstract class StatusBase : MonoBehaviour
         if (_hitable)
         {
             StartCoroutine(StartCountDown());
+            if(_damageEffects)
+            {
+                _damageEffects.Damaged(_invincibleTimeValue);
+            }
         }
         return (baseDamage + elemantDamage);
     }
