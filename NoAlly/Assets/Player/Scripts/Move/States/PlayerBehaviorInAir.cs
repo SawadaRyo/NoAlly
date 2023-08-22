@@ -18,7 +18,7 @@ public class PlayerBehaviorInAir : State
         base.OnEnter(prevState);
         if (prevState is PlayerBehaviourOnWall)
         {
-            //Debug.Log(_moveVecX);
+            Debug.Log(_moveVecX);
         }
     }
     protected override void OnUpdate()
@@ -33,7 +33,14 @@ public class PlayerBehaviorInAir : State
         }
         else
         {
-            x = Owner.MoveBehaviour.ActorMoveMethod(_moveVecX, _moveSpeedX, Owner.HitInfo).x;
+            //x = Owner.MoveBehaviour.ActorMoveMethod(_moveVecX, _moveSpeedX, Owner.HitInfo).x;
+            x = _moveVecX * _moveSpeedX;
+            if (Owner.HitInfo.collider != null)
+            {
+                Debug.Log(Owner.HitInfo.normal);
+            }
+            Debug.Log(x);
+            //Debug.Log($"{x},{y}");
         }
         y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.jumpPower, Owner.ParamaterCon.GetParamater.fallSpeed).y;
         Owner.Rb.velocity = new Vector3(x, y);

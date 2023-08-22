@@ -40,22 +40,16 @@ public class PlayerBehaviourOnWall : State
                      && !Owner.JumpBehaviour.KeyLook)
             .Subscribe(isJump =>
             {
-                Debug.Log(Owner.HitInfo.normal);
-                float x = 0f;
+                //Debug.Log(Owner.HitInfo.normal);
                 float y = 0f;
-                if (Owner.IsDash.Value)
-                {
-                    x = Owner.HitInfo.normal.x * Owner.ParamaterCon.GetParamater.speed;
-                }
-                else
-                {
-                    x = Owner.HitInfo.normal.x * Owner.ParamaterCon.GetParamater.dashSpeed;
-                }
+                _moveSpeedX = Owner.InputDash == true //x軸方向のベクトルを保存
+                            ? Owner.ParamaterCon.GetParamater.dashSpeed + Owner.ParamaterCon.GetParamater.speed
+                            : Owner.ParamaterCon.GetParamater.speed;
+                
                 _moveVecX = Owner.HitInfo.normal.x;
-                _moveSpeedX = x;//x軸方向のベクトルを保存
                 y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y;
                 Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.HitInfo.normal);
-                Owner.Rb.velocity = new Vector3(x, y);
+                Owner.Rb.velocity = new Vector3(_moveSpeedX, y);
                 //Debug.Log(Owner.Rb.velocity);
                 AbleWallKick(Owner.ParamaterCon.GetParamater.wallKickInterval);//壁キック中の入力制限
                 Owner.AbleWallJump = false;
@@ -79,7 +73,7 @@ public class PlayerBehaviourOnWall : State
     protected override void OnExit(State nextState)
     {
         base.OnExit(nextState);
-        if(!Owner.AbleWallJump && nextState is PlayerBehaviorInAir inAir)
+        if (!Owner.AbleWallJump && nextState is PlayerBehaviorInAir inAir)
         {
             inAir.MoveSpeedX = _moveSpeedX;
             inAir.MoveVecX = _moveVecX;

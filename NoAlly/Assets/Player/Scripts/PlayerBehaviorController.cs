@@ -21,6 +21,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     bool _ableJump = true;
     bool _ableWallJump = true;
     bool _ableMove = true;
+    bool _inputDash = false;
     bool _ableDash = true;
     bool _ableInput = true;
     float _h = 0f;
@@ -37,6 +38,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     Vector2 _currentMoveVec = Vector2.zero;
     RaycastHit _hitInfo;
 
+    public bool InputDash => _inputDash;
     public bool AbleDash { get => _ableDash; set => _ableDash = _ableDash = value; }
     public bool AbleMove { get => _ableMove; set => _ableMove = value; }
     public bool AbleJump { get => _ableJump; set => _ableJump = value; }
@@ -139,6 +141,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
         _v = Input.GetAxisRaw("Vertical");
         _isJump.SetValueAndForceNotify(Input.GetButton("Jump"));
         _isDash.Value = Input.GetButtonDown("Dash");
+        _inputDash = Input.GetButton("Dash");
 
         if (_h != 0)
         {
