@@ -33,7 +33,7 @@ namespace ActorBehaviour
                     .Subscribe(_ =>
                     {
                         //Debug.Log(_actorFallJudge);
-                        Debug.Log(_owner.IsJump.Value);
+                        //Debug.Log(_owner.IsJump.Value);
                     });
             }
 
@@ -220,7 +220,7 @@ namespace ActorBehaviour
             }
 
             /// <summary>
-            /// プレイヤーの移動(RaycastHit版)
+            /// プレイヤーの移動(Vector3版)
             /// </summary>
             /// <param name="h">入力方向</param>
             /// <param name="moveSpeed">移動速度</param>
