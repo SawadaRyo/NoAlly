@@ -47,7 +47,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         SetTrans();
         ActiveObject(true);
         _bulletPowers = Owner.GetWeaponPower;
-        _elementType = Owner.WeaponOwner.CurrentElement.Value;
+        _elementType = Owner.Base.CurrentElement.Value;
         Disactive(_intervalTime);
     }
 
@@ -93,11 +93,11 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     {
         _muzzleForwardPos = _muzzlePos.position;
         this.transform.position = _muzzleForwardPos;
-        if (Owner.playerVec == ActorVec.Right)
+        //if (Owner.playerVec == ActorVec.Right)
         {
             //_speed = 1;
         }
-        else if (Owner.playerVec == ActorVec.Left)
+        //else if (Owner.playerVec == ActorVec.Left)
         {
             //_speed = -1;
         }

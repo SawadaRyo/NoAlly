@@ -5314,9 +5314,9 @@ GameObject:
   - component: {fileID: 5785630500104816687}
   - component: {fileID: 4009065848111511044}
   - component: {fileID: 7743493402772332588}
-  - component: {fileID: 715491449951558020}
   - component: {fileID: 3113138534747045063}
   - component: {fileID: 8266695061144720445}
+  - component: {fileID: 797811487984796440}
   m_Layer: 7
   m_Name: Brastar 1
   m_TagString: Untagged
@@ -5430,18 +5430,6 @@ MonoBehaviour:
   - {fileID: 1516635459469811749}
   - {fileID: 4907600562354509511}
   _objectAnimator: {fileID: 5785630500104816687}
---- !u!114 &715491449951558020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9153705405047431978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4f7b8fc2e89704ab7026c7455708d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3113138534747045063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5454,7 +5442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e7c3a477f2208744b77af37fc706950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetWeapon: {fileID: 0}
+  _targetWeapon: {fileID: 7743493402772332588}
 --- !u!114 &8266695061144720445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5467,15 +5455,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2cecf277f1f844e8a7703f926fa0c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _setWeaponData: {fileID: 715491449951558020}
-  _weaponScriptableObjects: {fileID: 11400000, guid: 443dceecadd92bb41b03d41a037db8dd, type: 2}
-  _weaponPrefab: {fileID: 0}
+  _weaponPrefab: {fileID: 7743493402772332588}
   _attackPos: {fileID: 0}
   _poolPos: {fileID: 0}
   _myParticleSystem: {fileID: 2535850563167026178}
   hitLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 768
+--- !u!114 &797811487984796440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153705405047431978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f7bb334384b81c48a75b7d99b50f43e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponElements:
+  - type: 0
+    interval: 0.1
+    weaponRenderer:
+    - {fileID: 2715473356051015709}
+  - type: 1
+    interval: 0.1
+    weaponRenderer:
+    - {fileID: 2794318035981667794}
+    - {fileID: 7402933140166143896}
+  - type: 2
+    interval: 0.1
+    weaponRenderer:
+    - {fileID: 5096012824374426681}
+    - {fileID: 1516635459469811749}
+  - type: 3
+    interval: 0.1
+    weaponRenderer:
+    - {fileID: 4907600562354509511}
+  _weaponElementColor:
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0.49803922}
+  - {r: 1, g: 1, b: 0, a: 0.49803922}
+  - {r: 0, g: 0, b: 1, a: 0.49803922}
 --- !u!1001 &852632005689342466
 PrefabInstance:
   m_ObjectHideFlags: 0

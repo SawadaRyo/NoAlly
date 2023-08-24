@@ -3,31 +3,34 @@ using System.Collections;
 using UnityEngine;
 
 
-public abstract class WeaponBase : IWeaponBase<WeaponController>
+public abstract class WeaponBase : IWeaponBase<PlayerBehaviorController>
 {
+    [Tooltip("武器本体")]
+    protected WeaponController _base = null;
+    [Tooltip("この武器のデータ")]
+    protected WeaponDataEntity _weaponData;
+    [Tooltip("武器のオーナー")]
+    protected PlayerBehaviorController _owner = null;
     [Tooltip("装備判定")]
     protected bool _isEquipment = false;
     [Tooltip("溜め時間")]
     protected float _chargeCount = 0f;
-    [Tooltip("武器のオーナー")]
-    protected WeaponController _owner = null;
-    [Tooltip("")]
+    [Tooltip("武器の現在の攻撃力")]
     protected WeaponPower _weaponPower = WeaponPower.zero;
-
-    [Tooltip("この武器のデータ")]
-    protected WeaponDataEntity _weaponData;
     [Tooltip("武器が変形中かどうか")]
     protected WeaponDeformation _isDeformated = WeaponDeformation.NONE;
 
     public bool IsCharged => _chargeCount > _weaponData.ChargeLevels[0];
     public WeaponPower GetWeaponPower => _weaponPower;
     public WeaponDeformation Deformated => _isDeformated;
-    public WeaponController WeaponOwner => _owner;
+    public WeaponController Base => _base;
+    public PlayerBehaviorController Owner => _owner;
     public WeaponDataEntity WeaponData => _weaponData;
 
-    public virtual void Initializer(WeaponController owner, WeaponDataEntity weaponData)
+    public virtual void Initializer(PlayerBehaviorController owner,WeaponController baseObj, WeaponDataEntity weaponData)
     {
-        _owner = owner;
+
+        _base = baseObj;
         _weaponData = weaponData;
     }
     /// <summary>
@@ -88,7 +91,7 @@ public abstract class WeaponBase : IWeaponBase<WeaponController>
     {
         WeaponPower weaponPower = WeaponPower.zero;
         weaponPower.defaultPower = _weaponData.RigitPower[(int)_isDeformated];
-        switch (_owner.CurrentElement.Value)
+        switch (_base.CurrentElement.Value)
         {
             case ElementType.FIRE:
                 weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
