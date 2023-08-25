@@ -6,16 +6,30 @@ using UnityEngine;
 
 namespace DataOfWeapon
 {
-    public class SetWeaponData : MonoBehaviour
+    public class SetWeaponData
     {
+        static SetWeaponData instance = null;
+        [Tooltip("")]
+        WeaponScriptableObjects _weaponScriptableObjects;
         [Tooltip("")]
         Dictionary<WeaponType, WeaponBase> _weaponDataEntity = new();
 
-        public Dictionary<WeaponType, WeaponBase> WeaponDatas => _weaponDataEntity;
-
-        public void WeaponBaseInstantiate(WeaponController weaponOwner, WeaponScriptableObjects weaponData)
+        public static SetWeaponData Instance
         {
-            foreach (var d in weaponData.WeaponDatas)
+            get => instance;
+            set
+            {
+                if (instance == null)
+                {
+                    instance = value;
+                }
+            }
+        }
+
+        public SetWeaponData(WeaponScriptableObjects weaponScriptableObjects, PlayerBehaviorController owner, WeaponController baseObj)
+        {
+            _weaponScriptableObjects = weaponScriptableObjects;
+            foreach (var d in _weaponScriptableObjects.WeaponDatas)
             {
                 WeaponBase weaponBase = null;
                 try
@@ -43,14 +57,18 @@ namespace DataOfWeapon
                 {
                     Debug.LogError(e.ToString());
                 }
-                
-                if(weaponBase != null)
+
+                if (weaponBase != null)
                 {
-                    weaponBase.Initializer(weaponOwner, d);
+                    weaponBase.Initializer(owner, baseObj, d);
                     _weaponDataEntity.Add(d.TypeOfWeapon, weaponBase);
                 }
             }
         }
+
+        public Dictionary<WeaponType, WeaponBase> WeaponDatas => _weaponDataEntity;
+
+
     }
 }
 

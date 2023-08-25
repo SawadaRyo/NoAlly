@@ -5,9 +5,9 @@ using UniRx;
 
 public interface IWeaponBase<T> where T : class
 {
-    public T WeaponOwner { get; }
+    public T Owner { get; }
     public WeaponDeformation Deformated { get; }
-    public void Initializer(T owner, WeaponDataEntity weaponData);
+    public void Initializer(T owner,WeaponController baseObj, WeaponDataEntity weaponData);
     public void WeaponModeToElement(ElementType elementType);
     public void AttackBehaviour();
     public float InputCharging(float chargeTime);

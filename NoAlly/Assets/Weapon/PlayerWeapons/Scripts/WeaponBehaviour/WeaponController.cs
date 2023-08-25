@@ -2,12 +2,9 @@ using UnityEngine;
 using UniRx;
 using DataOfWeapon;
 
+
 public class WeaponController : MonoBehaviour, IWeaponController
 {
-    [SerializeField, Header("")]
-    SetWeaponData _setWeaponData = null;
-    [SerializeField, Header("WeaponScriptableObjects本体")]
-    WeaponScriptableObjects _weaponScriptableObjects;
     [SerializeField, Header("武器のプレハブ本体")]
     ObjectBase _weaponPrefab;
     [SerializeField, Header("攻撃の中心点")]
@@ -44,9 +41,8 @@ public class WeaponController : MonoBehaviour, IWeaponController
     /// <param name="sub"></param>
     public void Initializer(WeaponType main = WeaponType.SWORD, WeaponType sub = WeaponType.LANCE)
     {
-        _setWeaponData.WeaponBaseInstantiate(this, _weaponScriptableObjects);
-        _mainWeapon = _setWeaponData.WeaponDatas[main];
-        _subWeapon = _setWeaponData.WeaponDatas[sub];
+        _mainWeapon = SetWeaponData.Instance.WeaponDatas[main];
+        _subWeapon = SetWeaponData.Instance.WeaponDatas[sub];
         _equipementWeapon.Value = _mainWeapon;
         _myParticleSystem.Stop();
     }
@@ -70,9 +66,9 @@ public class WeaponController : MonoBehaviour, IWeaponController
     /// <summary>
     /// メイン武器・サブ武器の装備を変更する関数
     /// </summary>
-    /// <param name="weapon"></param>
+    /// <param name="weaponType"></param>
     /// <param name="type"></param>
-    public void SetEquipmentWeapon(WeaponType typeOfWeapon, CommandType type)
+    public void SetEquipmentWeapon(WeaponType weaponType, CommandType type)
     {
         //_weaponPrefabs[(int)_mainWeapon.Type].ActiveObject(false);
         //_weaponPrefabs[(int)_subWeapon.Type].ActiveObject(false);
@@ -80,12 +76,12 @@ public class WeaponController : MonoBehaviour, IWeaponController
         {
             case CommandType.MAIN:
                 _mainWeapon.OnLift();
-                _mainWeapon = _setWeaponData.WeaponDatas[typeOfWeapon];
+                _mainWeapon = SetWeaponData.Instance.WeaponDatas[weaponType];
                 _mainWeapon.OnEquipment();
                 break;
             case CommandType.SUB:
                 _subWeapon.OnLift();
-                _subWeapon = _setWeaponData.WeaponDatas[typeOfWeapon];
+                _subWeapon = SetWeaponData.Instance.WeaponDatas[weaponType];
                 _subWeapon.OnEquipment();
                 break;
         }
@@ -115,7 +111,7 @@ public class WeaponController : MonoBehaviour, IWeaponController
         {
             Gizmos.color = Color.red;
             var oldMatrix = Gizmos.matrix;
-            Gizmos.matrix = Matrix4x4.TRS(_attackPos.position, _attackPos.rotation, _attackPos.lossyScale);
+            Gizmos.matrix = Matrix4x4.TRS(_attackPos.position, _attackPos.rotation, _attackPos.localScale);
             Gizmos.DrawWireCube(Vector3.zero, Vector3.one * 1.1f);
             Gizmos.matrix = oldMatrix;
         }

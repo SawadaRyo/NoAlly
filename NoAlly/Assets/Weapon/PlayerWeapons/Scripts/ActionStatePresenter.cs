@@ -1,19 +1,25 @@
 //日本語コメント可
 using UniRx;
 using UnityEngine;
+using DataOfWeapon;
 
-public class WeaponStatePresenter : MonoBehaviour
+public class ActionStatePresenter : MonoBehaviour
 {
-    [SerializeField, Header("武器本体の挙動")]
-    WeaponController _weaponController;
-    [SerializeField, Header("武器のアニメーションの挙動")]
-    WeaponAnimator _weaponAnimator;
-    [SerializeField, Header("プレイヤー本体の挙動")]
+    [Header("オブジェクトの動作関係")]
+    [SerializeField, Header("プレイヤー")]
     PlayerBehaviorController _inputToPlayer;
-    [SerializeField, Header("プレイヤーのアニメーションの挙動")]
+    [SerializeField, Header("武器")]
+    WeaponController _weaponController;
+    [Space(15)]
+    [Header("オブジェクトのアニメーションの挙動")]
+    [SerializeField, Header("プレイヤー")]
     PlayerAnimatorController _playerAnimator;
-    [SerializeField, Header("")]
+    [SerializeField, Header("武器")]
+    WeaponAnimator _weaponAnimator;
+    [Space(15)]
+    [SerializeField, Header("初期装備")]
     WeaponType[] mainAndSub = new WeaponType[2];
+
 
     public void DoAttack()
     {
@@ -111,5 +117,9 @@ public class WeaponStatePresenter : MonoBehaviour
                     _inputToPlayer.Rb.velocity = vec;
                 }
             }).AddTo(this);
+    }
+    public void FinishAttackMove()
+    {
+
     }
 }
