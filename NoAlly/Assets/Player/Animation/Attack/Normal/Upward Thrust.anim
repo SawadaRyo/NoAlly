@@ -81178,6 +81178,13 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0.16666667
+    functionName: AttackMove
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 12
+    intParameter: 0
+    messageOptions: 0
   - time: 0.53333336
     functionName: IsParticleFlg
     data: 
