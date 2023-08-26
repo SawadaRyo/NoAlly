@@ -29,7 +29,7 @@ public abstract class WeaponBase : IWeaponBase<PlayerBehaviorController>
 
     public virtual void Initializer(PlayerBehaviorController owner,WeaponController baseObj, WeaponDataEntity weaponData)
     {
-
+        _owner = owner;
         _base = baseObj;
         _weaponData = weaponData;
     }
@@ -37,6 +37,7 @@ public abstract class WeaponBase : IWeaponBase<PlayerBehaviorController>
     /// “ü—ÍŽž‚Ì‹““®
     /// </summary>
     public virtual void AttackBehaviour() { }
+    public virtual void HitObjectBehaviour(Collider col) { }
     public void Charging(bool isInputCharge)
     {
         if (isInputCharge)
@@ -61,6 +62,21 @@ public abstract class WeaponBase : IWeaponBase<PlayerBehaviorController>
         else
         {
             _isDeformated = WeaponDeformation.Deformation;
+        }
+        _weaponPower.defaultPower = _weaponData.RigitPower[(int)_isDeformated];
+        switch (_base.CurrentElement.Value)
+        {
+            case ElementType.FIRE:
+                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            case ElementType.ELEKE:
+                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            case ElementType.FROZEN:
+                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                break;
+            default:
+                break;
         }
     }
 

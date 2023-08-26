@@ -6,6 +6,7 @@ public class WeaponShield : WeaponBase
 {
     AsyncOperationHandle _handle;
     ShieldWall _shieldWallPrefab = null;
+    Vector3 _boxRenge = Vector3.zero;
 
     /// <summary>
     /// このクラスのインスタンスが生成7される際に呼ばれる
@@ -15,6 +16,9 @@ public class WeaponShield : WeaponBase
     public override void Initializer(PlayerBehaviorController owner, WeaponController baseObj, WeaponDataEntity weaponData)
     {
         base.Initializer(owner, baseObj, weaponData);
+        _boxRenge = new Vector3(_base.GetAttackPos.localScale.x / 2
+                              , _base.GetAttackPos.localScale.y / 2
+                              , _base.GetAttackPos.localScale.z / 2);
         //SetPrefab();
     }
 
@@ -36,16 +40,26 @@ public class WeaponShield : WeaponBase
     /// </summary>
     public override void AttackBehaviour()
     {
-        Collider[] targets = Physics.OverlapBox(_base.GetAttackPos.position
-                                              , _base.GetAttackPos.localScale
-                                              , _base.GetAttackPos.rotation
-                                              , _base.HitLayer);
-        foreach (Collider targetCollider in targets)
+        Collider[] cols = Physics.OverlapBox(_base.GetAttackPos.position
+                                           , _boxRenge
+                                           , _base.GetAttackPos.localRotation
+                                           , _base.HitLayerToBlock);
+        if (cols.Length == 0) return;
+        foreach (Collider col in cols)
         {
-            //if(targetCollider.TryGetComponent(out IBullet<GunTypeEnemy> bullet))
+            if (col.TryGetComponent(out ObjectBase damageObj))
             {
-                //bullet.Disactive();
+                damageObj.ActiveObject(false);
             }
+        }
+    }
+
+    public override void HitObjectBehaviour(Collider col)
+    {
+        base.HitObjectBehaviour(col);
+        if(col.gameObject.layer == Base.HitLayerToBlock)
+        {
+            Debug.Log("Hit");
         }
     }
 

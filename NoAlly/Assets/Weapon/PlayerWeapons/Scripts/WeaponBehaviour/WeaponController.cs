@@ -13,8 +13,11 @@ public class WeaponController : MonoBehaviour, IWeaponController
     Transform _poolPos = null;
     [SerializeField, Header("武器の斬撃エフェクト")]
     ParticleSystem _myParticleSystem = default;
-    [SerializeField, Header("判定するオブジェクトのレイヤー")]
-    LayerMask hitLayer = ~0;
+    [SerializeField, Header("攻撃判定するオブジェクトのレイヤー")]
+    LayerMask hitLayerToAttack = ~0;
+    [SerializeField, Header("防御判定するオブジェクトのレイヤー")]
+    LayerMask hitLayerToBlock = ~0;
+
 
     [Tooltip("")]
     ReactiveProperty<WeaponBase> _equipementWeapon = new();
@@ -29,7 +32,8 @@ public class WeaponController : MonoBehaviour, IWeaponController
     public Transform GetPoolPos => _poolPos;
     public ObjectBase WeaponPrefab => _weaponPrefab;
     public ParticleSystem MyParticle => _myParticleSystem;
-    public LayerMask HitLayer => hitLayer;
+    public LayerMask HitLayerToAttack => hitLayerToAttack;
+    public LayerMask HitLayerToBlock => hitLayerToBlock;
     public IReadOnlyReactiveProperty<WeaponBase> EquipementWeapon => _equipementWeapon;
     public IReadOnlyReactiveProperty<ElementType> CurrentElement => _currentElement;
 
@@ -97,6 +101,10 @@ public class WeaponController : MonoBehaviour, IWeaponController
         _currentElement.Value = elementType;
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        _equipementWeapon.Value.HitObjectBehaviour(other);
+    }
     private void OnDisable()
     {
         _equipementWeapon.Dispose();
