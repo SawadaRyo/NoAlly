@@ -9,8 +9,6 @@ public class PlayerAnimatorController : MonoBehaviour
 {
     [SerializeField]
     Animator _playerAnimator = null;
-    [SerializeField]
-    CapsuleCollider _actorCollider = null;
 
     [Tooltip("攻撃可能か判定する変数")]
     bool _ableAttack = true;
@@ -26,8 +24,8 @@ public class PlayerAnimatorController : MonoBehaviour
     ReactiveProperty<BoolAttack> _isAttack = new();
     [Tooltip("アニメーションの状態")]
     ObservableStateMachineTrigger _trigger = null;
-    [Tooltip("")]
-    CapsuleColliderValue _colliderValue;
+
+    float testTime = 0f;
 
     public bool AbleAttack => _ableAttack;
     public IReadOnlyReactiveProperty<bool> AbleDash => _ableDash;
@@ -45,36 +43,7 @@ public class PlayerAnimatorController : MonoBehaviour
     /// <param name="moveInput"></param>
     public void Initializer(PlayerBehaviorController moveInput)
     {
-        _colliderValue = new CapsuleColliderValue(_actorCollider.center, _actorCollider.height);
         _trigger = _playerAnimator.GetBehaviour<ObservableStateMachineTrigger>();
-        Observable.EveryUpdate()
-            .Subscribe(_ =>
-            {
-                var height = _playerAnimator.GetFloat("ColliderHeight");
-                var center = new Vector3(_playerAnimator.GetFloat("ColliderCenterX")
-                                       , _playerAnimator.GetFloat("ColliderCenterY")
-                                       , _playerAnimator.GetFloat("ColliderCenterZ"));
-                //Debug.Log(height);
-                //Debug.Log(center);
-                if (height != 0)
-                {
-                    _actorCollider.height = height;
-                }
-                else
-                {
-                    _actorCollider.height = _colliderValue.height;
-                }
-
-                if (center != Vector3.zero)
-                {
-                    _actorCollider.center = center;
-                }
-                else
-                {
-                    _actorCollider.center = _colliderValue.center;
-                }
-
-            }).AddTo(moveInput);
         MoveAnimation(moveInput);
     }
     /// <summary>
@@ -117,8 +86,17 @@ public class PlayerAnimatorController : MonoBehaviour
                 {
                     _ableJump.Value = false;
                 }
-            });
-
+            }).AddTo(this);
+        _trigger
+            .OnStateUpdateAsObservable()
+            .Subscribe(onStateInfo =>
+            {
+                if (onStateInfo.StateInfo.IsName("Shoot"))
+                {
+                    testTime += Time.deltaTime;
+                    _playerAnimator.SetFloat("MotionTime", testTime);
+                }
+            }).AddTo(this);
         _trigger
             .OnStateExitAsObservable()
             .Subscribe(onStateInfo =>
@@ -127,8 +105,14 @@ public class PlayerAnimatorController : MonoBehaviour
                 {
                     _ableDash.Value = true;
                 }
-            });
+                else if (onStateInfo.StateInfo.IsName("Shoot"))
+                {
+                    testTime = 0f;
+                    _playerAnimator.SetFloat("MotionTime", testTime);
+                }
+            }).AddTo(this);
     }
+
     /// <summary>
     /// プレイヤーの移動関係のアニメーションを管理する関数
     /// </summary>
@@ -158,7 +142,7 @@ public class PlayerAnimatorController : MonoBehaviour
             .Subscribe(climbing =>
             {
                 _playerAnimator.SetBool("Climbing", climbing);
-            });
+            }).AddTo(moveInput);
     }
     /// <summary>
     /// プレイヤーの攻撃関係のアニメーションを管理する関数
@@ -170,13 +154,13 @@ public class PlayerAnimatorController : MonoBehaviour
             .Subscribe(isSwich =>
             {
                 _playerAnimator.SetInteger("WeaponType", (int)weaponController.EquipementWeapon.Value.WeaponData.TypeOfWeapon);
-            });
+            }).AddTo(this);
         inputWeapon.InputAttackDown
             .Where(_ => inputWeapon.InputAttackDown.Value && _ableAttack)
             .Subscribe(inputDown =>
             {
                 _playerAnimator.SetTrigger("AttackTrigger");
-            });
+            }).AddTo(this);
         inputWeapon.InputAttackCharge
             .Subscribe(inputCharge =>
             {
@@ -184,7 +168,7 @@ public class PlayerAnimatorController : MonoBehaviour
                 _playerAnimator.SetBool("Charge", weaponController.EquipementWeapon.Value.IsCharged);
                 _playerAnimator.SetBool("Inputing", inputCharge);
 
-            });
+            }).AddTo(this);
         inputWeapon.InputAttackUp
             .Where(_ => inputWeapon.InputAttackUp.Value)
             .Subscribe(inputUp =>
@@ -193,9 +177,8 @@ public class PlayerAnimatorController : MonoBehaviour
                 {
                     _playerAnimator.SetTrigger("ChargeAttackTrigger");
                 }
-            });
+            }).AddTo(this);
     }
-
     void OnDisable()
     {
         _ableDash.Dispose();

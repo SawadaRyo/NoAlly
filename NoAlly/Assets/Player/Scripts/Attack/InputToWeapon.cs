@@ -6,8 +6,6 @@ using UniRx.Triggers;
 
 public class InputToWeapon : MonoBehaviour
 {
-    [SerializeField, Header("")]
-    WeaponScriptableObjects _weaponData = null;
     [SerializeField, Header("武器のプレハブ")]
     ObjectBase _weaponPrefab = null;
     [SerializeField,Header("")]

@@ -69,6 +69,7 @@ public class PlayerBehaviourOnWall : State
             , Owner.Rb
             , Owner.HitInfo
             , Owner.CurrentLocation.Value);
+        Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed,Owner.transform, Owner.CurrentVec);
     }
     protected override void OnExit(State nextState)
     {
