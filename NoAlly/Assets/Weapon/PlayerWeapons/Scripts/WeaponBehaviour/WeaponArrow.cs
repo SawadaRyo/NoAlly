@@ -34,11 +34,16 @@ public class WeaponArrow : WeaponBase, IObjectGenerator,IArrowWeapon
         }
     }
 
+    public override void AttackBehaviour()
+    {
+        base.AttackBehaviour();
+        _bPool.Instantiate(_keys[0]);
+        _chargeCount = 0f;
+    }
+
     public void InsBullet()
     {
-        //BulletType type = WeaponChargeAttackMethod(Owner.ChargeCount, _weaponData.ChargeLevels, _elementType);
-        //_bPool.Instantiate(_keys[(int)type]);
-        //weaponAction.ChargeCount = 0f;
+        //BulletType type = WeaponChargeAttackMethod(_chargeCount, _weaponData.ChargeLevels, Base.CurrentElement.Value);
     }
 
     public BulletType WeaponChargeAttackMethod(float chrageCount, float[] chargeLevels, ElementType elementType)

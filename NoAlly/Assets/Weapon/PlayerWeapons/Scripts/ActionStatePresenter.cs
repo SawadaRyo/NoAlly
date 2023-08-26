@@ -1,4 +1,5 @@
 //日本語コメント可
+using System.Collections;
 using UniRx;
 using UnityEngine;
 using DataOfWeapon;
@@ -24,6 +25,27 @@ public class ActionStatePresenter : MonoBehaviour
     public void DoAttack()
     {
         _weaponController.EquipementWeapon.Value.AttackBehaviour();
+    }
+    public void AttackMove(float moveSpeed)
+    {
+        StartCoroutine(MoveAnimEvent(moveSpeed));
+    }
+    IEnumerator MoveAnimEvent(float moveSpeed)
+    {
+        Vector3 moveVec = new Vector3(_weaponController.GetAttackPos.position.x - _inputToPlayer.transform.position.x, 0f, 0f).normalized;
+        float time = 0f;
+        float interval = 0.2f;
+        while (true)
+        {
+            _inputToPlayer.Rb.velocity = _inputToPlayer.MoveBehaviour.ActorMoveMethod(moveVec.x, moveSpeed, _inputToPlayer.HitInfo);
+            time += Time.deltaTime;
+            if(time > interval)
+            {
+                _inputToPlayer.Rb.velocity = Vector3.zero;
+                yield break;
+            }
+            yield return null;
+        }
     }
 
     void Start()
@@ -118,8 +140,5 @@ public class ActionStatePresenter : MonoBehaviour
                 }
             }).AddTo(this);
     }
-    public void FinishAttackMove()
-    {
 
-    }
 }

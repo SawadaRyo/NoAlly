@@ -1,6 +1,5 @@
-using System;
+using System.Collections;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 
 public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
 {
@@ -17,10 +16,10 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     ElementType _elementType;
     [Tooltip("î≠éÀÇ≥ÇÍÇÈíºëOÇÃèâä˙à íu")]
     Transform _muzzlePos = null;
-    [Tooltip("î≠éÀÇ≥ÇÍÇÈï˚å¸")]
-    Vector3 _muzzleForwardPos;
     [Tooltip("íeÇÃâ¡ë¨ìx")]
     Vector3 _velo = Vector3.zero;
+    [Tooltip("íeÇÃå¸Ç´")]
+    Vector3 _bulletVec = Vector3.zero;
 
     public WeaponArrow Owner { get; set; }
 
@@ -28,10 +27,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     {
         if (_isActive)
         {
-            //_velo.x = _bulletSpeed * _speed;
-            _velo.x = _bulletSpeed;
-            _velo.y = _muzzleForwardPos.y;
-            _rb.velocity = new Vector3(_velo.x, _rb.velocity.y, 0f);
+            _rb.velocity = _bulletVec * _bulletSpeed;
         }
     }
 
@@ -48,7 +44,7 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         ActiveObject(true);
         _bulletPowers = Owner.GetWeaponPower;
         _elementType = Owner.Base.CurrentElement.Value;
-        Disactive(_intervalTime);
+        StartCoroutine(Disactive(_intervalTime));
     }
 
     public void Disactive()
@@ -58,12 +54,25 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         ActiveObject(_isActive);
     }
 
-    public async void Disactive(float interval)
+    public IEnumerator Disactive(float interval)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(interval));
-        _isActive = false;
-        _rb.isKinematic = !_isActive;
-        ActiveObject(_isActive);
+        float time = 0f;
+        while (true)
+        {
+            time += Time.deltaTime;
+            if(time > interval)
+            {
+                _isActive = false;
+                _rb.isKinematic = !_isActive;
+                ActiveObject(_isActive);
+                yield break;
+            }
+            else if(!_isActive)
+            {
+                yield break;
+            }
+            yield return null;
+        }
     }
     public void DisactiveForInstantiate(WeaponArrow owner)
     {
@@ -72,7 +81,6 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         _rb = GetComponent<Rigidbody>();
         _velo = _rb.velocity;
         _muzzlePos = Owner.GenerateTrance;
-        _bulletPowers = Owner.GetWeaponPower;
         ActiveObject(_isActive);
     }
 
@@ -91,16 +99,23 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
     }
     void SetTrans()
     {
-        _muzzleForwardPos = _muzzlePos.position;
-        this.transform.position = _muzzleForwardPos;
-        //if (Owner.playerVec == ActorVec.Right)
+        this.transform.position = _muzzlePos.position;
+        _bulletVec = new Vector3(Owner.Base.GetAttackPos.position.x - Owner.Owner.transform.position.x
+                               , 0f
+                               , Owner.Base.GetAttackPos.position.z - Owner.Owner.transform.position.z).normalized;
+        if (_bulletVec.x > 0f)
         {
-            //_speed = 1;
+            this.transform.rotation = Quaternion.AngleAxis(0f,Vector3.up);
         }
-        //else if (Owner.playerVec == ActorVec.Left)
+        else if (_bulletVec.x <= 0f)
         {
-            //_speed = -1;
+            this.transform.rotation = Quaternion.AngleAxis(180f,Vector3.up);
         }
+    }
+
+    void IObjectPool<WeaponArrow>.Disactive(float interval)
+    {
+        throw new System.NotImplementedException();
     }
 }
 
