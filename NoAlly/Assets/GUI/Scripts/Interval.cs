@@ -7,6 +7,11 @@ public class Interval
     float _time = 0;
     public Interval(float interval)
     {
+        SetIntarval(interval);
+    }
+
+    public void SetIntarval(float interval)
+    {
         _interval = interval;
     }
 
@@ -23,15 +28,6 @@ public class Interval
     public void ResetTimer()
     {
         _time = 0;
-    }
-
-    public bool IsCountUpColltin()
-    {
-        if (_time < _interval)
-        {
-            return false;
-        }
-        return true;
     }
 
 }

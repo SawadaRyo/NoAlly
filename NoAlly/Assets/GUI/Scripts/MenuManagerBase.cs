@@ -25,7 +25,7 @@ public class MenuManagerBase : MonoBehaviour
     /// </summary>
     public void Initialize()
     {
-        _firstSelectObjects.Initialize(null);
+        _firstSelectObjects.SetUp(null);
         _targetButton = _firstSelectObjects.SelectChildlen(0, 0);
         _currentMenuPanel = _firstSelectObjects;
     }
@@ -66,6 +66,7 @@ public class MenuManagerBase : MonoBehaviour
         {
             _targetButton.IsSelect(false);
             _targetButton = _currentMenuPanel.SelectChildlen(x, y);
+            _targetButton.IsSelect(true);
         }
     }
 
@@ -92,9 +93,9 @@ public class MenuManagerBase : MonoBehaviour
             }
             _targetButton = _currentMenuPanel.SelectChildlen(); //Œ»Ý‚Ì‰æ–Ê/ƒ{ƒ^ƒ“‚ð‘I‘ð
         }
-        if (_targetButton.Event)
+        if (_targetButton.B)
         {
-            _targetButton.Disided();
+            _targetButton.ClickEvent();
         }
     }
 
@@ -121,7 +122,7 @@ public class MenuManagerBase : MonoBehaviour
                 await UniTask.WaitUntil(() => flag);
             }
             _currentMenuPanel.IsSelect(false);
-            _currentMenuPanel.Disided();
+            _currentMenuPanel.ClickEvent();
             Array.ForEach(_currentMenuPanel.Childlen, childlen =>
             {
                 Array.ForEach(childlen.ChildArrays, x => x.ActiveUIObject(false));

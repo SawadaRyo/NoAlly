@@ -5,14 +5,12 @@ public class MenuPresenter : MonoBehaviour
 {
     [SerializeField, Tooltip("")]
     MenuHanderBase _menuHander;
-    [SerializeField, Tooltip("")]
-    PlayerContoller _playerContoller;
 
     [SerializeField, Tooltip("")]
     MenuManagerBase _menuManager;
 
 
-    void Start()
+    void Awake()
     {
         _menuHander.Initialize();
         _menuManager.Initialize();
@@ -32,10 +30,6 @@ public class MenuPresenter : MonoBehaviour
             .Subscribe(isMenuOpen =>
             {
                 _menuManager.IsMenuOpen();
-                if (_playerContoller)
-                {
-                    _playerContoller.ableJumpInput = !_menuManager.isActive;
-                }
             }).AddTo(this);
         _menuHander.InputCross.Skip(1)
             .Subscribe(inputCross =>
@@ -53,10 +47,6 @@ public class MenuPresenter : MonoBehaviour
             {
                 if (!isCansel) return;
                 _menuManager.OnCansel();
-                if (_playerContoller)
-                {
-                    _playerContoller.ableJumpInput = !_menuManager.isActive;
-                }
             }).AddTo(this);
     }
 }

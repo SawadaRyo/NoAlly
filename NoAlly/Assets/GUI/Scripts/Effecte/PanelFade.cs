@@ -29,9 +29,9 @@ public class PanelFade : MonoBehaviour
                 break;
         }
     }
-    public enum FadeType
-    {
-        FadeIn,
-        FadeOut
-    }
+}
+public enum FadeType:int
+{
+    FadeIn,
+    FadeOut
 }

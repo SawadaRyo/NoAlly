@@ -20,17 +20,15 @@ public class SelectObjecArrayBase : UIObjectBase
     public GenericArray<UIObjectBase>[] Childlen => _childlenArray;
     public ButtonArrayExtend ButtonTween => _buttonArrayExtend;
 
-    protected virtual void SetButtonEvent() { }
-
-    public override void Initialize(SelectObjecArrayBase perent)
+    public override void SetUp(SelectObjecArrayBase perent)
     {
-        base.Initialize(perent);
+        base.SetUp(perent);
         SetButtonEvent();
         for (int y = 0; y < _childlenArray.Length; y++)
         {
             for (int x = 0; x < _childlenArray[y].ChildArrays.Length; x++)
             {
-                _childlenArray[y].ChildArrays[x].Initialize(this);
+                _childlenArray[y].ChildArrays[x].SetUp(this);
             }
         }
     }
@@ -82,7 +80,6 @@ public class SelectObjecArrayBase : UIObjectBase
                 _currentCross.Item2 = _childlenArray.Length - 1;
             }
         }
-        _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1].IsSelect(true);
         return _childlenArray[_currentCross.Item2].ChildArrays[_currentCross.Item1];
     }
 

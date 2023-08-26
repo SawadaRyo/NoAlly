@@ -9,7 +9,7 @@ public interface ISelectObject
     /// <summary>
     /// ゲーム実行時初期化
     /// </summary>
-    public void Initialize(SelectObjecArrayBase perent);
+    public void SetUp(SelectObjecArrayBase perent);
 
     /// <summary>
     /// 選択時実行関数
@@ -19,7 +19,7 @@ public interface ISelectObject
     /// <summary>
     /// ボタンのイベントを実行する
     /// </summary>
-    public void Disided();
+    public void ClickEvent();
     public void Canseled();
     /// <summary>
     /// メニュー展開時実行関数
