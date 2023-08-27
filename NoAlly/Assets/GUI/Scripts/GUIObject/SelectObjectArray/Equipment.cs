@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Equipment : SelectObjecArrayBase
 {
     [SerializeField]
-    CommandType _commandType = CommandType.NONE;
+    EquipmentType _commandType = EquipmentType.NONE;
     [SerializeField]
     Image _weaponImage;
 
@@ -21,11 +21,16 @@ public class Equipment : SelectObjecArrayBase
     ReactiveProperty<ElementType> _elementType = new();
     BoolReactiveProperty _equiped = new();
 
+    [Tooltip("")]
+    Sprite[] _weaponSprites = null;
+    [Tooltip("")]
+    Sprite[] _elementSprites = null;
+
     public IReadOnlyReactiveProperty<WeaponType> MainWeapon => _mainWeapon;
     public IReadOnlyReactiveProperty<WeaponType> SubWeapon => _subWeapon;
     public IReadOnlyReactiveProperty<ElementType> Element => _elementType;
     public IReadOnlyReactiveProperty<bool> Equiped => _equiped;
-    public CommandType commandType => _commandType;
+    public EquipmentType commandType => _commandType;
 
     
 
@@ -34,22 +39,26 @@ public class Equipment : SelectObjecArrayBase
     /// </summary>
     protected override void SetButtonEvent()
     {
+        _weaponSprites = new Sprite[4];
+        _elementSprites = new Sprite[4];
         for (int y = 0; y < _childlenArray.Length; y++)
         {
             for (int x = 0; x < _childlenArray[y].ChildArrays.Length; x++)
             {
                 int index = x;
                 WeaponSelect weaponSelect = _childlenArray[y].ChildArrays[x] as WeaponSelect;
+                _weaponSprites[x] = weaponSelect.WeaponSprite;
+                weaponSelect.SetStatus(_commandType, (WeaponType)index);
                 switch (_commandType)
                 {
-                    case CommandType.MAIN:
-                        weaponSelect.Event.onClick.AddListener(() => EquipmentWeapon(weaponSelect,CommandType.MAIN, (WeaponType)index));
+                    case EquipmentType.MAIN:
+                        weaponSelect.B.onClick.AddListener(() => EquipmentWeapon(EquipmentType.MAIN, (WeaponType)index));
                         break;
-                    case CommandType.SUB:
-                        weaponSelect.Event.onClick.AddListener(() => EquipmentWeapon(weaponSelect,CommandType.SUB, (WeaponType)index));
+                    case EquipmentType.SUB:
+                        weaponSelect.B.onClick.AddListener(() => EquipmentWeapon(EquipmentType.SUB, (WeaponType)index));
                         break;
-                    case CommandType.ELEMENT:
-                        weaponSelect.Event.onClick.AddListener(() => EquipmentElement(weaponSelect,(ElementType)index));
+                    case EquipmentType.ELEMENT:
+                        weaponSelect.B.onClick.AddListener(() => EquipmentElement((ElementType)index));
                         break;
                     default:
                         break;
@@ -63,10 +72,10 @@ public class Equipment : SelectObjecArrayBase
     /// <summary> ëïîıïêäÌÇêÿÇËë÷Ç¶ÇÈ</summary>
     /// <param name="weaponName"></param>
     /// <param name="type"></param>
-    public void EquipmentWeapon(WeaponSelect weaponSelect, CommandType type, WeaponType weaponName)
+    public void EquipmentWeapon(EquipmentType type, WeaponType weaponName)
     {
         WeaponType beforeWeapons = default;
-        if (type == CommandType.MAIN)
+        if (type == EquipmentType.MAIN)
         {
             beforeWeapons = _isEquipment.Item1;
             _isEquipment.Item1 = weaponName;
@@ -75,7 +84,7 @@ public class Equipment : SelectObjecArrayBase
                 _isEquipment.Item2 = beforeWeapons;
             }
         }
-        else if (type == CommandType.SUB)
+        else if (type == EquipmentType.SUB)
         {
             beforeWeapons = _isEquipment.Item2;
             _isEquipment.Item2 = weaponName;
@@ -84,29 +93,29 @@ public class Equipment : SelectObjecArrayBase
                 _isEquipment.Item1 = beforeWeapons;
             }
         }
-        _weaponImage.sprite = weaponSelect.SwitchImage;
+        _weaponImage.sprite = _weaponSprites[(int)weaponName];
     }
     /// <summary>
     /// ëÆê´ÇêÿÇËë÷Ç¶ÇÈ
     /// </summary>
     /// <param name="element"></param>
-    public void EquipmentElement(WeaponSelect weaponSelect, ElementType element)
+    public void EquipmentElement(ElementType element)
     {
         _isEquipment.Item3 = element;
-        _weaponImage.sprite = weaponSelect.SwitchImage;
+        _weaponImage.sprite = _weaponSprites[(int)element];
     }
     public override void MenuClosed()
     {
         base.MenuClosed();
         switch (_commandType)
         {
-            case CommandType.MAIN:
+            case EquipmentType.MAIN:
                 _mainWeapon.Value = _isEquipment.Item1;
                 break;
-            case CommandType.SUB:
+            case EquipmentType.SUB:
                 _subWeapon.Value = _isEquipment.Item2;
                 break;
-            case CommandType.ELEMENT:
+            case EquipmentType.ELEMENT:
                 _equiped.SetValueAndForceNotify(true);
                 _elementType.Value = _isEquipment.Item3;
                 break;

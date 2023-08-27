@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class EquipmentButton : WeaponSelect
 {
-    CommandType _commandType;
+    EquipmentType _commandType;
     WeaponType _weaponType;
     ElementType _elementType;
 
-    public CommandType CommandType => _commandType;
+    public EquipmentType CommandType => _commandType;
     public WeaponType WeaponType => _weaponType;
     public ElementType ElementType => _elementType;
 
-    public EquipmentButton(CommandType commandType, WeaponType weaponType)
+    public EquipmentButton(EquipmentType commandType, WeaponType weaponType)
     {
         _commandType = commandType;
         _weaponType = weaponType;
     }
-    public EquipmentButton(CommandType commandType, ElementType elementType)
+    public EquipmentButton(EquipmentType commandType, ElementType elementType)
     {
         _commandType = commandType;
         _elementType = elementType;

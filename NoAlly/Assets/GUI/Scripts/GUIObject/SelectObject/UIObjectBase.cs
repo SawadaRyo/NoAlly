@@ -22,12 +22,13 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
 
     public bool imageDisactiveDoEvent => _imageDisactiveDoEvent;
     public SelectObjecArrayBase Perent => _perent;
-    public Button Event => _event;
+    public Button B => _event;
 
     /// <summary>
     /// オブジェクトの表示
     /// </summary>
     /// <param name="isActive"></param>
+    protected virtual void SetButtonEvent() { }
     public virtual void ActiveUIObject(bool isActive)
     {
         if (_objectAnimator != null)
@@ -43,8 +44,7 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
             Array.ForEach(_objectText, x => x.enabled = isActive);
         }
     }
-
-    public virtual void Initialize(SelectObjecArrayBase perent)
+    public virtual void SetUp(SelectObjecArrayBase perent)
     {
         _perent = perent;
         ActiveUIObject(false);
@@ -82,14 +82,11 @@ public class UIObjectBase : MonoBehaviour, ISelectObject
         }
         _objectAnimator.SetBool("IsSelect", isSelect);
     }
-    public void Disided()
+    public void ClickEvent()
     {
         _event.onClick.Invoke();
     }
-    public virtual void Canseled()
-    {
-
-    }
+    public virtual void Canseled(){ }
     public virtual void MenuExtended()
     {
         ActiveUIObject(true);

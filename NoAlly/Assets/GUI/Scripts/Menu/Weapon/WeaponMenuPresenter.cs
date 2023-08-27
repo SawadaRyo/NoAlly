@@ -27,7 +27,7 @@ public class WeaponMenuPresenter : MonoBehaviour
 
     public WeaponType CullentWeaponType => _cullentWeaponType;
 
-    void Awake()
+    void Start()
     {
         _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>().OrderBy(x => x.commandType).ToArray();
         for (int i = 0; i < _weaponEquipment.Length; i++)
@@ -36,6 +36,9 @@ public class WeaponMenuPresenter : MonoBehaviour
             _equipment.Add(_weaponEquipment[index]);
             WeaponEquipmentState(index);
         }
+        _weaponEquipment[(int)EquipmentType.MAIN].EquipmentWeapon(EquipmentType.MAIN, _weaponStateController.MainWeapon.WeaponData.TypeOfWeapon);
+        _weaponEquipment[(int)EquipmentType.SUB].EquipmentWeapon(EquipmentType.SUB, _weaponStateController.SubWeapon.WeaponData.TypeOfWeapon);
+        _weaponEquipment[(int)EquipmentType.ELEMENT].EquipmentElement(ElementType.RIGIT);
         _isSwitch = false;
         
         //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
@@ -46,14 +49,14 @@ public class WeaponMenuPresenter : MonoBehaviour
         _weaponEquipment[index].MainWeapon.Skip(1)
             .Subscribe(mainWeapon =>
             {
-                _weaponStateController.SetEquipmentWeapon(mainWeapon, CommandType.MAIN);
+                _weaponStateController.SetEquipmentWeapon(mainWeapon, EquipmentType.MAIN);
                 //_cullentWeaponType = mainWeapon;
                 Debug.Log(mainWeapon);
             }).AddTo(this);
         _weaponEquipment[index].SubWeapon.Skip(1)
            .Subscribe(subWeapon =>
            {
-               _weaponStateController.SetEquipmentWeapon(subWeapon, CommandType.SUB);
+               _weaponStateController.SetEquipmentWeapon(subWeapon, EquipmentType.SUB);
                //_cullentWeaponType = subWeapon;
                Debug.Log(subWeapon);
            }).AddTo(this);
@@ -71,7 +74,7 @@ public class WeaponMenuPresenter : MonoBehaviour
             {
                 //_weaponInput.TargetWeapon = _weaponProcessing.SetEquipment(_isSwitch);
                 //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
-            });
+            }).AddTo(this);
 
     }
 }
