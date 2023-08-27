@@ -13,3 +13,4 @@
 1. UniRx
 2. UniTask
 3. Addressables
+4. Mixamo
