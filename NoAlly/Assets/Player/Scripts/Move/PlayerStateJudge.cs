@@ -37,7 +37,7 @@ public class PlayerStateJudge : MonoBehaviour
     /// <param name="h"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    public Vector2 CurrentMoveVectorNormal(float h, float v)
+    public Vector2 CurrentMoveVectorNormal(float h = 0f, float v = 0f)
     {
         if (h > 0)
         {

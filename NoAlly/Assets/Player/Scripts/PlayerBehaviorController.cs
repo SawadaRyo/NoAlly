@@ -138,16 +138,16 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     void OnUpdateMove()
     {
         _h = Input.GetAxisRaw("Horizontal");
-        _v = Input.GetAxisRaw("Vertical");
+        //_v = Input.GetAxisRaw("Vertical");
         _isJump.SetValueAndForceNotify(Input.GetButton("Jump"));
         _isDash.Value = Input.GetButtonDown("Dash");
         _inputDash = Input.GetButton("Dash");
 
         if (_h != 0)
         {
-            _currentMoveVec = _stateJudge.CurrentMoveVectorNormal(_h, _v);
+            _currentMoveVec = _stateJudge.CurrentMoveVectorNormal(_h);
         }
-        _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVectorNormal(_h, _v)); //現在のプレイヤーの進行方向を代入
+        _currentMoveVector.SetValueAndForceNotify(_stateJudge.CurrentMoveVectorNormal(_h)); //現在のプレイヤーの進行方向を代入
         //Debug.Log(_currentMoveVector.Value);
         //Debug.Log(_currentLocation.Value);
         _currentLocation.Value = _stateJudge.ActorCurrentLocation(_paramaterController.GetParamater, _currentMoveVector.Value, out _hitInfo);
