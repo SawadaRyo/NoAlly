@@ -67,13 +67,13 @@ public abstract class WeaponBase : IWeaponBase<PlayerBehaviorController>
         switch (_base.CurrentElement.Value)
         {
             case ElementType.FIRE:
-                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                _weaponPower.elementPower = _weaponData.FirePower[(int)_isDeformated];
                 break;
             case ElementType.ELEKE:
-                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                _weaponPower.elementPower = _weaponData.ElekePower[(int)_isDeformated];
                 break;
             case ElementType.FROZEN:
-                _weaponPower.elementPower = _weaponData.RigitPower[(int)_isDeformated];
+                _weaponPower.elementPower = _weaponData.FrozenPower[(int)_isDeformated];
                 break;
             default:
                 break;

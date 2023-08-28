@@ -48,7 +48,7 @@ public class ActionStatePresenter : MonoBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
         _weaponController.Initializer(mainAndSub[0], mainAndSub[1]);
         _weaponAnimator.Initializer();
@@ -78,7 +78,6 @@ public class ActionStatePresenter : MonoBehaviour
         _playerAnimator.IsAttack
             .Subscribe(isParticle =>
             {
-                Debug.Log("Do");
                 if (_weaponController.EquipementWeapon.Value is WeaponCombat combat)
                 {
                     combat.DoParticle(isParticle);

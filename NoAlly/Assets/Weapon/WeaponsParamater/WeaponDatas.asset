@@ -70,7 +70,7 @@ MonoBehaviour:
     - 0
     - 2.5
     _chargeLevels:
-    - 0.5
+    - 0.4
     - 2
     _chargePowerLevels:
     - 1.2
