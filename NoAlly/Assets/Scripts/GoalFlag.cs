@@ -12,7 +12,7 @@ public class GoalFlag : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out _))
+        if (other.CompareTag("Player"))
         {
             _sceneController.Load(_sceneName);
         }

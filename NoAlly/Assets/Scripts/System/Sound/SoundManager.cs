@@ -1,9 +1,9 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-//TODO Œã‚ÅƒIƒuƒWƒFƒNƒgƒv[ƒ‹Œ`®‚ÅÄ¶‚·‚é‚æ‚¤‚É‚·‚é
+//TODO å¾Œã§ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒ«å½¢å¼ã§å†ç”Ÿã™ã‚‹ã‚ˆã†ã«ã™ã‚‹
 
 public class SoundManager : IObjectGenerator
 {
@@ -11,9 +11,9 @@ public class SoundManager : IObjectGenerator
     SoundObjectPool<SoundObject, SoundManager,SoundUsage> _pool = new();
     [Tooltip("")]
     Dictionary<SoundUsage,SoundObjectPool<SoundObject, SoundManager,SoundUsage>.ObjectKey> _keys = new();
-    [Tooltip("ƒTƒEƒ“ƒh‚ÌScriptableObject")]
+    [Tooltip("ã‚µã‚¦ãƒ³ãƒ‰ã®ScriptableObject")]
     Dictionary<SoundUsage, SoundScriptable> _soundDataBase = new();
-    [Tooltip("Œ»İƒ‹[ƒv‚³‚¹‚Ä‚¢‚éƒTƒEƒ“ƒh")]
+    [Tooltip("ç¾åœ¨ãƒ«ãƒ¼ãƒ—ã•ã›ã¦ã„ã‚‹ã‚µã‚¦ãƒ³ãƒ‰")]
     SoundObject _loopingSoundObj = null;
 
     SoundUsage _usage;
@@ -37,10 +37,10 @@ public class SoundManager : IObjectGenerator
     }
 
     /// <summary>
-    /// ƒTƒEƒ“ƒh‚Ìw’è
+    /// ã‚µã‚¦ãƒ³ãƒ‰ã®æŒ‡å®š
     /// </summary>
-    /// <param name="type">ƒTƒEƒ“ƒh‚Ìí—Ş</param>
-    /// <param name="soundNumber">ƒTƒEƒ“ƒh‚ª“o˜^‚³‚ê‚Ä‚¢‚é—v‘f”Ô†</param>
+    /// <param name="type">ã‚µã‚¦ãƒ³ãƒ‰ã®ç¨®é¡</param>
+    /// <param name="soundNumber">ã‚µã‚¦ãƒ³ãƒ‰ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹è¦ç´ ç•ªå·</param>
     public void CallSound(SoundUsage usage, SoundType type, int soundNumber)
     {
         SoundObject soundObject;

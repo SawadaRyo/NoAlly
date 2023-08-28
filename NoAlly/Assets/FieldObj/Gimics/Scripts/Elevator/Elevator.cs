@@ -37,17 +37,17 @@ public class Elevator : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.TryGetComponent<PlayerBehaviorController>(out PlayerBehaviorController player))
         {
             _rideText.enabled = true;
-            _playerRb = player.GetComponent<Rigidbody>();
+            _playerRb = player.Rb;
         }
     }
     void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller equipment))
+        if (other.CompareTag("Player"))
         {
-            if (Input.GetButtonDown("Decision") && equipment)
+            if (Input.GetButtonDown("Decision"))
             {
                 _animator.SetBool("Open", false);
             }
@@ -55,7 +55,7 @@ public class Elevator : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent<PlayerContoller>(out PlayerContoller player))
+        if (other.CompareTag("Player"))
         {
             _rideText.enabled = false;
             _playerRb = null;

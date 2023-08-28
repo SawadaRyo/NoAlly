@@ -11,7 +11,7 @@ public class DamageEffects : MonoBehaviour
     [SerializeField]
     int _loopCount = 2;
 
-    public void Damaged(float interval)
+    public void Damaged(float interval,ElementType type)
     {
         var seq = DOTween.Sequence();
         foreach (var renderer in targetRenderer)

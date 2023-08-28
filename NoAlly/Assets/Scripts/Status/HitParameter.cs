@@ -58,7 +58,24 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
 
     public void BehaviorOfHit(WeaponPower damageValue, ElementType type)
     {
-        Status.Damage(damageValue, this, type);
+        float baseDamage = damageValue.defaultPower * _rigitDefensePercentage;
+        float elemantDamage = 0;
+        switch (type)
+        {
+            case ElementType.FIRE:
+                elemantDamage = damageValue.elementPower * _fireDifansePercentage;
+                break;
+            case ElementType.ELEKE:
+                elemantDamage = damageValue.elementPower * _elekeDifansePercentage;
+                break;
+            case ElementType.FROZEN:
+                elemantDamage = damageValue.elementPower * _frozenDifansePercentage;
+                break;
+            default:
+                break;
+        }
+        WeaponPower result = new WeaponPower(baseDamage, elemantDamage);
+        Status.Damage(result, type);
     }
 
     public void BehaviorOfHit<TPlus>(TPlus pulsItem) where TPlus : ItemBase

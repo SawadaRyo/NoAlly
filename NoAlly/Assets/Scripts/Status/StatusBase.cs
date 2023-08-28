@@ -11,8 +11,6 @@ public abstract class StatusBase : MonoBehaviour
     protected float _maxSAP = 20;
     [SerializeField, Tooltip("無敵時間の値")]
     protected float _invincibleTimeValue = 1f;
-    [SerializeField, Tooltip("ダメージサウンド")]
-    protected AudioClip _damageSound;
     [SerializeField]
     protected DamageEffects _damageEffects;
 
@@ -31,10 +29,17 @@ public abstract class StatusBase : MonoBehaviour
 
     public bool Living => _living;
 
-    public virtual void Damage(WeaponPower damageValue, HitParameter difanse, ElementType type)
+    public virtual void Damage(WeaponPower damageValue, ElementType type)
     {
-        _hp -= DamageCalculation(damageValue, difanse, type);
-
+        _hp -= DamageCalculation(damageValue, type);
+    }
+    public virtual void Death()
+    {
+        if (_hp <= 0)
+        {
+            Debug.Log("Death");
+            _damageEffects.Death(_invincibleTimeValue);
+        }
     }
 
     public virtual void Initialize()
@@ -48,35 +53,19 @@ public abstract class StatusBase : MonoBehaviour
         }
     }
 
-    protected float DamageCalculation(WeaponPower damageValue, HitParameter difanse, ElementType type)
+    protected float DamageCalculation(WeaponPower damageValue, ElementType type)
     {
-        if (!_hitable) return 0;
-
-        float baseDamage = damageValue.defaultPower * difanse.RigitDefensePercentage;
-        float elemantDamage = 0;
-        switch (type)
-        {
-            case ElementType.FIRE:
-                elemantDamage = damageValue.elementPower * difanse.FireDifansePercentage;
-                break;
-            case ElementType.ELEKE:
-                elemantDamage = damageValue.elementPower * difanse.ElekeDifansePercentage;
-                break;
-            case ElementType.FROZEN:
-                elemantDamage = damageValue.elementPower * difanse.FrozenDifansePercentage;
-                break;
-            default:
-                break;
-        }
         if (_hitable)
         {
             StartCoroutine(StartCountDown());
-            if(_damageEffects)
+            if (_damageEffects)
             {
-                _damageEffects.Damaged(_invincibleTimeValue);
+                Debug.Log("DOC");
+                _damageEffects.Damaged(_invincibleTimeValue,type);
             }
+            return damageValue.defaultPower + damageValue.elementPower;
         }
-        return (baseDamage + elemantDamage);
+        return 0f;
     }
     public IEnumerator StartCountDown()
     {
