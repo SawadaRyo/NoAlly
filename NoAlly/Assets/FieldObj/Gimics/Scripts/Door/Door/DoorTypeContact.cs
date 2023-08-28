@@ -7,7 +7,7 @@ public class DoorTypeContact : DoorBase
 {
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<PlayerContoller>(out _))
+        if (other.gameObject.CompareTag("Player"))
         {
             DoorState(true);
         }
@@ -15,7 +15,7 @@ public class DoorTypeContact : DoorBase
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<PlayerContoller>(out _))
+        if (other.gameObject.CompareTag("Player"))
         {
             DoorState(false);
         }

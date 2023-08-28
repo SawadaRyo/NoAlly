@@ -33,7 +33,7 @@ public class FloorDetection : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<PlayerContoller>() != null)
+        if(other.CompareTag("Player"))
         {
             _active = true;
             _sectionDetectionManager.ConfinerColliderChanger(this, _stage);
