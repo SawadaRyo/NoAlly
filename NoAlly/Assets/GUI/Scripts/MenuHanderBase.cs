@@ -43,6 +43,16 @@ public class MenuHanderBase : MonoBehaviour, IMenuHander
         }
     }
 
+    public void OnUpdateMouse()
+    {
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        {
+            string objectName = hit.transform.name;
+            Debug.Log( objectName);
+        }
+    }
+
     void OnDisable()
     {
         _inputCross.Dispose();

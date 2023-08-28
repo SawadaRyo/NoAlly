@@ -21,7 +21,11 @@ public class MenuPresenter : MonoBehaviour
     void UpdateMenu()
     {
         Observable.EveryUpdate()
-            .Subscribe(_ => _menuHander.OnUpdate()).AddTo(this);
+            .Subscribe(_ =>
+            {
+                _menuHander.OnUpdate();
+                //_menuHander.OnUpdateMouse();
+            }).AddTo(this);
     }
 
     void ObjectSelect()
