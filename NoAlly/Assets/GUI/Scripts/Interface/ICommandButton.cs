@@ -13,7 +13,7 @@ public interface ICommandButton
     /// <summary>
     /// ボタンのコマンドタイプ
     /// </summary>
-    public CommandType TypeOfCommand { get; }
+    public EquipmentType TypeOfCommand { get; }
     /// <summary>
     /// 選択中
     /// </summary>
@@ -32,7 +32,7 @@ public enum ButtonState : int
     SELECTED, //選択中
     DISIDED //決定済み
 }
-public enum CommandType
+public enum EquipmentType
 {
     NONE = -1,
     MAIN = 0, //メイン武器
