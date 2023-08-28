@@ -30,7 +30,8 @@ public class WeaponController : MonoBehaviour, IWeaponController
 
     public Transform GetAttackPos => _attackPos;
     public Transform GetPoolPos => _poolPos;
-    public ObjectBase WeaponPrefab => _weaponPrefab;
+    public WeaponBase MainWeapon => _mainWeapon;
+    public WeaponBase SubWeapon => _subWeapon;
     public ParticleSystem MyParticle => _myParticleSystem;
     public LayerMask HitLayerToAttack => hitLayerToAttack;
     public LayerMask HitLayerToBlock => hitLayerToBlock;
@@ -72,18 +73,18 @@ public class WeaponController : MonoBehaviour, IWeaponController
     /// </summary>
     /// <param name="weaponType"></param>
     /// <param name="type"></param>
-    public void SetEquipmentWeapon(WeaponType weaponType, CommandType type)
+    public void SetEquipmentWeapon(WeaponType weaponType, EquipmentType type)
     {
         //_weaponPrefabs[(int)_mainWeapon.Type].ActiveObject(false);
         //_weaponPrefabs[(int)_subWeapon.Type].ActiveObject(false);
         switch (type)
         {
-            case CommandType.MAIN:
+            case EquipmentType.MAIN:
                 _mainWeapon.OnLift();
                 _mainWeapon = SetWeaponData.Instance.WeaponDatas[weaponType];
                 _mainWeapon.OnEquipment();
                 break;
-            case CommandType.SUB:
+            case EquipmentType.SUB:
                 _subWeapon.OnLift();
                 _subWeapon = SetWeaponData.Instance.WeaponDatas[weaponType];
                 _subWeapon.OnEquipment();

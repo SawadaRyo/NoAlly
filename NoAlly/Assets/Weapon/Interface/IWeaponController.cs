@@ -22,7 +22,7 @@ public interface IWeaponController
     /// </summary>
     /// <param name="weapon"></param>
     /// <param name="type"></param>
-    public void SetEquipmentWeapon(WeaponType typeOfWeapon, CommandType type);
+    public void SetEquipmentWeapon(WeaponType typeOfWeapon, EquipmentType type);
     /// <summary>
     /// 属性の装備
     /// </summary>

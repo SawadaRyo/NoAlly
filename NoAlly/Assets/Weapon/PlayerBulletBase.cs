@@ -60,14 +60,14 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         while (true)
         {
             time += Time.deltaTime;
-            if(time > interval)
+            if (time > interval)
             {
                 _isActive = false;
                 _rb.isKinematic = !_isActive;
                 ActiveObject(_isActive);
                 yield break;
             }
-            else if(!_isActive)
+            else if (!_isActive)
             {
                 yield break;
             }
@@ -89,11 +89,14 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         if (target)
         {
             if (target.CompareTag("Player")) return;
-            if (target.TryGetComponent(out IHitBehavorOfAttack hitObj) && hitObj.Owner != ObjectOwner.PLAYER)
+            if (target.CompareTag("Enemy"))
             {
-                hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+                if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
+                {
+                    hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+                }
+                Disactive();
             }
-            Disactive();
         }
 
     }
@@ -105,11 +108,11 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
                                , Owner.Base.GetAttackPos.position.z - Owner.Owner.transform.position.z).normalized;
         if (_bulletVec.x > 0f)
         {
-            this.transform.rotation = Quaternion.AngleAxis(0f,Vector3.up);
+            this.transform.rotation = Quaternion.AngleAxis(0f, Vector3.up);
         }
         else if (_bulletVec.x <= 0f)
         {
-            this.transform.rotation = Quaternion.AngleAxis(180f,Vector3.up);
+            this.transform.rotation = Quaternion.AngleAxis(180f, Vector3.up);
         }
     }
 
