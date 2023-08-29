@@ -1,11 +1,14 @@
-using System;
+//日本語コメント可
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using State = StateMachine<EnemyBase>.State;
 
-public class EnemyAttack : State
+public abstract class EnemyMove : State
 {
-    protected virtual void AttackBehaviour() { }
+    protected abstract void MoveBehaviour();
+    public virtual void EnemyRotate(Transform playerPos) { }
+
     protected override void OnEnter(State prevState)
     {
         base.OnEnter(prevState);
@@ -16,7 +19,7 @@ public class EnemyAttack : State
         base.OnUpdate();
         if (Owner.Player.Value)
         {
-            AttackBehaviour();
+            EnemyRotate(Owner.Player.Value.transform);
         }
         else
         {

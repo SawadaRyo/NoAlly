@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
+using UniRx;
 using State = StateMachine<EnemyBase>.State;
 
 public class EnemySearch : State
@@ -9,10 +10,11 @@ public class EnemySearch : State
     float _time = 0;
     float _intervalRotate = 3;
     float _turnSpeed = 10f;
+
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (!Owner.Player)
+        if (!Owner.Player.Value)
         {
             _time += Time.deltaTime;
             if (_time >= _intervalRotate)
@@ -33,5 +35,15 @@ public class EnemySearch : State
         {
             Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Attack);
         }
+    }
+
+    public override void OnTranstion()
+    {
+        base.OnTranstion();
+        Owner.Player
+            .Subscribe(player =>
+            {
+
+            });
     }
 }

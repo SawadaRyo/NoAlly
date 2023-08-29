@@ -19,8 +19,6 @@ public class UAVTypeEnemy : EnemyBase
     LayerMask _fieldLayer = ~0;
 
     [Tooltip("")]
-    Rigidbody _rb = default;
-    [Tooltip("")]
     Vector3 _distance = Vector2.zero;
     [Tooltip("")]
     bool _hit = false;
@@ -28,23 +26,18 @@ public class UAVTypeEnemy : EnemyBase
     float _currentSpeed = 0f;
     float _time = 0f;
 
-    public override void Start()
-    {
-        base.Start();
-        _rb = GetComponent<Rigidbody>();
-    }
     public override void EnemyAttack()
     {
-        if (InSight(out PlayerStatus player))
+        if (InSight())
         {
-            var targetPos = player.transform.position + new Vector3(0f, 1.8f, 0f);
+            var targetPos = Player.Value.transform.position + new Vector3(0f, 1.8f, 0f);
             transform.LookAt(targetPos);
             _distance = (targetPos - transform.position);
             if (_hit)
             {
                 _currentSpeed = (-_speed * _moveMagnification);
                 _time += Time.deltaTime;
-                if (_time > 1f || !InSight(out _))
+                if (_time > 1f || !InSight())
                 {
                     _hit = false;
                     _time = 0f;
