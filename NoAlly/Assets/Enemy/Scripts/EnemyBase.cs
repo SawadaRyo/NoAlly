@@ -1,22 +1,24 @@
 using System;
 using UnityEngine;
-using DG.Tweening;
-using State = StateMachine<EnemyBase>.State;
+using UniRx;
 
-public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
+public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
 {
     [SerializeField, Header("索敵範囲")]
     protected float _radius = 5f;
-    [SerializeField, Header("索敵用のレイヤー")]
-    protected LayerMask _playerLayer = ~0;
+    [SerializeField, Header("")]
+    protected Rigidbody _rb = null;
     [SerializeField, Header("索敵範囲の中心")]
     protected Transform _center = default;
+    [SerializeField, Header("索敵用のレイヤー")]
+    protected LayerMask _playerLayer = ~0;
 
     [Tooltip("ステートマシン")]
     protected StateMachine<EnemyBase> _stateMachine = null;
+    [Tooltip("")]
+    ReactiveProperty<PlayerStatus> _playerStatus = new();
 
-    public Animator EnemyAnimator => _objectAnimator;
-    public PlayerStatus Player => InSight(out PlayerStatus playerStatus);
+    public IReadOnlyReactiveProperty<PlayerStatus> Player => _playerStatus;
     /// <summary>
     /// ステートマシーンのオーナー(自分)を返すプロパティ(読み取り専用)
     /// </summary>
@@ -24,33 +26,22 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
 
     public IObjectGenerator Owner => throw new NotImplementedException();
 
-    public virtual void EnemyIdle() { }
     public virtual void EnemyAttack() { }
-    public virtual void EnemyRotate(Transform playerPos) { }
     public virtual void ExitAttackState() { }
-    public virtual void Start() { }
-    public void FixedUpdate()
-    {
-        if (_isActive)
-        {
-            _stateMachine.Update();
-        }
-    }
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerExit(Collider other) { }
 
-    public PlayerStatus InSight(out PlayerStatus playerState)
+    public PlayerStatus InSight()
     {
-        playerState = null;
         Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
         foreach (var s in inSight)
         {
             if (s.gameObject.TryGetComponent(out PlayerStatus player))
             {
-                playerState = player;
+                return player;
             }
         }
-        return playerState;
+        return null;
     }
     /// <summary>
     /// オブジェクト有効時に呼ぶ関数
@@ -71,10 +62,10 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
         _objectAnimator.SetBool("Death", !_isActive);
 
     }
-    public virtual void Disactive(float interval)
-    {
-        throw new NotImplementedException();
-    }
+    /// <summary>
+    /// オブジェクト非有効時に呼ぶ関数(インターバル有)
+    /// </summary>
+    public virtual void Disactive(float interval) { }
     /// <summary>
     /// オブジェクト生成時に呼ぶ関数
     /// </summary>
@@ -91,8 +82,20 @@ public abstract class EnemyBase : ObjectBase,IObjectPool<IObjectGenerator>
             _stateMachine.AddTransition<EnemyAttack, EnemySearch>((int)StateOfEnemy.Saerching);
             //HPが0になったとき死亡
             _stateMachine.AddAnyTransition<EnemyDeath>((int)StateOfEnemy.Death);
+            //ステート開始
             _stateMachine.Start<EnemySearch>();
         }
+        OnUpdate();
+    }
+    void OnUpdate()
+    {
+        Observable.EveryFixedUpdate()
+            .Where(_ => _isActive == true)
+            .Subscribe(_ =>
+            {
+                _playerStatus.Value = InSight();
+                _stateMachine.Update();
+            });
     }
 
 #if UNITY_EDITOR
