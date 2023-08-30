@@ -37,7 +37,7 @@ public class EnemySearch : State
         }
     }
 
-    public override void OnTranstion()
+    protected override void OnTranstion()
     {
         base.OnTranstion();
         Owner.Player
