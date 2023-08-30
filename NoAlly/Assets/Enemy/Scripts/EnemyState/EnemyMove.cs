@@ -11,8 +11,7 @@ public abstract class EnemyMove : State
 
     protected override void OnEnter(State prevState)
     {
-        base.OnEnter(prevState);
-        Owner.ObjectAnimator.SetBool("InSight", true);
+
     }
     protected override void OnUpdate()
     {
@@ -28,8 +27,6 @@ public abstract class EnemyMove : State
     }
     protected override void OnExit(State nextState)
     {
-        base.OnExit(nextState);
-        Owner.ObjectAnimator.SetBool("InSight", false);
-        Owner.ExitAttackState();
+        
     }
 }

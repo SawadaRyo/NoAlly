@@ -11,4 +11,14 @@ public class UAVAttack : State
         base.OnEnter(prevState);
         Owner.ObjectAnimator.SetTrigger("");
     }
+
+    protected override void OnExit(State nextState)
+    {
+        base.OnExit(nextState);
+    }
+
+    protected override void OnTranstion()
+    {
+        base.OnTranstion();
+    }
 }
