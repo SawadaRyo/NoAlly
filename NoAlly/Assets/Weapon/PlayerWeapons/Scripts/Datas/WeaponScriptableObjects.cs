@@ -51,6 +51,7 @@ public enum WeaponClassName
     WeaponShield
 }
 
+[System.Serializable]
 public struct WeaponPower
 {
     public float defaultPower;
