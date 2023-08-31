@@ -74,7 +74,7 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     public IReadOnlyReactiveProperty<bool> InputAttackUp => _inputAttackUp;
 
     public Vector3 GroundNormal => _stateJudge.GroundNormalChack(_currentMoveVector.Value
-                                                               , _paramaterController.GetParamater.graundDistance
+                                                               , _paramaterController.GetParamater.graundNormalDistance
                                                                , _paramaterController.GetParamater.groundMask);
     #endregion
 
@@ -133,12 +133,14 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
                     default:
                         break;
                 }
-            });
+            }).AddTo(this);
     }
     void OnUpdateMove()
     {
         _h = Input.GetAxisRaw("Horizontal");
         //_v = Input.GetAxisRaw("Vertical");
+        var ho = Input.GetAxisRaw("Mouse ScrollWheel");
+        Debug.Log(ho);
         _isJump.SetValueAndForceNotify(Input.GetButton("Jump"));
         _isDash.Value = Input.GetButtonDown("Dash");
         _inputDash = Input.GetButton("Dash");
@@ -174,7 +176,8 @@ public class PlayerBehaviorController : MonoBehaviour, IInputPlayer, IActor<Play
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_stateJudge.playerPartPos[2].position - new Vector3(0f, _paramaterController.GetParamater.graundDistance, 0f), _paramaterController.GetParamater.isGroundRengeRadios);
+        //Gizmos.DrawWireSphere(_stateJudge.playerPartPos[2].position - new Vector3(0f, _paramaterController.GetParamater.graundDistance, 0f), _paramaterController.GetParamater.isGroundRengeRadios);
+        Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, new Vector3(0f, -_paramaterController.GetParamater.graundDistance, 0f));
         Gizmos.DrawRay(_stateJudge.playerPartPos[1].position, (new Vector3(_h, 0f, 0f) + Vector3.up) * _paramaterController.GetParamater.walldistance);
         Gizmos.DrawRay(_stateJudge.playerPartPos[2].position, new Vector3(_currentMoveVector.Value.x, _currentMoveVector.Value.y, 0));
 

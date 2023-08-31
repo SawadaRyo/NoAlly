@@ -131,16 +131,16 @@ namespace ActorBehaviour
 
                         //ActorVertical.y = 0f;
                         ActorVertical.y = -(fallSpeed * Mathf.Pow(_timeInAir, 2));
-                        if (ActorVertical.y < -(fallSpeed / 2))
+                        if (ActorVertical.y < -(fallSpeed / 3))
                         {
-                            ActorVertical.y = -(fallSpeed / 2);
+                            ActorVertical.y = -(fallSpeed / 3);
                         }
                         break;
 
                     default:
                         break;
                 }
-                //Debug.Log(ActorVertical);
+                Debug.Log(ActorVertical.y);
                 return ActorVertical;
             }
         }
@@ -268,7 +268,9 @@ namespace ActorBehaviour
             bool _ableJumpInput = true;
             [Tooltip("")]
             Vector2 _velo = Vector2.zero;
+            Tweener twe = null;
 
+            float ClimbTime => twe.ElapsedPercentage();
             public IReadOnlyReactiveProperty<bool> Climbing => _clinbing;
 
             /// <summary>
@@ -321,7 +323,7 @@ namespace ActorBehaviour
                     _slideWall = false;
                     Vector3 endPoint = hitInfo.transform.position + new Vector3(0f, col1.size.y * hitInfo.transform.localScale.y, 0f);
 
-                    rb.transform.DOMove(endPoint, duration)
+                    twe = rb.transform.DOMove(endPoint, duration)
                         .OnStart(() =>
                         {
                             rb.isKinematic = true;
@@ -336,18 +338,6 @@ namespace ActorBehaviour
                             rb.isKinematic = false;
                         });
                 }
-
-                //while (time < duration)
-                //{
-                //    rb.transform.position = Vector3.Lerp(startPoint, endPoint, time / duration);
-                //    time += Time.deltaTime;
-                //}
-                //_animator.SetBool("Climbing", false);
-                //_animator.SetBool("WallGrip", false);
-                //rb.transform.position = endPoint;
-                //_clinbing = false;
-                //_ableInput = true;
-                //rb.isKinematic = false;
             }
         }
     }

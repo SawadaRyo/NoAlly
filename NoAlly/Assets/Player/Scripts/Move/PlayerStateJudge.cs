@@ -19,6 +19,9 @@ public class PlayerStateJudge : MonoBehaviour
     [Tooltip("")]
     RaycastHit[] _raycastHits = null;
 
+    float currentDis = 0f;
+    Vector2 currentVec = Vector2.zero;
+
     public Transform[] playerPartPos => _playerPartPos;
 
     public void Initialize()
@@ -94,7 +97,8 @@ public class PlayerStateJudge : MonoBehaviour
         Vector3 rayCenter = playerPartPos.transform.position; //Rayの原点
         Ray rayUnderPlayer = new Ray(rayCenter, Vector3.down); //Ray射出
 
-        return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+        //return (Physics.SphereCast(rayUnderPlayer, radios, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
+        return (Physics.Raycast(rayUnderPlayer, out hitInfo, distance, groundMask)); //接地判定をStateOfPlayerで返す
     }
     /// <summary>
     /// 接壁判定
@@ -117,13 +121,14 @@ public class PlayerStateJudge : MonoBehaviour
 
     public Vector3 GroundNormalChack(Vector2 currntMoveVec, float distance, LayerMask groundMask)
     {
-        var rayDirectionX = _rayDirection.x * currntMoveVec.x;
-        var rayDirection = (_playerPartPos[2].transform.localPosition + new Vector3(rayDirectionX, _rayDirection.y)).normalized;
+        currentDis = distance;
+        currentVec = currntMoveVec;
+        var rayDirection = (_playerPartPos[2].transform.localPosition + new Vector3(_rayDirection.x, _rayDirection.y)).normalized;
         Ray rayUnderPlayer = new Ray(_playerPartPos[2].transform.localPosition, rayDirection); //Ray射出
-        if(Physics.Raycast(rayUnderPlayer, out RaycastHit hitInfo, distance, groundMask))
+        if (Physics.Raycast(rayUnderPlayer, out RaycastHit hitInfo, distance, groundMask))
         {
             Vector3 onPlane = Vector3.ProjectOnPlane(new Vector3(currntMoveVec.x, 0f, 0f), hitInfo.normal);
-            if(Mathf.Abs(onPlane.y) <= 0.01f)
+            if (Mathf.Abs(onPlane.y) <= 0.01f)
             {
                 return onPlane.normalized;
             }
@@ -134,12 +139,9 @@ public class PlayerStateJudge : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        var rayCenter1 = new Vector3(_playerPartPos[2].transform.localPosition.x + _rayDirection.x, _playerPartPos[2].transform.localPosition.y + _rayDirection.y);
-        var rayCenter2 = new Vector3(-(_playerPartPos[2].transform.localPosition.x + _rayDirection.x), _playerPartPos[2].transform.localPosition.y + _rayDirection.y);
+        var rayDirection1 = (_playerPartPos[2].transform.localPosition + new Vector3(_rayDirection.x, _rayDirection.y)).normalized * currentDis;
 
-        Ray rayUnderPlayer1 = new Ray(_playerPartPos[2].transform.position, rayCenter1);
-        Ray rayUnderPlayer2 = new Ray(_playerPartPos[2].transform.position, rayCenter2);
+        Ray rayUnderPlayer1 = new Ray(_playerPartPos[2].transform.position, rayDirection1);
         Gizmos.DrawRay(rayUnderPlayer1);
-        Gizmos.DrawRay(rayUnderPlayer2);
     }
 }

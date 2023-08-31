@@ -8,11 +8,11 @@ public class PlayerBehaviorClimbWall : State
 {
     protected override void OnEnter(State prevState)
     {
-        if(prevState is PlayerBehaviourOnWall wall)
-        {
-            Owner.WallBehaviour.ClimbWall(Owner.Rb,wall.HitWall);
-        }
-        else if(prevState is PlayerBehaviorInAir air)
+        //if(prevState is PlayerBehaviourOnWall wall)
+        //{
+        //    Owner.WallBehaviour.ClimbWall(Owner.Rb,wall.HitWall);
+        //}
+        if(prevState is PlayerBehaviorInAir air)
         {
             Owner.WallBehaviour.ClimbWall(Owner.Rb, air.HitWall);
         }

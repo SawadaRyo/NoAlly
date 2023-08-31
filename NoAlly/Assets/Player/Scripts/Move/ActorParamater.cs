@@ -22,6 +22,8 @@ public class ActorParamater : ScriptableObject
     public float fallSpeed = 90f;
     [SerializeField, Header("接地判定のRayの射程")]
     public float graundDistance = 0.25f;
+    [SerializeField, Header("接地判定のRayの射程")]
+    public float graundNormalDistance = 0.25f;
     [SerializeField, Header("接地判定のSphierCastの半径")]
     public float isGroundRengeRadios = 0.2f;
     [SerializeField, Header("接地判定のLayerMask")]
@@ -29,7 +31,7 @@ public class ActorParamater : ScriptableObject
 
     [Header("WallJump")]
     [SerializeField, Header("プレイヤーの壁キックの力")]
-    public float wallJump = 10f;
+    public float wallJumpPower = 10f;
     [SerializeField, Header("壁をずり落ちる速度")]
     public float wallSlideSpeed = 1.5f;
     [SerializeField, Header("次の壁キックに掛かる時間")]
@@ -52,9 +54,10 @@ public class ActorParamater : ScriptableObject
         jumpPower = orignal.jumpPower;
         fallSpeed = orignal.fallSpeed;
         graundDistance = orignal.graundDistance;
+        graundNormalDistance = orignal.graundNormalDistance;
         isGroundRengeRadios = orignal.isGroundRengeRadios;
         groundMask = orignal.groundMask;
-        wallJump = orignal.wallJump;
+        wallJumpPower = orignal.wallJumpPower;
         wallSlideSpeed = orignal.wallSlideSpeed;
         wallKickInterval = orignal.wallKickInterval;
         walldistance = orignal.walldistance;
