@@ -17,7 +17,7 @@ public abstract class DoorSwitchBase : MonoBehaviour, IHitBehavorOfGimic
 
     public virtual void ObjectAction() { }
 
-    public void BehaviorOfHit<T>(T weaponBase, ElementType type) where T : MonoBehaviour
+    public void BehaviorOfHit<T>(T weaponBase, ElementType type) where T : WeaponBase
     {
         DoorLock();
     }
