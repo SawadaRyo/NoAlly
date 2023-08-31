@@ -13,6 +13,7 @@ TagManager:
   - EnemyPos
   - CameraCol
   - Enemy
+  - Gimic
   layers:
   - Default
   - TransparentFX
