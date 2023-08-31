@@ -3,8 +3,6 @@ using UniRx;
 
 public class EnemyStatus: StatusBase //敵の体力を管理するスクリプト
 {
-    [Tooltip("敵のHP")]
-    float _hp = 0;
     [Tooltip("このオブジェクトにアタッチされているEnemyBaseを取得する変数")]
     EnemyBase _enemyBase = null;
 
