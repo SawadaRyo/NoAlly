@@ -73,9 +73,17 @@ public class StateMachine<TOwner>
         protected bool IsActive => isActive;
 
         /// <summary>
+        /// ステート条件指定
+        /// </summary>
+        internal void Transtion()
+        {
+            OnTranstion();
+        }
+
+        /// <summary>
         /// 遷移条件
         /// </summary>
-        public virtual void OnTranstion() { }
+        protected virtual void OnTranstion() { }
 
 
         /// <summary>
@@ -150,7 +158,7 @@ public class StateMachine<TOwner>
     {
         var state = new T();
         state.stateMachine = this;
-        state.OnTranstion();
+        state.Transtion();
         states.AddLast(state);
         return state;
     }
