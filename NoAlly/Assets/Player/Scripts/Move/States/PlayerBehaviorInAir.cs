@@ -52,7 +52,7 @@ public class PlayerBehaviorInAir : State
         //_moveVecX = 0f;
     }
 
-    public override void OnTranstion()
+    protected override void OnTranstion()
     {
         Owner.CurrentLocation
             .Skip(1)

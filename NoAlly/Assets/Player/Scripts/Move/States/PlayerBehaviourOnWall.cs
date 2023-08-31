@@ -13,7 +13,7 @@ public class PlayerBehaviourOnWall : State
 
     public RaycastHit HitWall => _wallState;
 
-    public override void OnTranstion()
+    protected override void OnTranstion()
     {
         Owner.CurrentLocation
             .Where(_ => IsActive)
@@ -43,11 +43,11 @@ public class PlayerBehaviourOnWall : State
                 //Debug.Log(Owner.HitInfo.normal);
                 float y = 0f;
                 _moveSpeedX = Owner.InputDash == true //x軸方向のベクトルを保存
-                            ? Owner.ParamaterCon.GetParamater.dashSpeed + Owner.ParamaterCon.GetParamater.speed
-                            : Owner.ParamaterCon.GetParamater.speed;
+                            ? Owner.ParamaterCon.GetParamater.dashSpeed + Owner.ParamaterCon.GetParamater.wallJumpPower
+                            : Owner.ParamaterCon.GetParamater.wallJumpPower;
                 
                 _moveVecX = Owner.HitInfo.normal.x;
-                y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.speed, Owner.ParamaterCon.GetParamater.fallSpeed).y;
+                y = Owner.JumpBehaviour.ActorVectorInAir(Owner.ParamaterCon.GetParamater.wallJumpPower, Owner.ParamaterCon.GetParamater.fallSpeed).y;
                 Owner.MoveBehaviour.ActorRotateMethod(Owner.ParamaterCon.GetParamater.turnSpeed, Owner.transform, Owner.HitInfo.normal);
                 Owner.Rb.velocity = new Vector3(_moveSpeedX, y);
                 //Debug.Log(Owner.Rb.velocity);

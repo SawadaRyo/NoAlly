@@ -38,7 +38,7 @@ public class PlayerBehaviourOnGround : State
         }
     }
 
-    public override void OnTranstion()
+    protected override void OnTranstion()
     {
         Owner.CurrentLocation
             .Subscribe(currentLocation =>

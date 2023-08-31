@@ -16,14 +16,15 @@ MonoBehaviour:
   dashSpeed: 5
   dashIntarval: 0.5
   turnSpeed: 25
-  jumpPower: 15
-  fallSpeed: 180
-  graundDistance: 0.25
-  isGroundRengeRadios: 0.15
+  jumpPower: 10
+  fallSpeed: 90
+  graundDistance: 0.75
+  graundNormalDistance: 5
+  isGroundRengeRadios: 0.1
   groundMask:
     serializedVersion: 2
     m_Bits: 328
-  wallJump: 0
+  wallJumpPower: 5
   wallSlideSpeed: 1.5
   wallKickInterval: 0.5
   walldistance: 0.3

@@ -35,7 +35,7 @@ public class PlayerBehaviorDash : State
         }
     }
 
-    public override void OnTranstion()
+    protected override void OnTranstion()
     {
         Owner.CurrentLocation
            .Skip(1)
