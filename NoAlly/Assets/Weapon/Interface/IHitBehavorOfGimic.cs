@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IHitBehavorOfGimic
 {
     ObjectOwner Owner { get => ObjectOwner.GIMIC; }
-    public void BehaviorOfHit<T>(T weaponBase,ElementType type) where T :MonoBehaviour;
+    public void BehaviorOfHit<T>(T weaponBase,ElementType type) where T :WeaponBase;
 }

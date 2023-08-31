@@ -89,11 +89,15 @@ public class PlayerBulletBase : ObjectBase, IBullet<WeaponArrow>
         if (target)
         {
             if (target.CompareTag("Player")) return;
-            if (target.CompareTag("Enemy"))
+            if (target.CompareTag("Enemy") || target.CompareTag("Gimic"))
             {
                 if (target.TryGetComponent(out IHitBehavorOfAttack hitObj))
                 {
                     hitObj.BehaviorOfHit(_bulletPowers, _elementType);
+                }
+                else if(target.TryGetComponent(out IHitBehavorOfGimic hitGimic))
+                {
+                    hitGimic.BehaviorOfHit(Owner, _elementType);
                 }
                 Disactive();
             }

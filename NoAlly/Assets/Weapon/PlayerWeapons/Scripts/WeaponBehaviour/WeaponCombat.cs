@@ -14,22 +14,6 @@ public class WeaponCombat : WeaponBase
     }
     public override void AttackBehaviour()
     {
-        //_owner.TargetCol
-        //    .Where(target => _isEquipment && target != null)
-        //    .Subscribe(target =>
-        //    {
-        //        _weaponPower = CurrentPower(InputCharging(_chargeCount));
-        //        if (target.TryGetComponent(out IHitBehavorOfAttack characterHp))
-        //        {
-        //            characterHp.BehaviorOfHit(_weaponPower, _owner.CurrentElement.Value);
-        //        }
-        //        else if (target.TryGetComponent(out IHitBehavorOfGimic hitObj))
-        //        {
-        //            hitObj.BehaviorOfHit(_owner, _owner.CurrentElement.Value);
-        //        }
-        //    });
-
-
         Collider[] cols = Physics.OverlapBox(_base.GetAttackPos.position
                                            , _boxRenge
                                            , _base.GetAttackPos.localRotation
@@ -44,7 +28,7 @@ public class WeaponCombat : WeaponBase
             }
             else if (col.TryGetComponent(out IHitBehavorOfGimic hitObj))
             {
-                hitObj.BehaviorOfHit(_base, _base.CurrentElement.Value);
+                hitObj.BehaviorOfHit(this, _base.CurrentElement.Value);
             }
         }
     }
