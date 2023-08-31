@@ -37,6 +37,8 @@ public class EnemySearch : State
         }
     }
 
+    protected void SearchBehaviour() { }
+
     protected override void OnTranstion()
     {
         base.OnTranstion();
