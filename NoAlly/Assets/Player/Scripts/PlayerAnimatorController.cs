@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using System;
+using DG.Tweening;
 //using UniRx.Triggers;
 
 public class PlayerAnimatorController : MonoBehaviour
@@ -142,6 +143,11 @@ public class PlayerAnimatorController : MonoBehaviour
             .Subscribe(climbing =>
             {
                 _playerAnimator.SetBool("Climbing", climbing);
+                if (moveInput.WallBehaviour.ClimbTwe != null)
+                {
+                    Debug.Log(moveInput.WallBehaviour.ClimbTwe.ElapsedPercentage());
+                    _playerAnimator.SetFloat("ClimbingTime", moveInput.WallBehaviour.ClimbTwe.ElapsedPercentage());
+                }
             }).AddTo(moveInput);
     }
     /// <summary>

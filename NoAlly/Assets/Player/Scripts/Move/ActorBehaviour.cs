@@ -140,7 +140,6 @@ namespace ActorBehaviour
                     default:
                         break;
                 }
-                Debug.Log(ActorVertical.y);
                 return ActorVertical;
             }
         }
@@ -270,7 +269,7 @@ namespace ActorBehaviour
             Vector2 _velo = Vector2.zero;
             Tweener twe = null;
 
-            float ClimbTime => twe.ElapsedPercentage();
+            public Tweener ClimbTwe => twe;
             public IReadOnlyReactiveProperty<bool> Climbing => _clinbing;
 
             /// <summary>
