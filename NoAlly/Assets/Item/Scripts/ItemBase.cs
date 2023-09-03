@@ -4,12 +4,9 @@ using UnityEngine;
 //[RequireComponent(typeof(Collider))]
 public class ItemBase : ObjectBase,IObjectPool<IObjectGenerator>
 {
-    [SerializeField] protected float _plusParameter = 4;
     [SerializeField] AudioClip _getSound = null;
 
     AudioSource _audio = null;
-
-    public float PlusParameter => _plusParameter;
 
     public IObjectGenerator Owner => throw new System.NotImplementedException();
 
@@ -18,17 +15,6 @@ public class ItemBase : ObjectBase,IObjectPool<IObjectGenerator>
         _audio = GameObject.FindObjectOfType<AudioSource>();
     }
     public virtual void Activate() { }
-    public virtual void Activate(HitParameter gauge) { }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<HitParameter>(out HitParameter playerGauge) && _isActive)
-        {
-            //_audio.PlayOneShot(_getSound);
-            Activate(playerGauge);
-            Disactive();
-        }
-    }
 
     public virtual void Create()
     {
@@ -50,6 +36,6 @@ public class ItemBase : ObjectBase,IObjectPool<IObjectGenerator>
 
     public void DisactiveForInstantiate(IObjectGenerator Owner)
     {
-        throw new System.NotImplementedException();
+        
     }
 }
