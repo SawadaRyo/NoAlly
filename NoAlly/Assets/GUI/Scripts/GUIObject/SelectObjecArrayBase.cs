@@ -1,24 +1,23 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using DimensionalArray;
 using System;
 
 public class SelectObjecArrayBase : UIObjectBase
 {
-    [SerializeField, Header("このオブジェクトのメニュー深度")]
-    int _depthOfMenu = 0;
     [SerializeField, Header("このオブジェクトの展開時のTween")]
     ButtonArrayExtend _buttonArrayExtend = null;
     [SerializeField, Header("このオブジェクトの子関係にあるボタンオブジェクト")]
     protected GenericArray<UIObjectBase>[] _childlenArray = null;
+    [SerializeField, Header("")]
+    PanelType _panelType;
 
     [Tooltip("")]
     (int, int) _currentCross = (0, 0);
 
-    public int DepthOfMenu => _depthOfMenu;
     public GenericArray<UIObjectBase>[] Childlen => _childlenArray;
     public ButtonArrayExtend ButtonTween => _buttonArrayExtend;
+    public PanelType PanelType => _panelType;
 
     public override void SetUp(SelectObjecArrayBase perent)
     {
@@ -32,6 +31,14 @@ public class SelectObjecArrayBase : UIObjectBase
             }
         }
     }
+    //public override void MenuExtended()
+    //{
+    //    base.MenuExtended();
+    //    Array.ForEach(_childlenArray, childlen =>
+    //    {
+    //        Array.ForEach(childlen.ChildArrays, x => x.MenuExtended());
+    //    });
+    //}
     public override void MenuClosed()
     {
         base.MenuClosed();
@@ -86,26 +93,34 @@ public class SelectObjecArrayBase : UIObjectBase
     /// <summary>
     /// ボタンオブジェクト検索(実行時に使用推奨)
     /// </summary>
-    /// <typeparam name="T">検索するボタンオブジェクトの型</typeparam>
+    /// <typeparam name="TUIObj">検索するボタンオブジェクトの型</typeparam>
     /// <returns>このクラスの子オブジェクトにある検索対象の配列</returns>
-    public List<T> SelectChildlen<T>()
-        where T : UIObjectBase
+    public List<TUIObj> SelectChildlen<TUIObj>()
+        where TUIObj : UIObjectBase
     {
-        List<T> result = new();
+        List<TUIObj> result = new();
         foreach (var childlen in _childlenArray)
         {
-            for(int i = 0;i < childlen.ChildArrays.Length;i++)
+            for (int i = 0; i < childlen.ChildArrays.Length; i++)
             {
-                if (childlen.ChildArrays[i] is T r)
+                if (childlen.ChildArrays[i] is TUIObj r)
                 {
                     result.Add(r);
                 }
                 else if (childlen.ChildArrays[i] is SelectObjecArrayBase child)
                 {
-                    result.AddRange(child.SelectChildlen<T>());
+                    result.AddRange(child.SelectChildlen<TUIObj>());
                 }
             }
         }
         return result;
     }
+}
+
+public enum PanelType
+{
+    None,
+    Weapon,
+    Inventory,
+    Option,
 }

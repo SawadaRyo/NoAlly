@@ -5,29 +5,44 @@ using UnityEngine;
 
 public class MenuManagerBase : MonoBehaviour
 {
-    [SerializeField, Header("MenuPanelの初期選択画面")]
-    SelectObjecArrayBase _firstSelectObjects = null;
+    [SerializeField, Header("このメニュー画面に登録している全パネル")]
+    SelectObjecArrayBase[] _allSelectObjectArraies = null;
 
     [Tooltip("メニュー展開判定")]
     bool _isActive = false;
+    [Tooltip("")]
+    int _currentMenuPanelIndex = 0;
     [Tooltip("選択中のボタン")]
     UIObjectBase _targetButton = default;
+    [Tooltip("MenuPanelの初期選択画面")]
+    SelectObjecArrayBase _firstSelectObjectArraies = null;
     [Tooltip("現在展開中のメニュー画面")]
     SelectObjecArrayBase _currentMenuPanel = null;
     [Tooltip("ひとつ前のメニュー画面")]
     SelectObjecArrayBase _beforeMenuPanel = null;
 
     public bool isActive => _isActive;
-    public List<T> GetComponentButtonList<T>() where T : UIObjectBase => _firstSelectObjects.SelectChildlen<T>();
+    public List<T> GetComponentButtonList<T>(PanelType panelType) where T : UIObjectBase
+    {
+        foreach (var t in _allSelectObjectArraies)
+        {
+            if (t.PanelType == panelType)
+            {
+                return t.SelectChildlen<T>();
+            }
+        }
+        return null;
+    }
 
     /// <summary>
     /// 初期化関数
     /// </summary>
     public void Initialize()
     {
-        _firstSelectObjects.SetUp(null);
-        _targetButton = _firstSelectObjects.SelectChildlen(0, 0);
-        _currentMenuPanel = _firstSelectObjects;
+        Array.ForEach(_allSelectObjectArraies, array => array.SetUp(null));
+        _firstSelectObjectArraies = _allSelectObjectArraies[0];
+        _targetButton = _firstSelectObjectArraies.SelectChildlen(0, 0);
+        _currentMenuPanel = _firstSelectObjectArraies;
     }
 
     /// <summary>
@@ -39,19 +54,20 @@ public class MenuManagerBase : MonoBehaviour
         _isActive = !_isActive;
         if (_isActive)
         {
-            _firstSelectObjects.MenuExtended();
-            Array.ForEach(_firstSelectObjects.Childlen, childlen =>
+            _currentMenuPanel.MenuExtended();
+            Array.ForEach(_currentMenuPanel.Childlen, childlen =>
             {
                 Array.ForEach(childlen.ChildArrays, x => x.MenuExtended());
             });
-            _targetButton = _firstSelectObjects.SelectChildlen();
+            _targetButton = _firstSelectObjectArraies.SelectChildlen();
         }
         else
         {
+            _currentMenuPanelIndex = 0;
             _targetButton.IsSelect(false);
             _targetButton = null;
-            _currentMenuPanel = _firstSelectObjects;
-            _firstSelectObjects.MenuClosed();
+            _currentMenuPanel.MenuClosed();
+            _currentMenuPanel = _firstSelectObjectArraies;
         }
     }
 
@@ -67,6 +83,31 @@ public class MenuManagerBase : MonoBehaviour
             _targetButton.IsSelect(false);
             _targetButton = _currentMenuPanel.SelectChildlen(x, y);
             _targetButton.IsSelect(true);
+        }
+    }
+
+    public void SwitchPanal(int inputTrigger)
+    {
+        if (_isActive)
+        {
+            _currentMenuPanelIndex += inputTrigger;
+            if (_currentMenuPanelIndex < 0)
+            {
+                _currentMenuPanelIndex = _allSelectObjectArraies.Length - 1;
+            }
+            else if (_currentMenuPanelIndex >= _allSelectObjectArraies.Length)
+            {
+                _currentMenuPanelIndex = 0;
+            }
+            _beforeMenuPanel = null;
+            _currentMenuPanel.MenuClosed();
+            _currentMenuPanel = _allSelectObjectArraies[_currentMenuPanelIndex];
+            _currentMenuPanel.MenuExtended();
+            Array.ForEach(_currentMenuPanel.Childlen, childlen =>
+            {
+                Array.ForEach(childlen.ChildArrays, x => x.MenuExtended());
+            });
+            _targetButton = _currentMenuPanel.SelectChildlen();
         }
     }
 
@@ -106,7 +147,7 @@ public class MenuManagerBase : MonoBehaviour
     {
         if (!_isActive) return;
 
-        if (_currentMenuPanel == _firstSelectObjects)
+        if (_beforeMenuPanel == null)
         {
             IsMenuOpen();
         }

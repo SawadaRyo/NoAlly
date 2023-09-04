@@ -7,7 +7,7 @@ public class WeaponMenuPresenter : MonoBehaviour
 {
     [Space(15)]
     [Header("Model")]
-    
+
     [SerializeField, Tooltip("")]
     MenuManagerBase _menuManager = null;
     [SerializeField, Header("")]
@@ -29,7 +29,7 @@ public class WeaponMenuPresenter : MonoBehaviour
 
     void Start()
     {
-        _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>().OrderBy(x => x.commandType).ToArray();
+        _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>(PanelType.Weapon).OrderBy(x => x.commandType).ToArray();
         for (int i = 0; i < _weaponEquipment.Length; i++)
         {
             int index = i;
@@ -40,7 +40,7 @@ public class WeaponMenuPresenter : MonoBehaviour
         _weaponEquipment[(int)EquipmentType.SUB].EquipmentWeapon(EquipmentType.SUB, _weaponStateController.SubWeapon.WeaponData.TypeOfWeapon);
         _weaponEquipment[(int)EquipmentType.ELEMENT].EquipmentElement(ElementType.RIGIT);
         _isSwitch = false;
-        
+
         //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
     }
     void WeaponEquipmentState(int index)
@@ -49,15 +49,21 @@ public class WeaponMenuPresenter : MonoBehaviour
         _weaponEquipment[index].MainWeapon.Skip(1)
             .Subscribe(mainWeapon =>
             {
+                if (_weaponStateController.SubWeapon.WeaponData.TypeOfWeapon == mainWeapon)
+                {
+                    _weaponEquipment[(int)EquipmentType.SUB].EquipmentWeapon(EquipmentType.SUB, _weaponStateController.MainWeapon.WeaponData.TypeOfWeapon);
+                }
                 _weaponStateController.SetEquipmentWeapon(mainWeapon, EquipmentType.MAIN);
-                //_cullentWeaponType = mainWeapon;
                 Debug.Log(mainWeapon);
             }).AddTo(this);
         _weaponEquipment[index].SubWeapon.Skip(1)
            .Subscribe(subWeapon =>
            {
+               if (_weaponStateController.MainWeapon.WeaponData.TypeOfWeapon == subWeapon)
+               {
+                   _weaponEquipment[(int)EquipmentType.MAIN].EquipmentWeapon(EquipmentType.MAIN, _weaponStateController.MainWeapon.WeaponData.TypeOfWeapon);
+               }
                _weaponStateController.SetEquipmentWeapon(subWeapon, EquipmentType.SUB);
-               //_cullentWeaponType = subWeapon;
                Debug.Log(subWeapon);
            }).AddTo(this);
         _weaponEquipment[index].Element.Skip(1)

@@ -74,24 +74,13 @@ public class Equipment : SelectObjecArrayBase
     /// <param name="type"></param>
     public void EquipmentWeapon(EquipmentType type, WeaponType weaponName)
     {
-        WeaponType beforeWeapons = default;
         if (type == EquipmentType.MAIN)
         {
-            beforeWeapons = _isEquipment.Item1;
-            _isEquipment.Item1 = weaponName;
-            if (_subWeapon.Value == _mainWeapon.Value) //Main‚ÆSub‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚é
-            {
-                _isEquipment.Item2 = beforeWeapons;
-            }
+            _mainWeapon.Value = weaponName;
         }
         else if (type == EquipmentType.SUB)
         {
-            beforeWeapons = _isEquipment.Item2;
-            _isEquipment.Item2 = weaponName;
-            if (_isEquipment.Item1 == _isEquipment.Item2) //Sub‚ÆMain‚Ì‘•”õ•Ší‚ª“¯‚¶‚¾‚Á‚½ê‡‚»‚ê‚¼‚ê‚Ì‘•”õ•Ší‚ğ“ü‚ê‘Ö‚¦‚é
-            {
-                _isEquipment.Item1 = beforeWeapons;
-            }
+            _subWeapon.Value = weaponName;
         }
         _weaponImage.sprite = _weaponSprites[(int)weaponName];
     }
@@ -101,27 +90,12 @@ public class Equipment : SelectObjecArrayBase
     /// <param name="element"></param>
     public void EquipmentElement(ElementType element)
     {
-        _isEquipment.Item3 = element;
+        _elementType.Value = element;
         _weaponImage.sprite = _weaponSprites[(int)element];
     }
     public override void MenuClosed()
     {
         base.MenuClosed();
-        switch (_commandType)
-        {
-            case EquipmentType.MAIN:
-                _mainWeapon.Value = _isEquipment.Item1;
-                break;
-            case EquipmentType.SUB:
-                _subWeapon.Value = _isEquipment.Item2;
-                break;
-            case EquipmentType.ELEMENT:
-                _equiped.SetValueAndForceNotify(true);
-                _elementType.Value = _isEquipment.Item3;
-                break;
-            default:
-                break;
-        }
         _equiped.SetValueAndForceNotify(true);
     }
     private void OnDisable()

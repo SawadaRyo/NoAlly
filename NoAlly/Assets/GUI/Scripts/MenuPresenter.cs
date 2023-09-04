@@ -40,6 +40,11 @@ public class MenuPresenter : MonoBehaviour
             {
                 _menuManager.SelectTargetButton(inputCross.Item1, inputCross.Item2);
             }).AddTo(this);
+        _menuHander.CurrentTrigger.Skip(1)
+            .Subscribe(currentTrigger =>
+            {
+                _menuManager.SwitchPanal(currentTrigger);
+            }).AddTo(this);
         _menuHander.IsDiside.Skip(1)
             .Subscribe(isDiside =>
             {
