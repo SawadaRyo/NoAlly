@@ -44,12 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16237bfa93d1d64479dc0885fc916528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menuManager: {fileID: 4528188812832820785}
+  _weaponStateController: {fileID: 0}
   _weaponEquipment:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _weaponProcessing: {fileID: 0}
-  _weaponElementColor: {fileID: 0}
 --- !u!1 &4528188811531487113
 GameObject:
   m_ObjectHideFlags: 0
