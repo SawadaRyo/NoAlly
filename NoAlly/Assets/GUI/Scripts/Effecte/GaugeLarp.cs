@@ -8,10 +8,13 @@ using UnityEngine.UI;
 
 public class GaugeLarp : MonoBehaviour
 {
-    public void SetSliderValue(Slider slider,float value)
+    [SerializeField]
+    Slider _slider = null;
+
+    public void SetSliderValue(float value)
     {
-        DOTween.To(() => slider.value,
-                 n => slider.value = n,
+        DOTween.To(() => _slider.value,
+                 n => _slider.value = n,
                  value,
                  duration: 1.0f);
     }
