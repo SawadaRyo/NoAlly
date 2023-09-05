@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 8084510598960520554}
   - component: {fileID: 30371990971348292}
   - component: {fileID: 5451006842889277060}
+  - component: {fileID: 2043272578344075453}
   m_Layer: 5
   m_Name: TitleBack
   m_TagString: Untagged
@@ -210,6 +211,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &2043272578344075453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239054634318937445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f085bea8ef9b94282c61e478d0a0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _panelFade: {fileID: 0}
 --- !u!1 &843193990413639354
 GameObject:
   m_ObjectHideFlags: 0
