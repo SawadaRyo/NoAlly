@@ -5,11 +5,10 @@ public class MenuPresenter : MonoBehaviour
 {
     [SerializeField, Tooltip("")]
     MenuHanderBase _menuHander;
-
     [SerializeField, Tooltip("")]
     MenuManagerBase _menuManager;
-
-
+    [SerializeField]
+    UIObjectBase _manuEnabledInvertedUI;
     void Awake()
     {
         _menuHander.Initialize();
@@ -34,6 +33,7 @@ public class MenuPresenter : MonoBehaviour
             .Subscribe(isMenuOpen =>
             {
                 _menuManager.IsMenuOpen();
+                _manuEnabledInvertedUI.ActiveUIObject(!_menuManager.IsActive);
             }).AddTo(this);
         _menuHander.InputCross.Skip(1)
             .Subscribe(inputCross =>

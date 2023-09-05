@@ -21,7 +21,7 @@ public class MenuManagerBase : MonoBehaviour
     [Tooltip("‚Ð‚Æ‚Â‘O‚Ìƒƒjƒ…[‰æ–Ê")]
     SelectObjecArrayBase _beforeMenuPanel = null;
 
-    public bool isActive => _isActive;
+    public bool IsActive => _isActive;
     public List<T> GetComponentButtonList<T>(PanelType panelType) where T : UIObjectBase
     {
         foreach (var t in _allSelectObjectArraies)
