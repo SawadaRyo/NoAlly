@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using DataOfWeapon;
 
-public class WeaponMenuPresenter : MonoBehaviour
+public class WeaponMenuPresenter : InitializerBase
 {
     [Space(15)]
     [Header("Model")]
@@ -27,7 +27,7 @@ public class WeaponMenuPresenter : MonoBehaviour
 
     public WeaponType CullentWeaponType => _cullentWeaponType;
 
-    void Start()
+    public override void Init()
     {
         _weaponEquipment = _menuManager.GetComponentButtonList<Equipment>(PanelType.Weapon).OrderBy(x => x.commandType).ToArray();
         for (int i = 0; i < _weaponEquipment.Length; i++)
@@ -40,8 +40,6 @@ public class WeaponMenuPresenter : MonoBehaviour
         _weaponEquipment[(int)EquipmentType.SUB].EquipmentWeapon(EquipmentType.SUB, _weaponStateController.SubWeapon.WeaponData.TypeOfWeapon);
         _weaponEquipment[(int)EquipmentType.ELEMENT].EquipmentElement(ElementType.RIGIT);
         _isSwitch = false;
-
-        //_weaponInput.TargetWeapon = _weaponProcessing.SwichWeapon(_isSwitch);
     }
     void WeaponEquipmentState(int index)
     {

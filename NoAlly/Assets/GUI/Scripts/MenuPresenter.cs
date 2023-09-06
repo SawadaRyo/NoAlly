@@ -1,7 +1,7 @@
 using UnityEngine;
 using UniRx;
 
-public class MenuPresenter : MonoBehaviour
+public class MenuPresenter : InitializerBase
 {
     [SerializeField, Tooltip("")]
     MenuHanderBase _menuHander;
@@ -9,7 +9,8 @@ public class MenuPresenter : MonoBehaviour
     MenuManagerBase _menuManager;
     [SerializeField]
     UIObjectBase _manuEnabledInvertedUI;
-    void Awake()
+
+    public override void Init()
     {
         _menuHander.Initialize();
         _menuManager.Initialize();
