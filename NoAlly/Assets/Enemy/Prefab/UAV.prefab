@@ -405,10 +405,11 @@ MonoBehaviour:
   - {fileID: 4159492387287902439}
   _objectAnimator: {fileID: 1479103677212101138}
   _radius: 5
+  _rb: {fileID: 8964265821834317574}
+  _center: {fileID: 6037765406007133290}
   _playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  _center: {fileID: 6037765406007133290}
   _power:
   - 0
   - 0
@@ -450,7 +451,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHP: 5
-  _maxSAP: 20
   _invincibleTimeValue: 1
   _damageEffects: {fileID: 0}
 --- !u!136 &1043010382234640880
