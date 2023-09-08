@@ -13,6 +13,10 @@ public class SetWeaponInit : MonoBehaviour
 
     void Awake()
     {
+        Initialize();
+    }
+    public void Initialize()
+    {
         var instance = new SetWeaponData(weaponScriptableObjects, playerCon, weaponCon);
         SetWeaponData.Instance = instance;
         Destroy(this);

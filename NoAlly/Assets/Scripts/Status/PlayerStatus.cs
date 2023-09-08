@@ -5,10 +5,13 @@ using UniRx;
 
 public class PlayerStatus : StatusBase
 {
+    [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
+    protected float _maxSAP = 20;
     [Tooltip("オブジェクトの現在のHP")]
     protected FloatReactiveProperty _hpReactiveProperty;
     [Tooltip("オブジェクトの現在の必殺技ゲージ")]
     protected FloatReactiveProperty _sapReactiveProperty = null;
+
     public float MaxHP => _maxHP;
     public float MaxSAP => _maxSAP;
     public IReadOnlyReactiveProperty<float> SAP => _sapReactiveProperty;
@@ -26,7 +29,7 @@ public class PlayerStatus : StatusBase
         _hpReactiveProperty.Value -= base.DamageCalculation(damageValue, type);
         if (_hpReactiveProperty.Value <= 0)
         {
-            CharacterDead(false);
+            Death();
         }
     }
 
@@ -66,10 +69,10 @@ public class PlayerStatus : StatusBase
         _sapReactiveProperty.Value -= useSAP;
     }
 
-    void CharacterDead(bool living)
+    public override void Death()
     {
-        _living = living;
-        _animator.SetBool("Death", !living);
+        base.Death();
+        _animator.SetBool("Death", true);
     }
 
     /// <summary>

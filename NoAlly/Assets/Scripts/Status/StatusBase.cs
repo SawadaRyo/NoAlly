@@ -7,8 +7,6 @@ public abstract class StatusBase : MonoBehaviour
 {
     [SerializeField, Tooltip("HPの上限")]
     protected float _maxHP = 5;
-    [SerializeField, Tooltip("オブジェクトの必殺技ゲージの上限")]
-    protected float _maxSAP = 20;
     [SerializeField, Tooltip("無敵時間の値")]
     protected float _invincibleTimeValue = 1f;
     [SerializeField]
@@ -32,6 +30,10 @@ public abstract class StatusBase : MonoBehaviour
     public virtual void Damage(WeaponPower damageValue, ElementType type)
     {
         _hp -= DamageCalculation(damageValue, type);
+    }
+    public void ChangeParamater(float value,bool isPlus)
+    {
+
     }
     public virtual void Death()
     {
