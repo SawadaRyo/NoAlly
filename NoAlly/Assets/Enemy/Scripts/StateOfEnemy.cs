@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum StateOfEnemy : int
 {
-    None, //
+    Idle, //
     Move, //ˆÚ“®
     Saerching, //ƒvƒŒƒCƒ„[‚ğ‘{õ’†
     BattlePosture, //í“¬‘Ô¨

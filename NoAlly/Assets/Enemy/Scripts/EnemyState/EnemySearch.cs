@@ -33,7 +33,7 @@ public class EnemySearch : State
         }
         else
         {
-            Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Attack);
+            Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.BattlePosture);
         }
     }
 

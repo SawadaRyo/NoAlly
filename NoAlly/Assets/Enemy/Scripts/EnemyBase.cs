@@ -76,11 +76,13 @@ public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
         _isActive = false;
         _stateMachine = new StateMachine<EnemyBase>(this);
         {
-            //プレイヤーを見つけた時プレイヤーを攻撃
-            _stateMachine.AddTransition<EnemySearch, EnemyAttack>((int)StateOfEnemy.Attack);
-            //プレイヤーを見失ったとき攻撃を中止
-            _stateMachine.AddTransition<EnemyAttack, EnemySearch>((int)StateOfEnemy.Saerching);
-            //HPが0になったとき死亡
+            //戦闘態勢
+            _stateMachine.AddTransition<EnemySearch, EnemyBattlePosture>((int)StateOfEnemy.BattlePosture);
+            //戦闘態勢解除
+            _stateMachine.AddTransition<EnemyBattlePosture, EnemySearch>((int)StateOfEnemy.Saerching);
+            //プレイヤーへの攻撃
+            _stateMachine.AddTransition<EnemyBattlePosture, EnemyAttack>((int)StateOfEnemy.Attack);
+            //死亡
             _stateMachine.AddAnyTransition<EnemyDeath>((int)StateOfEnemy.Death);
             //ステート開始
             _stateMachine.Start<EnemySearch>();
