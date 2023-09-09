@@ -8,10 +8,15 @@ public class SceneController : MonoBehaviour
     [SerializeField]
     PanelFade _panelFade = null;
 
+    [Tooltip("")]
+    bool _enabled = false;
+
     public async void Load(string name)
     {
-        var token = this.GetCancellationTokenOnDestroy();
+        if (_enabled) return;
+        //var token = this.GetCancellationTokenOnDestroy();
         _panelFade.ImageFade(FadeType.FadeOut);
+        _enabled = true;
         await UniTask.Delay(TimeSpan.FromSeconds(_panelFade.Interval)); 
         SceneManager.LoadScene(name);
     }
