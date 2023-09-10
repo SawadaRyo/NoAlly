@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class AddWeapon : ItemBase
 {
+
     public override void Activate()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

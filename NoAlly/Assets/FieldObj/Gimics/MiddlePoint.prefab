@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: 3
+  _colors: []
 --- !u!1 &8520263256587900668
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +208,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 2100000, guid: be1e14b0ec3a5c541b4abf39536fe380, type: 2}
+  - {fileID: 2100000, guid: 6e1a0ceb51bdf254ab2e21edce752d5b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
