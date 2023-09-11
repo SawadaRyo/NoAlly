@@ -4,14 +4,11 @@ using UniRx;
 
 public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
 {
-    [SerializeField, Header("索敵範囲")]
-    protected float _radius = 5f;
     [SerializeField, Header("")]
+    protected EnemyParamaterBase _enemyParamater = null;
     protected Rigidbody _rb = null;
     [SerializeField, Header("索敵範囲の中心")]
     protected Transform _center = default;
-    [SerializeField, Header("索敵用のレイヤー")]
-    protected LayerMask _playerLayer = ~0;
 
     [Tooltip("ステートマシン")]
     protected StateMachine<EnemyBase> _stateMachine = null;
@@ -33,7 +30,7 @@ public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
 
     public PlayerStatus InSight()
     {
-        Collider[] inSight = Physics.OverlapSphere(_center.position, _radius, _playerLayer);
+        Collider[] inSight = Physics.OverlapSphere(_center.position, _enemyParamater.searchRenge, _enemyParamater.targetLayer);
         foreach (var s in inSight)
         {
             if (s.gameObject.TryGetComponent(out PlayerStatus player))
@@ -71,22 +68,10 @@ public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
     /// </summary>
     /// <typeparam name="TOwner"></typeparam>
     /// <param name="Owner"></param>
-    public void DisactiveForInstantiate(IObjectGenerator Owner)
+    public virtual void DisactiveForInstantiate(IObjectGenerator Owner)
     {
         _isActive = false;
         _stateMachine = new StateMachine<EnemyBase>(this);
-        {
-            //戦闘態勢
-            _stateMachine.AddTransition<EnemySearch, EnemyBattlePosture>((int)StateOfEnemy.BattlePosture);
-            //戦闘態勢解除
-            _stateMachine.AddTransition<EnemyBattlePosture, EnemySearch>((int)StateOfEnemy.Saerching);
-            //プレイヤーへの攻撃
-            _stateMachine.AddTransition<EnemyBattlePosture, EnemyAttack>((int)StateOfEnemy.Attack);
-            //死亡
-            _stateMachine.AddAnyTransition<EnemyDeath>((int)StateOfEnemy.Death);
-            //ステート開始
-            _stateMachine.Start<EnemySearch>();
-        }
         OnUpdate();
     }
     void OnUpdate()
@@ -104,7 +89,7 @@ public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
     public virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(_center.position, _radius);
+        Gizmos.DrawWireSphere(_center.position, _enemyParamater.searchRenge);
     }
 
 #endif

@@ -9,7 +9,7 @@ public class EnemySearch : State
     bool _rotated;
     float _time = 0;
     float _intervalRotate = 3;
-    float _turnSpeed = 10f;
+    float _turnDuration = 0.5f;
 
     protected override void OnUpdate()
     {
@@ -22,11 +22,11 @@ public class EnemySearch : State
                 _rotated = !_rotated;
                 if (_rotated)
                 {
-                    Owner.transform.DORotate(new Vector3(0f, -90f, 0f), 0.5f);
+                    Owner.transform.DORotate(new Vector3(0f, -90f, 0f), _turnDuration);
                 }
                 else
                 {
-                    Owner.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f);
+                    Owner.transform.DORotate(new Vector3(0f, 90f, 0f), _turnDuration);
                 }
                 _time = 0;
             }

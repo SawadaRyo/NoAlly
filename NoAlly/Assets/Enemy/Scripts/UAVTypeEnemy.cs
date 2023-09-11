@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
 {
-    [SerializeField, Tooltip("攻撃力")]
-    float[] _power = new float[4] { 0, 0, 3, 0 };
-    [SerializeField, Tooltip("速度")]
-    float _speed = 2;
     [SerializeField, Tooltip("加速度")]
     float _moveMagnification = 2f;
     [SerializeField, Tooltip("攻撃範囲")]
@@ -19,7 +15,7 @@ public class UAVTypeEnemy : EnemyBase
     LayerMask _fieldLayer = ~0;
 
     [Tooltip("")]
-    Vector3 _distance = Vector2.zero;
+    Vector2 _moveVec = Vector2.zero;
     [Tooltip("")]
     bool _hit = false;
     [Tooltip("")]
@@ -32,10 +28,10 @@ public class UAVTypeEnemy : EnemyBase
         {
             var targetPos = Player.Value.transform.position + new Vector3(0f, 1.8f, 0f);
             transform.LookAt(targetPos);
-            _distance = (targetPos - transform.position);
+            _moveVec = (targetPos - transform.position);
             if (_hit)
             {
-                _currentSpeed = (-_speed * _moveMagnification);
+                _currentSpeed = (-_enemyParamater.speed * _moveMagnification);
                 _time += Time.deltaTime;
                 if (_time > 1f || !InSight())
                 {
@@ -45,30 +41,28 @@ public class UAVTypeEnemy : EnemyBase
             }
             else
             {
-                _currentSpeed = _speed;
+                _currentSpeed = _enemyParamater.speed;
                 IHitBehavorOfAttack playerStatus = CallPlayerGauge();
                 if (playerStatus != null)
                 {
-                    playerStatus.BehaviorOfHit(_power, ElementType.ELEKE);
+                    playerStatus.BehaviorOfHit(_enemyParamater.enemyPowers[(int)ElementType.ELEKE], ElementType.ELEKE);
                     _hit = true;
                 }
             }
         }
-        _rb.velocity = _distance.normalized * _currentSpeed;
+        _rb.velocity = _moveVec.normalized * _currentSpeed;
     }
-
     public override void ExitAttackState()
     {
         base.ExitAttackState();
         _hit = false;
         _currentSpeed = 0f;
         _time = 0f;
-        _rb.velocity = _distance.normalized * _currentSpeed;
+        _rb.velocity = _moveVec.normalized * _currentSpeed;
     }
-
     IHitBehavorOfAttack CallPlayerGauge()
     {
-        Collider[] playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _playerLayer);
+        Collider[] playerCol = Physics.OverlapSphere(_attackPos.position, _attackRadius, _enemyParamater.targetLayer);
         foreach (Collider col in playerCol)
         {
             if (col.TryGetComponent(out IHitBehavorOfAttack playerGauge))
@@ -84,9 +78,18 @@ public class UAVTypeEnemy : EnemyBase
         _rb.velocity = Vector3.zero;
         _rb.isKinematic = true;
     }
-    //public override void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(_attackPos.position, _attackRadius);
-    //}
+    public override void DisactiveForInstantiate(IObjectGenerator Owner)
+    {
+        base.DisactiveForInstantiate(Owner);
+        //戦闘態勢
+        _stateMachine.AddTransition<EnemySearch, UAVBattlePosture>((int)StateOfEnemy.BattlePosture);
+        //戦闘態勢解除
+        _stateMachine.AddTransition<UAVBattlePosture, EnemySearch>((int)StateOfEnemy.Saerching);
+        //プレイヤーへの攻撃
+        _stateMachine.AddTransition<UAVBattlePosture, UAVAttack>((int)StateOfEnemy.Attack);
+        //死亡
+        _stateMachine.AddAnyTransition<EnemyDeath>((int)StateOfEnemy.Death);
+        //ステート開始
+        _stateMachine.Start<EnemySearch>();
+    }
 }

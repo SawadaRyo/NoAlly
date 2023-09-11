@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6696a440026c574dbf81aabcac1eb0a, type: 3}
+  m_Name: UAVParamater
+  m_EditorClassIdentifier: 
+  searchCentar: {x: 0, y: 0, z: 0}
+  searchRenge: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  hp: 5
+  enemyPowers:
+  - defaultPower: 0
+    elementPower: 0
+  - defaultPower: 0
+    elementPower: 0
+  - defaultPower: 0
+    elementPower: 0
+  - defaultPower: 0
+    elementPower: 0
+  speed: 3
