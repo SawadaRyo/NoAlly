@@ -16,14 +16,7 @@ public abstract class EnemyMove : State
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (Owner.Player.Value)
-        {
-            EnemyRotate(Owner.Player.Value.transform);
-        }
-        else
-        {
-            Owner.EnemyStateMachine.Dispatch((int)StateOfEnemy.Saerching);
-        }
+        EnemyRotate(Owner.Player.Value.transform);
     }
     protected override void OnExit(State nextState)
     {
