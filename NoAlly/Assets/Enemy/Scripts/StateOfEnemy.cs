@@ -5,9 +5,9 @@ using UnityEngine;
 public enum StateOfEnemy : int
 {
     Idle, //
-    Move, //ˆÚ“®
-    Saerching, //ƒvƒŒƒCƒ„[‚ğ‘{õ’†
-    BattlePosture, //í“¬‘Ô¨
-    Attack, //UŒ‚
-    Death //€–S
+    Move, //ç§»å‹•
+    Saerching, //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æœç´¢ä¸­
+    BattlePosture, //æˆ¦é—˜æ…‹å‹¢
+    Attack, //æ”»æ’ƒ
+    Death //æ­»äº¡
 }

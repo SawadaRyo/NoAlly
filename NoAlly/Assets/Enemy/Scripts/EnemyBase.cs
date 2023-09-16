@@ -4,23 +4,29 @@ using UniRx;
 
 public abstract class EnemyBase : ObjectBase, IObjectPool<IObjectGenerator>
 {
-    [SerializeField, Header("")]
+    [SerializeField, Header("エネミーの基本データ")]
     protected EnemyParamaterBase _enemyParamater = null;
-    protected Rigidbody _rb = null;
     [SerializeField, Header("索敵範囲の中心")]
     protected Transform _center = default;
+    [SerializeField,Header("エネミーのRigidbody")]
+    protected Rigidbody _rb = null;
 
     [Tooltip("ステートマシン")]
     protected StateMachine<EnemyBase> _stateMachine = null;
-    [Tooltip("")]
+    [Tooltip("プレイヤーのステータスデータ")]
     ReactiveProperty<PlayerStatus> _playerStatus = new();
 
-    public IReadOnlyReactiveProperty<PlayerStatus> Player => _playerStatus;
     /// <summary>
     /// ステートマシーンのオーナー(自分)を返すプロパティ(読み取り専用)
     /// </summary>
     public StateMachine<EnemyBase> EnemyStateMachine => _stateMachine;
-
+    /// <summary>
+    /// プレイヤーのステータスデータのプロパティ
+    /// </summary>
+    public IReadOnlyReactiveProperty<PlayerStatus> Player => _playerStatus;
+    /// <summary>
+    /// このオブジェクトの生成主
+    /// </summary>
     public IObjectGenerator Owner => throw new NotImplementedException();
 
     public virtual void EnemyAttack() { }

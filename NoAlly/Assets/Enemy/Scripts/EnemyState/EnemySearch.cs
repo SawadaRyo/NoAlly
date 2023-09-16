@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using DG.Tweening;
 using UniRx;
@@ -43,6 +42,7 @@ public class EnemySearch : State
     {
         base.OnTranstion();
         Owner.Player
+            .Where(player => player != null && IsActive)
             .Subscribe(player =>
             {
 

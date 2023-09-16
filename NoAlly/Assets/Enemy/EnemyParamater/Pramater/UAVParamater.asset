@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6696a440026c574dbf81aabcac1eb0a, type: 3}
   m_Name: UAVParamater
   m_EditorClassIdentifier: 
-  searchCentar: {x: 0, y: 0, z: 0}
   searchRenge: 0
-  playerLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
   hp: 5

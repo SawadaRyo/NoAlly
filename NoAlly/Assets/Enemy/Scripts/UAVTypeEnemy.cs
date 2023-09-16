@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class UAVTypeEnemy : EnemyBase
@@ -24,33 +21,33 @@ public class UAVTypeEnemy : EnemyBase
 
     public override void EnemyAttack()
     {
-        if (InSight())
-        {
-            var targetPos = Player.Value.transform.position + new Vector3(0f, 1.8f, 0f);
-            transform.LookAt(targetPos);
-            _moveVec = (targetPos - transform.position);
-            if (_hit)
-            {
-                _currentSpeed = (-_enemyParamater.speed * _moveMagnification);
-                _time += Time.deltaTime;
-                if (_time > 1f || !InSight())
-                {
-                    _hit = false;
-                    _time = 0f;
-                }
-            }
-            else
-            {
-                _currentSpeed = _enemyParamater.speed;
-                IHitBehavorOfAttack playerStatus = CallPlayerGauge();
-                if (playerStatus != null)
-                {
-                    playerStatus.BehaviorOfHit(_enemyParamater.enemyPowers[(int)ElementType.ELEKE], ElementType.ELEKE);
-                    _hit = true;
-                }
-            }
-        }
-        _rb.velocity = _moveVec.normalized * _currentSpeed;
+        //if (InSight())
+        //{
+        //    var targetPos = Player.Value.transform.position + new Vector3(0f, 1.8f, 0f);
+        //    transform.LookAt(targetPos);
+        //    _moveVec = (targetPos - transform.position);
+        //    if (_hit)
+        //    {
+        //        _currentSpeed = (-_enemyParamater.speed * _moveMagnification);
+        //        _time += Time.deltaTime;
+        //        if (_time > 1f || !InSight())
+        //        {
+        //            _hit = false;
+        //            _time = 0f;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _currentSpeed = _enemyParamater.speed;
+        //        IHitBehavorOfAttack playerStatus = CallPlayerGauge();
+        //        if (playerStatus != null)
+        //        {
+        //            playerStatus.BehaviorOfHit(_enemyParamater.enemyPowers[(int)ElementType.ELEKE], ElementType.ELEKE);
+        //            _hit = true;
+        //        }
+        //    }
+        //}
+        //_rb.velocity = _moveVec.normalized * _currentSpeed;
     }
     public override void ExitAttackState()
     {
