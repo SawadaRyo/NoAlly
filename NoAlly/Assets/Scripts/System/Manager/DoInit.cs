@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class DoInit : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class DoInit : MonoBehaviour
     void Awake()
     {
         _panelFade.ImageFade(FadeType.FadeIn);
+        //await UniTask.Delay(TimeSpan.FromSeconds(_panelFade.Interval));
         Array.ForEach(_initializerBases, x => x.Init());
     }
 }

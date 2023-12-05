@@ -78,7 +78,7 @@ public class HitParameter : MonoBehaviour, IHitBehavorOfAttack
         Status.Damage(result, type);
     }
 
-    public void BehaviorOfHit<TPlus>(TPlus pulsItem) where TPlus : ItemBase
+    public void BehaviorOfHit<TPlus>(TPlus pulsItem) where TPlus : PlusItemBase
     {
 
         if (Status is PlayerStatus)
